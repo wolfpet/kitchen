@@ -1,0 +1,32 @@
+ * {font-family:Verdana,Arial; font-size:10pt;}
+ body     {background:#FFFFFF; color:#000000; font-family:Verdana, Arial; font-size:10pt;}
+ a:link    {color:#0000FF; font-family:Verdana,Arial; text-decoration:none;}
+ a:visited {color:#000000; font-family:Verdana,Arial; text-decoration:none;}
+ 
+a:active  {color:#FF0000; font-family:Verdana,Arial; text-decoration:none;}
+ a:hover   {color:#FF0000; font-family:Verdana,Arial; text-decoration:underline;}
+ 
+h1	{font-family:Verdana,Arial; font-size:36pt;}
+ h2	{font-family:Verdana,Arial; font-size:24pt;}
+ h3	{font-family:Verdana,Arial; font-size:14pt; color:#0080c0;}
+ h4	{font-family:Verdana,Arial; font-size:12pt;}
+ h5	{font-family:Verdana,Arial; font-size:10pt;}
+ ol	{font-family:Verdana, Arial; font-size:10pt;}
+dl {font-family:Verdana, Arial; font-size:10pt; margin: 0px 0px 0px 0px;}
+ li	{font-family:Verdana, Arial; font-size:10pt;}
+ dt	{font-family:Verdana, Arial; font-size:10pt;}
+ 
+dd	{font-family:Verdana, Arial; font-size:10pt;}
+ 
+td	{font-family:Verdana, Arial; font-size:10pt;}
+ p	{font-family:Verdana, Arial; font-size:10pt;}
+ 
+b	{font-family:Verdana, Arial;}
+ pre	{font-family:Courier New;}
+ tt	{font-family:Courier New;}
+ .blueback {background:#DDDDFF; color:#000000; font-family:Verdana, Arial; font-size:10pt;}
+#translit_help {display:none;}
+#bbcode_help {display:none;}
+
+a.user_link {color:black;}
+a.menu:visited {color:#0000FF; font-family:Verdana,Arial; text-decoration:none;}

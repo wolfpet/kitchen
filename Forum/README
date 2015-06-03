@@ -1,0 +1,42 @@
+This is a second attempt to make distribution set of forum software
+known as "Kitchen".
+
+Installation:
+
+1. /php files go to directory where they will be accessible, e.g. 
+if your desired URL is http://www.kirdyk.com/forum and your document root 
+is /var/www/html - copy the content of /php to /var/www/html/forum
+
+Move images to /var/www/html/images and js files to /var/www/html/js
+
+Create database 'confa' and setup tables with create_tables.sql, 
+then run the rest of the sql files.
+
+Then, edit settings.php - setup title for forum,
+database configurations and directory under which forum will be.
+
+License - BSD.
+
+Author: A. Fig Lee <dmitriy@radier.ca>
+
+Contributors:
+
+Anrew R.
+Aleksei Sidorov
+Vasia Lozhkin
+Pchiolka
+
+P.S. (add if I forgot someone)
+2009-Nov-02
+
+fastbbcode.tar is a source code for php extension - must be placed in ext directory of php source
+and compiled/installed.
+fastbbcode.so - compiled version for CentOS
+
+Production environment:
+
+PHP 5.3.3 (cli) (built: Oct 30 2014 20:12:53) 
+Copyright (c) 1997-2010 The PHP Group
+Zend Engine v2.3.0, Copyright (c) 1998-2010 Zend Technologies
+
+mysql Ver 14.14 Distrib 5.1.73, for redhat-linux-gnu (x86_64) using readline 5.1
