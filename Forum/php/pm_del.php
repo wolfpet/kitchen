@@ -6,7 +6,7 @@ require_once('head_inc.php');
     if (count($pmdel) == 0) {
         $err = 'No messages were selected<BR>';
     } else {
-        $query = "UPDATE confa_pm set status = 2, flags = NULL where id in (";
+        $query = "UPDATE confa_pm set status = 2, flags = NULL where (receiver=".$user_id." or sender=".$user_id.") and id in (";
         $add = '';
         for ($i = 0; $i < count($pmdel); $i++) {
             if (strlen($add) > 0) {

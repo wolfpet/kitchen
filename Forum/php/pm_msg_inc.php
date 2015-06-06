@@ -17,7 +17,9 @@ if(!extension_loaded('fastbbcode')) {
     $proceeded = false;
     $in_response ='';
     // Performing SQL query
-    $query = 'SELECT s.username, p.subject, p.id as msg_id, p.sender, p.receiver,  CONVERT_TZ(p.created, \'' . $server_tz . '\', \'EST\') as created, p.body, s.id as id, p.status from confa_users s, confa_pm p where s.id=p.sender and p.id=' . $msg_id . ' and p.status != 2';
+    $query = 'SELECT s.username, p.subject, p.id as msg_id, p.sender, p.receiver,  CONVERT_TZ(p.created, \'' . $server_tz . 
+      '\', \'EST\') as created, p.body, s.id as id, p.status from confa_users s, confa_pm p where s.id=p.sender and p.id=' . $msg_id . ' and p.status != 2 and '. 
+      '(p.sender='.$user_id.' or p.receiver='.$user_id.')';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
