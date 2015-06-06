@@ -16,7 +16,7 @@
 
 <tr>
 <td align="left">
-<img src="images/ukrainian-flag2.jpg" alt=""/>
+<img src="images/ukrainian-flag2.png" alt=""/>
 <!--<h3><?php print($title);?></h3>-->
 <!--<b>Кто хочет помочь ВСУ, обращайтесь в приват к Picasso.</b>-->
 </td>
