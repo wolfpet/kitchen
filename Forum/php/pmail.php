@@ -4,7 +4,7 @@
 require_once('head_inc.php');
 
     if ($logout === true) {
-        header( "Location: http://$host$root_dir" ) ;
+        header( "Location: http://$host$root_dir$page_expanded" ) ;
         die();
     }
 
@@ -13,7 +13,7 @@ require_once('head_inc.php');
     $max_id = 1;
 
     $last_id = 0;
-
+/*(
     $query = 'select id from confa_users where username=\'' . $user . '\'';
     $result = mysql_query($query);
     if (!$result) {
@@ -22,8 +22,10 @@ require_once('head_inc.php');
     }
     $row = mysql_fetch_row($result);
     $user_id = $row[0];
-
-    $query = 'SELECT count(*) from confa_pm where receiver=' . $user_id . ' and status != 2';
+*/
+    $search_condition = 'receiver=' . $user_id . ' and !(p.status &'.$pm_deleted_by_receiver.')';
+    
+    $query = 'SELECT count(*) from confa_pm p where '.$search_condition;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -32,12 +34,13 @@ require_once('head_inc.php');
     $row = mysql_fetch_row($result);
     $count = $row[0]; 
 
-    $last_id = get_page_last_index('confa_pm where receiver=' . $user_id, $how_many, $page);
+    $last_id = get_page_last_index('confa_pm p where ' . $search_condition, $how_many, $page);
     if (is_null($last_id)) {
         $last_id = 1;
     }
 
-    $query = 'SELECT s.username as sender_name, p.id as id, p.sender, p.receiver, p.subject, p.body, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'EST\') as created,  p.status,  p.chars  from confa_pm p, confa_users s where p.sender=s.id and p.receiver=' . $user_id . ' and p.status != 2 and p.id <= ' . $last_id . ' order by id desc limit 20';
+    $query = 'SELECT s.username as sender_name, p.id as id, p.sender, p.receiver, p.subject, p.body, CONVERT_TZ(p.created, \'' . $server_tz . '\', \''.$prop_tz.':00\') as created,  p.status,  p.chars  from confa_pm p, confa_users s where p.sender=s.id and '
+      . $search_condition . ' and p.id <= ' . $last_id . ' order by id desc limit 20';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -61,7 +64,7 @@ require_once('head_inc.php');
         $status = $row['status'];
         $st_in = '';
         $st_out = '';
-        if ($status == 1) {
+        if ($status & 1) {
             $st_in = '<B>';
             $st_out = '</B>';
         }
@@ -108,7 +111,7 @@ require('menu_inc.php');
     }
 ?>
 -->
-
+<input type="hidden" name="lastpage" value="<?php print($cur_page);?>">
 <input type="submit" value="Delete selected">
 </form>
 </body>

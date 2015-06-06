@@ -18,8 +18,8 @@ if(!extension_loaded('fastbbcode')) {
     $in_response ='';
     // Performing SQL query
     $query = 'SELECT s.username, p.subject, p.id as msg_id, p.sender, p.receiver,  CONVERT_TZ(p.created, \'' . $server_tz . 
-      '\', \'EST\') as created, p.body, s.id as id, p.status from confa_users s, confa_pm p where s.id=p.sender and p.id=' . $msg_id . ' and p.status != 2 and '. 
-      '(p.sender='.$user_id.' or p.receiver='.$user_id.')';
+      '\', \'EST\') as created, p.body, s.id as id, p.status from confa_users s, confa_pm p where s.id=p.sender and p.id=' . $msg_id . ' and '. 
+      '(p.sender='.$user_id.' and !(p.status & '.$pm_deleted_by_sender.') or p.receiver='.$user_id.' and !(p.status & '.$pm_deleted_by_receiver.'))';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -55,7 +55,14 @@ if(!extension_loaded('fastbbcode')) {
         $author = $author;
         $id = $row['id'];
         $msg_id = $row['msg_id'];
-        $query = 'UPDATE confa_pm set status=4 where id=' . $msg_id;
+        $query = 'UPDATE confa_pm set status = status ';
+        if ($row['receiver'] == $user_id) {
+          $query .= '& ~'.$pm_new_mail;
+          $query .= '|'.$pm_read_by_receiver;
+        } else {
+          $query .= '| '.$pm_read_by_sender;
+        }
+        $query.= ' where id=' . $msg_id;
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);

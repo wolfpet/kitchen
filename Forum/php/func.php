@@ -9,8 +9,8 @@ require_once('translit.php');
 require_once('settings.php');
 
 function update_new_pm_count($user_id) {
-
-    $query = 'SELECT count(*) from confa_pm where receiver=' . $user_id . ' and status=1';
+    global $pm_new_mail;    
+    $query = 'SELECT count(*) from confa_pm where receiver=' . $user_id . ' and status & ' . $pm_new_mail;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);

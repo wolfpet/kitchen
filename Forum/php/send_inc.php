@@ -4,7 +4,7 @@
     if (strlen($err) != 0) {
         print('<B><font color="red">' . $err . '</font></B><BR>');
     }
-    if (is_null($to)) {
+    if (!isset($to) || is_null($to)) {
       $to = '';
     }
 ?>

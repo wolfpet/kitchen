@@ -47,7 +47,7 @@ $prop_bold      = NULL;
 $profile_bold   = NULL;
 $author_id      = NULL;
 $auth_id        = NULL;
-$prop_tz        = NULL;
+$prop_tz        = -5;
 $item_name     = NULL;
 $pay_mode       = NULL;
 $pay_moder      = NULL;
@@ -68,7 +68,12 @@ $n_ff = NULL;
 $howmanylikes = NULL;
 $likedby = NULL;
 
-
+// pmail status
+$pm_new_mail = 1;
+$pm_deleted_by_sender = 2;
+$pm_read_by_receiver = 4;
+$pm_deleted_by_receiver = 8;
+$pm_read_by_sender = 16;
 
 //$title       = 'Forum';
 $page_title = $title;
