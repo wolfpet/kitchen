@@ -1029,4 +1029,4 @@ function after_bbcode($body) {
        
   return fix_msg_target($body);
 }
-
+?>

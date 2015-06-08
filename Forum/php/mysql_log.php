@@ -16,5 +16,3 @@ function mysql_log($page, $msg) {
 }
 
 ?>
-
-

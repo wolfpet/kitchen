@@ -90,6 +90,4 @@ require_once('get_params_inc.php');
  
         }
     }
-
-
-
+?>

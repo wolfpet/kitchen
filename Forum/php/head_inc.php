@@ -126,13 +126,6 @@ $page_banned = 'banned.php';
 $page_pay_ban = 'pay_ban.php';
 $page_my_bookmarhs='mybookmarks.php';
 
-
-
-
-
-
-
-
 // Redirect if URL is not correct
 
 if ( isset( $_SERVER['HTTP_HOST'] ) && strcmp( $_SERVER['HTTP_HOST'], $host ) ) {
@@ -157,4 +150,3 @@ require_once('get_params_inc.php');
 require_once('auth.php');
 
 ?>
-
