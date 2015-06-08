@@ -280,17 +280,16 @@ body:not(#afui) .upage-outer {
 @media all {
   #afui .wrapping-col > .d-margins,
   #afui .wrapping-col > .afScrollPanel > .d-margins {
-    margin-left: 4px;
-    margin-right: 5px;
+    margin-left: 6px;
+    margin-right: 6px;
   }
   #afui .wrapping-col > .d-margins,
   #afui .wrapping-col > .afScrollPanel > .d-margins {
-    margin-left: 4px;
-    margin-right: 5px;
+    margin-left: 6px;
+    margin-right: 6px;
   }
   #afui .d-margins {
-    margin-top: 5px;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
   }
 }
 .uib_row_1:not(.cright) > .col {
@@ -315,10 +314,14 @@ body:not(#afui) .upage-outer {
   #afui .grid-pad {
     padding-top: 10px;
     padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
 @media all and (min-width: 0px) {
-  
+  #afui .row-height-1 > .col > .content-area {
+    min-height: 100px;
+  }
 }
 .left-receptacle {
   float: left;
@@ -344,7 +347,7 @@ body:not(#afui) .upage-outer {
     padding-left: 0px !important;
   }
 }
-@media all and (min-width: 4px) {
+@media all and (min-width: 0px) {
   #afui .row-height-2 > .col > .content-area {
     min-height: 100px;
   }
@@ -367,82 +370,8 @@ body:not(#afui) .upage-outer {
     padding-left: 0px !important;
   }
 }
-@media all and (min-width: 4px) {
-  #afui .row-height-3 > .col > .content-area {
-    min-height: 100px;
-  }
-}
-@media all and (min-width: 4px) {
-  #afui .row-height-4 > .col > .content-area {
-    min-height: 139px;
-  }
-}
-.uib_row_5:not(.cright) > .col {
-  padding-right: 20px;
-}
-.uib_row_5.cright > .col {
-  padding-left: 20px;
-}
-@media all {
-  .col-0_12-12 {
-    width: auto;
-    float: none !important;
-  }
-  .urow:not(.cright) > .col-0_12-12 {
-    padding-right: 0px !important;
-  }
-  .urow.cright > .col-0_12-12 {
-    padding-left: 0px !important;
-  }
-}
-@media all and (min-width: 4px) {
-  #afui .row-height-5 > .col > .content-area {
-    min-height: 100px;
-  }
-}
-.uib_row_6:not(.cright) > .col {
-  padding-right: 20px;
-}
-.uib_row_6.cright > .col {
-  padding-left: 20px;
-}
-@media all {
-  .col-0_12-12 {
-    width: auto;
-    float: none !important;
-  }
-  .urow:not(.cright) > .col-0_12-12 {
-    padding-right: 0px !important;
-  }
-  .urow.cright > .col-0_12-12 {
-    padding-left: 0px !important;
-  }
-}
-@media all and (min-width: 4px) {
-  #afui .row-height-6 > .col > .content-area {
-    min-height: 100px;
-  }
-}
-.uib_row_7:not(.cright) > .col {
-  padding-right: 20px;
-}
-.uib_row_7.cright > .col {
-  padding-left: 20px;
-}
-@media all {
-  .col-0_12-12 {
-    width: auto;
-    float: none !important;
-  }
-  .urow:not(.cright) > .col-0_12-12 {
-    padding-right: 0px !important;
-  }
-  .urow.cright > .col-0_12-12 {
-    padding-left: 0px !important;
-  }
-}
 @media all and (min-width: 0px) {
-  #afui .row-height-7 > .col > .content-area {
+  #afui .row-height-3 > .col > .content-area {
     min-height: 100px;
   }
 }
@@ -464,27 +393,8 @@ body:not(#afui) .upage-outer {
     padding-left: 0px !important;
   }
 }
-@media all {
-  #afui .bar-bg {
-    background-color: #dadada;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-  }
-}
-@media all {
-  #afui .thumb-bg > .sidebar-thumb {
-    background-image: url('../sidebar/css/images/gripper.png');
-  }
-  #afui .thumb-bg > .sidebar-thumb:hover,
-  #afui .thumb-bg > .sidebar-thumb:active {
-    background-color: #eeeeee;
-  }
-}
-@media all {
-  #afui .bar-gutter .sidebar-content > .grid-pad {
-    padding-top: 20px;
-    padding-right: 20px;
-    padding-left: 20px;
+@media all and (min-width: 0px) {
+  #afui .row-height-4 > .col > .content-area {
+    min-height: 100px;
   }
 }

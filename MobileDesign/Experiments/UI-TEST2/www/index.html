@@ -73,6 +73,15 @@
         <script type="application/javascript" src="app_framework/pageChangeRepeater.js"></script>
         <script type="application/javascript" src="xdk/appdesigner/js/rest-of-space.js"></script>
         <script type="application/javascript" src="app_framework/themeRelease.js"></script>
+        <!--            
+            You may substitute jQuery for the App Framework selector library.
+            See http://app-framework-software.intel.com/documentation.php#afui/afui_jquery
+        -->
+        <script type="application/javascript" src="lib/jquery.min.js"></script>
+        <script type="application/javascript" src="sidebar/js/hammer.js"></script>
+        <script type="application/javascript" src="sidebar/js/jquery.hammer.js"></script>
+        <script type="application/javascript" src="sidebar/js/swipe-hammer.js"></script>
+        <script type="application/javascript" src="sidebar/js/sidebar.js"></script>
     </head>
 
     <body id="afui" class="af">
@@ -86,7 +95,6 @@
             <h1>Messages</h1>
         </header>
 
-        
         <!-- Sub Page Headers -->
         <header class="wrapping-col wrap-element uib_w_13 with-back" data-uib="app_framework/header" data-ver="2" id="af-header-7"><a class="button backButton">Back</a>
             <h1>Item 1</h1>
@@ -97,28 +105,41 @@
 
         <!-- Content -->
         <div id="content" class="uwrap">
-            
-            <div class="upage vertical-col panel" id="mainpage" data-header="af-header-6" data-footer="af-footer-0">
-                <div class="grid grid-pad urow uib_row_1 row-height-1" data-uib="layout/row" data-ver="0">
-                    <div class="col uib_col_1 col-0_12-12" data-uib="layout/col" data-ver="0">
-                        <div class="widget-container content-area vertical-col">
-                            <!-- Current level Message List -->
-                            <ul class="list widget uib_w_2 d-margins" id="stuffs_list" data-uib="app_framework/listview" data-ver="1">
-                                <li class="widget uib_w_8" data-uib="app_framework/listitem" data-ver="1"><a href="#uib_page_1" data-transition="fade">Static  Item 1</a>
-                                </li>
-                                <li class="widget uib_w_7" data-uib="app_framework/listitem" data-ver="1"><a href="#uib_page_2" data-transition="fade">Static Item 2</a>
-                                </li>
-                            </ul><span class="uib_shim"></span>
-                            <!-- End Of List -->
+
+            <div class="upage panel" id="mainpage" data-header="af-header-6" data-footer="mainFooter">
+                <div class="upage-outer">
+                    <div class="upage-content ac0 content-area vertical-col" id="page_36_25">
+                        <div class="grid urow uib_row_1 row-height-1" data-uib="layout/row" data-ver="0">
+
+                            <div class="col uib_col_1 col-0_12-12" data-uib="layout/col" data-ver="0">
+                                <div class="widget-container content-area vertical-col">
+                                    <!-- Current level Message List -->
+                                    <ul class="list widget uib_w_2 d-margins" id="stuffs_list" data-uib="app_framework/listview" data-ver="1">
+                                        <li class="widget uib_w_8" data-uib="app_framework/listitem" data-ver="1">
+                                            <!-- Badge: number of replies -->
+                                            <span class="af-badge tl">3</span>
+                                            <!--- Message title ---->
+                                            <a onclick="javascript:alert('sss');" href="#uib_page_2" data-transition="fade">Static  Item 1</a>
+
+                                            <!-- end of inem -->
+                                        </li>
+                                        <li class="widget uib_w_7" data-uib="app_framework/listitem" data-ver="1">
+                                            <a href="#uib_page_2" data-transition="fade">Static Item 2</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                    </ul><span class="uib_shim"></span>
+                                    <!-- End Of List -->
+                                </div>
+                            </div>
+                            <span class="uib_shim"></span>
                         </div>
+                        <a class="button widget uib_w_25 d-margins" data-uib="app_framework/button" data-ver="1">Add Item</a>
                     </div>
-                    <span class="uib_shim"></span>
                 </div>
-                <a class="button widget uib_w_25 d-margins" data-uib="app_framework/button" data-ver="1">Add Item</a>
+                <!-- display message -->
+
             </div>
-            
-            
-            
+
             <div class="upage vertical-col panel" id="uib_page_1" data-header="af-header-7" data-footer="none">
                 <div class="grid grid-pad urow uib_row_2 row-height-2" data-uib="layout/row" data-ver="0">
                     <div class="col uib_col_2 col-0_12-12" data-uib="layout/col" data-ver="0">
@@ -155,9 +176,11 @@
             </div>
 
         </div>
-        <footer class="wrap-element uib_w_26" data-uib="app_framework/footer" data-ver="1" id="af-footer-0">
 
+        <!-- Footre area -->
+        <footer class="wrap-element uib_w_26" data-uib="app_framework/footer" data-ver="1" id="mainFooter">
         </footer>
+
     </body>
 
 </html>

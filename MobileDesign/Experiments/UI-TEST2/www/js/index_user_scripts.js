@@ -21,7 +21,7 @@
         var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML="<a href='http://google.com'>stuffs stuffs and then it's quite a bit of extra text here to understand how the list item is going to behave</a>";
+        li.innerHTML="<span class='af-badge tl'>250</span><a href='http://google.com'>stuffs stuffs and then it's quite a bit of extra text here to understand how the list item is going to behave. And one more: stuffs stuffs and then it's quite a bit of extra text here to understand how the list item is going to behave</a>";
         
         var listStuff = document.getElementById("stuffs_list");
         listStuff.appendChild(li);
