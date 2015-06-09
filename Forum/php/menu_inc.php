@@ -140,7 +140,7 @@ Forgot password? |
 ?>
 <tr><td align="left">
  <SPAN STYLE="background-color: #E0E0E0">
-[ Pmail<?php if (!is_null($new_pm) && $new_pm > 0){ print('(<font color="red">' . $new_pm . '</font>)');}?> | 
+[ Pmail<?php if (!is_null($new_pm) && $new_pm > 0){ print('(<font color="red"><b>' . $new_pm . '</b></font>)');}?> | 
 <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>">In</a> |
 <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail_sent); ?>">Sent</a> |
  
