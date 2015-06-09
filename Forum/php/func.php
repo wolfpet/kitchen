@@ -997,10 +997,13 @@ function before_bbcode($body) {
   
   $body = preg_replace( array (
     // search
-    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?vimeo\.com/([0-9]*)(?:(?:\?|&)[^\s<\]"]*)?)#is' // Vimeo on-the-fly e.g. https://vimeo.com/129252030
+    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?vimeo\.com/([0-9]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', // Vimeo on-the-fly e.g. https://vimeo.com/129252030
+    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?coub\.com/(?:view|embed)/([0-9a-zA-Z]*)(?:(?:\?|&)[^\s<\]"]*)?)#is' // Coub on the fly e.g. http://coub.com/view/3lbz7
     ), array (
-    // replace
-    '<br/><iframe src="https://player.vimeo.com/video/$3" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br/><a href="$2">$2</a>'
+    // Vimeo
+    '<br/><iframe src="https://player.vimeo.com/video/$3" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br/><a href="$2">$2</a>',
+    // Coub <iframe src="//coub.com/embed/3lbz7?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="640" height="360"></iframe>
+    '<br/><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/><a href="$2">$2</a>'          
     ), $body);    
        
   return $body;
