@@ -43,3 +43,22 @@ function onAppReady() {
     }
 }
 document.addEventListener("app.Ready", onAppReady, false) ;
+
+function callKitchen()
+{
+    var url = "http://kirdyk.radier.ca/api/messages/442576";
+    var apiCall = $.get(url, function(data) {kitchenCallback(data);}); 
+}
+
+function kitchenCallback(payload) 
+{
+    // Docs: http://app-framework-software.intel.com/api2/index.html#$_parseJSON
+   
+    var data = $.parseJSON(payload);       
+    for (var x in data.Result) {
+        var message = data.Result[x];
+        var subject = message.subject;
+        alert(subject);
+    }
+    
+}
