@@ -1,2 +1,0 @@
-test
-This is line #2 from Peter(2)
