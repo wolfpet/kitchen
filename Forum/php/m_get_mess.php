@@ -4,9 +4,6 @@ require_once('func.php');
 
 $mess_id=empty($_REQUEST['mess_id'])?"":str_replace("'", "", $_REQUEST['mess_id']);
 if(!empty($mess_id)){
-//	if(!extension_loaded('fastbbcode')) {
-//		dl('fastbbcode.' . PHP_SHLIB_SUFFIX);
-//	}
 	$sSQL="SELECT body, status FROM confa_posts WHERE id='$mess_id'";
 	$result2=mysql_query($sSQL) or die ("MySQL err: " . mysql_error());
 	if($row2 = mysql_fetch_array($result2)){ 
@@ -25,8 +22,10 @@ if(!empty($mess_id)){
 				$s_mess = $prefix . ' ' . str_replace("\n", "\n" . $prefix . ' ', $s_mess);
 			}
 			$s_mess = htmlentities($s_mess, HTML_ENTITIES,'UTF-8');
-			$s_mess = bbcode($s_mess);
-			$s_mess=nl2br($s_mess);
+      $s_mess = before_bbcode($s_mess);
+			$s_mess = do_bbcode($s_mess);
+			$s_mess = nl2br($s_mess);
+      $s_mess = after_bbcode($s_mess);      
 			echo trim($s_mess);
 			}	
 		}

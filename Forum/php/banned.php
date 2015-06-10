@@ -4,18 +4,12 @@
 require_once('head_inc.php');
 require_once('func.php');
 
-/*
-if(!extension_loaded('fastbbcode')) {
-    dl('fastbbcode.' . PHP_SHLIB_SUFFIX);
+$query = 'SELECT u.username, m.username as banned_by, u.ban, CONVERT_TZ(u.ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as ban_end, h.ban_reason from confa_users u, confa_ban_history h, confa_users m where u.ban_ends>current_timestamp() and u.ban = h.id and m.id=h.moder';
+$result = mysql_query($query);
+if (!$result) {
+    mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+    die('Query failed ' );
 }
-*/
-
-    $query = 'SELECT u.username, m.username as banned_by, u.ban, CONVERT_TZ(u.ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as ban_end, h.ban_reason from confa_users u, confa_ban_history h, confa_users m where u.ban_ends>current_timestamp() and u.ban = h.id and m.id=h.moder';
-    $result = mysql_query($query);
-    if (!$result) {
-        mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-        die('Query failed ' );
-    }
 
 require_once('html_head_inc.php');
 
@@ -36,8 +30,10 @@ require_once('html_head_inc.php');
         $translit_done = false;
         $reason = translit($row['ban_reason'], $translit_done);
         $reason = htmlentities( $reason, HTML_ENTITIES,'UTF-8');
-        $reason = bbcode ( $reason );
+        $reason = before_bbcode($reason);
+        $reason = do_bbcode ( $reason );
         $reason = nl2br($reason);
+        $reason = after_bbcode($reason);
         $banned_by = htmlentities($row['banned_by'], HTML_ENTITIES,'UTF-8');
         $ban_ends = $row['ban_end'];
         print('<tr><td>' . $username . '</td><td>' . $reason . '</td><td>' . $banned_by . '</td><td>' . $ban_ends . '</td></tr>');

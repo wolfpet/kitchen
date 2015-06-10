@@ -22,8 +22,8 @@ if (!is_null($user_id) && $user_id != null) {
 <title>Thank you, </title></head>
 <body style="background-color: #CCEEEE;">
 <h3>Confirmation</h3>
-Thank you, <b><?php print(htmlentities($user, HTML_ENTITIES,'UTF-8')); ?></b>!<br>
-Your private message, named "<b><?php print(htmlentities($subj, HTML_ENTITIES,'UTF-8')); ?></b>", has been sent to <?php print(htmlentities($to, HTML_ENTITIES,'UTF-8')); ?>.<p>
+Thank you, <b><?php print(htmlentities($user, HTML_ENTITIES,'UTF-8')); ?></b>!<br/><br/>
+Your private message, named "<b><?php print(htmlentities($subj, HTML_ENTITIES,'UTF-8')); ?></b>", has been sent to <b><?php print(htmlentities($to, HTML_ENTITIES,'UTF-8')); ?></b>.<p>
 
 </body></html>
 

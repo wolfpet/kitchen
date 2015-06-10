@@ -85,7 +85,7 @@ if(!extension_loaded('fastbbcode')) {
                 }
                 $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
                 $msgbody = before_bbcode($msgbody);
-                $msgbody = bbcode ( $msgbody );
+                $msgbody = do_bbcode ( $msgbody );
                 $msgbody = nl2br($msgbody);
                 $msgbody = after_bbcode($msgbody);
             } else { 
@@ -100,7 +100,7 @@ if(!extension_loaded('fastbbcode')) {
                 }
                 $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
                 $msgbody = before_bbcode($msgbody);
-                $msgbody = bbcode ( $msgbody );
+                $msgbody = do_bbcode ( $msgbody );
                 $msgbody = nl2br($msgbody);
                 $msgbody = after_bbcode($msgbody);
             } else {
@@ -117,7 +117,7 @@ if(!extension_loaded('fastbbcode')) {
             }
             $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
             $msgbody = before_bbcode($msgbody);
-            $msgbody = bbcode ( $msgbody );
+            $msgbody = do_bbcode ( $msgbody );
             $msgbody = nl2br($msgbody);
             $msgbody = after_bbcode($msgbody);
         }

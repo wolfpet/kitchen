@@ -1009,6 +1009,13 @@ function before_bbcode($body) {
   return $body;
 }
 
+function do_bbcode($body) {
+  if(!extension_loaded('fastbbcode'))
+    return bbcode_format($body);
+  else 
+    return bbcode($body);
+}
+
 /** 
  * Run this after bbcode is called to finalize the rendering of the message body 
  */

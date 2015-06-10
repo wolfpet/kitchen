@@ -40,7 +40,8 @@ if(!extension_loaded('fastbbcode')) {
             $msgbody = $prefix . ' ' . str_replace("\n", "\n" . $prefix . ' ', $msgbody);
         }
         $msgbody = htmlentities($msgbody, HTML_ENTITIES,'UTF-8');
-        $msgbody = bbcode ( $msgbody );
+        $msgbody = before_bbcode($msgbody);
+        $msgbody = do_bbcode ( $msgbody );
         $msgbody = nl2br($msgbody);
         $msgbody = after_bbcode($msgbody);
 

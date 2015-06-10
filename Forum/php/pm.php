@@ -1,31 +1,24 @@
 <?php
 /*$Id: pm.php 823 2012-11-02 23:43:52Z dmitriy $*/
 
-/*
-if(!extension_loaded('fastbbcode')) {
-    dl('fastbbcode.' . PHP_SHLIB_SUFFIX);
-}
-*/
+$ip          = NULL;
+$agent       = NULL;
+$auth_cookie = NULL;
+$user        = NULL;
+$auth        = NULL;
+$ban         = false;
+$logout      = NULL;
+$err         = '';
+$user_id     = NULL;
+$body        = NULL;
+$re          = NULL;
+$pass        = NULL;
+$ban_time    = NULL;
+$log         = '';
+$ibody       = 'NULL';
+$success = false;
 
-
-    $ip          = NULL;
-    $agent       = NULL;
-    $auth_cookie = NULL;
-    $user        = NULL;
-    $auth        = NULL;
-    $ban         = false;
-    $logout      = NULL;
-    $err         = '';
-    $user_id     = NULL;
-    $body        = NULL;
-    $re          = NULL;
-    $pass        = NULL;
-    $ban_time    = NULL;
-    $log         = '';
-    $ibody       = 'NULL';
-    $success = false;
-
-    $msg_page = 1;
+$msg_page = 1;
 
 require_once('head_inc.php');
 require_once('get_params_inc.php');
@@ -116,8 +109,8 @@ require_once('login_inc.php');
         }
         $username = $user;      
         $success = true;
-        $confirm = $root_dir . $page_pm_confirm . '?id=' . $msg_id . '&subj=' . htmlentities( $subj, HTML_ENTITIES,'UTF-8') . '&author_name=' . htmlentities( $user,  HTML_ENTITIES,'UTF-8') . '&to=' . htmlentities( $to, HTML_ENTITIES,'UTF-8');
-        header("Location: $confirm",TRUE,302);
+        $confirm = $root_dir . $page_pm_confirm . '?id=' . $msg_id . '&subj=' . urlencode($subj) . '&author_name=' . urlencode( $user) . '&to=' . urlencode($to);
+        header("Location: $confirm", TRUE, 302);
         die('Message has been sent');
     }
 
@@ -144,7 +137,8 @@ require_once('html_head_inc.php');
             $msgbody = $prefix . ' ' . str_replace("\n", "\n" . $prefix . ' ', $msgbody);
         }
         $msgbody = htmlentities($msgbody, HTML_ENTITIES,'UTF-8');
-        $msgbody = bbcode ( $msgbody );
+        $msgbody = before_bbcode($msgbody);
+        $msgbody = do_bbcode ( $msgbody );
         $msgbody = nl2br($msgbody);
         $msgbody = after_bbcode($msgbody);
         
@@ -154,7 +148,6 @@ require_once('html_head_inc.php');
         }
 
 require_once('pm_form_inc.php');
-
     }
 
 require('send_inc.php');
