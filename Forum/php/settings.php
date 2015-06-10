@@ -10,6 +10,8 @@ $host   = '<hostname>'; // 127.0.0.1 for running locally
 $root_dir   = '/';
 $server_tz = '-5:00';
 
+date_default_timezone_set('America/Toronto');
+
 $title='<forum title>';
 $from_email = '<supportemailaddress>';
 ?>
