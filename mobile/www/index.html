@@ -1,30 +1,58 @@
 <!DOCTYPE html>
 <html>
-<!--
-  * Please see the included README.md file for license terms and conditions.
-  -->
 <head>
-    <title>Blank Standard HTML5 Web App Template</title>
+    <title>Messages</title>
+    
+    <!-- meta tags -->
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-
-    <!-- see http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag -->
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+    
+    
+    <!--  XDK styles and other style stuffs -->
     <style>
         /* following two viewport lines are equivalent to meta viewport statement above, needed for Windows */
         /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html and http://dev.w3.org/csswg/css-device-adapt/ */
         @-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }  @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
         @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }           @viewport { user-zoom: fixed ; min-zoom: 100% ; }
     </style>
-
-    <!-- Uncomment "phantom" cordova.js script if you convert your "Standard HTML5" project into a "Cordova" project. -->
-    <!-- <script src="cordova.js"></script> -->          <!-- phantom library, needed for Cordova api calls, added during build -->
+    <link rel="stylesheet" type="text/css" href="app_framework/2.1/css/af.ui.min.css">
+    <link rel="stylesheet" type="text/css" href="app_framework/2.1/css/icons.min.css">    
+    <link rel="stylesheet" type="text/css" href="css/index_main.less.css" class="main-less">
+    <link rel="stylesheet" href="css/app.css">
+    
+    <!-- here goes javascript -->
+    <script type="application/javascript" src="app_framework/2.1/appframework.js"></script>
+    <script type="application/javascript" src="app_framework/2.1/appframework.ui.js" data-ver="1"></script>
+    <script type="application/javascript" src="app_framework/pageChangeRepeater.js"></script>
+    <script type="application/javascript" src="xdk/appdesigner/js/rest-of-space.js"></script>
+    <script type="application/javascript" src="js/index_user_scripts.js"></script>
+    <script type="application/javascript" src="app_framework/themeRelease.js"></script>
     <script src="js/app.js"></script>           <!-- recommended location of your JavaScript code relative to other JS files -->
     <script src="xdk/init-dev.js"></script>     <!-- normalizes device and document ready events, see README for details -->
+    <script src="xdk/init-dev.js"></script>
+
 </head>
 
-<body>
+<body id="afui">
 
-    <p>Hello, Intel XDK!</p>
+<!-- header and footer -->
+<header class="wrapping-col wrap-element uib_w_12" data-uib="app_framework/header" data-ver="2" id="he"><h1>Messages</h1></header>
+<footer class="wrap-element" data-uib="app_framework/footer" data-ver="1" id="foo"></footer>
 
+    
+<!-- content -->    
+<div id="content" class="uwrap"> 
+    <div class="upage vertical-col panel" id="mainpage" data-header="he" data-footer="foo">
+        <!-- Messages go here -->
+        <ul class="list widget uib_w_2 d-margins" id="stuffs_list" data-uib="app_framework/listview" data-ver="1">                 
+            <li data-uib="app_framework/listitem"><span class="af-badge tl">10</span><a href="#" onclick="javascript:alert('hi');" >The first message topic goes here. The badge indicates thatthe topic has 10 replies</a>
+            </li>
+            <li data-uib="app_framework/listitem"><a href="#" >This is the second message title. For the sake of testing we'll put a little bit more text here. Blah-blah-blah</a>
+            </li>
+        </ul>
+        <span class="uib_shim"></span>
+    </div>
+</div>
 </body>
 </html>
