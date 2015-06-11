@@ -71,13 +71,17 @@ function kitchenCallback(payload)
     for(i=0; i<data.count; i++)
     {
         var subj = data.threads[i].message.subject;
-        //alert(subj);
+        //check the number of replies. if >0 then render the badge
+        var badgeHtml ="";
+        if(data.threads[i].counter > 0)
+        {
+            badgeHtml= "<span class='af-badge tl'>"+data.threads[i].counter+"</span>";
+        }
         //Append the title to the list
         var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML="<span class='af-badge tl'>"+data.threads[i].message.views+"</span><a href='#'>"+subj+"<br /><b>"+data.threads[i].message.author.name+"</b></a>";
-        
+        li.innerHTML= badgeHtml +  "<a href='#'>"+subj+"<br /><b>"+data.threads[i].message.author.name+"</b></a>";        
         var listStuff = document.getElementById("stuffs_list");
         listStuff.appendChild(li);
 
