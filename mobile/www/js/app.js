@@ -52,13 +52,6 @@ function callKitchen()
 
 function kitchenCallback(payload) 
 {
-    // Docs: http://app-framework-software.intel.com/api2/index.html#$_parseJSON
-   
-    var data = $.parseJSON(payload);       
-    for (var x in data.Result) {
-        var message = data.Result[x];
-        var subject = message.subject;
-        alert(subject);
-    }
-    
+    var data = $.parseJSON(payload);    
+    alert(data.subject);
 }
