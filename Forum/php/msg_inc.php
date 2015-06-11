@@ -21,6 +21,11 @@ if(!extension_loaded('fastbbcode')) {
         mysql_log( __FILE__, 'query 1 failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
     }
+    
+    $reads = '';
+    $likes = '';
+    $dislikes = '';
+    
     while($row = mysql_fetch_assoc($result)) {
         if ($row['valuelike'] > 0) {
           if (strlen($likes) > 0) {
