@@ -296,6 +296,117 @@ function print_line($row, $collapsed=false) {
         
   return $line . $arrow;
 }
+
+function get_thread($thread_id) {
+
+  global $prop_tz;
+  global $server_tz;
+
+  $query = 'SELECT u.username, u.moder, p.auth, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject, p.body, p.status, p.content_flags, LENGTH(IFNULL(p.body,"")) as len, p.thread_id, p.level, p.id as id, p.chars, p.page, t.closed as t_closed  from confa_posts p, confa_users u, confa_threads t ';
+  $query .= ' where p.author=u.id and thread_id = ' . $thread_id . ' and t.id = thread_id order by thread_id desc, level, id desc';
+  
+  $result = mysql_query($query);
+    if (!$result) {
+        mysql_log( __FILE__, 'get_thread failed ' . mysql_error() . ' QUERY: ' . $query);
+        die('Query failed ');
+    }
+    return $result;
+}
+
+function print_thread($result, &$content, $print_function='print_line_in_one_thread') {
+  
+  $msgs = array();
+  $content = array();
+  $cur_content = &$content;
+  $armass = array();
+  $glob = array();
+  $l = 0;
+
+  while ($row = mysql_fetch_assoc($result)) {
+    $armass[$l] = array();
+    
+    $line = $print_function($row);
+    
+    $msgs[$row['id']] = $line;
+    
+    if ($row['level'] == 0) {
+        $content[$row['id']] = &$armass[$l];
+        $glob[$row['id']] = &$armass[$l];
+    } else {
+        $cur_content = &$glob[$row['parent']];
+        $cur_content[$row['id']] = &$armass[$l];
+        $glob[$row['id']] = &$armass[$l];
+    }
+
+    $l++;
+  } 
+  
+  return $msgs;
+}
+
+// Collapsed threads - thread view
+function print_line_in_one_thread($row) {
+  
+  global $root_dir;
+  global $image_img;
+  global $youtube_img;
+  global $page_msg;
+  
+  global $show_hidden;
+  global $ignored;
+  
+  $msg_moder = $row['moder'];
+  $subj = translit(/*nl2br(*/htmlentities($row['subject'], HTML_ENTITIES,'UTF-8')/*)*/, $proceeded);
+  $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
+
+  $length = $row['chars'];
+  if (is_null($length)) {
+      $length =  $row['len'];
+  }
+
+  $img = '';
+  $thread_closed = $row['t_closed'];
+  if ($row['level'] == 0) {
+      if ($thread_closed != 0) {
+        $img = '<img border=0 src="images/cs.gif" width=16 height=16 alt="*"> ';
+      } else {
+        $img = '<img border=0 src="images/bs.gif" width=16 height=16 alt="*"> ';
+      }
+  } else {
+      $img = '<img border=0 src="images/dc.gif" width=16 height=16 alt="*"> ';
+  }
+
+  if ( $row['status'] == 2 ) {
+      $line = '&nbsp;' . $img . '<I><font color="gray"><del>This message has been deleted</del></font></I> '; 
+  } else {
+  $icons = '';
+  if ($row['content_flags'] & 0x02) {
+    $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
+  }
+  if ($row['content_flags'] & 0x04) {
+    $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
+  }
+
+      $line = '&nbsp;<a name="' . $row['id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['id'] . '">' . $img . $icons . $subj . '  </a>';
+  }
+  $line .= ' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $length . '</b> bytes';
+  
+  if (!is_null($row['likes'])) {
+    $likes = $row['likes'];
+    if ($likes > 0) {
+      $line .= ' <font color="green"><b>+' . $likes . '</b></font>';
+    }
+  }
+  if (!is_null($row['dislikes'])) {
+    $dislikes = $row['dislikes'];
+    if ($dislikes > 0) {
+      $line .= ' <font color="red"><b>-' . $dislikes . '</b></font>';
+    }
+  }
+  
+  return $line;
+}
+
 // NG: end
 
 function get_threads() {

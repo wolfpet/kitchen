@@ -6,19 +6,94 @@ $app = new Micro();
 
 require_once('head_inc.php');
 
-// "Collapsed threads" view, also a default view for mobile client. optional arguments - $min_thread_id, $max_thread_id
-
-$app->get('/api/threads', function() {
-  api_get_threads(-1);
+/**
+ * GET /api/threads?id=-1&count=50
+ *
+ * Returns "Collapsed threads" view data, also a default view for mobile client. optional arguments - $max_thread_id, $count
+ */
+$app->get('/api/threads', function() use ($app) {
+  
+  $id = $app->request->getQuery('id');  
+  if (is_null($id)) 
+    $id = -1;
+  else 
+    $id = intval($id);
+  
+  $count = $app->request->getQuery('count');
+  
+  if (is_null($count))
+    api_get_threads($id);
+  else {
+    $count = intval($count);
+    if ($count > 0 && $count <= 1000) {
+      api_get_threads($id, $count - 1);   // -1, because query is inclusive
+    } else {
+      $response = new Response();
+      $response->setStatusCode(400, 'Error')->sendHeaders();
+      $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Invalid parameter value ' . $count)));
+      return $response;
+    }
+  }
 });
 
-$app->get('/api/threads/{id:-?[0-9]+}', function($id) {
-  api_get_threads(intval($id));
+/**
+ * GET /api/threads/[id]
+ *
+ * Returns one complete thread by ID (subjects only, no bodies), the way topthread.php does them
+ */
+$app->get('/api/threads/{id:[0-9]+}', function($id) {
+  $result = get_thread($id);
+
+  $content = array();
+  $msgs = print_thread($result, $content, function($row) {
+    return $row;
+  });
+  
+  $response = new Response();
+
+  function print_msgs2($ar, $msgs) {
+    $messages = array();    
+    $keys = array_keys($ar);
+    
+    foreach ($keys as $key) {
+      $row = $msgs[$key];
+      $messages[] = array(
+        'id' => intval($row['id']),
+        'status' => intval($row['status']),
+        'subject' => api_get_subject($row['subject'], $row['status']),
+        'author' => array('id'  => intval($row['auth']), 'name' => $row['username']),
+        'created' => $row['created'],
+        'views' => intval($row['views']),
+        'likes' => intval($row['likes']),
+        'dislikes' => intval($row['dislikes']),
+        'page' => intval($row['page']),
+        'parent' => intval($row['parent']),
+        'closed' => filter_var($row['post_closed'], FILTER_VALIDATE_BOOLEAN),
+        'flags' => intval($row['content_flags']),
+        'answers' => sizeof($ar[$key]) > 0 ? print_msgs2($ar[$key], $msgs) : array()
+      );
+    }
+    
+    return $messages;
+  }
+  
+  $array = print_msgs2($content, $msgs);
+  
+  if (count($array) > 0) {
+    $id = array_keys($msgs)[0];
+    $response->setJsonContent( array(
+      'id'       => intval($msgs[$id]['thread_id']),
+      'closed'   => filter_var($msgs[$id]['t_closed'], FILTER_VALIDATE_BOOLEAN),
+      'message'  => $array[0]
+    ));
+  } else {
+    $response->setStatusCode(404, 'Not Found')->sendHeaders();
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Message not found')));
+  }
+
+  return $response;
 });
 
-$app->get('/api/threads/{id:-?[0-9]+}/{count:[0-9]+}', function($id, $count) {
-  api_get_threads(intval($id), intval($count));
-});
 
 function api_get_threads($max_thread_id, $count=50) {
   
@@ -172,51 +247,11 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) use ($prop_tz, 
   return $response;
 });
 
-/*
-TODO:
-
-GET /users/$name or $id
-
-User profile, can be used for authentication
-
-Data: {id:-1, token:"", ... }
-
-GET /threads {?max_thread_id=-1&limit=-1}
-
-"Collapsed threads" view, also a default view for mobile client. optional arguments - $min_thread_id, $max_thread_id
-
-Data:
-
-{count: -1, threads: [
-{msg_id:-1, subject:"", created:"ts",author : {id:-1, name:""}, answers: {count : -1}, likes:-1, dislikes:-1, flags:[], permissions:[], thread_id:-1}
-.... 
-]}
-
-GET /messages/$id
-
-Return message data by ID, including content
-
-POST /messages
-
-Create new topic
-
-POST /messages/$id/answers
-
-Respond to a message
-
-PUT /messages/$id/like
-
-Like a message
-
-DELETE /messages/$id/like
-
-Dislike a message
-*/
-
 $app->notFound(
     function () use ($app) {
-        $app->response->setStatusCode(404, "Not Found")->sendHeaders();
-        echo 'This page was not found!';
+        $app->response->redirect("index.html")->sendHeaders();
+        //$app->response->setStatusCode(404, "Not Found")->sendHeaders();
+        //echo 'This page was not found!. Please, use for now http://kirdyk.radier.ca/bydate.php?page=1';
     }
 );
 
