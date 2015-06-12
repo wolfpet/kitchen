@@ -14,7 +14,7 @@
         /* following two viewport lines are equivalent to meta viewport statement above, needed for Windows */
         /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html and http://dev.w3.org/csswg/css-device-adapt/ */
         @-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }  @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
-        @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }           @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+        @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }           @viewport { user-zoom: fixed ; min-zoom: 100% ; }        
     </style>
     <link rel="stylesheet" type="text/css" href="app_framework/2.1/css/af.ui.min.css">
     <link rel="stylesheet" type="text/css" href="app_framework/2.1/css/icons.min.css">    
@@ -46,15 +46,18 @@
     <div class="upage vertical-col panel" id="mainpage" data-header="he" data-footer="foo">
         <!-- Messages go here -->
         <ul class="list widget uib_w_2 d-margins" id="stuffs_list" data-uib="app_framework/listview" data-ver="1">                 
-            <li data-uib="app_framework/listitem"><span class="af-badge tl">10</span><a href="#" onclick="javascript:alert('hi');" >The first message topic goes here. The badge indicates thatthe topic has 10 replies</a>
-            </li>
-            <li data-uib="app_framework/listitem"><a href="#" >This is the second message title. For the sake of testing we'll put a little bit more text here. Blah-blah-blah</a>
-            </li>
+
         </ul>
         <span class="uib_shim"></span>
         <!-- temp button to execute RESTful call -->
-        <a class="button" onclick="javascript:callKitchen();">Execute Kitchen API call </a>
+        <a class="button" onclick="javascript:callKitchen();">Load Messages</a>        
     </div>
+</div>
+    
+    <!-- message view -->
+<div id="openModal">
+	<div id=msgBody>				
+	</div>
 </div>
 </body>
 </html>
