@@ -101,7 +101,7 @@ function api_get_threads($max_thread_id, $count=50) {
     get_max_pages_collapsed($max_thread_id);
   }
   
-  $min_thread_id = $max_thread_id - $count;  
+  $min_thread_id = $max_thread_id - $count;
   $threads = array();
   $count = 0;
   
@@ -203,6 +203,7 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_
   // retrieve the message
   $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.body, p.author, u.id as id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.status, t.author as t_author, t.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
   $result = mysql_query($query);
+  
   if (!$result) {
     $response->setStatusCode(400, 'Error');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
@@ -241,9 +242,46 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_
  */
 $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) use ($prop_tz, $server_tz) {
   $response = new Response();
-  $response->setStatusCode(400, 'Error')->sendHeaders();
-  $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Not implemented')));
 
+  global $prop_tz;
+  global $server_tz;
+
+  $query = 'SELECT u.username, u.moder, p.auth, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject, p.status, p.content_flags, LENGTH(IFNULL(p.body,"")) as len, p.thread_id, p.level, p.id as id, p.level, p.chars, p.page, (select count(*) from confa_posts where parent = p.id) as counter '
+    .' from confa_posts p, confa_users u where p.author=u.id and p.parent = ' . $msg_id . ' order by id desc';
+    
+  $result = mysql_query($query);
+
+  if (!$result) {
+    $response->setStatusCode(400, 'Error');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+    return $response;
+  }
+
+  $messages = array();
+  $count = 0;
+  
+  while ($row = mysql_fetch_assoc($result)) {
+    $messages[] = array(
+      'id' => intval($row['id']),
+      'status' => intval($row['status']),
+      'subject' => api_get_subject($row['subject'], $row['status']),
+      'author' => array('id'  => intval($row['auth']), 'name' => $row['username']),
+      'created' => $row['created'],
+      'views' => intval($row['views']),
+      'likes' => intval($row['likes']),
+      'dislikes' => intval($row['dislikes']),
+      'page' => intval($row['page']),
+      'parent' => intval($row['parent']),
+      'closed' => filter_var($row['post_closed'], FILTER_VALIDATE_BOOLEAN),
+      'flags' => intval($row['content_flags']),
+      'answers' => intval($row['counter']),
+      'level' => intval($row['level'])
+    );
+    $count++;
+  }
+
+  $response->setJsonContent(array('count' => $count,'messages' => $messages));
+  
   return $response;
 });
 
