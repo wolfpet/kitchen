@@ -126,7 +126,7 @@ Forgot password? |
   }
 ?>
 
-<a target="_blank" class="menu" href="https://github.com/wolfpet/kitchen">GitHub</a> |
+<a target="_blank" class="menu" href="https://github.com/wolfpet/kitchen/issues">Development</a> |
 
 <a target="contents" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">Refresh</a> 
 
@@ -141,7 +141,7 @@ Forgot password? |
 <tr><td align="left">
  <SPAN STYLE="background-color: #E0E0E0">
 [ Pmail<?php if (!is_null($new_pm) && $new_pm > 0){ print('(<font color="red"><b>' . $new_pm . '</b></font>)');}?> | 
-<a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>">In</a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>">Inbox</a> |
 <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail_sent); ?>">Sent</a> |
  
 <?php
