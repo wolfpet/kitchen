@@ -1,5 +1,6 @@
 var mainUrl = "http://kirdyk.radier.ca/";
-var listStuff;
+var titleList;
+var parentMessageID=0;
 
 function onAppReady() {
     if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
@@ -15,14 +16,15 @@ function loadRootThreads()
 {
     var url = mainUrl+ "api/threads";
     //if(null != threadId){url=url+"/"+threadId}
-    listStuff = document.getElementById("stuffs_list");
+    titleList = document.getElementById("titleList");
     var apiCall = $.get(url, function(data) {loadRootThreadsCallback(data);}); 
+    currentLevel=0; //we are on the top level of the tree
 }
 
 function loadRootThreadsCallback(payload) 
 {
     //clear the list
-    $("#stuffs_list").empty();
+    $("#titleList").empty();
     var data = $.parseJSON(payload);
     for(i=0; i<data.count; i++)
     {
@@ -41,7 +43,7 @@ function loadRootThreadsCallback(payload)
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
         li.innerHTML= "<p onclick='javascript:displayMessage("+data.threads[i].message.id+")'><b>"+data.threads[i].message.author.name+"</b> wrote:<br /><span style='color:#0088d1'>"+subj+"</span><br /></p>"+readMsgButtonHtml;                
-        listStuff.appendChild(li);        
+        titleList.appendChild(li);        
     }           
 }
 
@@ -49,14 +51,15 @@ function loadRootThreadsCallback(payload)
 function showReplies(messageID)
 {
     var url = mainUrl+"api/messages/" + messageID +"/answers";   
-    listStuff = document.getElementById("stuffs_list");
+    titleList = document.getElementById("titleList");
     var apiCall = $.get(url, function(data) {showRepliesCallback(data);}); 
+    
 }
 
 function showRepliesCallback(payload) 
 {
     //clear the list
-    $("#stuffs_list").empty();
+    $("#titleList").empty();
     //clear the message div as well
     document.getElementById('msgBody').innerHTML="";
     var data = $.parseJSON(payload);
@@ -75,18 +78,34 @@ function showRepliesCallback(payload)
         }
         readMsgButtonHtml = readMsgButtonHtml + showRepliesHtml;
         
-        var parentHTML ="<div class='button' onclick='javascript:showReplies("+data.messages[i].parent+");'>Back</div>"
+        var parentHTML ="<div class='button' onclick='javascript:climbLevelUpTheTree("+data.messages[i].parent+");'>Back</div>"
         //Append the title to the list
         var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
         li.innerHTML= "<p onclick='javascript:displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote: <br /><span style='color:#0088d1'>"+subj+"</span><br /></p>"+readMsgButtonHtml + parentHTML+"</div>";
                           
-        listStuff.appendChild(li);                
-    }           
-    
+        titleList.appendChild(li);                
+    }               
 }
 
+
+//climbing one level up the tree requires 2 calls currently in order to retrieve the grand parent ID
+function climbLevelUpTheTree(parentID)
+{
+   // This function must load the parent message. Then read the Grand Parent ID. If 0 then load root threads. If non 0 then load its replies.
+   // Perhaps there is a better way but I can't think of any right now. (PW).
+    //alert(parentID);    
+    var url = mainUrl+"api/messages/" + parentID;
+    var apiCall = $.get(url, function(data) {climbLevelUpTheTreeCallback(data);}); 
+}
+function climbLevelUpTheTreeCallback(payload)
+{
+    var data = $.parseJSON(payload);
+    var grandparent = data.parent;
+    if(grandparent==0){loadRootThreads();}
+    else {showReplies(grandparent);}
+}
 
 //the user clicks on the title, then we display the message body in the pop-up
 function displayMessage (messageId)
@@ -102,6 +121,7 @@ function displayMessageCallback(payload)
     ///alert(msg);
     //$.ui.popup(msg);
     document.getElementById('msgBody').innerHTML = msg;
+    if(msg==""){document.getElementById('msgBody').innerHTML = "<br/><center>EMPTY MESSAGE</center>";}
     
 }
     
