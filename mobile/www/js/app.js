@@ -1,43 +1,49 @@
 var mainUrl = "http://kirdyk.radier.ca/";
-var listStuff;
+var titleList;
+var parentMessageID=0;
 
 function onAppReady() {
     if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
         navigator.splashscreen.hide() ;
     }
+    loadRootThreads()
 }
 document.addEventListener("app.Ready", onAppReady, false) ;
 
 
 
-function callKitchen(threadId)
+function loadRootThreads()
 {
     var url = mainUrl+ "api/threads";
-    if(null != threadId){url=url+"/"+threadId}
-    listStuff = document.getElementById("stuffs_list");
-    var apiCall = $.get(url, function(data) {kitchenCallback(data);}); 
+    //if(null != threadId){url=url+"/"+threadId}
+    titleList = document.getElementById("titleList");
+    var apiCall = $.get(url, function(data) {loadRootThreadsCallback(data);}); 
+    currentLevel=0; //we are on the top level of the tree
 }
 
-function kitchenCallback(payload) 
+function loadRootThreadsCallback(payload) 
 {
     //clear the list
-    $("#stuffs_list").empty();
+    $("#titleList").empty();
     var data = $.parseJSON(payload);
     for(i=0; i<data.count; i++)
     {
         var subj = data.threads[i].message.subject;
         //check the number of replies. if >0 then render the badge
         var badgeHtml ="";
+        var repliesLinkHtml="";
+        var readMsgButtonHtml ="<div class='button-grouped'><a class='button' onclick='javascript:displayMessage("+data.threads[i].message.id+")'>Read Message</a>";
         if(data.threads[i].counter > 0)
         {
-            badgeHtml= "<span class='af-badge tl'>"+data.threads[i].counter+"</span>";
+            repliesLinkHtml="<div class='button' onclick='javascript:showReplies("+data.threads[i].message.id+");'><span class='af-badge tl'>"+data.threads[i].counter+"</span>&nbsp;&nbsp;&nbsp;&nbsp;Show replies </div>"
         }
+        readMsgButtonHtml = readMsgButtonHtml + repliesLinkHtml + "</div>";
         //Append the title to the list
         var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml +  "<a href='#' onclick='javascript:displayMessage("+data.threads[i].message.id+")'>"+subj+"<br /><b>"+data.threads[i].message.author.name+"</b></a><br/><div onclick='javascript:showReplies("+data.threads[i].message.id+");'>See replies </div>   ";                
-        listStuff.appendChild(li);        
+        li.innerHTML= "<p onclick='javascript:displayMessage("+data.threads[i].message.id+")'><b>"+data.threads[i].message.author.name+"</b> wrote:<br /><span style='color:#0088d1'>"+subj+"</span><br /></p>"+readMsgButtonHtml;                
+        titleList.appendChild(li);        
     }           
 }
 
@@ -45,14 +51,17 @@ function kitchenCallback(payload)
 function showReplies(messageID)
 {
     var url = mainUrl+"api/messages/" + messageID +"/answers";   
-    listStuff = document.getElementById("stuffs_list");
+    titleList = document.getElementById("titleList");
     var apiCall = $.get(url, function(data) {showRepliesCallback(data);}); 
+    
 }
 
 function showRepliesCallback(payload) 
 {
     //clear the list
-    $("#stuffs_list").empty();
+    $("#titleList").empty();
+    //clear the message div as well
+    document.getElementById('msgBody').innerHTML="";
     var data = $.parseJSON(payload);
     for(i=0; i<data.count; i++)
     {
@@ -60,21 +69,43 @@ function showRepliesCallback(payload)
         //check the number of replies. if >0 then render the badge
         var badgeHtml ="";
         var replyLinkHtml="";
+        var showRepliesHtml="";
+        var readMsgButtonHtml ="<div class='button-grouped'><div class='button' onclick='javascript:displayMessage("+data.messages[i].id+")'>Read Message</div>";
         if(data.messages[i].answers > 0)
         {
             badgeHtml= "<span class='af-badge tl'>"+data.messages[i].answers+"</span>";
-            replyLinkHtml="<br/><p onclick='javascript:showReplies("+data.messages[i].id+");'>See replies&nbsp;&nbsp;&nbsp;</p>"
+            showRepliesHtml="<div class='button' onclick='javascript:showReplies("+data.messages[i].id+");'>"+badgeHtml+">&nbsp;&nbsp;&nbsp;&nbsp;Show Replies</div>";            
         }
-        var parentHTML ="<p onclick='javascript:showReplies("+data.messages[i].parent+");'> Level up</p>"
+        readMsgButtonHtml = readMsgButtonHtml + showRepliesHtml;
+        
+        var parentHTML ="<div class='button' onclick='javascript:climbLevelUpTheTree("+data.messages[i].parent+");'>Back</div>"
         //Append the title to the list
         var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml +  "<a href='#' onclick='javascript:displayMessage("+data.messages[i].id+")'>"+subj+"<br /><b>"+data.messages[i].author.name+"</b></a>" + replyLinkHtml + parentHTML;                
-        listStuff.appendChild(li);        
-    }           
+        li.innerHTML= "<p onclick='javascript:displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote: <br /><span style='color:#0088d1'>"+subj+"</span><br /></p>"+readMsgButtonHtml + parentHTML+"</div>";
+                          
+        titleList.appendChild(li);                
+    }               
 }
 
+
+//climbing one level up the tree requires 2 calls currently in order to retrieve the grand parent ID
+function climbLevelUpTheTree(parentID)
+{
+   // This function must load the parent message. Then read the Grand Parent ID. If 0 then load root threads. If non 0 then load its replies.
+   // Perhaps there is a better way but I can't think of any right now. (PW).
+    //alert(parentID);    
+    var url = mainUrl+"api/messages/" + parentID;
+    var apiCall = $.get(url, function(data) {climbLevelUpTheTreeCallback(data);}); 
+}
+function climbLevelUpTheTreeCallback(payload)
+{
+    var data = $.parseJSON(payload);
+    var grandparent = data.parent;
+    if(grandparent==0){loadRootThreads();}
+    else {showReplies(grandparent);}
+}
 
 //the user clicks on the title, then we display the message body in the pop-up
 function displayMessage (messageId)
@@ -89,7 +120,8 @@ function displayMessageCallback(payload)
     var msg = data.body.html;
     ///alert(msg);
     //$.ui.popup(msg);
-    document.getElementById('openModal').innerHTML = msg;
+    document.getElementById('msgBody').innerHTML = msg;
+    if(msg==""){document.getElementById('msgBody').innerHTML = "<br/><center>EMPTY MESSAGE</center>";}
     
 }
     
