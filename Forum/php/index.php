@@ -6,6 +6,10 @@ $app = new Micro();
 
 require_once('head_inc.php');
 
+$app->get('/', function() use ($app) {
+  echo file_get_contents('index.html');
+});
+
 /**
  * GET /api/threads?id=-1&count=50
  *
@@ -287,9 +291,10 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) use ($prop_tz, 
 
 $app->notFound(
     function () use ($app) {
+        // echo 'Not found!';
         $app->response->redirect("index.html")->sendHeaders();
         //$app->response->setStatusCode(404, "Not Found")->sendHeaders();
-        //echo 'This page was not found!. Please, use for now http://kirdyk.radier.ca/bydate.php?page=1';
+        //echo 'This page was not found!. Please, use for now http://kirdyk.radier.ca/bydate.php?page=1';        
     }
 );
 
