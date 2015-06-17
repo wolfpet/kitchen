@@ -7,6 +7,15 @@
 
 require_once('translit.php');
 require_once('settings.php');
+require_once('bbcode.php');
+
+function autoversion($file) {
+ if(strpos($file, '/') !== 0 || !file_exists($_SERVER['DOCUMENT_ROOT'] . $file))
+    return $file;
+
+  $mtime = filemtime($_SERVER['DOCUMENT_ROOT'] . $file);
+  return preg_replace('{\\.([^./]+)$}', ".$mtime.\$1", $file);
+}
 
 function update_new_pm_count($user_id) {
     global $pm_new_mail;    
@@ -258,16 +267,19 @@ function print_line($row, $collapsed=false) {
           $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
       }
   } else {
+      //$subj = preg_replace('/[^\.](\.)$/','', trim($subj));
       if ($row['level'] == 0) {
           $icon = "bs.gif";
           if ($row['thread_closed'] != 0) {
             $icon = "cs.gif";
           } else if ($row['counter'] == 0) {
             $icon = "es.gif";
+          } else {
+            $style .= 'cursor:pointer;';
           }
-          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"><a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '"> ' .  $icons . $b_start . $subj . $b_end . '  </a> ';
+          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . trim($subj) . $b_end . '</a>   ';
       } else {
-          $line = '&nbsp;<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '"><img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> ' . $icons . $subj . '  </a> ';
+          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . trim($subj) . '</a>   ';
       }
   }
   
@@ -907,67 +919,6 @@ function m_print_threads($result, &$content) {
     return $msgs;
 }
 
-function bbcode_format($str){
-   // Convert all special HTML characters into entities to display literally
-   // $str = htmlentities($str);
-   // The array of regex patterns to look for
-   $format_search =  array(
-      '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
-      '#\[i\](.*?)\[/i\]#is', // Italics ([i]text[/i]
-      '#\[u\](.*?)\[/u\]#is', // Underline ([u]text[/u])
-      '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
-      '#\[code\](.*?)\[/code\]#is', // Monospaced code [code]text[/code])
-      '#\[size=([1-9]|1[0-9]|20)\](.*?)\[/size\]#is', // Font size 1-20px [size=20]text[/size])
-      '#\[color=(.*?)\](.*?)\[/color\]#is', // Font color ([color=#00F]text[/color]) or Font color ([color={color_name}]text[/color])
-//    '#\[color=\#?([A-F0-9]{3}|[A-F0-9]{6})\](.*?)\[/color\]#is', // Font color ([color=#00F]text[/color])
-      '#\[url=((?:ftp|https?)://.*?)\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
-      '#\[url\]((?:ftp|https?)://.*?)\[/url\]#i', // Hyperlink ([url]http://url[/url]),
-      '#\[img=(https?://\S*?)\]#i', // Image ([img=http://url_to_image[/img])
-	  '#((?:ftp|https?)://[^\s>"]+\.(?:jpg|jpeg|gif|png|bmp)(?:\?[^\s<"]*)?)(?=[^"]*(?:"[^"]*"[^"]*)*$)#is', // unprocessed images (i.e. without quotes around them)
-      '@[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/](?=[^"]*(?:"[^"]*"[^"]*)*$)@is' // unprocessed URLs (i.e. without quotes around them)
-   );
-   
-   // The matching array of strings to replace matches with
-   $format_replace = array(
-      '<strong>$1</strong>',
-      '<em>$1</em>',
-      '<span style="text-decoration: underline;">$1</span>',
-      '<span style="text-decoration: line-through;">$1</span>',
-      '<pre>$1</'.'pre>',
-      '<span style="font-size: $1px;">$2</span>',
-      '<span style="color: $1;">$2</span>',
-      '<a target="_blank" href="$1">$2</a>',
-      '<a target="_blank" href="$1">$1</a>',
-      '<img src="$1" alt=""/>',
-      '<img src="$1" alt=""/>',
-      '<a target="_blank" href="\\0">\\0</a>'
-   );
-   // Perform the actual conversion
-   $str = preg_replace($format_search, $format_replace, $str);
-   // Convert line breaks in the <br /> tag
-   // $str = nl2br($str);
-  
-   // Deal with quotes
-   $format_search =  array(
-      '#\[quote(?!.*\[quote)\](.*?)\[/quote\]#is', // Quote ([quote]text[/quote])
-	  '#\[quote(?!.*\[quote)=(.*?)\](.*?)\[/quote\]#is', // Quote with author ([quote=author]text[/quote])
-   );
-   
-   // The matching array of strings to replace matches with
-   $format_replace = array(
-      '<blockquote><div>$1</div></blockquote>',
-      '<blockquote><div><cite>$1:</cite>$2</div></blockquote>',
-   );
-   
-   // Perform the actual quotes conversion
-   $count = 1;
-   while ($count > 0) {
-     $str = preg_replace($format_search, $format_replace, $str, -1, $count);
-   }
-   
-   return $str;
-}
-
 function can_edit_post($msg_author, $msg_time, $current_user) {
 	
    $time = strtotime($msg_time); // time in EST
@@ -993,38 +944,47 @@ function sendmail($address, $subj, $body) {
 
 function youtube($body, $embed = true) {
   global $host;
+  
 	$result = preg_replace_callback('#(?<!\[url(=|]))((?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#i',
-		function ($matches) use ($embed, $host) {
+
+    function ($matches) use ($embed, $host) {
       $url = $matches[2];
 			$id  = $matches[3];
+      
 			$obj2 = file_get_contents(
-"https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=" . $id . "&key=AIzaSyAMBQ3QfviQCDu8G1jeLlPsex16hhbw9jI&fields=pageInfo(totalResults),items(id,contentDetails/duration,snippet(title,thumbnails/default))");
-			$ar2 = json_decode($obj2);
-			/*
-			 1. check pageInfo.totalResults (== 1)
-			 2. .items[0].contentDetails.duration
-			 3. .items[0].snippet.title
-			 4. .items[0].snippet.thumbnails.default
-			*/
-			// var_dump($ar2);         			 
-			$new_body = $url;
-			if ($ar2->pageInfo->totalResults == 1) {
+        "https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=" . $id . "&key=AIzaSyAMBQ3QfviQCDu8G1jeLlPsex16hhbw9jI&fields=pageInfo(totalResults),items(id,contentDetails/duration,snippet(title,thumbnails/default))");
+      
+      if($obj2 === FALSE) 
+        return $url;
+
+      $ar2 = json_decode($obj2);
+      /*
+       1. check pageInfo.totalResults (== 1)
+       2. .items[0].contentDetails.duration
+       3. .items[0].snippet.title
+       4. .items[0].snippet.thumbnails.default
+      */
+      // var_dump($ar2);         			 
+      $new_body = $url;
+      if ($ar2->pageInfo->totalResults == 1) {
         $duration = '';
-				$di = new DateInterval($ar2->items[0]->contentDetails->duration);
-				if ($di->h > 0) {
+        $di = new DateInterval($ar2->items[0]->contentDetails->duration);
+        if ($di->h > 0) {
           $duration .= $di->h.':';
-				}
-				$duration .= $di->i . ':' . $di->s;
-				$title = $ar2->items[0]->snippet->title;
+        }
+        $duration .= $di->i . ':' . $di->s;
+        $title = $ar2->items[0]->snippet->title;
         if ($embed) {
-          $new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube.com/embed/' . $id . '?enablejsapi=1' . '&origin=http://' . $host . '" frameborder="0"]';
+          //$new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?fs=1&enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen]';
+          $new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"]';
           $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
+          //$new_body .= "\nLink: ".$url;
        } else {
           $thumbnail = $ar2->items[0]->snippet->thumbnails->{'default'}->url;
           $new_body .= "\n[i][color=lightslategrey]( " . "[b]" . $title . "[/b]; " . $duration . ")[/color][/i] ";
           $new_body .= "\n[img=" . $thumbnail . "]";
         }
-			}
+      }
 			return $new_body;
 		},
 		$body
@@ -1041,6 +1001,7 @@ function rutube($body, $embed = true) {
 			$id  = $matches[3];
 			$obj2 = file_get_contents("http://www.rutube.ru/api/video/" . $id . "/");
 			//var_dump($obj2);
+      if($obj2 === FALSE) return $url;
       
 			$ar2 = json_decode($obj2);       
 			$new_body = $url;
@@ -1090,64 +1051,5 @@ function chuck($percentage) {
 	 }
  }
  return "";
-}
-
-/** 
- * Replaces target for URLs that reference messages of this forum
- */
-function fix_msg_target($body) {
-  global $host;
-  return str_replace('<a target="_blank" href="http://'.$host.'/msg.php?id=', '<a target="bottom" href="http://'.$host.'/msg.php?id=', $body);
-}
-
-
-/** 
- * Run this before bbcode is called to render content before bbcode() had a chance to mess it up
- */
-function before_bbcode($body) {
-  
-  $body = preg_replace( array (
-    // search
-    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?vimeo\.com/([0-9]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', // Vimeo on-the-fly e.g. https://vimeo.com/129252030
-    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?coub\.com/(?:view|embed)/([0-9a-zA-Z]*)(?:(?:\?|&)[^\s<\]"]*)?)#is' // Coub on the fly e.g. http://coub.com/view/3lbz7
-    ), array (
-    // Vimeo
-    '<br/><iframe src="https://player.vimeo.com/video/$3" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br/>Link: <a href="$2">$2</a>',
-    // Coub <iframe src="//coub.com/embed/3lbz7?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="640" height="360"></iframe>
-    '<br/><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2">$2</a>'          
-    ), $body);    
-       
-  return $body;
-}
-
-function do_bbcode($body) {
-  if(!extension_loaded('fastbbcode'))
-    return bbcode_format($body);
-  else 
-    return bbcode($body);
-}
-
-/** 
- * Run this after bbcode is called to finalize the rendering of the message body 
- */
-function after_bbcode($body) {
-  
-  $body = preg_replace( array (
-    // search
-    '#\[iframe (.*)\]#i',
-    '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
-    '#\[i\](.*?)\[/i\]#is', // Italics ([i]text[/i]
-    '#\[u\](.*?)\[/u\]#is', // Underline ([u]text[/u])
-    '#\[s\](.*?)\[/s\]#is'  // Strikethrough ([s]text[/s])
-    ), array (
-    // replace
-    '<iframe $1></iframe>',
-    '<strong>$1</strong>',
-    '<em>$1</em>',
-    '<span style="text-decoration: underline;">$1</span>',
-    '<span style="text-decoration: line-through;">$1</span>'
-    ), $body);    
-       
-  return fix_msg_target($body);
 }
 ?>
