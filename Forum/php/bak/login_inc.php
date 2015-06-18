@@ -81,19 +81,15 @@ require_once('head_inc.php');
         $md5 = md5($tm . $ip . $user);
         $auth = '1';
         $logged_in = true;
-        
         $query = 'INSERT into confa_sessions(created, user_id, hash) values(\'' . $tm . '\', ' . $user_id . ', \'' . $md5 . '\')';
-        
         $result = mysql_query($query); 
         if (!$result) {
             mysql_log( __FILE__, 'insert failed ' . mysql_error() . ' QUERY: ' . $query);
             die('Query failed');
         }
-        
         mysql_log( __FILE__, 'insert query succeded for username= ' . $user . ' QUERY: ' . $query);
-        
-        setcookie('auth_cookie2', $md5, 1800000000, $root_dir, $host, false, true);
-        setcookie('user2', $user, 1800000000, $root_dir, $host, false, true);
+        setcookie('auth_cookie2', $md5, 1800000000, $root_dir, $host);
+        setcookie('user2', $user, 1800000000, $root_dir, $host);
 
     } while(false);
 

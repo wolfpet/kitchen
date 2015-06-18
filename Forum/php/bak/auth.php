@@ -13,7 +13,7 @@ require_once('get_params_inc.php');
         $ip = 'NULL';
     }
     if (!is_null($agent)) {
-        $agent = '\'' . mysql_real_escape_string($agent) . '\'';
+        $agent = '\'' . mysql_escape_string($agent) . '\'';
     } else {
         $agent = 'NULL';
     }
@@ -21,7 +21,7 @@ require_once('get_params_inc.php');
 
 
     if (!is_null($auth_cookie) && !is_null($user)) {
-        $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.moder, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_real_escape_string($user) . '\'';
+        $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.moder, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_escape_string($user) . '\'';
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -71,7 +71,7 @@ require_once('get_params_inc.php');
             } else {
                 $logged_in = false;
                 $query = 'DELETE from confa_sessions where hash=\'' . $auth_cookie . '\' and id=' . $user_id;
-                setcookie('auth_cookie2', '', time() - 100000, $root_dir, $host, false, true);
+                setcookie('auth_cookie2', '', time() - 100000, $root_dir, $host);
             }
             $result = mysql_query($query);
             if (!$result) {
@@ -90,4 +90,6 @@ require_once('get_params_inc.php');
  
         }
     }
-?>
+
+
+
