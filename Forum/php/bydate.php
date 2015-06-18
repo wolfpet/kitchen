@@ -128,7 +128,7 @@ $show_hidden = 2;
         } else {
           $line="<li>";
         }
-          $line .= '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '"> ' . $icons . $subj . ' </a> <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
+          $line .=  $icons . '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '"> ' . print_subject($subj) . '</a>  <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
           if (!is_null($row['likes'])) {
             $likes = $row['likes'];
             if ($likes > 0) {

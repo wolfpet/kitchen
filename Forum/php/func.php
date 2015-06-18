@@ -201,6 +201,10 @@ function print_threads_ex($result, &$content, &$max_thread_id, $limit = 200, $co
     return $msgs;
 }
 
+function print_subject($subj) {
+  return preg_replace('#([^\.])\.$#','$1', trim($subj));
+}
+
 function print_line($row, $collapsed=false) {
   
   global $root_dir;
@@ -267,7 +271,7 @@ function print_line($row, $collapsed=false) {
           $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
       }
   } else {
-      //$subj = preg_replace('/[^\.](\.)$/','', trim($subj));
+      $subj = print_subject($subj);
       if ($row['level'] == 0) {
           $icon = "bs.gif";
           if ($row['thread_closed'] != 0) {
@@ -277,9 +281,9 @@ function print_line($row, $collapsed=false) {
           } else {
             $style .= 'cursor:pointer;';
           }
-          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . trim($subj) . $b_end . '</a>   ';
+          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>   ';
       } else {
-          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . trim($subj) . '</a>   ';
+          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a>   ';
       }
   }
   

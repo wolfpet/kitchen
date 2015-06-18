@@ -56,8 +56,9 @@ require_once('head_inc.php');
           $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
         }
 
-        $line = '<li><a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '"> ' . $icons . $subj . ' </a> <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
-if (!is_null($row['likes'])) {
+        $line = '<li> ' . $icons . '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '">' . print_subject($subj) . '</a>  <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
+        
+        if (!is_null($row['likes'])) {
           $likes = $row['likes'];
           if ($likes > 0) {
             $line .= ' <font color="green"><b>+' . $likes . '</b></font>';
