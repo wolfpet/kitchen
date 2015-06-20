@@ -207,7 +207,7 @@ $end_timestamp = microtime(true);
     if (strlen($err) > 0) {
         print('<br><font color="red"><b>' . $err . '</b></font></br>');
     }
-    print("<b>Want to see more? Say how many:</b>");
+    print("<b>Want to see more? Say how many:</b> ");
     print('<input type="text" size="5" id="how_many" name="how_many" value="' . $how_many . '">');
 ?>
 <!--
