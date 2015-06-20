@@ -13,10 +13,9 @@ if (!is_null($user_id) && $user_id != null) {
 }
 
 ?>
-
 <html>
 <head>
-<link REL="STYLESHEET" TYPE="text/css" HREF="css/<?php print($css); ?>">
+<link REL="STYLESHEET" TYPE="text/css" HREF="<?=autoversion('css/'.$css)?>">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 <title>Thank you, </title></head>

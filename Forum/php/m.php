@@ -16,10 +16,8 @@ if (!is_null($user_id) && $user_id != null) {
     $css = $row['css'];
   } 
 }
-
 ?><title>Outline</title>
 <script src="js/ajax.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/<?php print($css); ?>"> 
 <style type="text/css">
 .show_message{ background-color:#f0f0f0; border:#CCC 2px solid; position:absolute; width:320px; padding:4px; display:none; font-size:10pt;}
 </style><meta name="viewport" content="width=240, height=320, user-scalable=yes, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">

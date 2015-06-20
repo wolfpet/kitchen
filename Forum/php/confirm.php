@@ -1,8 +1,6 @@
 <?php
 /*$Id: confirm.php 987 2014-01-01 21:03:31Z dmitriy $*/
 require_once('head_inc.php');
-require_once('settings.php');
-require_once('get_params_inc.php');
 
     if (isset($_GET) && is_array($_GET)) {
         $msg_id = $_GET['id'];
@@ -11,10 +9,9 @@ require_once('get_params_inc.php');
         $subj = $_GET['subj'];
     }
 ?>
-
 <html>
 <head>
-<link REL="STYLESHEET" TYPE="text/css" HREF="css/disc2.css">
+<link REL="STYLESHEET" TYPE="text/css" HREF="<?=autoversion('css/disc2.css')?>">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 <title>Thank you, </title></head>
