@@ -10,11 +10,18 @@ require_once('settings.php');
 require_once('bbcode.php');
 
 function autoversion($file) {
- if(strpos($file, '/') !== 0 || !file_exists($_SERVER['DOCUMENT_ROOT'] . $file))
+ global $root_dir;
+ if(strpos($file, '/') !== 0)
+    $full_path = $_SERVER['DOCUMENT_ROOT'] . $root_dir . $file;
+ else 
+    $full_path = $_SERVER['DOCUMENT_ROOT'] . $file;
+ 
+ if (!file_exists($full_path))
     return $file;
 
-  $mtime = filemtime($_SERVER['DOCUMENT_ROOT'] . $file);
-  return preg_replace('{\\.([^./]+)$}', ".$mtime.\$1", $file);
+  $mtime = filemtime($full_path);
+  // return preg_replace('{\\.([^./]+)$}', ".$mtime.\$1", $file);
+  return $file . '?' . $mtime;
 }
 
 function update_new_pm_count($user_id) {
