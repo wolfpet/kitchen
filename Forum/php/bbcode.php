@@ -83,7 +83,7 @@ return '>'.$pattern.'<\/a>|="'.$pattern.'"|('.$pattern.')';
 
 function bbcode_naked_images($str) {
   // Deal with untagged images
-  $str = preg_replace_callback('#'.unless_in_quotes('(?:ftp|https?):\/\/[^\s>"]+\.(?:jpg|jpeg|gif|png|bmp)(?:\?[^\s<"]*)?').'#is', // unprocessed images (i.e. without quotes around them)
+  $str = preg_replace_callback('#'.unless_in_quotes('(?:ftp|https?):\/\/[^\s>"]+\.(?:jpg|jpeg|gif|png|bmp)(?:[^\s<"]*)?').'#is', // unprocessed images (i.e. without quotes around them)
     function ($m) {
       if(empty($m[1])) return $m[0];
 					else return '<img src="' . $m[1] . '" alt=""/>';
