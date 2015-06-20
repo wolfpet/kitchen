@@ -53,7 +53,7 @@ require('menu_inc.php');
     
     print_pages($max_page, $page, 'contents', $cur_page);
     print('<BR><a href="#up" target="contents">Up</a>');
-    print('&nbsp;&nbsp;<a href="#up" target="contents" onclick="javascript:load_threads(document.getElementById(\'threads\'), '.$last_thread.','.$limit.'); return false;">More</a>');
+    print('&nbsp;&nbsp;<a href="javascript:load_threads(document.getElementById(\'threads\'), '.$last_thread.','.$limit.');" target="contents">More</a>');
 
     $end_timestamp = time();
     $duration = $end_timestamp - $start_timestamp;
