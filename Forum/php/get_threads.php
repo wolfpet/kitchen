@@ -14,12 +14,12 @@ if ( isset($msg_id) ) {
   $collapsed = isset($custom) && $custom == 'yes';
   
   if ($collapsed) {
-    $limit = 50;
+    $limit = 50; // 50
     $min_thread = $last_thread - $limit;
-    $result = get_thread_starts($min_thread, $last_thread);
+    $result = get_thread_starts($min_thread, $last_thread-1);
   } else {
-    $limit = 100;
-    $result = get_threads_ex($limit, $last_thread);
+    $limit = 100; // 100
+    $result = get_threads_ex($limit, $last_thread-1);
   }
 
   $msgs = print_threads_ex($result, $content, $last_thread, $limit, $collapsed);

@@ -150,6 +150,13 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
 
 // NG: begin
 
+function autoload_threads($last_thread) {?>
+  <script language="JavaScript">
+    set_max_id(<?=$last_thread?>);
+  </script>
+  <div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div><?php 
+}
+
 function get_show_hidden_and_ignored() {
   
   global $link;
