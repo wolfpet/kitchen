@@ -16,9 +16,6 @@ if (!is_null($user_id) && $user_id != null) {
     $row = mysql_fetch_assoc($result);
     $css = $row['css'];
   } 
-
-  
-
 }
 ?>
 <html>
@@ -32,7 +29,8 @@ if (!is_null($user_id) && $user_id != null) {
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <META name="description" content="Форум канадских эмигрантов">
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="css/<?php print($css); ?>" >
+<link rel="stylesheet" type="text/css" href="<?=autoversion('css/'.$css)?>">
+<link rel="stylesheet" type="text/css" href="<?=autoversion('css/common.css')?>">
 <script src="js/jquery-1.10.2.min.js"></script>
 <!--<script>
 var $lastdiv = null;
@@ -47,6 +45,3 @@ function show_msg($msg, $body)
 }
 </script>
 -->
-
-
-

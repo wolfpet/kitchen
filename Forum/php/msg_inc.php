@@ -2,12 +2,6 @@
 /*$Id: msg_inc.php 988 2014-01-05 01:14:33Z dmitriy $*/
 
 require_once('head_inc.php');
-require_once('func.php');
-/*
-if(!extension_loaded('fastbbcode')) {
-    dl('fastbbcode.' . PHP_SHLIB_SUFFIX);
-}
-*/
 
     $proceeded = false;
     $msg_status = 1;
@@ -163,6 +157,8 @@ if(!extension_loaded('fastbbcode')) {
     }
 
     mysql_free_result($result);
+
+  notify_about_new_pm($user_id, $last_login, "bottom");
 
 require_once('msg_form_inc.php');
 
