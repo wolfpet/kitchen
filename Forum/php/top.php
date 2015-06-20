@@ -10,67 +10,8 @@ require_once('mysql_log.php');
     $work_page = ($max_page - $page) + 1;
     $start_timestamp = time();
 ?>
-<script language="JavaScript" src="js/junk.js"></script>
-<script language="JavaScript">
-var max_id = "";
-var loading = false;
-
-function load_threads(div, id, count) {
-  if (loading) return;
-  loading = true;
-  
-  var indicator = document.getElementById('loading');
-  if (indicator != null) 
-    indicator.style.display = "block";
-  
-  if (max_id.length == 0) {
-    max_id = "" + id;  
-    console.log("max id=" + max_id);
-  }
-  
-  // Initialize the Ajax request.
-  var xhr = new XMLHttpRequest();
-  var url = 'get_threads.php?id=' + max_id + "&custom=" + count;
-  console.log("loading " + url);
-
-  xhr.open('get', url);
-   
-  // Track the state changes of the request.
-  xhr.onreadystatechange = function () {
-    var DONE = 4; // readyState 4 means the request is done.
-    var OK = 200; // status 200 is a successful return.
-    if (xhr.readyState === DONE) {        
-      try {
-        var indicator = document.getElementById('loading');
-        if (indicator != null) indicator.style.display = "none";
-        if (xhr.status === OK) {
-            // alert(xhr.responseText); // 'This is the returned text.'
-            var text = xhr.responseText;
-            var id = text.indexOf("id=");
-            var start = text.indexOf("<dl");
-            if (start >= 0) {
-              max_id = text.substring(id + 3, start);
-              console.log("new max id=" + max_id);
-              div.innerHTML = div.innerHTML + " " + text.substring(start);
-            }
-        } else {
-            // alert('Error: ' + xhr.status); // An error occurred during the request.
-        }
-      } finally {
-        loading = false;
-      }
-    }
-  };
-   
-  xhr.send(null);
-}
-
-function scroll2Top(element){ 
-  var ele = document.getElementById(element); 
-  setTimeout(window.scrollTo(ele.offsetLeft,ele.offsetTop), 100);
-}
-
-</script>
+<script language="JavaScript" src="<?=autoversion('js/junk.js')?>"></script>
+<script language="JavaScript" src="<?=autoversion('js/autoload.js')?>"></script>
 <base target="bottom">
 </head>
 <body id="body"> 
@@ -82,12 +23,11 @@ function scroll2Top(element){
 -->
 <!--<table width="95%"><tr>
 <td>-->
-<!--<h3><?php print($title);?></h3>-->
+<!--<h3><?php //print($title);?></h3>-->
 <!--</td>
 
 </tr></table>-->
 <?php
-// $page_expanded = 'top2.php'; // NG: remove when renamed
 
 require('menu_inc.php');
 
@@ -121,21 +61,8 @@ require('menu_inc.php');
 
    // print($show_hidden . "|");
    // print_r($ignored);
+   autoload_threads($last_thread);
 ?>
-<script language="JavaScript">
-function load_more() {
-	var div = document.getElementById("threads");
-	var contentHeight = document.getElementById("body").offsetHeight;
-	var yOffset = window.pageYOffset; 
-	var y = yOffset + window.innerHeight;
-	if ( y >= contentHeight - 300) {
-		load_threads(div, <?php print($last_thread);?>, <?php print($limit);?>);
-	}
-}
-
-window.onscroll = load_more;
-</script>
-<div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div>
 <table cellpadding=1 cellspacing=0 width="90%">
   <tr>
     <td align="left">

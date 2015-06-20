@@ -5,8 +5,8 @@
         print('<B><font color="red">' . $err . '</font></B><BR>');
     }
 ?>
-<script language="JavaScript" src="js/translit.js"></script>
-<script language="JavaScript" src="js/func.js"></script>
+<script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
+<script language="JavaScript" src="<?=autoversion('js/func.js')?>"></script>
 <script language="Javascript">
 function bbcode_on() {
   document.getElementById('translit_help').style.display='none';
