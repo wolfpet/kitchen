@@ -37,6 +37,7 @@ require_once('get_params_inc.php');
             $prop_bold = $row['prop_bold'];
             $prop_tz = $row['prop_tz'];
             $status = $row['status'];
+            $last_login = $row['updated'];        
             if ( $status == 2 ) {
                 $logout = true;
             }
