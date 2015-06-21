@@ -2,7 +2,6 @@
 /*$Id: msg.php 988 2014-01-05 01:14:33Z dmitriy $*/
 
 require_once('head_inc.php');
-require_once('get_params_inc.php');
 require_once('html_head_inc.php');
 
 $likes = '';
@@ -13,13 +12,10 @@ $thread_owner = false;
 /* Set to false to disallow thread owner 
 close/open thread */
 $managed = true;
-
 ?>
-
-<base target="bottom">
+<!--<base target="bottom">-->
 </head>
 <body>
-
 <?php
     if (is_null($action)) {
     	$query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id;
@@ -129,17 +125,12 @@ $managed = true;
 
 require("msg_inc.php");
 
-
 if ( $reply_closed ) {
-
 ?>
 Closed |
 <?php
 } else {
 ?>
-
-
-
 <a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>">Reply</a> |
 <span style="background-color: rgb(224, 224, 224);"><a href="<?php print( $root_dir . $page_pmail_send . '?to=' . $author . '&re=' .  $msg_id); ?>"); ?>Reply to sender (private)</a> </span>|
 <?php
