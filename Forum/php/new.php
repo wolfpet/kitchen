@@ -2,7 +2,6 @@
 /*$Id: new.php 988 2014-01-05 01:14:33Z dmitriy $*/
 
 require_once('head_inc.php');
-require_once('get_params_inc.php');
 require_once('html_head_inc.php');
 
 $thread_owner = false;
@@ -21,7 +20,7 @@ $thread_owner = false;
 
 <base target="bottom">
 </head>
-<body>
+<body onload="javascript:document.getElementById('subj').focus();">
 
 <?php 
     if (is_null($re) || strlen($re)== 0) {

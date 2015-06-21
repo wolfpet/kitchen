@@ -11,7 +11,7 @@ $thread_owner = false;
 
 <base target="bottom">
 </head>
-<body style="background-color: #CCEEEE;" onload="javascript:document.getElementById('to').focus();">
+<body style="background-color: #CCEEEE;" onload="javascript:document.getElementById('<?=is_null($pm_id) ? "to" : "body"?>').focus();">
 <?php 
     if (is_null($re) || strlen($re)== 0) {
 ?>
