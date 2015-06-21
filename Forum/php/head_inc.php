@@ -19,6 +19,7 @@ $log         = '';
 $page        = 1;
 $moder       = false;
 $logged_in   = false;
+$last_login  = NULL;
 $user_id     = NULL;
 $doc_type   = NULL;
 $user_like = NULL;
