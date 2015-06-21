@@ -8,7 +8,7 @@ require_once('html_head_inc.php');
     $work_page = ($max_page - $page) + 1;
 $pix=0;
 $css = 'disc2.css';
-if (!is_null($user_id) && $user_id != null) {
+if (!is_null($user_id) && $user_id != null && false) {
   $query = "SELECT css from confa_users where id = " . $user_id;
   $result = mysql_query($query);
   if ($result) {
@@ -16,17 +16,16 @@ if (!is_null($user_id) && $user_id != null) {
     $css = $row['css'];
   } 
 }
-?><title>Outline</title>
+?><title>Кирдык</title>
 <script src="js/ajax.js" type="text/javascript"></script>
-<style type="text/css">
-.show_message{ background-color:#f0f0f0; border:#CCC 2px solid; position:absolute; width:320px; padding:4px; display:none; font-size:10pt;}
-</style><meta name="viewport" content="width=240, height=320, user-scalable=yes, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+<link rel="stylesheet" type="text/css" href="css/m.css?<?=filemtime('css/m.css')?>">
+<meta name="viewport" content="width=240, height=320, user-scalable=yes, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
 </head> 
 <body><form method="post" action="" id="form1" style="display:inline;">
 <?php
 #require('menu_inc.php');
     print_pages($max_page, $page, '_self', $cur_page);
-
+    print("<p/>");
     $result = get_threads();
     $content = array();
     $msgs = m_print_threads($result, $content);
@@ -40,13 +39,13 @@ require_once('tail_inc.php');
 var last_id="";
 function show_message(mess_id){
 	if(last_id!="")document.getElementById("div_mes_"+last_id).style.display="none";
-	//alert(mess_id);
+	//console.log(mess_id);
 	if(document.getElementById("div_mes_"+mess_id).innerHTML==""){makeRequest("m_get_mess.php?mess_id="+mess_id+"&tttt="+tttt(), show_message1, mess_id);}
 	else{ document.getElementById("div_mes_"+mess_id).style.display="block";}
 	last_id=mess_id;
 	}
 function show_message1(content, mess_id){ //alert(content);
-	//alert('='+content+"=");
+  //console.log(content);
 	if(content!=""){document.getElementById("div_mes_"+mess_id).style.display='block'; document.getElementById("div_mes_"+mess_id).innerHTML=content;}
 	}
 </script>

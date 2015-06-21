@@ -1,0 +1,63 @@
+.show_message { 
+  background-color:#f0f0f0; 
+  border:#CCC 2px solid; 
+  padding:5px; 
+  display:none; 
+  font-size:10pt; 
+  position:absolute; 
+  right: 0;
+  width:98%;
+// Old
+  // width:320px; 
+// Ranger added:
+  //white-space: pre-wrap;      /* CSS3 */   
+  // white-space: -moz-pre-wrap; /* Firefox */    
+  // white-space: -pre-wrap;     /* Opera <7 */   
+  // white-space: -o-pre-wrap;   /* Opera 7 */    
+  // -- To wrap long words and URLs - use this:
+  // word-wrap: break-word;      /* IE */
+  // -- To crap words:
+  white-space: nowrap; /* Don't forget this one */
+  text-overflow: ellipsis;
+  //overflow:auto;
+}
+
+iframe {
+    max-height: auto;
+    max-width: 100%;
+    }
+
+.mbutton {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding:2px;
+  background: #b0d4e3; /* Old browsers */
+  background: -moz-linear-gradient(top,  #b0d4e3 0%, #88bacf 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b0d4e3), color-stop(100%,#88bacf)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #b0d4e3 0%,#88bacf 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #b0d4e3 0%,#88bacf 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #b0d4e3 0%,#88bacf 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #b0d4e3 0%,#88bacf 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0d4e3', endColorstr='#88bacf',GradientType=0 ); /* IE6-9 */
+  color:white !important;
+  text-align:center;
+  margin-bottom: 15px;
+  margin-left:5px;
+}
+
+.mbutton:hover {
+  background: #b0d4e3; /* Old browsers */
+  background: -moz-linear-gradient(top,  #b0d4e3 0%, #88bacf 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b0d4e3), color-stop(100%,#88bacf)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #b0d4e3 0%,#88bacf 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #b0d4e3 0%,#88bacf 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #b0d4e3 0%,#88bacf 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #b0d4e3 0%,#88bacf 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0d4e3', endColorstr='#88bacf',GradientType=0 ); /* IE6-9 */
+  color:navy !important;
+}
+
+.mbutton#close {
+  float:right;
+}
