@@ -8,8 +8,8 @@
       $to = '';
     }
 ?>
-<script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
-<script language="JavaScript" src="<?=autoversion('js/func.js')?>"></script>
+<script language="JavaScript" src="js/translit.js"></script>
+<script language="JavaScript" src="js/func.js"></script>
 <script language="Javascript">
 function bbcode_on() {
     document.getElementById('translit_help').style.display='none';
@@ -32,9 +32,10 @@ function bbcode_on() {
 <td colspan="2" />
 </tr>
 <tr>
-<td nowrap>To:</td><td><B><input type="text" name="to" id="to" value="<?php print($to); ?>" tabindex="1"/></B></td>
+<td nowrap>To:</td><td><B><input type="text" name="to" id="to" value="<?php print($to); ?>"/></B></td>
 <td colspan="2"/>
 </tr>
+
 <?php
 
     if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER_AGENT'], 'Opera Mini' ) ) {
@@ -45,7 +46,7 @@ function bbcode_on() {
 ?>
 <tr>
 <td>Subject:</td>
-<td colspan="2"><input type="text" tabindex=2 <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print($subj); ?>' maxlength="128" size="54"/></td>
+<td colspan="2"><input type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print($subj); ?>' maxlength="128" size="54"/></td>
 </tr>
 <!--<tr>
 <td colspan="3" align="right">
@@ -73,7 +74,7 @@ function bbcode_on() {
 </tr>
 <tr>
 <td colspan="3" width="100%">
-<textarea id="body" name="body" tabindex=3 <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> cols="90" tabindex="2" rows="8"><?php
+<textarea id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> cols="90" tabindex="2" rows="8"><?php
 
     print($body);
  //print(nl2br(htmlentities($body, HTML_ENTITIES,'UTF-8')));
@@ -81,10 +82,10 @@ function bbcode_on() {
 </td>
 </tr>
 <tr>
-<td colspan="3"><input name="preview" id="preview" type="checkbox" readonly value="off" tabindex="4"> Preview first</td>
+<td colspan="3"><input name="preview" id="preview" type="checkbox" readonly value="off"/> Preview first</td>
 </td></tr>
 <tr>
-<td colspan="3"><input value="Send!" type="submit" tabindex="5"/></td>
+<td colspan="3"><input tabindex="3" value="Send!" type="submit"></td>
 </tr>
 </tbody></table>
 </td><td width="40%" valign="top">

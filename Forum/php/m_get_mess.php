@@ -7,8 +7,9 @@ if(!empty($mess_id)){
 	$sSQL="SELECT body, status FROM confa_posts WHERE id='$mess_id'";
 	$result2=mysql_query($sSQL) or die ("MySQL err: " . mysql_error());
 	if($row2 = mysql_fetch_array($result2)){ 
-		print('<a href="' .  $root_dir . $page_new . '?re=' . $mess_id . '"'); ?>
-               target="_blank">Reply</a>&nbsp;&nbsp;<a href="#" onclick="document.getElementById('div_mes_<?= $mess_id ?>').style.display='none'; return false;">Close</a><br><?php
+		print('<a id="reply" class="mbutton" href="' .  $root_dir . $page_new . '?re=' . $mess_id . '"'); ?>
+               target="_blank">Reply</a>&nbsp;&nbsp;<a id="close" class="mbutton" href="#" onclick="document.getElementById('div_mes_<?= $mess_id ?>').style.display='none'; return false;">Close</a>
+               <br/><?php
 		if ( $row2['status'] == 3 ) { print( '<font color="red">Censor (Мат)</font>' ); }
         elseif ( $row2['status'] == 4 ) {print( '<font color="red">Censor (Хамство)</font>' ); }
         elseif ( $row2['status'] == 5 ) {print( '<font color="red">Censor (Наезд)</font>' ); }
@@ -22,15 +23,20 @@ if(!empty($mess_id)){
 				$s_mess = $prefix . ' ' . str_replace("\n", "\n" . $prefix . ' ', $s_mess);
 			}
 			$s_mess = htmlentities($s_mess, HTML_ENTITIES,'UTF-8');
+// New version      
       $s_mess = before_bbcode($s_mess);
-			$s_mess = do_bbcode($s_mess);
-			$s_mess = nl2br($s_mess);
-      $s_mess = after_bbcode($s_mess);      
+      $s_mess = do_bbcode ( $s_mess );
+      $s_mess = nl2br($s_mess);
+      $s_mess = after_bbcode($s_mess);
+// Old version      
+//		$s_mess = bbcode($s_mess);
+//    $s_mess = nl2br($s_mess);
 			echo trim($s_mess);
 			}	
 		}
-	$query = 'UPDATE confa_posts SET views=views + 1 where id=' . $mess_id;
+    $query = 'UPDATE confa_posts SET views=views + 1 where id=' . $mess_id;
     $result = mysql_query($query);
 	}
+require_once('tail_inc.php');  
 ?>
 
