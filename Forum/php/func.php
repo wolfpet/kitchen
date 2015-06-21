@@ -59,24 +59,28 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
     }
     
     if ($row = mysql_fetch_assoc($result)) { 
-      // You've got mail!
-?><div id="close"/><div id="openModal" class="modalDialog">
+      // You've got mail!      
+?><script language="javascript">    
+    var windowonload = window.onload;
+    
+    window.onload = function(e) {
+      // console.log("onload() starts");
+      if (windowonload != null) {
+        windowonload(e);        
+      }
+      location.href = "#openModal";
+      // console.log("openModal ended");
+    }
+  </script><div id="close"/><div id="openModal" class="modalDialog">
     <div>
-      <a href="javascript:closeModal();" title="Close" class="close">X</a>
+      <a href="#close" target="<?=$target?>" title="Close" class="close">X</a>
       <table cellpadding="5"><tr><td><img src="images/ygm.png" style="width:80%;height:auto;"/></td><td width="75%">
        	<h3>You've got mail!</h3>
         <p><b><?=$row['username']?></b> has sent you a private message.</p>
         <p>Click <a target="contents" href="<?=$page_pmail?>" onclick="javascript:location.hash='#close'; return true;">here</a> to go to your Inbox.</p>
       </td></tr></table>
     </div>
-  </div><script language="javascript">
-    function closeModal() {
-      openModal.style.opacity=0;
-      openModal.style.pointerEvents="none";
-    }
-    openModal.style.opacity=1;
-    openModal.style.pointerEvents="auto";
-  </script><?php       
+  </div><?php       
     }
 }
 
