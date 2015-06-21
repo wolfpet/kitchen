@@ -1,7 +1,6 @@
 <?php
 /*$Id: pm_confirm.php 823 2012-11-02 23:43:52Z dmitriy $*/
 require_once('head_inc.php');
-require_once('get_params_inc.php');
 $css = 'disc2.css';
 if (!is_null($user_id) && $user_id != null) {
   $query = "SELECT css from confa_users where id = " . $user_id;
