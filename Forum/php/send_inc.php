@@ -66,13 +66,19 @@ function bbcode_on() {
     }
 ?>
 </td>
+<td align="right">&nbsp;
+  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'b');return false;">[<b>b</b>]</a>
+  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'i');return false;">[<i>i</i>]</a>
+  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'u');return false;">[<u>u</u>]</a>
+  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 's');return false;">[<del>s</del>]</a>
+</td>
 <td align="right">
   <a href="#" onclick="javascript:insertTag('body', 1);return false;">[url=]<font color="gray">Title</font>[/url]</a>&nbsp;
   <a href="#" onclick="javascript:insertTag('body', 2);return false;">[img=]</a>
 </td>
 </tr>
 <tr>
-<td colspan="3" width="100%">
+<td colspan="4" width="100%">
 <textarea id="body" name="body" tabindex=3 <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> cols="90" tabindex="2" rows="8"><?php
 
     print($body);
