@@ -105,12 +105,12 @@ function insertBBCode(fieldId, tag)
     if (element.value.substring(0, ss).lastIndexOf('[/' + tag + ']') >= element.value.substring(0, ss).lastIndexOf('[' + tag + ']')) {
       element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + '[' + tag +']' + element.value.substring(element.value.length - tl); 
       if (element.setSelectionRange) { 
-        element.setSelectionRange(ss + 3, ss + 3); 
+        element.setSelectionRange(ss + tag.length + 2, ss + tag.length + 2); 
       }
     } else {
       element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + '[/' + tag +']' + element.value.substring(element.value.length - tl); 
       if (element.setSelectionRange) { 
-        element.setSelectionRange(ss + 4, ss + 4); 
+        element.setSelectionRange(ss + tag.length + 3, ss + tag.length + 3); 
       }
     }
   }
