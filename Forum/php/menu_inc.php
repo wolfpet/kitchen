@@ -2,7 +2,7 @@
 /*$Id: menu_inc.php 875 2013-01-30 17:10:57Z dmitriy $*/
 ?>
 <?php notify_about_new_pm($user_id, $last_login);?>
-<table width="95%">
+<table width="98%">
 <?php
     if (!is_null($err_login) && strlen($err_login) > 0) {
 ?>
