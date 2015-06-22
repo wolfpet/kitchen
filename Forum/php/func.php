@@ -64,12 +64,12 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
     var windowonload = window.onload;
     
     window.onload = function(e) {
-      // console.log("onload() starts");
+      console.log("openModal starts");
       if (windowonload != null) {
         windowonload(e);        
       }
-      location.href = "#openModal";
-      // console.log("openModal ended");
+      location.hash = "#openModal";
+      console.log("openModal ended");
     }
   </script><div id="close"/><div id="openModal" class="modalDialog">
     <div>
