@@ -58,7 +58,7 @@ require('menu_inc.php');
     print('<BR><a href="#up" target="contents">Up</a>');
     print('&nbsp;&nbsp;<a href="javascript:load_threads(document.getElementById(\'threads\'), '.$last_thread.',\'yes\');" target="contents">More</a>');
     
-    autoload_threads($last_thread);
+    autoload_threads($last_thread, "yes");
 ?>
 <table cellpadding=1 cellspacing=0 width="90%">
   <tr>

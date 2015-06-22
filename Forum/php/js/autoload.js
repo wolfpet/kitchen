@@ -2,6 +2,7 @@
 
 var max_id = "";
 var loading = false;
+var limit = "200";
 
 function load_threads(div, id, count) {
   if (loading) return;
@@ -64,13 +65,14 @@ function load_more() {
 	var yOffset = window.pageYOffset; 
 	var y = yOffset + window.innerHeight;
 	if ( y >= contentHeight - 300) {
-		load_threads(div, max_id, "yes");
+		load_threads(div, max_id, limit);
 	}
 }
 
-function set_max_id(id) {
+function set_max_id(id, how_many) {
   max_id = id;
-  console.log("set max id=" + (max_id));
+  limit = how_many;
+  console.log("set max id=" + (max_id) + " limit=" + limit);
 }
 
 window.onscroll = load_more;

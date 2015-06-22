@@ -61,7 +61,7 @@ require('menu_inc.php');
 
    // print($show_hidden . "|");
    // print_r($ignored);
-   autoload_threads($last_thread);
+   autoload_threads($last_thread, $limit);
 ?>
 <table cellpadding=1 cellspacing=0 width="90%">
   <tr>

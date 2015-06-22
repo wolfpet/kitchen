@@ -63,13 +63,25 @@ function recall_state() {
       var value = localStorage.getItem(item.name);
             
       if (value != null) { // topic visibility state found in local storage
-         var target = getDL(item);           
-         if (target != null) {  // sanity check
-			decorate(target, item, value);
-         } 
+        var target = getDL(item);           
+        if (target != null) {  // sanity check
+          decorate(target, item, value);
+        } 
       } 
     }     
   } 
 };
 
-window.onload=recall_state;
+var windowonloadbeforejunk = window.onload;
+
+window.onload = function (e) {
+  try {
+    recall_state();
+    console.log("recall_state() called");
+  } catch (e) {
+    console.log("recall_state() failed");
+  }
+  if (windowonloadbeforejunk != null) {
+     windowonloadbeforejunk(e);
+  }
+}
