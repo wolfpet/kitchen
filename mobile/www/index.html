@@ -39,7 +39,7 @@
 <!-- Hamburger Menu -->
 <nav>
     <ul class="list">
-        <li><a onclick="javascript:loadRootThreads();$.ui.toggleSideMenu();" class="icon home">Collapsed Threads</a></li>
+        <li><a onclick="javascript:loadRootThreadsPlus();$.ui.toggleSideMenu();" class="icon home">Collapsed Threads</a></li>
         <li><a href="#future" onclick="javascript:$.ui.toggleSideMenu();msgBody.InnerHTML=''" class="icon clock">Most Recent</a></li>
         <li><a href="#future" onclick="javascript:$.ui.toggleSideMenu();"  class="icon heart">Answered</a></li>
         <li><a href="#future" onclick="javascript:$.ui.toggleSideMenu();"  class="icon user">My Messages</a></li>
@@ -55,7 +55,7 @@
     <a id="menubadge" onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
     <h1>Threads</h1>
 </header>
-<footer class="wrap-element" data-uib="app_framework/footer" data-ver="1" id="foo"><a class="icon home" href="#mainpage"  onclick="javascript:loadRootThreads();">Home</a></footer>
+<footer class="wrap-element" data-uib="app_framework/footer" data-ver="1" id="foo"><a class="icon home" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Home</a></footer>
     
 <!-- content -->    
 <div id="content" class="uwrap"> 
@@ -68,16 +68,19 @@
     <!-- individual messages are open here -->
     <div class="panel" title="Message" id="messagePage"  data-footer="foo">
         <header>
-            <a id="backBtn"  class='backButton' onclick="javascript:msgBody.innerHTML='';" style="float:left !important"></a>
+            <a id="backBtn"  class='button' onclick="javascript:onBackButton();" style="float:left !important">Back</a>
             <h1>Message</h1>
         </header>
         <div id="msgBody">
         </div>
+        <!-- Replies go here -->
+        <ul class="list widget uib_w_2 d-margins" id="replyTitleList" data-uib="app_framework/listview" data-ver="1">                 
+        </ul>
     </div>
     <!-- some future stuffs -->
     <div class="panel" title="Future stuff" id="future" data-footer="foo">
         <header>
-            <a id="backBtn2"  class='backButton'  style="float:left !important"></a>
+            <a id="backBtn2"  class='backButton'  style="float:left !important">Back</a>
             <h1>Back to the Future!</h1>
         </header>
         <div id="futureStuff">
