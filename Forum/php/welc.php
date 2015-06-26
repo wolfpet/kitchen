@@ -5,6 +5,6 @@
 <title></title>
 </head>
 <body>
-<H2> Free forum</H2>
+<H3> Free forum</H3>
 </body>
 </html>
