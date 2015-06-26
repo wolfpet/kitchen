@@ -48,6 +48,9 @@ require_once('head_inc.php');
         $new_pm = $row["new_pm"];
         $prop_bold = $row["prop_bold"];
         $prop_tz  = $row['prop_tz'];
+        if (is_null($prop_tz)) {
+          $prop_tz = explode(":", $server_tz)[0];
+        }
         if ( $row['status'] == 2 ) {
             $err_login = ' This user has been disabled.';
             break;

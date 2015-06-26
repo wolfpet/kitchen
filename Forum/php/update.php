@@ -2,7 +2,6 @@
 /*$Id: update.php 378 2009-11-02 19:36:24Z dmitriy $*/
 
 require_once('head_inc.php');
-require_once('get_params_inc.php');
 require_once('html_head_inc.php');
 
     $title = 'Update profile';
@@ -74,8 +73,18 @@ require_once('html_head_inc.php');
             if ( is_null($profile_bold) ) {
                 $profile_bold = 0;
             }
- 
+
             $update .= ' prop_bold=' . $profile_bold; 
+ 
+            if (strlen($update) > 0) {
+                $update .= ', ';
+            }
+ 
+            if (is_null($tz)) {
+                $tz = explode(":", $server_tz)[0];
+            }
+            
+            $update .= ' prop_tz=\'' . mysql_escape_string($tz) . '\''; 
       
             $query = 'UPDATE confa_users set ' . $update . ' where username = \'' . mysql_escape_string($user) . '\'';
             $result = mysql_query($query);
@@ -88,6 +97,7 @@ require_once('html_head_inc.php');
             } else {
                 $info = 'Successfully updated profile';
                 $prop_bold = $profile_bold;
+                $prop_tz = $tz;
             }
         } while (false);
     }

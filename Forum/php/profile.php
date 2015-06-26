@@ -74,7 +74,7 @@ $(document).ready(function() {
 </B>
 <?php
 
-    $query=' SELECT email, prop_bold from confa_users where id = ' . $user_id;
+    $query=' SELECT email, prop_bold, prop_tz from confa_users where id = ' . $user_id;
     $result = mysql_query( $query );
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -84,6 +84,7 @@ $(document).ready(function() {
     $email = $row['email'];
     $email2 = $email;
     $profile_bold = $row['prop_bold'];
+    $prop_tz = $row['prop_tz'];
  
 require_once("profile_inc.php");
 require_once('tail_inc.php');

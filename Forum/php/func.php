@@ -150,9 +150,7 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
 
     global $prop_tz;
     global $server_tz;
-    if (is_null($prop_tz)) {
-        $prop_tz = -5;
-    }
+
     $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter from confa_posts p, confa_users u, confa_threads t ';
     if ( $min_thread_id < 0 ) {
         $min_thread_id = 0;
@@ -212,12 +210,9 @@ function get_threads_ex($limit = 200, $thread_id = null) {
 
   global $prop_tz;
   global $work_page;
+  global $server_tz;
 
-  if (is_null($prop_tz)) {
-      $prop_tz = -5;
-  }
-
-  $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'-5:00\', \'' . $prop_tz . ':00\')  as created, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter from confa_posts p, confa_users u, confa_threads t ';
+  $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter from confa_posts p, confa_users u, confa_threads t ';
   $query.= 'where p.author=u.id and t.id = p.thread_id and t.status != 2 ';
 	
 	if (is_null($thread_id)) {
@@ -499,10 +494,9 @@ function get_threads() {
 
     global $prop_tz;
     global $work_page;
-    if (is_null($prop_tz)) {
-        $prop_tz = -5;
-    }
-    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'-5:00\', \'' . $prop_tz . ':00\')  as created, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter from confa_posts p, confa_users u, confa_threads t where p.author=u.id and t.id = p.thread_id and t.status != 2 and t.page=' . $work_page . ' order by thread_id desc, level, msg_id desc';
+    global $server_tz;
+    
+    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter from confa_posts p, confa_users u, confa_threads t where p.author=u.id and t.id = p.thread_id and t.status != 2 and t.page=' . $work_page . ' order by thread_id desc, level, msg_id desc';
 
     $result = mysql_query($query);
     if (!$result) {
@@ -514,7 +508,7 @@ function get_threads() {
 
 function get_max_pages_collapsed(&$max_thread_id) {
 
-    $query = 'SELECT count(distinct(thread_id)), max(thread_id)  from  confa_posts where status != 2';
+    $query = 'SELECT count(distinct(thread_id)), max(thread_id) from confa_posts where status != 2';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log(__FILE__, 'Query page count failed: ' . mysql_error() . ' QUERY: ' . $query);
@@ -547,13 +541,12 @@ function get_max_pages_users(&$max_user_id, $user_like) {
 function get_users($min_user_id, $max_user_id, $user_like) {
 
     global $prop_tz;
-    if (is_null($prop_tz)) {
-        $prop_tz = -5;
-    }
+    global $server_tz;
+    
     if (is_null($user_like)) {
-      $query = 'select id as user_id, username,  CONVERT_TZ(created, \'-5:00\', \'' . $prop_tz . ':00\')  as created, moder, CONVERT_TZ(ban_ends, \'-5:00\', \'' . $prop_tz . ':00\')  as ban_ends from (select id, username, created, moder, ban_ends from confa_users  where status != 2 order by username) us where id >= ' . $min_user_id . ' and id <= ' . $max_user_id . ' order by username';
+      $query = 'select id as user_id, username,  CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, moder, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as ban_ends from (select id, username, created, moder, ban_ends from confa_users  where status != 2 order by username) us where id >= ' . $min_user_id . ' and id <= ' . $max_user_id . ' order by username';
     } else {
-      $query = 'select id as user_id, username,  CONVERT_TZ(created, \'-5:00\', \'' . $prop_tz . ':00\')  as created, moder, CONVERT_TZ(ban_ends, \'-5:00\', \'' . $prop_tz . ':00\')  as ban_ends from (select id, username, created, moder, ban_ends from confa_users  where status != 2 order by username    ) us where username like \'%' . $user_like . '%\'  order by username';
+      $query = 'select id as user_id, username,  CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, moder, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as ban_ends from (select id, username, created, moder, ban_ends from confa_users  where status != 2 order by username    ) us where username like \'%' . $user_like . '%\'  order by username';
 
     }
     $result = mysql_query($query);

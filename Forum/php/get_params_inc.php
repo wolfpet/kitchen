@@ -232,6 +232,9 @@
         }
         if (array_key_exists('howmanylikes', $_POST)) {
             $howmanylikes = trim($_POST['howmanylikes']);
+        }            
+        if (array_key_exists('tz', $_POST)) {
+            $tz = trim($_POST['tz']);
         }
     
     }
