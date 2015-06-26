@@ -158,7 +158,7 @@ require_once('head_inc.php');
 
     mysql_free_result($result);
 
-  notify_about_new_pm($user_id, $last_login, "bottom");
+  notify_about_new_pm($user_id, $last_pm_check_time, "bottom");
 
 require_once('msg_form_inc.php');
 

@@ -4,11 +4,11 @@ use Phalcon\Http\Response;
 
 $app = new Micro();
 
-require_once('head_inc.php');
-
 $app->get('/', function() use ($app) {
   echo file_get_contents('index.html');
 });
+
+require_once('head_inc.php');
 
 /**
  * GET /api/threads?id=-1&count=50

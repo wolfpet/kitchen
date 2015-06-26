@@ -37,6 +37,7 @@ $email2         = NULL;
 $email          = NULL;
 $auth_text      = NULL;
 $last_answered_id   = NULL;
+$last_pm_check_time = NULL;
 $byip           = NULL;
 $star           = NULL;
 $err_ban_reason = NULL;

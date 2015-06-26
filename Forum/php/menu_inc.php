@@ -1,7 +1,7 @@
 <?php
 /*$Id: menu_inc.php 875 2013-01-30 17:10:57Z dmitriy $*/
 ?>
-<?php notify_about_new_pm($user_id, $last_login);?>
+<?php notify_about_new_pm($user_id, $last_pm_check_time);?>
 <table width="98%">
 <?php
     if (!is_null($err_login) && strlen($err_login) > 0) {
@@ -17,7 +17,7 @@
 
 <tr>
 <td align="left">
-<img src="images/ukrainian-flag2.png" alt=""/>
+<a target="_top" href="m.php" title="Mobile version"><img src="images/ukrainian-flag2.png" alt="Кирдык"/></a>
 <!--<h3><?php print($title);?></h3>-->
 <!--<b>Public announcements go here</b>-->
 </td>
@@ -142,8 +142,20 @@ Forgot password? |
 <tr><td align="left">
  <SPAN STYLE="background-color: #E0E0E0">
 [ Pmail<?php if (!is_null($new_pm) && $new_pm > 0){ print('(<font color="red"><b>' . $new_pm . '</b></font>)');}?> | 
-<a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>">Inbox</a> |
+
+<?php
+if (strcmp($cur_page, $page_pmail) == 0) {?>
+  <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>"><i>Inbox</i></a> |
+<?php } else { ?>
+  <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>">Inbox</a> |
+<?php } ?>
+
+<?php
+if (strcmp($cur_page, $page_pmail_sent) == 0) {?>
+<a target="contents" class="menu" href="<?php print($root_dir . $page_pmail_sent); ?>"><i>Sent</i></a> |
+<?php } else { ?>
 <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail_sent); ?>">Sent</a> |
+<?php } ?>
  
 <?php
     if (strcmp($cur_page, $page_pmail_send) == 0) {

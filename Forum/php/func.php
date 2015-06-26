@@ -51,7 +51,7 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
     
     global $pm_new_mail;
 
-    $query = 'SELECT u.username, p.created from confa_pm p, confa_users u where u.id=p.sender and p.receiver=' . $user_id . ' and p.status & ' . $pm_new_mail . " and p.created > '" . $last_login . "'";
+    $query = 'SELECT u.username, p.created from confa_pm p, confa_users u where u.id=p.sender and p.receiver=' . $user_id . ' and p.status & ' . $pm_new_mail . " and p.created > '" . $last_login . "' order by p.created desc";
     $result = mysql_query($query);
     if (!$result) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -60,28 +60,35 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
     
     if ($row = mysql_fetch_assoc($result)) { 
       // You've got mail!      
-?><script language="javascript">    
-    var windowonload = window.onload;
-    
-    window.onload = function(e) {
-      console.log("openModal starts");
-      if (windowonload != null) {
-        windowonload(e);        
+      ?><script language="javascript">    
+      var windowonload = window.onload;
+      
+      window.onload = function(e) {
+        console.log("openModal starts");
+        if (windowonload != null) {
+          windowonload(e);        
+        }
+        location.hash = "#openModal";
+        console.log("openModal ended");
       }
-      location.hash = "#openModal";
-      console.log("openModal ended");
-    }
-  </script><div id="close"/><div id="openModal" class="modalDialog">
-    <div>
-      <a href="#close" target="<?=$target?>" title="Close" class="close">X</a>
-      <table cellpadding="5"><tr><td><img src="images/ygm.png" style="width:80%;height:auto;"/></td><td width="75%">
-       	<h3>You've got mail!</h3>
-        <p><b><?=$row['username']?></b> has sent you a private message.</p>
-        <p>Click <a target="contents" href="<?=$page_pmail?>" onclick="javascript:location.hash='#close'; return true;">here</a> to go to your Inbox.</p>
-      </td></tr></table>
-    </div>
-  </div><?php       
-    }
+      </script><div id="close"/><div id="openModal" class="modalDialog">
+      <div>
+        <a href="#close" target="<?=$target?>" title="Close" class="close">X</a>
+        <table cellpadding="5"><tr><td><img src="images/ygm.png" style="width:80%;height:auto;"/></td><td width="75%">
+          <h3>You've got mail!</h3>
+          <p><b><?=$row['username']?></b> has sent you a private message.</p>
+          <p>Click <a target="contents" href="<?=$page_pmail?>" onclick="javascript:location.hash='#close'; return true;">here</a> to go to your Inbox.</p>
+        </td></tr></table>
+      </div>
+    </div><?php
+    // No need to update this if no PM was found;
+    $query = "update confa_users set last_pm_check_time = CURRENT_TIMESTAMP where id=" . $user_id;
+    $result = mysql_query($query);
+    if (!$result) {
+      mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+      die('Query failed: ' . mysql_error() . ' QUERY: ' . $query);
+    }      
+  }    
 }
 
 function get_page_last_index( $where, $page_size, $page) {
