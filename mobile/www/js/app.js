@@ -124,19 +124,22 @@ function displayMessageCallback(payload)
 //this function loads the root threads or goes one level up depending on where we are.
 function onBackButton()
 {
-    currentLevel--;
+    
     
     //kill the message body content. Especially all sorts of players 
     //so they don't bother in the background.
+    if(currentLevel==0)return; //already on top
     document.getElementById('msgBody').innerHTML="";
-    if(currentLevel==0)
+    if(currentLevel==1)
     {   
         //go to the root threads
+        currentLevel--;
         $.ui.goBack();
     }
     else
     {   
         //level up
+        currentLevel--;
         displayMessage(currentParentID);        
     }
 }
