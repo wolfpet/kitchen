@@ -8,8 +8,7 @@ if(!empty($mess_id)){
 	$result2=mysql_query($sSQL) or die ("MySQL err: " . mysql_error());
 	if($row2 = mysql_fetch_array($result2)){ 
 		print('<a id="reply" class="mbutton" href="' .  $root_dir . $page_new . '?re=' . $mess_id . '"'); ?>
-               target="_blank">Reply</a>&nbsp;&nbsp;<a id="close" class="mbutton" href="#" onclick="document.getElementById('div_mes_<?= $mess_id ?>').style.display='none'; return false;">Close</a>
-               <br/><?php
+               target="_blank">Reply</a><a id="close" class="mbutton" href="#" onclick="document.getElementById('div_mes_<?= $mess_id ?>').style.display='none'; return false;">Close</a><div style='clear:both;'></div><?php
 		if ( $row2['status'] == 3 ) { print( '<font color="red">Censor (Мат)</font>' ); }
         elseif ( $row2['status'] == 4 ) {print( '<font color="red">Censor (Хамство)</font>' ); }
         elseif ( $row2['status'] == 5 ) {print( '<font color="red">Censor (Наезд)</font>' ); }

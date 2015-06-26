@@ -3,10 +3,10 @@
   border:#CCC 2px solid; 
   padding:5px; 
   display:none; 
-  font-size:10pt; 
+  font-size: 1.2em; //10pt; 
   position:absolute; 
   right: 0;
-  width:98%;
+  width:97%;
 // Old
   // width:320px; 
 // Ranger added:
@@ -20,6 +20,8 @@
   white-space: nowrap; /* Don't forget this one */
   text-overflow: ellipsis;
   //overflow:auto;
+  text-align: justify;
+  line-height: 1.2em;
 }
 
 iframe {
@@ -42,8 +44,8 @@ iframe {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0d4e3', endColorstr='#88bacf',GradientType=0 ); /* IE6-9 */
   color:white !important;
   text-align:center;
-  margin-bottom: 15px;
-  margin-left:5px;
+  margin-bottom: 10px;
+  // margin-left:5px;
 }
 
 .mbutton:hover {
@@ -58,6 +60,6 @@ iframe {
   color:navy !important;
 }
 
-.mbutton#close {
+.mbutton#reply {
   float:right;
 }
