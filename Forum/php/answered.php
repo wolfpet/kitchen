@@ -55,8 +55,13 @@ require_once('head_inc.php');
         if ($row['content_flags'] & 0x04) {
           $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
         }
+        $nsfw = '';
+        global $content_nsfw;
+        if ($row['content_flags'] & $content_nsfw) {
+          $nsfw .= ' <span class="nsfw">NSFW</span>';
+        }                  
 
-        $line = '<li> ' . $icons . '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '">' . print_subject($subj) . '</a>  <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
+        $line = '<li> ' . $icons . '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '">' . print_subject($subj) . '</a> '.$nsfw.' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
         
         if (!is_null($row['likes'])) {
           $likes = $row['likes'];

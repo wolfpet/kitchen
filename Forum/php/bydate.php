@@ -121,6 +121,11 @@ $show_hidden = 2;
         if ($row['content_flags'] & 0x04) {
           $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
         }
+        $nsfw = '';
+        global $content_nsfw;
+        if ($row['content_flags'] & $content_nsfw) {
+          $nsfw .= ' <span class="nsfw">NSFW</span>';
+        }                  
         $line = "";
         if ($show_hidden == 1 && in_array($row['author'], $ignored)) {
           $line= "<li><div style=\"visibility:visible\" id=\"hidden_msg_" . $id . "\"><font color=\"lightgrey\">Hidden message by " . $post_author . " <A href=\"#\" onclick=\"show_hidden_msg(" . $id . ");return false;\"><font color=\"lightgrey\"><b>show</b></font></A></font></div><div style=\"visibility:hidden; height:0;\" id=\"shown_msg_" . $id . "\">";
@@ -128,7 +133,7 @@ $show_hidden = 2;
         } else {
           $line="<li>";
         }
-          $line .=  $icons . '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '"> ' . print_subject($subj) . '</a>  <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
+          $line .=  $icons . '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '"> ' . print_subject($subj) . '</a> '.$nsfw.' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
           if (!is_null($row['likes'])) {
             $likes = $row['likes'];
             if ($likes > 0) {

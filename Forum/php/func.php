@@ -283,6 +283,7 @@ function print_line($row, $collapsed=false) {
   global $prop_bold;
   global $image_img;
   global $youtube_img;
+  global $content_nsfw;
 
   global $show_hidden;
   global $ignored;
@@ -312,12 +313,15 @@ function print_line($row, $collapsed=false) {
   $subj = $row['subject'];
   $icons = '';
   $style = 'padding:0px 0px 3px 0px;';
-
+  $nsfw = '';
   if ($row['content_flags'] & 0x02) {
     $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
   }
   if ($row['content_flags'] & 0x04) {
     $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
+  }
+  if ($row['content_flags'] & $content_nsfw) {
+    $nsfw .= '<span class="nsfw">NSFW</span>';
   }
   $subj = encode_subject($subj);
   $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
@@ -346,9 +350,9 @@ function print_line($row, $collapsed=false) {
           } else {
             $style .= 'cursor:pointer;';
           }
-          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>   ';
+          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a> '.$nsfw.'  ';
       } else {
-          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a>   ';
+          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a> '.$nsfw.'  ';
       }
   }
   
@@ -907,6 +911,7 @@ function m_print_threads($result, &$content) {
     global $page_collapsed;
     global $page_thread;
     global $prop_bold;
+    global $content_nsfw;
 #$pix=0;
     $msgs = array();
     $content = array();
@@ -959,11 +964,15 @@ function m_print_threads($result, &$content) {
                 $line = '&nbsp;<img border=0 src="images/dc.gif" alt="*"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
             }
         } else {
+            $nsfw = '';
+            if ($row['content_flags'] & $content_nsfw) {
+              $nsfw .= ' <span class="nsfw">NSFW</span>';
+            }          
             if ($row['level'] == 0) {
-                $line = '<div id="div_mes_' . $row['msg_id'] . '" onclick="this.style.display=\'none\'" class="show_message"></div><a href="#" onclick="show_message(\'' . $row['msg_id'] . '\'); return false;" class="index"><b>' . $row["username"] . ': </b>' . $subj . '</a></dd>';
+                $line = '<div id="div_mes_' . $row['msg_id'] . '" onclick="this.style.display=\'none\'" class="show_message"></div><a href="#" onclick="show_message(\'' . $row['msg_id'] . '\'); return false;" class="index"><b>' . $row["username"] . ': </b>' . $subj . '</a>'.$nsfw.'</dd>';
                 #$line = '&nbsp;<a id="' . $row['msg_id'] . '" onClick="SelectAll(\'' . $row['msg_id'] . '\');"  name="' . $row['msg_id'] . '" target="' . detect_mobile() . '" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '"><img border=0 src="images/bs.gif" width=16 height=16 alt="*"> ' . $b_start . $subj . $b_end . '  </a> ';
             } else {
-                $line = '<div id="div_mes_' . $row['msg_id'] . '" onclick="this.style.display=\'none\'" class="show_message"></div><a href="#" onclick="show_message(\'' . $row['msg_id'] . '\'); return false;" class="index"><b>' . $row["username"] . ': </b>' . $subj . '</a></dd>';
+                $line = '<div id="div_mes_' . $row['msg_id'] . '" onclick="this.style.display=\'none\'" class="show_message"></div><a href="#" onclick="show_message(\'' . $row['msg_id'] . '\'); return false;" class="index"><b>' . $row["username"] . ': </b>' . $subj . '</a>'.$nsfw.'</dd>';
                 #$line = '&nbsp;<a id="' . $row['msg_id'] . '" onClick="SelectAll(\'' . $row['msg_id'] . '\');"  name="' . $row['msg_id'] . '" target="' . detect_mobile() . '" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '"><img border=0 src="images/dc.gif" width=16 height=16 alt="*"> ' . $subj . '  </a> ';
             }
         }

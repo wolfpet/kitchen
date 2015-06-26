@@ -90,3 +90,7 @@ blockquote.uncited {
 .close:hover {
     background: #00d9ff;
 }
+
+.nsfw {
+  color: magenta;
+}

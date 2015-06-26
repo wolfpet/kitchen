@@ -52,9 +52,12 @@ require_once('dump.php');
                 $content_flags |= 2;
             }
             $new_body = youtube($body);
-			if (strcmp($body, $new_body) != 0) {
+            if (strcmp($body, $new_body) != 0) {
                 $content_flags |= 4;
-			}
+            }
+            if (isset($nsfw)) {
+                $content_flags |= $content_nsfw;
+            }
             $ibody = '\'' . mysql_escape_string($new_body) . '\'';
         }
     } while(false);

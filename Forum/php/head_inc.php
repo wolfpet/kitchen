@@ -77,6 +77,12 @@ $pm_read_by_receiver = 4;
 $pm_deleted_by_receiver = 8;
 $pm_read_by_sender = 16;
 
+// content flags
+$content_image  = 0x02;
+$content_video  = 0x04;
+$content_nsfw   = 0x08;
+$content_boyan  = 0x0A;
+
 //$title       = 'Forum';
 $page_title = $title;
 //$root_dir    = '/kirdyk/';

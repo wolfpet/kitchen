@@ -236,7 +236,9 @@
         if (array_key_exists('tz', $_POST)) {
             $tz = trim($_POST['tz']);
         }
-    
+        if (array_key_exists('nsfw', $_POST)) {
+            $nsfw = $_POST["nsfw"];
+        }    
     }
 
 ?>
