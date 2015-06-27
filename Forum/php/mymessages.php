@@ -20,7 +20,7 @@ require_once('head_inc.php');
     $count = $row[0]; 
 
     $last_id = get_page_last_index('confa_posts where author=' . $author_id , $how_many, $page );
-    $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'EST\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars  from confa_posts p, confa_users u where p.author=' . $author_id . ' and p.author=u.id and  p.status != 2 and p.id <= ' . $last_id . ' order by msg_id desc limit 50'; 
+    $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars  from confa_posts p, confa_users u where p.author=' . $author_id . ' and p.author=u.id and  p.status != 2 and p.id <= ' . $last_id . ' order by msg_id desc limit 50'; 
 
     $result = mysql_query($query);
     if (!$result) {
@@ -108,7 +108,9 @@ require('menu_inc.php');
     }
 ?>
 -->
-
+<?php 
+    print_pages($max_page, $page, 'contents', $cur_page, '&author_id=' . $author_id, false);
+?>
 </body>
 </html>
 <?php

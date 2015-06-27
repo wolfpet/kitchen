@@ -594,10 +594,11 @@ function get_max_pages_expanded(){
     return $max_page;
 }
 
-function print_pages($max_page, $page, $target, $cur_page, $param = '') {
+function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = true) {
 
     global $root_dir;
-    print('<BR><B>Pages</B>: ');
+    if ($br) print('<BR>');
+    print('<B>Pages</B>: ');
     $start = $page - 10;
     $end = $page + 9;
     if ( $start > 0 ) {

@@ -11,7 +11,7 @@ $thread_owner = false;
 
 <base target="bottom">
 </head>
-<body style="background-color: #CCEEEE;" onload="javascript:document.getElementById('<?=is_null($pm_id) ? "to" : "body"?>').focus();">
+<body style="background-color: #CCEEEE;" onload="javascript:var field = document.getElementById('<?=is_null($pm_id) ? "to" : "subj"?>'); addEvent(field,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); field.focus();">
 <?php 
     if (is_null($re) || strlen($re)== 0) {
 ?>
