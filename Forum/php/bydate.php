@@ -203,7 +203,10 @@ $end_timestamp = microtime(true);
 
 
 <br><b><?php print($max_id - $last_id); ?></b> new message(s) since you came here last time
-&nbsp;&nbsp;&nbsp;&nbsp;Queried: <?php printf(' (in ' . round($duration, 5) . ' seconds) <b>');  print(date('Y F d H:i:s', time())); ?></b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Queried: <?php printf(' (in ' . round($duration, 5) . ' seconds) <b>');  
+//print(date('Y F d H:i:s', time())); 
+print(local_time(time(), 'Y F d H:i:s'));
+?></b><br>
 <ol>
 <?php print($out); ?>
 </ol>

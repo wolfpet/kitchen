@@ -9,6 +9,22 @@ require_once('translit.php');
 require_once('settings.php');
 require_once('bbcode.php');
 
+function local_time($time, $format) {
+  
+  global $prop_tz;
+  global $server_tz;
+  
+  $offset = intval($prop_tz) - intval(explode(":", $server_tz)[0]);
+  
+  $date = new DateTime("now");
+  if ($offset < 0) 
+    $date->sub( new DateInterval('PT'.(-$offset).'H'));
+  else
+    $date->add( new DateInterval('PT'.$offset.'H'));
+  
+  return $date->format($format);
+}
+
 function autoversion($file) {
  global $root_dir;
  if(strpos($file, '/') !== 0)

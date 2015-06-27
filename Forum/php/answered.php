@@ -106,7 +106,7 @@ require('menu_inc.php');
 </table>
 -->
 
-<br>Queried: <b><?php  print(date('Y F d H:i:s', time())); ?></b><br>
+<br>Queried: <b><?php  print(local_time(time(), 'Y F d H:i:s')); ?></b><br>
 <ol>
 <?php print($out); ?>
 </ol>
