@@ -20,7 +20,7 @@ $thread_owner = false;
 
 <base target="bottom">
 </head>
-<body onload="javascript:document.getElementById('subj').focus();">
+<body onload="javascript:var subj = document.getElementById('subj'); addEvent(subj,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); subj.focus();">
 
 <?php 
     if (is_null($re) || strlen($re)== 0) {

@@ -116,3 +116,19 @@ function insertBBCode(fieldId, tag)
   }
   element.focus();
 }
+
+// Basic cross browser addEvent
+function addEvent(elem, event, fn){
+if(elem.addEventListener){
+  elem.addEventListener(event, fn, false);
+}else{
+  elem.attachEvent("on" + event,
+  function(){ return(fn.call(elem, window.event)); });
+}}
+
+// Demo: move caret to the end of textbox on focus
+/*
+addEvent(element,focus,function(){
+  this.selectionStart = this.selectionEnd = this.value.length;
+});
+*/
