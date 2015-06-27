@@ -19,7 +19,7 @@ if ( isset($msg_id) ) {
     $result = get_thread_starts($min_thread, $last_thread-1);
   } else {
     $limit = 100; // 100
-    $result = get_threads_ex($limit, $last_thread-1);
+    $result = get_threads_ex($limit, $last_thread);
   }
 
   $msgs = print_threads_ex($result, $content, $last_thread, $limit, $collapsed);
