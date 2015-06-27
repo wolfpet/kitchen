@@ -3,7 +3,7 @@
 function do_bbcode($body) {
   global $user;
   
-  if(!extension_loaded('fastbbcode') || isset($user) && in_array($user, array('Ranger', 'Pensioner', 'test', 'echo_maker', 'A. Fig Lee', 'leonid', 'Peter (2)'))) {
+  if(true || !extension_loaded('fastbbcode') || isset($user) && in_array($user, array('Ranger', 'Pensioner', 'test', 'echo_maker', 'A. Fig Lee', 'leonid', 'Peter (2)'))) {
     print('<div id="stamp" style="font-size: 8px;color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 8px;z-index: 9999;text-align: right;">phpBBCode&nbsp;</div>');
     return bbcode_format($body);
   } else 
