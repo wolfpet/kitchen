@@ -1,8 +1,35 @@
 <?php
-use Phalcon\Mvc\Micro;
+use Phalcon\Mvc\Micro, 
+    Phalcon\Events\Manager as EventsManager;
 use Phalcon\Http\Response;
 
+// Create a events manager
+$eventManager = new EventsManager();
+
+// Listen all the application events
+$eventManager->attach('micro', function($event, $app) {
+
+  if ($event->getType() == 'beforeExecuteRoute') {
+    // authenticate user
+    if ($app->session->get('auth') == false) {
+
+      $username = $app->request->getServer('PHP_AUTH_USER');
+      $password = $app->request->getServer('PHP_AUTH_PW');  
+
+      if (is_null($username) || is_null($password)) {
+        // debug
+      }        
+      
+      // Return false to stop the operation
+      return true;
+    }
+  }
+});
+
 $app = new Micro();
+
+// Bind the events manager to the app
+$app->setEventsManager($eventManager);
 
 $app->get('/', function() use ($app) {
   echo file_get_contents('index.html');
@@ -167,6 +194,8 @@ function api_get_subject($subject, $status=1) {
 
 /**
  * GET /messages/$id
+ *
+ * Returns one message
  */
 
 $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_tz) {
@@ -286,6 +315,119 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) use ($prop_tz, 
 
   $response->setJsonContent(array('count' => $count,'messages' => $messages));
   
+  return $response;
+});
+
+/**
+ * GET /api/messages?mode=<bydate|mymessages|answered>&count=50&id=<max_msg_id>
+ *
+ * Returns "Collapsed threads" view data, also a default view for mobile client. optional arguments - $max_thread_id, $count
+ */
+$app->get('/api/messages', function() use ($app, $prop_tz, $server_tz) {
+  $response = new Response();
+  
+  $mode = $app->request->getQuery('mode');  
+
+  if (is_null($mode)) {
+    $mode = 'bydate';
+  }
+  
+  $count = $app->request->getQuery('count');
+  
+  if (is_null($count)) {
+    $count = 30;
+  } else {
+    $count = intval($count);
+  }
+
+  $max_id = $app->request->getQuery('id');
+
+  if (is_null($max_id)) {
+    $max_id = -1;
+  } else {
+    $max_id = intval($max_id);
+  }
+  
+  switch ($mode) {
+    
+    case 'bydate':
+      $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
+        . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 order by id desc limit ' . $count;
+      break;
+      
+    case 'mymessages':
+    case 'answered':
+    default:
+      $response = new Response();
+      $response->setStatusCode(400, 'Error')->sendHeaders();
+      $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Invalid parameter value: ' . $mode)));
+      return $response;
+  }
+
+  $result = mysql_query($query);
+  if (!$result) {
+      mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'max_id="' . $max_id . '"');
+      die('Query failed ' . mysql_error() . ' QUERY: ' . $query );
+  }
+
+  $messages = array();
+  $count = 0;
+  
+  while ($row = mysql_fetch_assoc($result)) {
+    $messages[] = array(
+      'id' => intval($row['id']),
+      'status' => intval($row['status']),
+      'subject' => api_get_subject($row['subject'], $row['status']),
+      'author' => array('id'  => intval($row['auth']), 'name' => $row['username']),
+      'created' => $row['created'],
+      'views' => intval($row['views']),
+      'likes' => intval($row['likes']),
+      'dislikes' => intval($row['dislikes']),
+      'page' => intval($row['page']),
+      'parent' => intval($row['parent']),
+      'closed' => filter_var($row['post_closed'], FILTER_VALIDATE_BOOLEAN),
+      'flags' => intval($row['content_flags']),
+      'answers' => intval($row['counter']),
+      'level' => intval($row['level'])
+    );
+    $count++;
+  }
+
+  $response->setJsonContent(array('count' => $count,'messages' => $messages));
+  
+  return $response;  
+});
+
+/**
+ * GET /api/users
+ *
+ * Returns user profile and session ID (in headers)
+ */
+$app->get('/api/users', function() use ($app) {
+  $response = new Response();
+  /*    
+  while ($row = mysql_fetch_assoc($result)) {
+    $messages[] = array(
+      'id' => intval($row['id']),
+      'status' => intval($row['status']),
+      'subject' => api_get_subject($row['subject'], $row['status']),
+      'author' => array('id'  => intval($row['auth']), 'name' => $row['username']),
+      'created' => $row['created'],
+      'views' => intval($row['views']),
+      'likes' => intval($row['likes']),
+      'dislikes' => intval($row['dislikes']),
+      'page' => intval($row['page']),
+      'parent' => intval($row['parent']),
+      'closed' => filter_var($row['post_closed'], FILTER_VALIDATE_BOOLEAN),
+      'flags' => intval($row['content_flags']),
+      'answers' => intval($row['counter']),
+      'level' => intval($row['level'])
+    );
+    $count++;
+  }
+
+  $response->setJsonContent(array('count' => $count,'messages' => $messages));
+*/  
   return $response;
 });
 
