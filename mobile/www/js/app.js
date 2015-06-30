@@ -92,7 +92,7 @@ function showRepliesCallback(payload)
         li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote: <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
+        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote: <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
                           
         replyTitleList.appendChild(li);                
     }               
@@ -134,7 +134,7 @@ function byDateCallback(payload)
         li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote on "+data.messages[i].created+": <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
+        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote on "+data.messages[i].created+": <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
                           
          titleList.appendChild(li);       
     }
@@ -156,7 +156,7 @@ function byDateCallback(payload)
 //the user clicks on the title, then we display the message body in the pop-up
 function displayMessage (messageId)
 {
-    currentView="message";
+    currentView="message";    
     var url = mainUrl+"api/messages/" + messageId;
     var apiCall = $.get(url, function(data) {displayMessageCallback(data);}); 
 }
@@ -169,7 +169,7 @@ function displayMessageCallback(payload)
     //$.ui.popup(msg);
     var subj = data.subject;
     var name = data.author.name;
-    currentParentID = data.parent;
+    currentParentID = data.parent;    
     document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /> <br /><span style='color:#008800'> Likes: " + data.likes + "</span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'> Dislikes: " + data.dislikes + "</span><br><br />";
 
     //display replies here if any    
