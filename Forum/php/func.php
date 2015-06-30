@@ -1038,7 +1038,7 @@ function sendmail($address, $subj, $body) {
 function youtube($body, $embed = true) {
   global $host;
   
-	$result = preg_replace_callback('#(?<!\[url(=|]))((?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#i',
+	$result = preg_replace_callback('#(?<!\[url(=|\]))((?:https?://)(?:www\.|m\.)?(?:youtu\.be/|youtube\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#i',
 
     function ($matches) use ($embed, $host) {
       $url = $matches[2];
