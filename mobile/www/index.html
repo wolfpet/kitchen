@@ -39,7 +39,7 @@
 <!-- Hamburger Menu -->
 <nav>
     <ul class="list">
-        <li><a href="#future" onclick="javascript:$.ui.toggleSideMenu();msgBody.InnerHTML=''" class="icon clock">Most Recent</a></li>
+        <li><a href="#recent" onclick="javascript:$.ui.toggleSideMenu();msgBody.InnerHTML='';byDate(50);" class="icon clock">Most Recent</a></li>
         <li><a href="#future" onclick="javascript:$.ui.toggleSideMenu();"  class="icon heart">Answered</a></li>
         <li><a href="#future" onclick="javascript:$.ui.toggleSideMenu();"  class="icon user">My Messages</a></li>
         <li><a href="#future" onclick="javascript:$.ui.toggleSideMenu();"  class="icon mail">Private Mail</a></li>
@@ -79,6 +79,17 @@
         <!-- Replies go here -->
         <ul class="list widget uib_w_2 d-margins" id="replyTitleList" data-uib="app_framework/listview" data-ver="1">                 
         </ul>
+    </div>
+    <!-- by date view -->
+    <div class="panel" title="Recent" id="recent" data-footer="foo">
+        <header>
+            <a id="menubadge" onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
+            <h1>Recent</h1>
+        </header>
+        <div id="byDate">
+            <ul class="list widget uib_w_2 d-margins" id="byDateList" data-uib="app_framework/listview" data-ver="1">    
+            </ul>
+        </div>
     </div>
     <!-- some future stuffs -->
     <div class="panel" title="Future stuff" id="future" data-footer="foo">

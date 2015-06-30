@@ -2,6 +2,7 @@ var mainUrl = "http://kirdyk.radier.ca/";
 var titleList;
 var currentParentID=0;
 var currentLevel=0;
+var currentView="threads"; //"message", "byDate"
 
 function onAppReady() 
 {
@@ -33,7 +34,7 @@ function loadRootThreadsCallbackPlus(payload)
         var badgeHtml ="";
         if(data.threads[i].counter > 0)
         { 
-            badgeHtml="<span class='af-badge tl'>"+data.threads[i].counter+"</span>";
+            badgeHtml="<span class='af-badge tr'>"+data.threads[i].counter+"</span>";
         }
         //Append the title to the list
         var li = document.createElement('li');
@@ -47,11 +48,10 @@ function loadRootThreadsCallbackPlus(payload)
 
 //see the current level replies
 function showReplies(messageID)
-{    
+{   
     var url = mainUrl+"api/messages/" + messageID +"/answers";   
     replyTitleList = document.getElementById("replyTitleList");
-    var apiCall = $.get(url, function(data) {showRepliesCallback(data);}); 
-    
+    var apiCall = $.get(url, function(data) {showRepliesCallback(data);});     
 }
 
 function showRepliesCallback(payload) 
@@ -86,7 +86,7 @@ function showRepliesCallback(payload)
         var readMsgButtonHtml ="<div class='button-grouped'>";
         if(data.messages[i].answers > 0)
         {
-            badgeHtml= "<span class='af-badge tl'>"+data.messages[i].answers+"</span>";          
+            badgeHtml= "<span class='af-badge tr'>"+data.messages[i].answers+"</span>";          
         }
         //Append the title to the list
         li = document.createElement('li');
@@ -98,9 +98,65 @@ function showRepliesCallback(payload)
     }               
 }
 
+//By Date
+//example: http://kirdyk.radier.ca/api/messages?mode=bydate&id=444842&count=5
+//this will change when proper authentication is implemented and it's possible to determine
+//which messages were posted since the last check.
+//for now we just show last 30.
+function byDate(howMany)
+{
+    currentView="byDate";
+    var url = mainUrl+ "api/messages?mode=bydate&count=" + howMany;
+    
+    
+    titleList = document.getElementById("byDateList");
+    var apiCall = $.get(url, function(data) {byDateCallback(data);}); 
+    currentLevel=0; //we are on the top level of the tree
+}
+function byDateCallback(payload)
+{
+    //clear the list
+    $("#byDateList").empty();
+    var data = $.parseJSON(payload);
+    for(i=0; i<data.count; i++)
+    {
+        var subj = data.messages[i].subject;
+        //check the number of replies. if >0 then render the badge
+        var badgeHtml ="";
+        var replyLinkHtml="";
+        var showRepliesHtml="";
+        var readMsgButtonHtml ="<div class='button-grouped'>";
+        if(data.messages[i].answers > 0)
+        {
+            badgeHtml= "<span class='af-badge tr'>"+data.messages[i].answers+"</span>";          
+        }
+        //Append the title to the list
+        li = document.createElement('li');
+        li.setAttribute('class','widget uib_w_7');
+        li.setAttribute('data-uib','app_framework/listitem');
+        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote on "+data.messages[i].created+": <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
+                          
+         titleList.appendChild(li);       
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //the user clicks on the title, then we display the message body in the pop-up
 function displayMessage (messageId)
 {
+    currentView="message";
     var url = mainUrl+"api/messages/" + messageId;
     var apiCall = $.get(url, function(data) {displayMessageCallback(data);}); 
 }
