@@ -71,7 +71,7 @@ $show_hidden = 2;
 
     $result = mysql_query($query);
     if (!$result) {
-        mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'last_id="' . $last_id . '"');
+        mysql_log(__FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'last_id="' . $last_id . '"');
         die('Query failed ' );
     }
 
@@ -84,7 +84,7 @@ $show_hidden = 2;
       $query = "SELECT ignored from confa_ignor where ignored_by=" . $test_user_id;
       $result_ignored = mysql_query($query);
       if (!$result_ignored) {
-        mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'test_user_id="' . $test_user_id . '"');
+        mysql_log(__FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'test_user_id="' . $test_user_id . '"');
         die('Query failed ' );
       }
       while ($row = mysql_fetch_assoc($result_ignored)) {
