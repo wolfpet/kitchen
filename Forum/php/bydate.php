@@ -63,6 +63,9 @@ $show_hidden = 2;
     } else {
        $limit_id = $max_id - $how_many;
     }
+    if (is_null($max_id) || strlen($max_id) == 0)
+      $max_id = 0;
+
     if ($show_hidden == 2 || $show_hidden == 1) {
     $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 order by id desc limit 100';
     } else if ($show_hidden == 0) {
