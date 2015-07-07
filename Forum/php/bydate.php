@@ -71,7 +71,7 @@ $show_hidden = 2;
 
     $result = mysql_query($query);
     if (!$result) {
-        mysql_log(__FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'last_id="' . $last_id . '"');
+        mysql_log(__FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . '<--END_OF_QUERY, last_id="' . $last_id . '"');
         die('Query failed ' );
     }
 
