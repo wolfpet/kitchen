@@ -18,25 +18,25 @@ require_once('head_inc.php');
         $query = 'SELECT id, username, password, prop_bold, prop_tz, status, moder, ban, ban_ends, new_pm  FROM confa_users where username = \'' . mysql_escape_string($user) . '\' and password=password(\'' . mysql_escape_string($password) . '\')';
         $result = mysql_query($query);
         if (!$result) {
-            mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+            mysql_log( __FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
             die('Query failed');
         }
-        mysql_log( __FILE__, 'query succeded numrows= ' . mysql_num_rows($result) . ' for username= ' . $user . ' QUERY: ' . $query);
+        mysql_log( __FILE__ . ':' . __LINE__, 'query succeded numrows= ' . mysql_num_rows($result) . ' for username= ' . $user . ' QUERY: ' . $query);
         if (mysql_num_rows($result)  < 1) {
-        mysql_log( __FILE__, 'num_rows ' . $user . ' QUERY: ' . $query);
+        mysql_log( __FILE__ . ':' . __LINE__, 'num_rows < 1' . $user . ' QUERY: ' . $query);
             $query = 'SELECT id, username, password, prop_bold, prop_tz, status, moder, ban, ban_ends, new_pm  FROM confa_users where username = \'' . mysql_escape_string($user) . '\' and password=old_password(\'' . mysql_escape_string($password) . '\')';
             $result = mysql_query($query);
-        mysql_log( __FILE__, 'result ' . $user . ' QUERY: ' . $query);
+        mysql_log( __FILE__ . ':' . __LINE__, 'result ' . $user . ' QUERY: ' . $query);
             if (!$result) {
-                mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+                mysql_log( __FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
                 die('Query failed');
             } 
-        mysql_log( __FILE__, '2 ' . $user . ' QUERY: ' . $query);
+        mysql_log( __FILE__ . ':' . __LINE__, '2 ' . $user . ' QUERY: ' . $query);
             if (mysql_num_rows($result) == 0) {
                 $err_login = 'Wrong password or username ' . $user . ' ' . $password ;
                 break;
             } else {
-                mysql_log( __FILE__, 'successfull login with old password');
+                mysql_log( __FILE__ . ':' . __LINE__, 'successfull login with old password');
 
             }
         }
