@@ -79,7 +79,7 @@ function bbcode_on() {
 </tr>
 <tr>
 <td colspan="4" width="100%">
-<textarea id="body" name="body" tabindex=3 <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> cols="90" tabindex="2" rows="8"><?php
+<textarea id="body" name="body" tabindex=3 <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);" <?php } ?> cols="90" tabindex="2" rows="8"><?php
 
     print($body);
  //print(nl2br(htmlentities($body, HTML_ENTITIES,'UTF-8')));
