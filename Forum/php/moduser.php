@@ -78,6 +78,7 @@ require_once('html_head_inc.php');
         $ban = $row['ban'];
         $email = $row['email'];
         $ban_ends = $row['ban_ends'];
+        $pban = $row['pban'];
         if (is_null($email) || strlen($email) == 0) {
             $email = '-';
         }
