@@ -2,7 +2,7 @@
 /*$Id: menu_inc.php 875 2013-01-30 17:10:57Z dmitriy $*/
 ?>
 <?php notify_about_new_pm($user_id, $last_pm_check_time);?>
-<table width="98%">
+<table width="100%">
 <?php
     if (!is_null($err_login) && strlen($err_login) > 0) {
 ?>
@@ -54,15 +54,15 @@
     print($url); ?>" target="contents">Logout</a> | <?php
     if (strcmp($cur_page, $page_profile) == 0) {
 ?>
-Profile |
+<font color="gray"><b><?php print($user); ?></b></font> |
 <?php
     } else {
 ?>
-<a target="bottom" class="menu"  href="<?php print($root_dir . $page_profile); ?>">Profile</a></span>
+<a target="bottom" class="menu"  href="<?php print($root_dir . $page_profile); ?>"><b><?php print($user); ?></b></a></span>
 <?php
     }   
 ?>
-| <font color="gray"><b><?php print($user); ?></b></font> ]<!--</td></tr></table>-->
+]
 </td>
 
 <?php
