@@ -3,7 +3,7 @@
 function do_bbcode($body) {
   global $user;
   
-  if(true || !extension_loaded('fastbbcode') || isset($user) && in_array($user, array('Ranger', 'Pensioner', 'test', 'echo_maker', 'A. Fig Lee', 'leonid', 'Peter (2)'))) {
+  if(!extension_loaded('fastbbcode') || isset($user) && in_array($user, array('Ranger', 'Pensioner', 'test', 'echo_maker', 'A. Fig Lee', 'leonid', 'Peter (2)'))) {
     print('<div id="stamp" style="font-size: 8px;color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 8px;z-index: 9999;text-align: right;">phpBBCode&nbsp;</div>');
     return bbcode_format($body);
   } else 
@@ -22,8 +22,9 @@ function bbcode_format($str){
       '#\[code\](.*?)\[/code\]#is', // Monospaced code [code]text[/code])
       '#\[size=([1-9]|1[0-9]|20)\](.*?)\[/size\]#is', // Font size 1-20px [size=20]text[/size])
       '#\[color=([A-F0-9]{3}|[A-F0-9]{6})\](.*?)\[/color\]#is', // Font color ([color=00F]text[/color])
-      '#\[color=(.*?)\](.*?)\[/color\]#is', // Font color ([color=#00F]text[/color]) or Font color ([color={color_name}]text[/color])
-      '#\[url=((?:ftp|https?)://[^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
+      '#\[color=(.*?)\](.*?)\[/color\]#is', // Font color ([color=#00F]text[/color]) or Font color ([color={color_name}]text[/color])      
+//      '#\[url=((?:ftp|https?)://[^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
+      '#\[url=((?:ftp|https?):\/\/[^\]\s]*)\s*\](.*?)\[\/url\]#is',
       '#\[url=([^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
       '#\[url\]((?:ftp|https?)://[^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]),
       '#\[url\]([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]) 
@@ -100,7 +101,8 @@ function bbcode_naked_images($str) {
 }
 
 function bbcode_naked_urls($str) {
-  return preg_replace_callback('#'.unless_in_quotes('[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]').'#is', // unprocessed URLs(i.e. without quotes around them)
+  // '[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]'
+  return preg_replace_callback('#'.unless_in_quotes('[[:alpha:]]+://[^<>[:space:]\"]+').'#is', // unprocessed URLs(i.e. without quotes around them)
     function ($m) {
       if(empty($m[1])) return $m[0];
 					else return '<a target="_blank" href="' . $m[1] . '">' . $m[1] . '</a>';

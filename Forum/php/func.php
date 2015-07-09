@@ -664,7 +664,7 @@ function print_pages_old($max_page, $page, $target, $cur_page) {
 function print_msgs($ar, $msgs) {
 
     $keys = array_keys($ar);
-    print("<dl style='position:relative; left:-20px'><dd>\n");
+    print("<dl style='position:relative; left:0px'><dd>\n");
     foreach ($keys as $key) {
         //if ($msgs[$key] != "") {
         print($msgs[$key]);

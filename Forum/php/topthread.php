@@ -27,7 +27,7 @@ require_once('head_inc.php');
 
     function print_msgs2($ar, $msgs) {
         $keys = array_keys($ar);
-        print("<dl style='position:relative; left:-20px'><dd>");
+        print("<dl style='position:relative; left:0px'><dd>");
         foreach ($keys as $key) {
             print($msgs[$key]);
             print("<BR>");
