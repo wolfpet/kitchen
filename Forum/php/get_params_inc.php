@@ -126,6 +126,9 @@
         if (array_key_exists('howmanylikes', $_GET)) {
             $howmanylikes = trim($_GET['howmanylikes']);
         }
+        if (array_key_exists('bantime', $_GET)) {
+            $bantime = $_GET['bantime'];
+        }
 
     }
 
