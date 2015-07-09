@@ -92,5 +92,12 @@ blockquote.uncited {
 }
 
 .nsfw {
-  color: magenta;
+  color: #FF2400; /* scarlet */
+}
+
+div#threads {
+/*
+  white-space: nowrap;
+  overflow-x: hidden;
+*/
 }
