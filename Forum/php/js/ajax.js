@@ -54,21 +54,22 @@
 		http_request.onreadystatechange = function() { alertContents(http_request, inner_func, other_arg); };
 		http_request.open('POST', url, true);
 		http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		http_request.setRequestHeader("Content-length", snd.length);
-      	http_request.setRequestHeader("Connection", "close");
-      	http_request.send(snd);
-
+		//http_request.setRequestHeader("Content-length", snd.length);
+    //http_request.setRequestHeader("Connection", "close");
+    http_request.send(snd);
     }
 
     function alertContents(http_request, ffff, sAgument) {
 
         if (http_request.readyState == 4) {
             if (http_request.status == 200) {
-				var ttt= ffff(http_request.responseText, sAgument);
-				return http_request.responseText;
+              var ttt= ffff(http_request.responseText, sAgument);
+              return http_request.responseText;
                 //alert(http_request.responseText);
             } else {
                 //alert('There was a problem with the request.');
+              var ttt= ffff(http_request.responseText, sAgument, http_request.status);
+              return http_request.responseText;
             }
         }
     }
@@ -77,5 +78,4 @@
 		var dddd=new Date();
 		return dddd.getTime();
 		}
-
-
+    
