@@ -40,6 +40,8 @@
         $count = $row[0]; 
 
         $last_id = get_page_last_index(' confa_posts where ' . $subquery . $where, $how_many, $page);
+        if (is_null($last_id) || strlen($last_id) == 0)
+          $last_id = 0;
 
         $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'EST\') as created, p.subject, p.status, p.id as msg_id, p.chars  from confa_posts p, confa_users u where ' . $where_author . ' p.author=u.id and  p.' . $subquery . ' and p.id <= ' . $last_id . ' order by msg_id desc limit 50'; 
 
