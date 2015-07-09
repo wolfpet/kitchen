@@ -69,8 +69,8 @@
         if (array_key_exists('re', $_GET)) {
             $re = intval(trim($_GET['re']), 10);
         }
-        if (array_key_exists('link', $_GET)) {
-            $link = trim($_GET['link']);
+        if (array_key_exists('act_link', $_GET)) {
+            $act_link = trim($_GET['act_link']);
         }     
         if (array_key_exists('password', $_GET)) {
             $password = trim($_GET['password']);

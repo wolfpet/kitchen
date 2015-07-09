@@ -10,8 +10,8 @@ require_once('html_head_inc.php');
 </head>
 <?php
 
-if ( strlen($link) > 0 ) {
-    $query = 'SELECT username, password, timediff(current_timestamp, created) as td, email, actkey from confa_regs where actkey=\'' . $link . '\'';
+if ( strlen($act_link) > 0 ) {
+    $query = 'SELECT username, password, timediff(current_timestamp, created) as td, email, actkey from confa_regs where actkey=\'' . $act_link . '\'';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);

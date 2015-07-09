@@ -111,7 +111,7 @@ require_once('html_head_inc.php');
         }
         $to = $email;
         $subject = "Forum registration";
-        $message = $user . ", to activate account, please click on the following link or copy an paste it in your browser.\n <a href=\"http://" . $host . $root_dir . $page_activate . '?link=' . $md5 . '">http://' . $host . $root_dir . $page_activate . '?link=' . $md5 . "</a> The link will be valid 86400 seconds (24 hours in human language).\n";
+        $message = $user . ", to activate account, please click on the following link or copy an paste it in your browser.\n <a href=\"http://" . $host . $root_dir . $page_activate . '?act_link=' . $md5 . '">http://' . $host . $root_dir . $page_activate . '?act_link=' . $md5 . "</a> The link will be valid 86400 seconds (24 hours in human language).\n";
         $from = $from_email;
         $headers = "From: $from";
         mail($to,$subject,$message,$headers);
