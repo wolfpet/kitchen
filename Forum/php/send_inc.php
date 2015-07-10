@@ -66,11 +66,14 @@ function bbcode_on() {
     }
 ?>
 </td>
-<td align="right">&nbsp;
+<td align="right" nowrap>
   <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'b');return false;">[<b>b</b>]</a>
   <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'i');return false;">[<i>i</i>]</a>
   <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'u');return false;">[<u>u</u>]</a>
-  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 's');return false;">[<del>s</del>]</a>
+  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 's');return false;">[<del>s</del>]</a>&nbsp;&nbsp;&nbsp;&nbsp;
+ <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'quote');return false;">[quote]</a>
+ <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'code');return false;">[code]</a>
+ <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'sarcasm');return false;">[<em>sarcasm</em>]</a>&nbsp;&nbsp;
 </td>
 <td align="right">
   <a href="#" onclick="javascript:insertTag('body', 1);return false;">[url=]<font color="gray">Title</font>[/url]</a>&nbsp;
