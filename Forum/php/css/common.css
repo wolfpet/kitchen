@@ -101,3 +101,12 @@ div#threads {
   overflow-x: hidden;
 */
 }
+
+em {
+  display: inline-block;
+  -ms-transform: skew(15deg,0deg);      /* IE 9 */
+  -webkit-transform: skew(15deg,0deg);  /* Safari and Chrome */
+  -o-transform: skew(15deg,0deg);       /* Opera */
+  -moz-transform: skew(15deg,0deg);     /* Firefox */
+  transform: skew(15deg,0deg);
+}

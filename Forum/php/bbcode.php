@@ -20,6 +20,7 @@ function bbcode_format($str){
       '#\[u\](.*?)\[/u\]#is', // Underline ([u]text[/u])
       '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
       '#\[code\](.*?)\[/code\]#is', // Monospaced code [code]text[/code])
+      '#\[sarcasm\](.*?)\[/sarcasm\]#is', // Sarcasm
       '#\[size=([1-9]|1[0-9]|20)\](.*?)\[/size\]#is', // Font size 1-20px [size=20]text[/size])
       '#\[color=([A-F0-9]{3}|[A-F0-9]{6})\](.*?)\[/color\]#is', // Font color ([color=00F]text[/color])
       '#\[color=(.*?)\](.*?)\[/color\]#is', // Font color ([color=#00F]text[/color]) or Font color ([color={color_name}]text[/color])      
@@ -35,10 +36,11 @@ function bbcode_format($str){
   // The matching array of strings to replace matches with
   $format_replace = array(
       '<strong>$1</strong>',
-      '<em>$1</em>',
+      '<i>$1</i>',
       '<span style="text-decoration: underline;">$1</span>',
       '<span style="text-decoration: line-through;">$1</span>',
       '<pre>$1</'.'pre>',
+      '<em>$1</em>',
       '<span style="font-size: $1px;">$2</span>',
       '<span style="color: #$1;">$2</span>',
       '<span style="color: $1;">$2</span>',
