@@ -33,7 +33,12 @@ fastbbcode.tar is a source code for php extension - must be placed in ext direct
 and compiled/installed.
 fastbbcode.so - compiled version for CentOS
 
-Forum's REST API requires PHP version 5.3.3+ and PhalconPHP extension installed.
+Forum's REST API requires PHP version 5.3.3+ and PhalconPHP extension installed. 
+
+Apache settings: 
+
+1. Enable mod_rewrite (uncomment LoadModule... line)
+2. Modify vhost entry (e.g. Directory var/www/html) from AllowOverride None to AllowOverride All)
 
 Production environment:
 
