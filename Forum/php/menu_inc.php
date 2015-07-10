@@ -24,8 +24,7 @@
 <?php
     if ($logged_in == false) {
 ?>
-
-<td align="right">
+<td align="right" nowrap>
 <form method="post" target="contents" action="<?php print($root_dir . $page_login); ?>">
 <input type="hidden" name="lastpage" id="lastpage" value="<?php print( $cur_page );?>"/>
 <?php
@@ -33,14 +32,8 @@
             print('<input type="hidden" name="author_id" id="author_id" value="' . $author_id . '"/>');
         }
 ?>
-<table><tr>
-<td>Username: <input type="text" id="user" name="user" maxlength="64" size="16" value="<?php htmlentities($user, HTML_ENTITIES,'UTF-8');?>"/></td>
-<td>Password: <input type="password" id="password" name="password" size="8" maxlength="16"/></td>
-<td><input type="Submit" value="Login"/></td>
-</tr></table>
-</form>
-</td>
-
+Username: <input type="text" id="user" name="user" maxlength="64" size="16" value="<?php htmlentities($user, HTML_ENTITIES,'UTF-8');?>"/> Password: <input type="password" id="password" name="password" size="8" maxlength="16"/> <input type="Submit" value="Login"/>
+</form></td>
 <?php
     } else {
 ?>
