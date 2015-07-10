@@ -102,7 +102,7 @@ function insertBBCode(fieldId, tag)
       element.setSelectionRange(element.value.length - tl, element.value.length - tl); 
     }
   } else { // no selection, insert the tag at selection start
-    if (element.value.substring(0, ss).lastIndexOf('[/' + tag + ']') >= element.value.substring(0, ss).lastIndexOf('[' + tag + ']')) {
+    if (element.value.substring(0, ss).lastIndexOf('[/' + tag + ']') >= element.value.substring(0, ss).lastIndexOf('[' + tag /*+ ']'*/)) {  // to support tags like quote=
       element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + '[' + tag +']' + element.value.substring(element.value.length - tl); 
       if (element.setSelectionRange) { 
         element.setSelectionRange(ss + tag.length + 2, ss + tag.length + 2); 

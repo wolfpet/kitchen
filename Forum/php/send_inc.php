@@ -73,7 +73,7 @@ function bbcode_on() {
   <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 's');return false;">[<del>s</del>]</a>&nbsp;&nbsp;&nbsp;&nbsp;
  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'quote');return false;">[quote]</a>
  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'code');return false;">[code]</a>
- <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'sarcasm');return false;">[<em>sarcasm</em>]</a>&nbsp;&nbsp;
+ <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'sarcasm');return false;">[<em>sarcasm</em>]</a>&nbsp;
 </td>
 <td align="right">
   <a href="#" onclick="javascript:insertTag('body', 1);return false;">[url=]<font color="gray">Title</font>[/url]</a>&nbsp;
