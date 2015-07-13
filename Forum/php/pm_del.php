@@ -6,14 +6,23 @@ require_once('head_inc.php');
     if (count($pmdel) == 0) {
         $err = 'No messages were selected<BR>';
     } else {
-        $query = "UPDATE confa_pm SET status = status | IF(sender=".$user_id.",".$pm_deleted_by_sender.",IF(receiver=".$user_id.",".$pm_deleted_by_receiver.",0)), flags = NULL WHERE (receiver=".$user_id." or sender=".$user_id.") and id in (";
+        $query = "UPDATE confa_pm SET status = status ";
+
+        if (!isset($lastpage) || $lastpage == $page_pmail) {
+          $query .= "& ~".$pm_new_mail." | IF(receiver=".$user_id.",".$pm_deleted_by_receiver.",0)";  // so that deleted pmail doesn't counts as 'new'
+        } else {
+          $query .= "| IF(sender=".$user_id.",".$pm_deleted_by_sender.",0)";
+        }
+        $query .= ", flags = NULL WHERE (receiver=".$user_id." or sender=".$user_id.") and id in (";
+        
         $add = '';
         for ($i = 0; $i < count($pmdel); $i++) {
             if (strlen($add) > 0) {
                 $add .= ",";
             }
             $add .= $pmdel[$i] . " ";
-        }    
+        }
+        
         $query .= $add;
         $query .= ')';
         $result = mysql_query($query);

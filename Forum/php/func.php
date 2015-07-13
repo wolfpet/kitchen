@@ -41,7 +41,8 @@ function autoversion($file) {
 }
 
 function update_new_pm_count($user_id) {
-    global $pm_new_mail;    
+    global $pm_new_mail;
+    global $new_pm;
     $query = 'SELECT count(*) from confa_pm where receiver=' . $user_id . ' and status & ' . $pm_new_mail;
     $result = mysql_query($query);
     if (!$result) {
@@ -62,9 +63,19 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
     global $cur_page;
     global $page_pmail;
     
-    if (!isset($user_id) || is_null($user_id) || !isset($last_login) || is_null($last_login) || $cur_page == $page_pmail) 
+    if (!isset($user_id) || is_null($user_id) || !isset($last_login) || is_null($last_login))
       return;
-    
+    else if ($cur_page == $page_pmail) {
+      // visiting Inbox counts as checking for pmail
+      $query = "update confa_users set last_pm_check_time = CURRENT_TIMESTAMP where id=" . $user_id;
+      $result = mysql_query($query);
+      if (!$result) {
+        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+        die('Query failed: ' . mysql_error() . ' QUERY: ' . $query);
+      }      
+      return;
+    }
+
     global $pm_new_mail;
 
     $query = 'SELECT u.username, p.created from confa_pm p, confa_users u where u.id=p.sender and p.receiver=' . $user_id . ' and p.status & ' . $pm_new_mail  . " and p.created > '" . $last_login . "' order by p.created desc";
