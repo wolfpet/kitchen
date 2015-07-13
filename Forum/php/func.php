@@ -42,8 +42,9 @@ function autoversion($file) {
 
 function update_new_pm_count($user_id) {
     global $pm_new_mail;
+    global $pm_deleted_by_receiver;
     global $new_pm;
-    $query = 'SELECT count(*) from confa_pm where receiver=' . $user_id . ' and status & ' . $pm_new_mail;
+    $query = 'SELECT count(*) from confa_pm where receiver=' . $user_id . ' and status & ' . $pm_new_mail . ' and not status & ' . $pm_deleted_by_receiver;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
