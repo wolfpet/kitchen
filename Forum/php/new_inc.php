@@ -117,13 +117,14 @@ if ($keyboard) {
 <tr><td align="left" valign="top" width="100%">
 <div id="bbcode_help"><table border="1">
 <tbody><tr><td>[b]<font color="gray">bolded text</font>[/b]</td><td><strong>bolded text</strong></td></tr>
-<tr><td>[i]<font color="gray">italicized text</font>[/i]</td><td><em>italicized text</em></td></tr>
+<tr><td>[i]<font color="gray">italicized text</font>[/i]</td><td><i>italicized text</i></td></tr>
 <tr><td>[u]<font color="gray">underlined text</font>[/u]</td><td><span style="text-decoration: underline;">underlined text</span></td></tr>
 <tr><td>[s]<font color="gray">strikethrough text[</font>/s]</td><td><del>strikethrough text</del></td></tr>
 <tr><td>[url]<font color="gray">http://example.org</font>[/url]</td><td><a target="_blank" href="http://example.org/">http://example.org</a></td></tr>
 <tr><td>[url=<font color="gray">http://example.com]Example</font>[/url]</td><td><a target="_blank" href="http://example.com/">Example</a></td></tr>
 <tr><td>[quote]<font color="gray">quoted text</font>[/quote]</td><td><q>quoted text</q></td></tr>
 <tr><td>[code]<font color="gray">monospaced text[</font>/code]</td><td><code>monospaced text</code></td></tr>
+<tr><td>[sarcasm]<font color="gray">reverse italicized text</font>[/sarcasm]</td><td><em>sarcasm</em></td></tr>
 <tr><td>[color=red]<font color="gray">Red Text</font>[/color]</td><td><span style="color: red;">Red Text</span></td></tr>
 <tr><td>[color=#FF0000]<font color="gray">Red Text</font>[/color]</td><td><span style="color: rgb(255, 0, 0);">Red Text</span></td></tr>
 <tr><td>[color=FF0000]<font color="gray">Red Text</font>[/color]</td><td><span style="color: rgb(255, 0, 0);">Red Text</span></td></tr>
