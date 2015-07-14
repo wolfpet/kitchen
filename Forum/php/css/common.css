@@ -92,7 +92,8 @@ blockquote.uncited {
 }
 
 .nsfw {
-  color: #FF2400; /* scarlet */
+  color: magenta; /* #FF2400 is scarlet */
+  font-weight: bold;
 }
 
 div#threads {
@@ -104,9 +105,9 @@ div#threads {
 
 em {
   display: inline-block;
-  -ms-transform: skew(15deg,0deg);      /* IE 9 */
-  -webkit-transform: skew(15deg,0deg);  /* Safari and Chrome */
-  -o-transform: skew(15deg,0deg);       /* Opera */
-  -moz-transform: skew(15deg,0deg);     /* Firefox */
-  transform: skew(15deg,0deg);
+  -ms-transform: skew(20deg,0deg);      /* IE 9 */
+  -webkit-transform: skew(20deg,0deg);  /* Safari and Chrome */
+  -o-transform: skew(20deg,0deg);       /* Opera */
+  -moz-transform: skew(20deg,0deg);     /* Firefox */
+  transform: skew(20deg,0deg);
 }
