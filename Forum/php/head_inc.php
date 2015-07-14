@@ -1,5 +1,11 @@
 <?php
 /*$Id: head_inc.php 874 2013-01-30 17:01:15Z dmitriy $*/
+
+// Registration type constants
+define('REG_TYPE_OPEN', 0);
+define('REG_TYPE_EMAIL', 1);
+define('REG_TYPE_CLOSED', 2);
+
 require_once('settings.php');
 $ip          = NULL;
 $agent       = NULL;

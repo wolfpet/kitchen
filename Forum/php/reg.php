@@ -114,11 +114,9 @@ require_once('html_head_inc.php');
         $message = $user . ", to activate account, please click on the following link or copy an paste it in your browser.\n <a href=\"http://" . $host . $root_dir . $page_activate . '?act_link=' . $md5 . '">http://' . $host . $root_dir . $page_activate . '?act_link=' . $md5 . "</a> The link will be valid 86400 seconds (24 hours in human language).\n";
         $from = $from_email;
         $headers = "From: $from";
-        if ( isset($reg_type) && $reg_type == 0 )
-          // Open registration
+        if ( isset($reg_type) && $reg_type == REG_TYPE_OPEN )
 	  print($message);
-        else if (isset($reg_type) && $reg_type == 1 ){
-          // Registration over e-mail
+        else if (isset($reg_type) && $reg_type == REG_TYPE_EMAIL ){
           mail($to,$subject,$message,$headers);
           print("<B>" . $user . "</B>, activation link has been sent to " . $email . ". The link will be valid for 86400 seconds ( 24 hours )");
         }else

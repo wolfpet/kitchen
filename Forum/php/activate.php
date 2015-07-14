@@ -11,8 +11,7 @@ require_once('html_head_inc.php');
 <?php
 
 if (!isset($reg_type) ||
-    (isset($reg_type) && $reg_type == 2)){
-  // Registration is closed
+    (isset($reg_type) && $reg_type == REG_TYPE_CLOSED)){
   print "Go away.";
   exit;
 }

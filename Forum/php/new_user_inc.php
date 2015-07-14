@@ -1,8 +1,8 @@
 <?php
 /*$Id: new_user_inc.php 381 2009-11-02 20:25:46Z dmitriy $*/
 if ( isset($reg_type) && 
-   ( $reg_type == 0 || // open registration
-     $reg_type == 1 )){  // registration over e-mail
+   ( $reg_type == REG_TYPE_OPEN ||
+     $reg_type == REG_TYPE_EMAIL )){ 
 ?>
 <br>
 <form action="<?php print( $root_dir . $page_reg ); ?>" method="post">
@@ -36,13 +36,11 @@ if ( isset($reg_type) &&
 </body>
 </html>
 <?php
-}else if ( isset($reg_type) && $reg_type == 2){
-  // Closed registration
+}else if ( isset($reg_type) && $reg_type == REG_TYPE_CLOSED){
   if ( isset($closed_reg_message) && $closed_reg_message != "")
-    // Message is defined, print it
     print $closed_reg_message;
   else{
-    // Message is not defined, print the default one
+    // Closed registration message is not defined, print the default one
 ?>
 Due to abuse of free, impersonated automatic registration system, a new way of registration was introduced.
 Goal is to make sure a person, trying to be registered is a real person, is not trying to register multiple accounts
