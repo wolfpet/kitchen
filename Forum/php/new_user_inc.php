@@ -37,12 +37,10 @@ if ( isset($reg_type) &&
 </html>
 <?php
 }else if ( isset($reg_type) && $reg_type == REG_TYPE_CLOSED){
-  // Closed registration
   if ( isset($closed_reg_message) && $closed_reg_message != "")
-    // Message is defined, print it
     print $closed_reg_message;
   else{
-    // Message is not defined, print the default one
+    // Closed registration message is not defined, print the default one
 ?>
 Due to abuse of free, impersonated automatic registration system, a new way of registration was introduced.
 Goal is to make sure a person, trying to be registered is a real person, is not trying to register multiple accounts
