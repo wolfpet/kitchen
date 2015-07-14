@@ -1,8 +1,8 @@
 <?php
 /*$Id: new_user_inc.php 381 2009-11-02 20:25:46Z dmitriy $*/
 if ( isset($reg_type) && 
-   ( $reg_type == 0 || // open registration
-     $reg_type == 1 )){  // registration over e-mail
+   ( $reg_type == REG_TYPE_OPEN ||
+     $reg_type == REG_TYPE_EMAIL )){ 
 ?>
 <br>
 <form action="<?php print( $root_dir . $page_reg ); ?>" method="post">
@@ -36,7 +36,7 @@ if ( isset($reg_type) &&
 </body>
 </html>
 <?php
-}else if ( isset($reg_type) && $reg_type == 2){
+}else if ( isset($reg_type) && $reg_type == REG_TYPE_CLOSED){
   // Closed registration
   if ( isset($closed_reg_message) && $closed_reg_message != "")
     // Message is defined, print it
