@@ -45,7 +45,7 @@ require_once('dump.php');
                 $content_flags |= 2;
             }
             $new_body = youtube($body);
-            if (strcmp($body, $new_body) != 0) {
+            if (strcmp($body, $new_body) != 0 || /* check for vimeo/coub clips */ strcmp($body, before_bbcode($body)) != 0) {
                 $content_flags |= 4;
             }
             if (isset($nsfw)) {
