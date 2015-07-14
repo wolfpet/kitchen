@@ -10,6 +10,13 @@ require_once('html_head_inc.php');
 </head>
 <?php
 
+if (!isset($reg_type) ||
+    (isset($reg_type) && $reg_type == 2)){
+  // Registration is closed
+  print "Go away.";
+  exit;
+}
+
 if ( strlen($act_link) > 0 ) {
     $query = 'SELECT username, password, timediff(current_timestamp, created) as td, email, actkey from confa_regs where actkey=\'' . $act_link . '\'';
     $result = mysql_query($query);

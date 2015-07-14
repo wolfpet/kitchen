@@ -1,8 +1,10 @@
 <?php
 /*$Id: new_user_inc.php 381 2009-11-02 20:25:46Z dmitriy $*/
+if ( isset($reg_type) && 
+   ( $reg_type == 0 || // open registration
+     $reg_type == 1 )){  // registration over e-mail
 ?>
-
-<BR>
+<br>
 <form action="<?php print( $root_dir . $page_reg ); ?>" method="post">
 
 <table>
@@ -33,4 +35,28 @@
 </form>
 </body>
 </html>
+<?php
+}else if ( isset($reg_type) && $reg_type == 2){
+  // Closed registration
+  if ( isset($closed_reg_message) && $closed_reg_message != "")
+    // Message is defined, print it
+    print $closed_reg_message;
+  else{
+    // Message is not defined, print the default one
+?>
+Due to abuse of free, impersonated automatic registration system, a new way of registration was introduced.
+Goal is to make sure a person, trying to be registered is a real person, is not trying to register multiple accounts
+and planning to be a good member of our community. In a very rare, unlikely case, as a result of long and multiple 
+conflicts with the community, account may be suspended.
+<br>To register, simply send email with request and desired nick to <B>dmitriy@radier.ca</B><!--<img src="/images/myemail.png"/>-->,
+you will get response with the password shortly.
+However, in some cases, identification through some of the acceptable ways may be requested, such as request
+to send email through linkedin or other methods.
+<B>Please, send 2 times due to spam filter</B>
 
+We are welcome everyone with a good spirit and peacefull intentions.
+Thank you.
+<?php
+  }
+}
+?>
