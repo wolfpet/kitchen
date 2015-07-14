@@ -71,6 +71,14 @@ require_once('login_inc.php');
     }
     
     if (strlen($err) == 0 && !$preview) {
+        if ( strlen($ticket) > 0 ) {
+          $query = 'INSERT into confa_tickets(ticket) values(\'' . $ticket . '\')';
+          $result = mysql_query($query);
+          if (!$result) {
+              mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+              die('This is duplicated post (ticket ' . $ticket . ')');
+          }
+        }
         $query = 'SELECT id from confa_users where username=\'' . $user . '\' and status != 2';
         $result = mysql_query($query);
         if (!$result) {

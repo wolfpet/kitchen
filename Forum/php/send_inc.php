@@ -23,6 +23,7 @@ function bbcode_on() {
 
 <form action="<?php print($root_dir . $page_pm); ?>" method="post" id="msgform" name="msgform">
 <input type="hidden" name="re" id="re" value="<?php print($re); ?>"/>
+<input type="hidden" name="ticket" id="ticket" value="<?php print($ticket); ?>"/>
 
 <table width="100%">
 <tr><td width="60%" valign="top">

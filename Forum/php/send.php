@@ -6,6 +6,7 @@ require_once('get_params_inc.php');
     $cur_page = $page_pmail_send;
 require_once('html_head_inc.php');
     $title = 'Private message';
+    $ticket = '' . ip2long(substr($ip, 1, strlen($ip) - 2)) . '-' . time();
 $thread_owner = false;
 ?>
 
