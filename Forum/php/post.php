@@ -1,20 +1,13 @@
 <?php
 /*$Id: post.php 986 2014-01-01 20:42:58Z dmitriy $*/
-/*
-if(!extension_loaded('fastbbcode')) {
-    dl('fastbbcode.' . PHP_SHLIB_SUFFIX);
-}
-*/
 
     $ibody       = 'NULL';
 
     $msg_page = 1;
 
 require_once('head_inc.php');
-require_once('get_params_inc.php');
 
     $title = 'New message';
-require_once('auth.php');
     if ($logged_in == false ) {
 require_once('login_inc.php');
     }
@@ -48,7 +41,7 @@ require_once('dump.php');
            $chars = strlen(utf8_decode($body));
            $length = strlen($body);
 /* This mechanism actually shoud be done using mb_xxx string function, but it should work */
-            if (stristr($body, "[img=http://") || stristr($body, "[img=https://")) {
+            if (stristr(do_bbcode($body), "<img src=\"")) {
                 $content_flags |= 2;
             }
             $new_body = youtube($body);
