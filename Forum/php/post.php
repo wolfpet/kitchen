@@ -13,7 +13,10 @@ require_once('login_inc.php');
     }
 require_once('html_head_inc.php');
 require_once('dump.php');
-
+?>
+</head>
+<body>
+<?php
     do {
         if (!is_null($err_login) && strlen($err_login) > 0 ) {
             $err = $err_login;
@@ -45,7 +48,7 @@ require_once('dump.php');
                 $content_flags |= 2;
             }
             $new_body = youtube($body);
-            if (strcmp($body, $new_body) != 0 || /* check for vimeo/coub clips */ strcmp($body, before_bbcode($body)) != 0) {
+            if (strcmp($body, $new_body) != 0 || /* check for vimeo/coub/fb clips */ strcmp($body, before_bbcode($body)) != 0) {
                 $content_flags |= 4;
             }
             if (isset($nsfw)) {
@@ -178,7 +181,6 @@ require_once('dump.php');
                 if ($translit_done === true) {
                     $trans_body .= '<BR><BR>[Message was transliterated]';
                 }
-
 require_once('msg_form_inc.php');
             }
         }

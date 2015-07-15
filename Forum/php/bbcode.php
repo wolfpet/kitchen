@@ -117,12 +117,19 @@ function bbcode_naked_urls($str) {
 function before_bbcode($body) {
   
   $body = preg_replace( array (
-    // search
-    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?vimeo\.com/([0-9]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', // Vimeo on-the-fly e.g. https://vimeo.com/129252030
-    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?coub\.com/(?:view|embed)/([0-9a-zA-Z]*)(?:(?:\?|&)[^\s<\]"]*)?)#is' // Coub on the fly e.g. http://coub.com/view/3lbz7
+    // Vimeo on-the-fly e.g. https://vimeo.com/129252030
+    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?vimeo\.com/([0-9]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', 
+    // Coub on the fly e.g. http://coub.com/view/3lbz7
+    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?coub\.com/(?:view|embed)/([0-9a-zA-Z]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', 
+    // FB video clip (permanent link) e.g. https://www.facebook.com/kolesiko.taiskoe/videos/vb.100006902082868/1524658977774157/?type=2&theater
+    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?facebook\.com/\S+/videos/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    // FB video clip (temporary link) e.g. https://video-ord1-1.xx.fbcdn.net/hvideo-xap1/v/t42.1790-2/10444296_1524659357774119_1276856449_n.mp4?efg=eyJybHIiOjM2NSwicmxhIjo1MTJ9&rl=365&vabr=203&oh=e9a02a9d91fe8de7d59750a03447dc42&oe=55A5D0C0
+    '#(?<!\[url(=|]))((?:https?://)?video-[^\s<\]"]+\.mp4(?:(?:\?)[^\s<\]"]*)?)#is'
     ), array (
     '<br/><iframe src="https://player.vimeo.com/video/$3" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br/>Link: <a href="$2">$2</a>',
-    '<br/><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2">$2</a>'          
+    '<br/><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2">$2</a>',  
+    '<br/><div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2">$2</a>',  
+    '<br/><div class="fb-video" data-href="$2" data-width="500"></div><br/><a href="$2">Please note that this link is only temporary and will not be available in the future</a>'  
     ), $body);    
        
   return $body;
@@ -165,4 +172,19 @@ function fix_msg_target($body) {
   return str_replace('<a target="_blank" href="http://'.$host.'/msg.php?id=', '<a target="bottom" href="http://'.$host.'/msg.php?id=', $body);
 }
 
+/**
+ * FaceBook API support
+ */
+function include_facebook_api_if_required($body) {
+  if (!is_null($body) && strpos($body, 'class="fb-video"') !== false) { ?>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4&appId=1588477758092680";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script><?php
+  } 
+}
 ?>

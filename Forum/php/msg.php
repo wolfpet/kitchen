@@ -2,7 +2,6 @@
 /*$Id: msg.php 988 2014-01-05 01:14:33Z dmitriy $*/
 
 require_once('head_inc.php');
-require_once('get_params_inc.php');
 require_once('html_head_inc.php');
 
 $likes = '';
@@ -15,11 +14,9 @@ close/open thread */
 $managed = true;
 
 ?>
-
 <base target="bottom">
 </head>
 <body>
-
 <?php
     if (is_null($action)) {
     	$query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id;
@@ -129,9 +126,7 @@ $managed = true;
 
 require("msg_inc.php");
 
-
 if ( $reply_closed ) {
-
 ?>
 Closed |
 <?php
