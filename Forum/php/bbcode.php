@@ -1,18 +1,16 @@
 <?php
 
-function do_bbcode($body) {
-  global $user;
-  
-  if(!extension_loaded('fastbbcode') || isset($user) && in_array($user, array('Ranger', 'Pensioner', 'test', 'echo_maker', 'A. Fig Lee', 'leonid', 'Peter (2)'))) {
+function do_bbcode($str) {
+/*  
+  if(!extension_loaded('fastbbcode')) { */
     print('<div id="stamp" style="font-size: 8px;color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 8px;z-index: 9999;text-align: right;">phpBBCode&nbsp;</div>');
-    return bbcode_format($body);
+/*    return bbcode_format($str);
   } else 
-    return bbcode($body);
+    return bbcode($str);
 }
 
 function bbcode_format($str){
-  // Convert all special HTML characters into entities to display literally
-  
+*/  
   // The array of regex patterns to look for
   $format_search = array(
       '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
@@ -176,9 +174,7 @@ function fix_msg_target($body) {
  * FaceBook API support
  */
 function include_facebook_api_if_required($body) {
-  if (!is_null($body) && strpos($body, 'class="fb-video"') !== false) { ?>
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
+  if (!is_null($body) && strpos($body, 'class="fb-video"') !== false) { ?><div id="fb-root"></div><script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s); js.id = id;
