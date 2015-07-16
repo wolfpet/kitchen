@@ -112,6 +112,9 @@ require('menu_inc.php');
 </ol>
 <form target="contents" method=POST action="<?php print($root_dir . $page_answered); ?>">
 <?php 
+    if (is_null($how_many) || $how_many == 0) {
+        $how_many = 20;
+    }
     if (strlen($err) > 0) {
         print('<br><font color="red"><b>' . $err . '</b></font></br>');
     }
