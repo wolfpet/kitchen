@@ -19,6 +19,13 @@ function bbcode_on() {
 </script>
 
 <form action="<?php print($root_dir . $page_post); ?>" method="post" id="msgform" name="msgform">
+<?php
+    if (isset($msg_id) && !is_null($msg_id)) {
+?>
+<input type="hidden" name="id" id="id" value="<?php print($msg_id); ?>"/>
+<?php
+	}
+?>		
 <input type="hidden" name="re" id="re" value="<?php print($re); ?>"/>
 <input type="hidden" name="ticket" id="ticket" value="<?php print($ticket); ?>"/>
 
@@ -94,7 +101,9 @@ if ($keyboard) {
 <tr>
 <td colspan="4" width="100%">
 <textarea id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php
-
+ if (is_null($body) && $user == '486') {  // специально для Проца!
+   $body = '1';
+ }
  print($body);
  //print(nl2br(htmlentities($body, HTML_ENTITIES,'UTF-8')));
 ?></textarea>

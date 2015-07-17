@@ -69,7 +69,35 @@ require_once('dump.php');
                     die('This is duplicated post (ticket ' . $ticket . ')');
                 }
             }
-            if (/*is_null($re) || strlen($re)*/ $re == 0) {
+            if ( isset($msg_id) && $msg_id > 0 ) {
+                $query = 'SELECT p.status, p.author, p.created, p.thread_id, p.level, p.closed as post_closed, p.id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page from confa_posts p, confa_threads t where t.id=p.thread_id and p.id=' . $msg_id;
+                $result = mysql_query($query);
+                if (!$result) {
+                  mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+                  die('Query failed');
+                }
+                $closed = false;
+
+                if (mysql_num_rows($result) != 0) {
+                    $row = mysql_fetch_assoc($result);
+                    $thread_id = $row['thread_id'];
+                    if ( (!is_null($row['post_closed']) && $row['post_closed'] > 0 ) ||
+                      (!is_null($row['thread_closed']) && $row['thread_closed'] > 0 )) {
+                        $closed = true;
+                    }
+                    if ( $closed || $row['status'] != 1 || !can_edit_post($row['author'], $row['created'], $user_id, $msg_id)) {
+                        die('Modifications to this post are not allowed.');
+                    }
+                }
+                $query = 'UPDATE confa_posts SET subject=\'' . mysql_escape_string($subj) . '\',body=' . $ibody . ',created=now(),ip=' .$ip. ',user_agent=' .$agent. ',content_flags='.$content_flags . ', chars='. $chars . ' WHERE id=' . $msg_id;
+                $result = mysql_query($query);
+                if (!$result) {
+                    mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+                    die('Query failed');
+                } else {
+                    mysql_log( __FILE__, 'query executed ' . mysql_error() . ' QUERY: ' . $query);
+                }
+            } else if (/*is_null($re) || strlen($re)*/ $re == 0) {
 
                 $query = 'select sum(counter) as cnt, page from confa_threads group by page desc limit 1';
                 $result = mysql_query($query);
@@ -188,7 +216,6 @@ require_once('msg_form_inc.php');
 
 require('new_inc.php');
 require_once('tail_inc.php');
-
 ?>
 
 

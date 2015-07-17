@@ -133,22 +133,17 @@ Closed |
 } else {
 ?>
 
-
-
 <a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>">Reply</a> |
 <span style="background-color: rgb(224, 224, 224);"><a href="<?php print( $root_dir . $page_pmail_send . '?to=' . $author . '&re=' .  $msg_id); ?>"); ?>Reply to sender (private)</a></span> |
 <?php
 }
 ?>
 
-
-
 <a target="contents" name="<?php print($msg_id); ?>" href="<?php print($root_dir . $page_expanded); ?>?page=<?php print($msg_page . '#' .$msg_id);?>">Synchronize</a> |
 <a target="bottom" href="<?php print($root_dir . $page_thread); ?>?id=<?php print($msg_id); ?>">Thread</a>
 <?php
   if (!is_null($user_id)) {
 ?>
-
 |
 <a target="bottom" href="<?php print($root_dir . $page_msg); ?>?id=<?php print($msg_id); ?>&action=like"><font color="green"><!--&#8679;-->+</FONT></a>
  <font color="blue">Reputation</font>
@@ -167,6 +162,14 @@ Closed |
      } else {
        print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=closethread">Close Thread</a>');
      } 
+   }
+   if (!$reply_closed && can_edit_post($auth_id, $created_ts, $user_id, $msg_id)) {
+     print(" | ");
+     if (!is_null($parent) && $parent != 0) {
+         print('<a target="bottom" href="' . $root_dir . $page_new . '?id=' . $msg_id . '?&re=' . $parent . '">Edit</a>');
+     } else {
+         print('<a target="bottom" href="' . $root_dir . $page_new . '?id=' . $msg_id . '">Edit</a>');
+     }
    }
 } // !is_null($user)
     if ( !is_null( $moder ) && $moder > 0 ) {

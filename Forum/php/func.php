@@ -1024,17 +1024,6 @@ function m_print_threads($result, &$content) {
     return $msgs;
 }
 
-function can_edit_post($msg_author, $msg_time, $current_user) {
-	
-   $time = strtotime($msg_time); // time in EST
-   $curtime = time();
-
-   $diff = $curtime-$time;
-   print('Author=' . $msg_author . ' current user=' . $current_user . ' diff=' . strval($diff) . ' time=' . $time .''); 
-	
-   return !strcmp($msg_author, $current_user) || true; // 5 min
-}
-
 function sendmail($address, $subj, $body) {
 	$body = str_replace("\n.", "\n..", $body);
 	$body = wordwrap($body, 70, "\r\n");
@@ -1156,5 +1145,32 @@ function chuck($percentage) {
 	 }
  }
  return "";
+}
+
+function can_edit_post($msg_author, $msg_time, $current_user, $msg_id) {
+
+  // Editing is enabled if the user is an author, the message is less than 1 day old and there were no answers
+  if ( strcmp($msg_author, $current_user) != 0)
+    return false;
+
+  $time = strtotime($msg_time); // time the message was created (server time)
+  $curtime = time(); // current time (server time)
+   
+  $diff = ($curtime - $time) / 3600;
+  
+  if ($diff > 24) return false;
+    
+  $query = "SELECT count(*) as cnt from confa_posts where parent = " . $msg_id;
+  $result = mysql_query($query);
+  if (!$result) {
+    mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'test_user_id="' . $user_id . '"');
+    die('Query failed ' );
+  }
+  
+  if ($row = mysql_fetch_assoc($result)) {
+    return $row['cnt'] == 0;
+  }
+  
+  return true;
 }
 ?>

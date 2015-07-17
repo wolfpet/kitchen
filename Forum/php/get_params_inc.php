@@ -129,7 +129,6 @@
         if (array_key_exists('bantime', $_GET)) {
             $bantime = $_GET['bantime'];
         }
-
     }
 
     if ( isset($_POST) && is_array($_POST) && count($_POST) > 0 ) {
@@ -242,6 +241,9 @@
         if (array_key_exists('nsfw', $_POST)) {
             $nsfw = $_POST["nsfw"];
         }    
+        if (array_key_exists('id', $_POST)) {
+            $msg_id = intval(trim($_POST['id']), 10);
+        }
     }
 
 ?>
