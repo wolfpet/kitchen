@@ -43,8 +43,7 @@ require_once('dump.php');
         if (!is_null($body) && strlen($body) != 0) {
            $chars = strlen(utf8_decode($body));
            $length = strlen($body);
-/* This mechanism actually shoud be done using mb_xxx string function, but it should work */
-            if (stristr(do_bbcode($body), "<img src=\"")) {
+            if (stristr(render_for_display($body), "<img ")) {
                 $content_flags |= 2;
             }
             $new_body = youtube($body);

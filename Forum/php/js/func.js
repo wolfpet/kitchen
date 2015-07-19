@@ -69,9 +69,10 @@ function insertURL(element) {
           element.setSelectionRange(element.value.length - tl, element.value.length - tl); 
         }
       }
+/*  // image links are processed by renderer anyway, without img tag, let's not step on its toes
     } else if (nt.indexOf("http") == 0 && pattern.test(nt)) { // image?
-        element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + "[img=" + nt + "]" + element.value.substring(element.value.length - tl);
-    }
+        element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + "[img=" + nt + "]" + element.value.substring(element.value.length - tl);        
+*/  }
   }, 4);
 }
 
