@@ -96,6 +96,10 @@ blockquote.uncited {
   font-weight: bold;
 }
 
+.edited {
+  color: red;
+}
+
 div#threads {
 /*
   white-space: nowrap;

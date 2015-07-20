@@ -179,7 +179,7 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
     global $prop_tz;
     global $server_tz;
 
-    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter from confa_posts p, confa_users u, confa_threads t ';
+    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter from confa_posts p, confa_users u, confa_threads t ';
     if ( $min_thread_id < 0 ) {
         $min_thread_id = 0;
     }
@@ -240,7 +240,7 @@ function get_threads_ex($limit = 200, $thread_id = null) {
   global $work_page;
   global $server_tz;
 
-  $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter from confa_posts p, confa_users u, confa_threads t ';
+  $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter from confa_posts p, confa_users u, confa_threads t ';
   $query.= 'where p.author=u.id and t.id = p.thread_id and t.status != 2 ';
 	
 	if (is_null($thread_id)) {
@@ -298,7 +298,7 @@ function print_subject($subj) {
   return preg_replace('#([^\.])\.$#','$1', trim($subj));
 }
 
-function print_line($row, $collapsed=false) {
+function print_line($row, $collapsed=false, $add_arrow=true) {
   
   global $root_dir;
   global $page_msg;
@@ -351,6 +351,11 @@ function print_line($row, $collapsed=false) {
   if ($row['content_flags'] & $content_nsfw) {
     $nsfw .= '<span class="nsfw">NSFW</span>';
   }
+  if ($row['modified'] != null) {
+    $date = $row['modified'] . '<span class="edited">*</span>';
+  } else {
+    $date = $row['created'];  
+  }
   $subj = encode_subject($subj);
   $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
   if ( !is_null( $ban_ends ) && strcmp( $ban_ends, '0000-00-00 00:00:00' ) ) {
@@ -384,7 +389,7 @@ function print_line($row, $collapsed=false) {
       }
   }
   
-  $line .= '<b>' . $enc_user . '</b>' .  ' [' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $length . '</b> bytes';
+  $line .= '<b>' . $enc_user . '</b>' .  ' [' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
   
   if (!is_null($row['likes'])) {
     $likes = $row['likes'];
@@ -404,9 +409,12 @@ function print_line($row, $collapsed=false) {
   }
 
   $arrow = ''; 
-  $arrow.= '<img border=0 src="images/up.gif" width=16 height=16 alt="*" ';
-  $arrow.= ' onclick="javascript:scroll2Top(\'body\');" onmouseout="this.style.opacity = 0.3;" style="opacity:0.3" onmouseover="this.style.opacity=1;" align="top">';
-        
+
+  if ($add_arrow) {
+    $arrow.= '<img border=0 src="images/up.gif" width=16 height=16 alt="*" ';
+    $arrow.= ' onclick="javascript:scroll2Top(\'body\');" onmouseout="this.style.opacity = 0.3;" style="opacity:0.3" onmouseover="this.style.opacity=1;" align="top">';
+  }
+
   return $line . $arrow;
 }
 
@@ -415,8 +423,11 @@ function get_thread($thread_id) {
   global $prop_tz;
   global $server_tz;
 
-  $query = 'SELECT u.username, u.moder, p.auth, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject, p.body, p.status, p.content_flags, LENGTH(IFNULL(p.body,"")) as len, p.thread_id, p.level, p.id as id, p.chars, p.page, t.closed as t_closed  from confa_posts p, confa_users u, confa_threads t ';
-  $query .= ' where p.author=u.id and thread_id = ' . $thread_id . ' and t.id = thread_id order by thread_id desc, level, id desc';
+  $query = 'SELECT u.username, u.moder, p.auth, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes,'.
+    ' CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created,'.
+    ' CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.body, p.status, p.content_flags, LENGTH(IFNULL(p.body,"")) as len,'.
+    ' p.thread_id, p.level, p.id as id, p.chars, p.page, t.closed as t_closed  from confa_posts p, confa_users u, confa_threads t '.
+    ' WHERE p.author=u.id and thread_id = ' . $thread_id . ' and t.id = thread_id order by thread_id desc, level, id desc';
   
   $result = mysql_query($query);
     if (!$result) {
@@ -499,10 +510,14 @@ function print_line_in_one_thread($row) {
   if ($row['content_flags'] & 0x04) {
     $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
   }
-
-      $line = '&nbsp;<a name="' . $row['id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['id'] . '">' . $img . $icons . $subj . '  </a>';
+    $line = '&nbsp;<a name="' . $row['id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['id'] . '">' . $img . $icons . $subj . '  </a>';
   }
-  $line .= ' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $length . '</b> bytes';
+  if ($row['modified'] != null) {
+    $date = $row['modified'] . '<span class="edited">*</span>';
+  } else {
+    $date = $row['created'];
+  }
+  $line .= ' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
   
   if (!is_null($row['likes'])) {
     $likes = $row['likes'];
@@ -672,7 +687,6 @@ function print_pages_old($max_page, $page, $target, $cur_page) {
     }
 }
 
-
 function print_msgs($ar, $msgs) {
 
     $keys = array_keys($ar);
@@ -689,7 +703,6 @@ function print_msgs($ar, $msgs) {
     print("</dd></dl>\n");
 }
 
-
 function build_content_tree($msg_line, $msg_id, $msg_level, $msg_parent, &$content, &$msgs, &$glob_map, &$armass, &$l) {
 
     $msgs[$msg_id] = $line;
@@ -703,7 +716,6 @@ function build_content_tree($msg_line, $msg_id, $msg_level, $msg_parent, &$conte
     }
     $l++;
 }
-
 
 function validateEmail($email){
 
@@ -776,137 +788,6 @@ function encode_subject($subj) {
     $subj = htmlentities(translit($subj, $proceeded), HTML_ENTITIES,'UTF-8');
     return $subj;
 }
-
-function print_threads($result, &$content) {
-
-    global $root_dir;
-    global $page_msg;
-    global $page_byuser;
-    global $page_topthread;
-    global $page;
-    global $cur_page;
-    global $page_collapsed;
-    global $page_thread;
-    global $prop_bold;
-    global $image_img;
-    global $youtube_img;
-
-    global $show_hidden;
-    global $ignored;
-
-    $msgs = array();
-    $content = array();
-    $cur_content = &$content;
-    $stack = array();
-    $stack[0] = &$content;
-    $level = 0;
-    $armass = array();
-    $glob = array();
-    $l = 0;
-    $b_start = '';
-    $b_end = '';
-
-    if ( !is_null($prop_bold) && $prop_bold > 0 &&  strcmp( $cur_page, $page_collapsed ) ) { 
-        $b_start = '<b>';
-        $b_end = '</b>';
-    }
-
-    while ($row = mysql_fetch_assoc($result)) {
-
-        $length = $row['chars'];
-        $armass[$l] = array();
-        $moder = $row['moder'];
-        $banned = false;
-        $ban_ends = $row['ban_ends'];
-        $subj = $row['subject'];
-        $icons = '';
-        $skip = false;
-
-        if ($show_hidden == 1 && in_array($row['user_id'], $ignored)) {
-          $line = "<font color=\"lightgrey\"/>Hidden msg by " . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . "</font>";
-          $skip = true;
-        }
-        if ($show_hidden == 0 && in_array($row['user_id'], $ignored)) {
-          $line = "";
-          $skip = true; 
-        }
-
-        
-        if (!$skip) {
-
-
-
-        if ($row['content_flags'] & 0x02) {
-          $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
-        }
-        if ($row['content_flags'] & 0x04) {
-          $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
-        }
-        $subj = encode_subject($subj);
-        $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
-        if ( !is_null( $ban_ends ) && strcmp( $ban_ends, '0000-00-00 00:00:00' ) ) {
-            $banned = true;
-        }
-        if ( $banned === true ) {
-            $enc_user = '<font color="grey">' . $enc_user . '</font>';
-        }
-        $enc_user = '<a class="user_link" href="' . $root_dir . $page_byuser . '?author_id=' . $row['user_id'] . '" target="contents">' . $enc_user . '</a>';  
-        if ($row['status'] == 2 ) {
-
-            if ($row['level'] == 0) {
-                $line = '&nbsp;<img border=0 src="images/bs.gif" width=16 height=16 alt="*" align="top" style="padding:0px 0px 2px 0px;"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
-            } else {
-                $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="padding:0px 0px 2px 0px;"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
-            }
-        } else {
-            if ($row['level'] == 0) {
-                $icon = "bs.gif";
-                if ($row['thread_closed'] != 0) {
-                  $icon = "cs.gif";
-                } else if ($row['counter'] == 0) {
-                  $icon = "es.gif";
-                }
-                $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 2px 0px;"><a name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '"> ' .  $icons . $b_start . $subj . $b_end . '  </a> ';
-            } else {
-                $line = '&nbsp;<a name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '"><img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="padding:0px 0px 2px 0px;"> ' . $icons . $subj . '  </a> ';
-            }
-        }
-        $line .= '<b>' . $enc_user . '</b>' .  ' [' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $length . '</b> bytes';
-if (!is_null($row['likes'])) {
-          $likes = $row['likes'];
-          if ($likes > 0) {
-            $line .= ' <font color="green"><b>+' . $likes . '</b></font>';
-          }
-        }
-        if (!is_null($row['dislikes'])) {
-          $dislikes = $row['dislikes'];
-          if ($dislikes > 0) {
-            $line .= ' <font color="red"><b>-' . $dislikes . '</b></font>';
-          }
-        }
-
-        if ( !strcmp( $cur_page, $page_collapsed ) ) {
-            $line .= ' <font color="gray">[ <a href="' . $root_dir . $page_topthread . '?thread=' . $row['thread_id'] . '&page=' . $page . '" target="contents">+' . $row['counter'] . '</a> ] </font>    ';
-        }
-
-        }
-
-
-        $msgs[$row['msg_id']] = $line;
-        if ($row['level'] == 0) {
-            $content[$row['msg_id']] = &$armass[$l];
-            $glob[$row['msg_id']] = &$armass[$l];
-        } else {
-            $cur_content = &$glob[$row['parent']];
-            $cur_content[$row['msg_id']] = &$armass[$l];
-            $glob[$row['msg_id']] = &$armass[$l];
-        }
-
-        $l++;
-    } 
-    return $msgs;
-}
-
 
 function m_print_msgs($ar, $msgs, $pix) {
     $keys = array_keys($ar);
