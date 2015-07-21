@@ -2,7 +2,7 @@
 /*$Id: msg_form_inc.php 816 2012-10-21 01:19:09Z dmitriy $*/
   include_facebook_api_if_required($msgbody);
 ?>
-<h3 id="subject"><?php print($subject); ?></h3>
+<h3 id="subj"><?php print($subject); ?></h3>
 Author: <b><?php print($author . '</b>' . ' '); 
 if (!is_null($views)) {
   print(" [$views views] " );
@@ -16,7 +16,7 @@ if (isset($nsfw)) {
   print('&nbsp;<span class="nsfw">NSFW</span>');
 }
 ?><br>
-<?php print($in_response); ?><hr><div id="body"><?php 
+<?php print($in_response); ?><hr><div id="msgbody"><?php 
 if (is_null($msgbody) || strlen($msgbody) == 0) {
   print(''); 
 } else {
