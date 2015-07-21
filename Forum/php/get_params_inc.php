@@ -247,6 +247,9 @@
         if (array_key_exists('id', $_POST)) {
             $msg_id = intval(trim($_POST['id']), 10);
         }
+        if (array_key_exists('mode', $_POST)) {
+            $mode = trim($_POST['mode']);
+        }
     }
 
 ?>

@@ -126,7 +126,9 @@ Forgot password? |
 
 ]
 </td><td align="right">
-[ <?php if (strcmp($cur_page, $page_search) == 0) {?>Search |<?php } else { ?><a href="<?php print($root_dir . $page_search); ?>" class="menu"  target="bottom">Search</A> |<?php } ?>  <a href="<?php print($root_dir . $page_new); ?>" class="menu" target="bottom">New message</a>
+[ <?php if (strcmp($cur_page, $page_search) == 0) {?>Search |<?php } else { ?><a href="<?php print($root_dir . $page_search); 
+  if (strcmp($cur_page, $page_my_bookmarks) == 0) print("?mode=bookmarks");
+?>" class="menu"  target="bottom">Search</A> |<?php } ?>  <a href="<?php print($root_dir . $page_new); ?>" class="menu" target="bottom">New message</a>
  ]
 </td></tr>
 <?php

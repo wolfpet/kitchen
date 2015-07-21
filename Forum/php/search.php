@@ -2,7 +2,6 @@
 /*$Id: search.php 841 2012-11-22 02:17:40Z dmitriy $*/
 
 require_once('head_inc.php');
-require_once('get_params_inc.php');
     $title = 'Search';
 require_once('html_head_inc.php');
 
@@ -11,7 +10,7 @@ require_once('html_head_inc.php');
 <base target="contents">
 </head>
 <body>
-<H3>Search</H3>
+<H3><?=$title.(is_null($mode) ? '' : (' ' . $mode))?></H3>
 <?php
 
     if (strlen($err) != 0) {
@@ -19,6 +18,10 @@ require_once('html_head_inc.php');
     }
 ?>
 <form action="<?php print($root_dir . $page_do_search); ?>" method="post" >
+<?php 
+if (!is_null($mode)) { ?>
+<input type="hidden" name="mode" id="mode" value="<?=$mode?>"/><?php 
+}?>
 <table >
 <tr>
 <td>Author:</td><td><input type="text" id="author" name="author" value="<?php print($author); ?>" size="32" maxlength="64"/></td>

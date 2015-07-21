@@ -74,7 +74,11 @@ require_once('head_inc.php');
             $query .= ' and p.created < \'' . $todate . '\' ';
         }
     }
-
+    
+    if (strcmp("bookmarks", $mode) == 0) {
+      $query .= ' and exists ( select * from confa_bookmarks b where b.post = p.id and b.user = ' . $user_id . ') ';
+    }
+    
     $query .= ' order by created desc limit 500';
     mysql_log(__FILE__, 'search query: ' . $query);
     $result = mysql_query($query);
@@ -83,6 +87,7 @@ require_once('head_inc.php');
         die('Query failed ' );
     }
     $numrows = mysql_num_rows($result);
+    $num = 0;
     while ($row = mysql_fetch_assoc($result)) {
         $id = $row['id'];
         $auth_moder = $row['moder'];
@@ -116,7 +121,7 @@ require('menu_inc.php');
 ?>
 
 
-<br>Your searched for <i><?php if (!is_null($text) && strlen($text)>0) {print('"' . $text . '"');} else { print('<u>any text</u>'); } ?></i> in <?php 
+<br>Your searched for <?=is_null($mode) ? '' : $mode.' with ' ?><i><?php if (!is_null($text) && strlen($text)>0) {print('"' . $text . '"');} else { print('<u>any text</u>'); } ?></i> in <?php 
     switch($searchin) {
     case 1:
         print('<i><u>Body and subject</u></i> ');
