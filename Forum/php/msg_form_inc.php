@@ -10,13 +10,12 @@ if (!is_null($views)) {
 }
 print($created); 
 
+if (!is_null($modified)) {
+  print(', modified ' . $modified);
+}  
 
 ?><br>
-<?php print($in_response); ?>
-
-
-<hr>
-<?php 
+<?php print($in_response); ?><hr><?php 
 if (is_null($msgbody) || strlen($msgbody) == 0) {
   print(''); 
 } else {
