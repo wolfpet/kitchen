@@ -110,7 +110,6 @@ $managed = true;
             }
         }
       }
-
    }
    $msg_bookmark = NULL;
    if (!is_null($user_id) && is_numeric($user_id)) { 
@@ -162,6 +161,10 @@ Closed |
      } else {
        print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=closethread">Close Thread</a>');
      } 
+   }
+   if ($revisions > 0) {
+     print(" | ");
+     print('<a href="javascript:revisions_on();">Revisions</a>');
    }
    if (!$reply_closed && can_edit_post($auth_id, $created_ts, $user_id, $msg_id)) {
      print(" | ");

@@ -25,7 +25,7 @@ if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
   $page_version = "ver.php";
   
   if (mysql_num_rows($result) != 0) {
-    print('<br/><a class="revisions_link" href="javascript:revisions_on();"><font color="gray">Revision history</font></a><div class="revisions" id="revisions" '
+    print('<!--<br/><a class="revisions_link" href="javascript:revisions_on();"><font color="gray">Revision history</font></a>--><div class="revisions" id="revisions" '
       . (isset($version) ? 'style="display:block;"' : '') .'><br/>');
   
     while($row = mysql_fetch_assoc($result)) {

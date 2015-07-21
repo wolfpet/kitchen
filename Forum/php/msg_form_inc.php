@@ -10,7 +10,7 @@ if (!is_null($views)) {
 print($created); 
 
 if (!is_null($modified)) {
-  print(', modified ' . $modified);
+  print(', last modified ' . $modified);
 }
 if (isset($nsfw)) {
   print('&nbsp;<span class="nsfw">NSFW</span>');
