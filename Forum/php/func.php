@@ -383,9 +383,9 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
           } else {
             $style .= 'cursor:pointer;';
           }
-          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a> '.$nsfw.'  ';
+          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a> '.$nsfw.' ';
       } else {
-          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a> '.$nsfw.'  ';
+          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a> '.$nsfw.' ';
       }
   }
   
@@ -1040,7 +1040,7 @@ function can_edit_post($msg_author, $msg_time, $current_user, $msg_id) {
   $diff = ($curtime - $time) / 3600;
   
   if ($diff > 24) return false;
-    
+/*    
   $query = "SELECT count(*) as cnt from confa_posts where parent = " . $msg_id;
   $result = mysql_query($query);
   if (!$result) {
@@ -1051,7 +1051,7 @@ function can_edit_post($msg_author, $msg_time, $current_user, $msg_id) {
   if ($row = mysql_fetch_assoc($result)) {
     return $row['cnt'] == 0;
   }
-  
+*/  
   return true;
 }
 ?>

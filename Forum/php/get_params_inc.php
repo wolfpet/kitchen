@@ -129,6 +129,9 @@
         if (array_key_exists('bantime', $_GET)) {
             $bantime = $_GET['bantime'];
         }
+        if (array_key_exists('ver', $_GET)) {
+            $version = $_GET['ver'];
+        }
     }
 
     if ( isset($_POST) && is_array($_POST) && count($_POST) > 0 ) {

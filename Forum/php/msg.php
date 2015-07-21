@@ -13,7 +13,7 @@ $thread_owner = false;
 close/open thread */
 $managed = true;
 
-?>
+?><script src="js/jsdiff.js"></script>
 <base target="bottom">
 </head>
 <body>
@@ -210,11 +210,13 @@ if (strlen($dislikes) > 0) {
 if (strlen($reads) > 0) {
   print(' <FONT color="lightgray">' . $reads . '</FONT>');
 }
+if (strlen($likes) > 0 || strlen($dislikes) > 0 || strlen($reads) > 0) {
+  print('<BR/>');
+}
+require_once('msg_hist_inc.php');
 require_once('tail_inc.php');
-
 ?>
-<br/>
-<center style="color:gray"><?php print(chuck(15));?></center>
+<br/><center style="color:gray"><?php print(chuck(15));?></center>
 &nbsp;
 </body>
 </html>
