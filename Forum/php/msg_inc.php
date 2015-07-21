@@ -47,7 +47,7 @@ require_once('head_inc.php');
     mysql_free_result($result);
 
     // Performing SQL query
-    $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.created as created_ts, p.body, p.author, u.id as id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.status, t.author as t_author, t.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
+    $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.created as created_ts, p.body, p.author, u.id as id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.content_flags, t.author as t_author, t.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query 2 failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -65,6 +65,7 @@ require_once('head_inc.php');
         $created_ts = $row['created_ts'];
         $modified = $row['modified'];
         $msg_status = $row['status'];
+        $content_flags = $row['content_flags'];
         if ( !is_null($row['post_closed']) && $row['post_closed'] > 0 ) {
             $post_closed = true;
         }
@@ -74,6 +75,10 @@ require_once('head_inc.php');
         if ( $thread_closed || $post_closed ) {
             $reply_closed = true;
         }
+        if ($content_flags & $content_nsfw) {
+          $nsfw = true;
+        }
+
         $views = $row['views'];
         if ($row['t_author'] == $user_id) {
           $thread_owner = true;

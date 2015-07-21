@@ -10,7 +10,7 @@ $thread_owner = false;
 
     if (isset($msg_id) && $msg_id > 0) {	// editing of the existing message
 		
-      $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, p.created, p.body, p.author, u.id as id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.status, t.author as t_author from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
+      $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, p.created, p.body, p.author, u.id as id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.content_flags, t.author as t_author from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
       $result = mysql_query($query);
       if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -22,6 +22,7 @@ $thread_owner = false;
         $auth_id = $row['author'];
         $created = $row['created'];
         $msg_status = $row['status'];		
+        $content_flags = $row['content_flags'];		
         if ( !is_null($row['post_closed']) && $row['post_closed'] > 0 ) {
           $post_closed = true;
         }
@@ -30,6 +31,9 @@ $thread_owner = false;
         }
         if ( $thread_closed || $post_closed ) {
           $reply_closed = true;
+        }
+        if ($content_flags & $content_nsfw) {
+          $nsfw = true;
         }
         
         $title = 'Edit message';

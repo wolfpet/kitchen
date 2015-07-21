@@ -28,7 +28,7 @@ require_once('ver_inc.php');
       print( ']</SPAN>' );
   }
 print("<br/>");
-require_once('msg_hist_inc.php');    
+require_once('msg_hist_inc.php');
 require_once('tail_inc.php');
 ?>
 </body>
