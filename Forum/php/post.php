@@ -92,7 +92,7 @@ require_once('dump.php');
                     if (strcmp($old_subject, $subj) != 0 || strcmp($old_body, $new_body) != 0) {
                       // create a new version
                       $query = 'INSERT INTO confa_versions (parent, subject, body, created, chars, IP, user_agent, views, content_flags) ' .
-                      ' SELECT id, subject, body, now(), chars, IP, user_agent, views, content_flags FROM confa_posts WHERE id=' . $msg_id;
+                      ' SELECT id, subject, body, IF(ISNULL(modified), created, modified), chars, IP, user_agent, views, content_flags FROM confa_posts WHERE id=' . $msg_id;
                       $result = mysql_query($query);
                       if (!$result) {
                           mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
