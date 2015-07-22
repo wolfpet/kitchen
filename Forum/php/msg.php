@@ -14,6 +14,16 @@ close/open thread */
 $managed = true;
 
 ?><script src="js/jsdiff.js"></script>
+<!--
+<script language="Javascript">
+function unbookmark_on() {
+  if (document.getElementById('unbookmark').style.display != 'inline') {
+    document.getElementById('unbookmark').style.display='inline';
+  } else {
+    document.getElementById('unbookmark').style.display='none';
+  }
+}
+</script>-->
 <base target="bottom">
 </head>
 <body>
@@ -82,7 +92,14 @@ $managed = true;
             }
 
       } else if (!strcmp($action, "bookmark")) {
-	    $query = 'insert into confa_bookmarks(user, post) values(' . $user_id. ', ' . $msg_id . ');';
+        $query = 'insert into confa_bookmarks(user, post) values(' . $user_id. ', ' . $msg_id . ');';
+            $result = mysql_query($query);
+            if (!$result) {
+                 mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+                 die('Query failed');
+            }
+      } else if (!strcmp($action, "unbookmark")) {
+        $query = 'delete from confa_bookmarks where user=' . $user_id. ' and post=' . $msg_id . ';';
             $result = mysql_query($query);
             if (!$result) {
                  mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -152,7 +169,8 @@ Closed |
    if (is_null($msg_bookmark)) {
        print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=bookmark">Bookmark</a>');
    } else {
-       print('In bookmarks');
+//     print('<a target="bottom" href="javascript:unbookmark_on();">In bookmarks</a><span id="unbookmark" style="display:none;">: <a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=unbookmark">Remove</a></span>');
+       print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=unbookmark"><font color="black"><i>In bookmarks</i></font></a>');
    }
    if ($thread_owner && $managed) {
      print(" | ");

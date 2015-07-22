@@ -3,7 +3,7 @@
 
 require_once('head_inc.php');
   
-    if (count($pmdel) == 0) {
+    if (!isset($pmdel) || count($pmdel) == 0) {
         $err = 'No messages were selected<BR>';
     } else {
         $query = "UPDATE confa_pm SET status = status ";

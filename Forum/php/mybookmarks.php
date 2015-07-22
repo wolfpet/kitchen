@@ -4,6 +4,31 @@
 require_once('head_inc.php');
 
     $cur_page = $page_my_bookmarks;
+    
+    if ( isset($_POST) && is_array($_POST) && count($_POST) > 0 ) {
+      if (!isset($pmdel) || count($pmdel) == 0) {
+        $err = 'No messages were selected<BR>';
+      } else {
+        $query = 'DELETE FROM confa_bookmarks WHERE user='.$user_id.' and post in(';
+
+        $add = '';
+        for ($i = 0; $i < count($pmdel); $i++) {
+            if (strlen($add) > 0) {
+                $add .= ",";
+            }
+            $add .= $pmdel[$i] . " ";
+        }        
+        $query .= $add;          
+        $query .= ')';
+        //print('executing query: '.$query.'<br/>');
+        $result = mysql_query($query);
+        if (!$result) {
+            mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+            die('Query failed');
+        }          
+      }      
+    }
+    
     $how_many = 50;
     $max_id = 1;
     $last_id = 0;
@@ -54,8 +79,8 @@ require_once('head_inc.php');
           $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
         }
 
-        $line = '<li><a target="bottom" name="' . $msg_id . '" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '"> ' . $icons . $subj . ' </a> <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
-if (!is_null($row['likes'])) {
+        $line = '<li><INPUT TYPE=CHECKBOX NAME="pmdel[]" value="' . $msg_id . '"/><a target="bottom" name="' . $msg_id . '" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '"> ' . $icons . $subj . ' </a> <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
+        if (!is_null($row['likes'])) {
           $likes = $row['likes'];
           if ($likes > 0) {
             $line .= ' <font color="green"><b>+' . $likes . '</b></font>';
@@ -93,26 +118,19 @@ require('menu_inc.php');
     $max_page++;
     print_pages($max_page, $page, 'contents', $cur_page, '&author_id=' . $user_id);
     if (!is_null($err) && strlen($err) > 0) {
-        print('<BR><font color="red"><b>' . $err . '</b></font>');
+        print('<BR/><br/><font color="red"><b>' . $err . '</b></font>');
     }
 ?>
-
-<ol>
-<?php print($out); ?>
-</ol>
-<!--
-<?php 
-    if (strlen($err) > 0) {
-        print('<br><font color="red"><b>' . $err . '</b></font></br>');
-    }
-?>
--->
-
+<form method=POST target="contents" action="<?php print($root_dir . $page_my_bookmarks); ?>">
+  <ol>
+  <?php print($out); ?>
+  </ol>
+  <input type="hidden" name="dummy" value="10">
+  <input type="submit" value="Delete selected">
+</form>
 </body>
 </html>
 <?php
-
 require('tail_inc.php');
-
 ?>
 

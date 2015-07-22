@@ -96,7 +96,7 @@ require('menu_inc.php');
     $max_page++;
     print_pages($max_page, $page, 'contents', $cur_page);
     if (!is_null($err) && strlen($err) > 0) {
-        print('<BR><font color="red"><b>' . $err . '</b></font>');
+        print('<BR/><br/><font color="red"><b>' . $err . '</b></font>');
     } 
 ?>
 
@@ -107,7 +107,7 @@ require('menu_inc.php');
 <!--
 <?php 
     if (strlen($err) > 0) {
-        print('<br><font color="red"><b>' . $err . '</b></font></br>');
+        print('<br/><br/><font color="red"><b>' . $err . '</b></font></br>');
     }
 ?>
 -->

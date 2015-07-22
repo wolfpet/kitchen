@@ -146,8 +146,8 @@ require('menu_inc.php');
     }
 
 ?> 
-</b> <br>Found <?php print( $numrows); ?> message(s) (maximum 500)
-<br>
+</b> <br/><br/>Found <?php print( $numrows); ?> message(s) (maximum 500)
+<br/>
 <ol>
 <?php print($out); ?>
 </ol>
