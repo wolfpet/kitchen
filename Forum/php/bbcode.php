@@ -3,7 +3,7 @@
 function do_bbcode($str) {
 /*  
   if(!extension_loaded('fastbbcode')) { */
-    print('<div id="stamp" style="font-size: 8px;color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 8px;z-index: 9999;text-align: right;">phpBBCode&nbsp;</div>');
+//  print('<div id="stamp" style="font-size: 8px;color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 8px;z-index: 9999;text-align: right;">phpBBCode&nbsp;</div>');
 /*    return bbcode_format($str);
   } else 
     return bbcode($str);
@@ -116,11 +116,11 @@ function before_bbcode($body) {
   
   $body = preg_replace( array (
     // Vimeo on-the-fly e.g. https://vimeo.com/129252030
-    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?vimeo\.com/([0-9]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', 
+    '#(?<!\[url(=|]))((?:https?://)(?:www\.)?vimeo\.com/([0-9]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', 
     // Coub on the fly e.g. http://coub.com/view/3lbz7
-    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?coub\.com/(?:view|embed)/([0-9a-zA-Z]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', 
+    '#(?<!\[url(=|]))((?:https?://)(?:www\.)?coub\.com/(?:view|embed)/([0-9a-zA-Z]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', 
     // FB video clip (permanent link) e.g. https://www.facebook.com/kolesiko.taiskoe/videos/vb.100006902082868/1524658977774157/?type=2&theater
-    '#(?<!\[url(=|]))((?:https?://)?(?:www\.)?facebook\.com/\S+/videos/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!\[url(=|]))((?:https?://)(?:www\.)?facebook\.com/\S+/videos/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // FB video clip (temporary link) e.g. https://video-ord1-1.xx.fbcdn.net/hvideo-xap1/v/t42.1790-2/10444296_1524659357774119_1276856449_n.mp4?efg=eyJybHIiOjM2NSwicmxhIjo1MTJ9&rl=365&vabr=203&oh=e9a02a9d91fe8de7d59750a03447dc42&oe=55A5D0C0
     '#(?<!\[url(=|]))((?:https?://)?video-[^\s<\]"]+\.mp4(?:(?:\?)[^\s<\]"]*)?)#is',
     // imgur
