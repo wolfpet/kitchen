@@ -105,7 +105,6 @@ Register |
 ?>
 <a target="bottom" class="menu" href="<?php print($root_dir . $page_new_user); ?>">Register</a> |
 
-
 <?php
     }
     if (strcmp($cur_page, $page_forgot) == 0) {
@@ -125,10 +124,10 @@ Forgot password? |
 <a target="contents" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">Refresh</a> 
 
 ]
-</td><td align="right">
+</td><td align="right" nowrap>
 [ <?php if (strcmp($cur_page, $page_search) == 0) {?>Search |<?php } else { ?><a href="<?php print($root_dir . $page_search); 
   if (strcmp($cur_page, $page_my_bookmarks) == 0) print("?mode=bookmarks");
-?>" class="menu"  target="bottom">Search</A> |<?php } ?>  <a href="<?php print($root_dir . $page_new); ?>" class="menu" target="bottom">New message</a>
+?>" class="menu"  target="bottom">Search</A> |<?php } ?>  <a href="<?php print($root_dir . $page_new); ?>" class="menu" target="bottom">New thread</a>
  ]
 </td></tr>
 <?php

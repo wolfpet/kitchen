@@ -175,9 +175,9 @@ Closed |
    if ($thread_owner && $managed) {
      print(" | ");
      if ($reply_closed) {
-       print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=openthread">Open Thread</a>');
+       print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=openthread">Open&nbsp;Thread</a>');
      } else {
-       print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=closethread">Close Thread</a>');
+       print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=closethread">Close&nbsp;Thread</a>');
      } 
    }
    if ($revisions > 0) {
