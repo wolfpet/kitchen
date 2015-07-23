@@ -78,7 +78,7 @@ require("msg_inc.php");
           $subj = $edit_subj;
           $msg_id = $edit_id;
         } else {
-          if (strncasecmp($subj, 're: ', 4)) {
+          if (strncasecmp($subj, 're:', 3)) {
               $subj = 'Re: ' . $subj;
           }
           $msg_id = null;
