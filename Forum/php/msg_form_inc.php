@@ -9,7 +9,7 @@ if (!is_null($views)) {
 }
 print($created); 
 
-if (!is_null($modified)) {
+if (isset($modified) && !is_null($modified)) {
   print(', last modified ' . $modified);
 }
 if (isset($nsfw)) {
