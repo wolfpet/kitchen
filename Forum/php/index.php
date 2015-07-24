@@ -3,26 +3,36 @@ use Phalcon\Mvc\Micro,
     Phalcon\Events\Manager as EventsManager;
 use Phalcon\Http\Response;
 
+require_once('head_inc.php');
+
 // Create a events manager
 $eventManager = new EventsManager();
 
 // Listen all the application events
 $eventManager->attach('micro', function($event, $app) {
-
+  global $err_login;
+  
   if ($event->getType() == 'beforeExecuteRoute') {
     // authenticate user
-    if ($app->session->get('auth') == false) {
+    $user = $app->request->getServer('PHP_AUTH_USER');
+    $password = $app->request->getServer('PHP_AUTH_PW');  
 
-      $username = $app->request->getServer('PHP_AUTH_USER');
-      $password = $app->request->getServer('PHP_AUTH_PW');  
-
-      if (is_null($username) || is_null($password)) {
-        // debug
-      }        
-      
-      // Return false to stop the operation
-      return true;
+    if (!is_null($user) || !is_null($password)) {
+      // Credentials are sent: perform the login 
+      if (!login($user, $password, false)) {
+        // Invalid credentials: set correct status
+        $app->response->setStatusCode(403, is_null($err_login) ? 'Authentication error' : $err_login)->sendHeaders();
+        // and exit
+        return false;
+      } else {
+        // success, do nothing
+      }      
+    } else {
+      // if cookies are set, they would have already been handled by auth.php
     }
+
+    // Return false to stop the operation
+    return true;
   }
 });
 
@@ -34,8 +44,6 @@ $app->setEventsManager($eventManager);
 $app->get('/', function() use ($app) {
   echo file_get_contents('index.html');
 });
-
-require_once('head_inc.php');
 
 /**
  * GET /api/threads?id=-1&count=50
@@ -60,8 +68,11 @@ $app->get('/api/threads', function() use ($app) {
       api_get_threads($id, $count - 1);   // -1, because query is inclusive
     } else {
       $response = new Response();
+      
       $response->setStatusCode(400, 'Error')->sendHeaders();
+      $response->setContentType('application/json');
       $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Invalid parameter value ' . $count)));
+      
       return $response;
     }
   }
@@ -111,14 +122,18 @@ $app->get('/api/threads/{id:[0-9]+}', function($id) {
   $array = print_msgs2($content, $msgs);
   
   if (count($array) > 0) {
-    $id = array_keys($msgs)[0];
+    $id = array_keys($msgs)[0];    
+    
+    $response->setContentType('application/json');
     $response->setJsonContent( array(
       'id'       => intval($msgs[$id]['thread_id']),
       'closed'   => filter_var($msgs[$id]['t_closed'], FILTER_VALIDATE_BOOLEAN),
       'message'  => $array[0]
     ));
+    
   } else {
     $response->setStatusCode(404, 'Not Found')->sendHeaders();
+    $response->setContentType('application/json');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Message not found')));
   }
 
@@ -177,7 +192,7 @@ function api_get_body($body, $status=1) {
     $msgbody = translit($body, $translit_done);
     // $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
     $msgbody = before_bbcode($msgbody);
-    $msgbody = bbcode ( $msgbody );
+    $msgbody = bbcode_format( $msgbody );
     $msgbody = nl2br($msgbody);
     $msgbody = after_bbcode($msgbody);
   }
@@ -205,8 +220,11 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_
   $query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id;
   $result = mysql_query($query);
   if (!$result || $result == 0) {
+    
     $response->setStatusCode(404, 'Not Found')->sendHeaders();
+    $response->setContentType('application/json');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Message not found')));
+    
     return $response;
   }
 
@@ -218,8 +236,11 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_
   $query = 'SELECT u.username as userlike, l.value as valuelike from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
   $result = mysql_query($query);
   if (!$result) {
+    
     $response->setStatusCode(400, 'Error')->sendHeaders();
+    $response->setContentType('application/json');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+
     return $response;
   }
   
@@ -238,14 +259,18 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_
   $result = mysql_query($query);
   
   if (!$result) {
+    
     $response->setStatusCode(400, 'Error');
+    $response->setContentType('application/json');    
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+
     return $response;
   }
 
   if (mysql_num_rows($result) != 0) {
     $row = mysql_fetch_assoc($result);
-    
+
+    $response->setContentType('application/json');    
     $response->setJsonContent(array(
       'id' => intval($row['msg_id']),
       'status' => intval($row['status']),
@@ -264,6 +289,7 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_
       
   } else {
     $response->setStatusCode(404, 'Not Found')->sendHeaders();
+    $response->setContentType('application/json');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Message not found')));
   }
 
@@ -285,8 +311,11 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) use ($prop_tz, 
   $result = mysql_query($query);
 
   if (!$result) {
+    
     $response->setStatusCode(400, 'Error');
+    $response->setContentType('application/json');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+    
     return $response;
   }
 
@@ -313,6 +342,7 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) use ($prop_tz, 
     $count++;
   }
 
+  $response->setContentType('application/json');
   $response->setJsonContent(array('count' => $count,'messages' => $messages));
   
   return $response;
@@ -359,8 +389,11 @@ $app->get('/api/messages', function() use ($app, $prop_tz, $server_tz) {
     case 'answered':
     default:
       $response = new Response();
+      
       $response->setStatusCode(400, 'Error')->sendHeaders();
+      $response->setContentType('application/json');
       $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Invalid parameter value: ' . $mode)));
+      
       return $response;
   }
 
@@ -393,44 +426,54 @@ $app->get('/api/messages', function() use ($app, $prop_tz, $server_tz) {
     $count++;
   }
 
+  $response->setContentType('application/json');
   $response->setJsonContent(array('count' => $count,'messages' => $messages));
   
   return $response;  
 });
 
 /**
- * GET /api/users
+ * GET /api/profile
  *
  * Returns user profile and session ID (in headers)
  */
-$app->get('/api/users', function() use ($app) {
+$app->get('/api/profile', function() use ($app) {
+  global $logged_in;
+  global $err_login;
+
+  global $user_id;
+  global $ban;
+  global $ban_ends;
+  global $new_pm;
+  global $prop_bold;
+  global $prop_tz;
+  global $ban_time;
+  global $user;
+  
   $response = new Response();
-  /*    
-  while ($row = mysql_fetch_assoc($result)) {
-    $messages[] = array(
-      'id' => intval($row['id']),
-      'status' => intval($row['status']),
-      'subject' => api_get_subject($row['subject'], $row['status']),
-      'author' => array('id'  => intval($row['auth']), 'name' => $row['username']),
-      'created' => $row['created'],
-      'views' => intval($row['views']),
-      'likes' => intval($row['likes']),
-      'dislikes' => intval($row['dislikes']),
-      'page' => intval($row['page']),
-      'parent' => intval($row['parent']),
-      'closed' => filter_var($row['post_closed'], FILTER_VALIDATE_BOOLEAN),
-      'flags' => intval($row['content_flags']),
-      'answers' => intval($row['counter']),
-      'level' => intval($row['level'])
+  
+  if ($logged_in) {
+    $profile = array(
+      'id' => intval($user_id),
+      'name' => $user,
+      'new_pm' => intval($new_pm),
+      'banned' => filter_var($ban, FILTER_VALIDATE_BOOLEAN),
+      'ban_ends' => $ban_ends,
+      'ban_time' => $ban_time,
+      'prop_bold' => filter_var($prop_bold, FILTER_VALIDATE_BOOLEAN),
+      'prop_tz' => intval($prop_tz)
     );
-    $count++;
+    $response->setContentType('application/json');
+    $response->setJsonContent($profile);
+  } else {
+    $response->setStatusCode(403, 'Authentication error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
   }
 
-  $response->setJsonContent(array('count' => $count,'messages' => $messages));
-*/  
   return $response;
 });
-
+    
 $app->notFound(
     function () use ($app) {
         // echo 'Not found!';
