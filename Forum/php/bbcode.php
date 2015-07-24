@@ -145,7 +145,14 @@ function after_bbcode($body) {
 		function ($matches) {
       return "<iframe ".html_entity_decode($matches[1])."></iframe>";
     }, $body);
-      
+  
+  // remove <br /> from <pre> tags
+  if (preg_match_all('/\<pre\>(.*?)\\<\/pre\>/s', $body, $matches)) {
+    foreach($matches[1] as $a) {
+      $body = str_replace($a, str_replace("<br />", '', $a), $body);
+    }
+  }  
+
   $body = preg_replace( array (
     // search
     '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
