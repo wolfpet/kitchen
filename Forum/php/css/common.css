@@ -126,7 +126,3 @@ em {
   -moz-transform: skew(20deg,0deg);     /* Firefox */
   transform: skew(20deg,0deg);
 }
-
-pre{
-    background-color: #EBECE4; 
-} 

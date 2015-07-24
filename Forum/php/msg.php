@@ -14,6 +14,13 @@ close/open thread */
 $managed = true;
 
 ?><script src="js/jsdiff.js"></script>
+<!-- Syntax highighting -->
+<!--
+<link rel="stylesheet" href="/path/to/styles/default.css">
+<script src="/path/to/highlight.pack.js"></script> -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 <!--
 <script language="Javascript">
 function unbookmark_on() {
@@ -170,7 +177,7 @@ Closed |
        print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=bookmark">Bookmark</a>');
    } else {
 //     print('<a target="bottom" href="javascript:unbookmark_on();">In bookmarks</a><span id="unbookmark" style="display:none;">: <a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=unbookmark">Remove</a></span>');
-       print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=unbookmark"><font color="black"><i>In bookmarks</i></font></a>');
+       print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=unbookmark"><font color="black">In bookmarks</font></a>');
    }
    if ($thread_owner && $managed) {
      print(" | ");

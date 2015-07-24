@@ -17,6 +17,7 @@ function bbcode_format($str){
       '#\[i\](.*?)\[/i\]#is', // Italics ([i]text[/i]
       '#\[u\](.*?)\[/u\]#is', // Underline ([u]text[/u])
       '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
+      '#\[code=([^\]\s]*)\s*\](.*?)\[/code\]#is', // Monospaced code [code]text[/code])
       '#\[code\](.*?)\[/code\]#is', // Monospaced code [code]text[/code])
       '#\[sarcasm\](.*?)\[/sarcasm\]#is', // Sarcasm
       '#\[size=([1-9]|1[0-9]|20)\](.*?)\[/size\]#is', // Font size 1-20px [size=20]text[/size])
@@ -37,7 +38,8 @@ function bbcode_format($str){
       '<i>$1</i>',
       '<span style="text-decoration: underline;">$1</span>',
       '<span style="text-decoration: line-through;">$1</span>',
-      '<pre>$1</'.'pre>',
+      '<pre><code class="$1">$2</'.'code></'.'pre>',
+      '<pre><code>$1</'.'code></'.'pre>',
       '<em>$1</em>',
       '<span style="font-size: $1px;">$2</span>',
       '<span style="color: #$1;">$2</span>',
