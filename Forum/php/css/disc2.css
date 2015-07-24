@@ -5,6 +5,8 @@
  
 a:active  {color:#FF0000; font-family:Verdana,Arial; text-decoration:none;}
  a:hover   {color:#FF0000; font-family:Verdana,Arial; text-decoration:underline;}
+
+.selected  {background:#E0F1FF;}
  
 h1	{font-family:Verdana,Arial; font-size:36pt;}
  h2	{font-family:Verdana,Arial; font-size:24pt; color:#0080c0;}

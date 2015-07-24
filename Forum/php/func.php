@@ -368,9 +368,9 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
   if ($row['status'] == 2 ) {
 
       if ($row['level'] == 0) {
-          $line = '&nbsp;<img border=0 src="images/bs.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
+          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/bs.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
       } else {
-          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
+          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
       }
   } else {
       $subj = print_subject($subj);
@@ -383,9 +383,9 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
           } else {
             $style .= 'cursor:pointer;';
           }
-          $line = '&nbsp;<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a> '.$nsfw.' ';
+          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a> '.$nsfw.' ';
       } else {
-          $line = '&nbsp;<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a> '.$nsfw.' ';
+          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a> '.$nsfw.' ';
       }
   }
   
@@ -405,7 +405,9 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
   }
 
   if ( $collapsed ) {
-      $line .= ' <font color="gray">[ <a href="' . $root_dir . $page_topthread . '?thread=' . $row['thread_id'] . '&page=' . $page . '" target="contents">+' . $row['counter'] . '</a> ] </font>    ';
+      $line .= ' <font color="gray">[ <a href="' . $root_dir . $page_topthread . '?thread=' . $row['thread_id'] . '&page=' . $page . '" target="contents">+' . $row['counter'] . '</a> ] </font> </span>   ';
+  } else {
+      $line .= '&nbsp;</span>';
   }
 
   $arrow = ''; 
@@ -501,16 +503,16 @@ function print_line_in_one_thread($row) {
   }
 
   if ( $row['status'] == 2 ) {
-      $line = '&nbsp;' . $img . '<I><font color="gray"><del>This message has been deleted</del></font></I> '; 
+      $line = '&nbsp;<span>' . $img . '<I><font color="gray"><del>This message has been deleted</del></font></I> '; 
   } else {
-  $icons = '';
-  if ($row['content_flags'] & 0x02) {
-    $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
-  }
-  if ($row['content_flags'] & 0x04) {
-    $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
-  }
-    $line = '&nbsp;<a name="' . $row['id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['id'] . '">' . $img . $icons . $subj . '  </a>';
+    $icons = '';
+    if ($row['content_flags'] & 0x02) {
+      $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
+    }
+    if ($row['content_flags'] & 0x04) {
+      $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
+    }
+    $line = '&nbsp;<span id="sp_'.$row['id'].'"><a id="' . $row['id'] . '" name="' . $row['id'] . '" target="bottom" href="' . $root_dir . $page_msg . '?id=' . $row['id'] . '" onclick="selectMsg(\''. $row['id'] .'\')">' . $img . $icons . $subj . '  </a>';
   }
   if ($row['modified'] != null) {
     $date = $row['modified'] . '<span class="edited">*</span>';
@@ -532,7 +534,7 @@ function print_line_in_one_thread($row) {
     }
   }
   
-  return $line;
+  return $line . " </span>";
 }
 
 // NG: end

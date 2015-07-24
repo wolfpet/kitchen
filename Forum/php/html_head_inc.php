@@ -32,7 +32,8 @@ if (!is_null($user_id) && $user_id != null) {
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/'.$css)?>">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/common.css')?>">
 <script src="js/jquery-1.10.2.min.js"></script>
-<!--<script>
+<script>
+/*
 var $lastdiv = null;
 function show_msg($msg, $body)
 {
@@ -43,5 +44,31 @@ function show_msg($msg, $body)
   $lastdiv = document.getElementById($id);
   $lastdiv.innerHTML = $body;
 }
+*/
+var selected_id = "";
+
+function selectMsg(id) {
+  id = "sp_" + id;
+  console.log('selectMsg  id=' + id);
+  if (selected_id != "") {
+    // reset selection
+    console.log('resetting selected id=' + selected_id);
+    var selected = document.getElementById(selected_id);
+    if (selected != null) {
+      selected.className = null;
+    }  
+  }
+  var selected = document.getElementById(id);
+  if (selected != null) {
+    console.log('selected element id=' + id);
+    // select message
+    selected.className = "selected";
+    selected_id = id;
+  } else {
+    // message not found
+    selected_id = "";
+    console.log('id=' + id + "not found");
+  }
+}
+
 </script>
--->
