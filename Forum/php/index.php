@@ -192,7 +192,7 @@ function api_get_body($body, $status=1) {
     $msgbody = translit($body, $translit_done);
     // $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
     $msgbody = before_bbcode($msgbody);
-    $msgbody = bbcode_format( $msgbody );
+    $msgbody = do_bbcode( $msgbody );
     $msgbody = nl2br($msgbody);
     $msgbody = after_bbcode($msgbody);
   }
