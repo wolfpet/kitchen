@@ -521,6 +521,7 @@ $app->delete('/api/messages/{id:[0-9]+}/like', function($msg_id) {
   $response = new Response();
 
   if (!$logged_in) {
+    
     $response->setStatusCode(403, 'Authentication error');
     $response->setContentType('application/json');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
@@ -539,6 +540,61 @@ $app->delete('/api/messages/{id:[0-9]+}/like', function($msg_id) {
   }
 
   $response->setContentType('application/json');
+  
+  return $response;
+});
+
+/**
+ * PUT /messages/$id/bookmark
+ */
+$app->put('/api/messages/{id:[0-9]+}/bookmark', function($msg_id) {
+  global $logged_in, $user_id;
+  
+  $response = new Response();
+
+  if (!$logged_in) {
+    $response->setStatusCode(403, 'Authentication error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
+    
+    return $response;
+  }
+  
+  $new_value = bookmark($user_id, $msg_id);
+  
+  if ($new_value === false) {
+    $response->setStatusCode(400, 'Error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+  }
+  
+  return $response;
+});
+
+/**
+ * DELETE /messages/$id/bookmark
+ */
+$app->delete('/api/messages/{id:[0-9]+}/bookmark', function($msg_id) {
+  global $logged_in, $user_id;
+  
+  $response = new Response();
+
+  if (!$logged_in) {
+    
+    $response->setStatusCode(403, 'Authentication error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
+    
+    return $response;
+  }
+  
+  $new_value = bookmark($user_id, $msg_id, false);
+  
+  if ($new_value === false) {
+    $response->setStatusCode(400, 'Error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+  }
   
   return $response;
 });

@@ -1243,4 +1243,18 @@ function like($user_id, $msg_id, $val=1) {
 
   return true;
 }
+
+function bookmark($user_id, $msg_id, $add=true) {
+  if ($add) {
+    $query = 'insert into confa_bookmarks(user, post) values(' . $user_id. ', ' . $msg_id . ');';
+  } else {
+    $query = 'delete from confa_bookmarks where user=' . $user_id. ' and post=' . $msg_id . ';';
+  }
+  $result = mysql_query($query);
+  if (!$result) {
+       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+       return false;
+  }
+  return $result;
+}
 ?>

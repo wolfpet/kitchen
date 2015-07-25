@@ -44,35 +44,29 @@ function unbookmark_on() {
     	}
     } 
     if (!is_null($action)) {
-      if (!strcmp($action, "like") || !strcmp($action, "dislike")) {
-        $val = 1;
-        if (!strcmp($action, "dislike")) {
-           $val = -1;
+      if (!strcmp($action, "like")) {
+        if (like($user_id, $msg_id, 1) == false) {
+          die('Query failed');
         }
-        if (like($user_id, $msg_id, $val) == false) {
+      } else if (!strcmp($action, "dislike")) {
+        if (like($user_id, $msg_id, -1) == false) {
           die('Query failed');
         }
       } else if (!strcmp($action, "bookmark")) {
-        $query = 'insert into confa_bookmarks(user, post) values(' . $user_id. ', ' . $msg_id . ');';
-            $result = mysql_query($query);
-            if (!$result) {
-                 mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-                 die('Query failed');
-            }
+        if (bookmark($user_id, $msg_id, true) == false) {
+          die('Query failed');
+        }
       } else if (!strcmp($action, "unbookmark")) {
-        $query = 'delete from confa_bookmarks where user=' . $user_id. ' and post=' . $msg_id . ';';
-            $result = mysql_query($query);
-            if (!$result) {
-                 mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-                 die('Query failed');
-            }
+        if (bookmark($user_id, $msg_id, false) == false) {
+          die('Query failed');
+        }        
       } else if (!strcmp($action, "closethread") || !strcmp($action, "openthread")) {
         $query = "SELECT t.author as t_author, t.properties as t_properties, t.id as thread_id  from confa_threads t, confa_posts p where p.thread_id = t.id and p.id=" . $msg_id;
-            $result = mysql_query($query);
-            if (!$result) {
-                 mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-                 die('Query failed');
-            }
+        $result = mysql_query($query);
+        if (!$result) {
+             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+             die('Query failed');
+        }
         $row = mysql_fetch_assoc($result);
         if ($user_id == $row['t_author']) {
           $thread_id = $row['thread_id'];
