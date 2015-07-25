@@ -213,7 +213,9 @@ function api_get_subject($subject, $status=1) {
  * Returns one message
  */
 
-$app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_tz) {
+$app->get('/api/messages/{id:[0-9]+}', function($msg_id) {
+  global $prop_tz, $server_tz;
+  
   $response = new Response();
 
   // update views
@@ -299,11 +301,10 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($prop_tz, $server_
 /**
  * GET /messages/$id/answers
  */
-$app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) use ($prop_tz, $server_tz) {
+$app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) {
+  global $prop_tz, $server_tz;
+  
   $response = new Response();
-
-  global $prop_tz;
-  global $server_tz;
 
   $query = 'SELECT u.username, u.moder, p.auth, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject, p.status, p.content_flags, LENGTH(IFNULL(p.body,"")) as len, p.thread_id, p.level, p.id as id, p.level, p.chars, p.page, (select count(*) from confa_posts where parent = p.id) as counter '
     .' from confa_posts p, confa_users u where p.author=u.id and p.parent = ' . $msg_id . ' order by id desc';
@@ -353,7 +354,9 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) use ($prop_tz, 
  *
  * Returns "Collapsed threads" view data, also a default view for mobile client. optional arguments - $max_thread_id, $count
  */
-$app->get('/api/messages', function() use ($app, $prop_tz, $server_tz) {
+$app->get('/api/messages', function() use ($app) {
+  global $prop_tz, $server_tz;
+  
   $response = new Response();
   
   $mode = $app->request->getQuery('mode');  
@@ -473,7 +476,73 @@ $app->get('/api/profile', function() use ($app) {
 
   return $response;
 });
+
+/**********************************************************
+ * Updates
+ **********************************************************/
+ 
+/**
+ * PUT /messages/$id/like
+ */
+$app->put('/api/messages/{id:[0-9]+}/like', function($msg_id) {
+  global $logged_in, $user_id;
+  
+  $response = new Response();
+
+  if (!$logged_in) {
+    $response->setStatusCode(403, 'Authentication error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
     
+    return $response;
+  }
+  
+  $new_value = like($user_id, $msg_id, 1);
+  
+  if ($new_value === false) {
+    // error
+    $response->setStatusCode(400, 'Error');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+  } else {
+    $response->setJsonContent(array('value' => intval($new_value)));
+  }
+
+  $response->setContentType('application/json');
+  
+  return $response;
+});
+
+/**
+ * DELETE /messages/$id/like
+ */
+$app->delete('/api/messages/{id:[0-9]+}/like', function($msg_id) {
+  global $logged_in, $user_id;
+  
+  $response = new Response();
+
+  if (!$logged_in) {
+    $response->setStatusCode(403, 'Authentication error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
+    
+    return $response;
+  }
+  
+  $new_value = like($user_id, $msg_id, -1);
+  
+  if ($new_value === false) {
+    // error
+    $response->setStatusCode(400, 'Error');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+  } else {
+    $response->setJsonContent(array('value' => intval($new_value)));
+  }
+
+  $response->setContentType('application/json');
+  
+  return $response;
+});
+ 
 $app->notFound(
     function () use ($app) {
         // echo 'Not found!';

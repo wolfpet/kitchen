@@ -1012,11 +1012,6 @@ function rutube($body, $embed = true) {
 	return $result;
 }
 
-// Draft
-function vimeo($body, $embed = true) {
-  return $body;
-}
-
 // Returns random Chuck Norris fact in $percentage cases
 function chuck($percentage) {
  if (rand(0, 100) < $percentage) {
@@ -1194,4 +1189,58 @@ function login($username, $passw, $create_session=true) {
     return $logged_in;
 }
 
+function like($user_id, $msg_id, $val=1) {
+  
+  $query = 'INSERT INTO confa_likes(user, post, value) values(' .
+      $user_id . ', ' . $msg_id . ', ' . $val . ') ON DUPLICATE KEY UPDATE value=value+ ' . $val ;
+
+  $result = mysql_query($query);
+  if (!$result) {
+      mysql_log( __FILE__ . ":" . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+      return false;
+  }
+  
+  $query = 'select value from confa_likes where user=' . $user_id . ' and post = ' . $msg_id;
+
+  $result = mysql_query($query);
+  if (!$result) {
+      mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+      return false;
+  }
+  $row = mysql_fetch_assoc($result);
+  mysql_free_result($result);
+  if ($row != null) {
+    $new_val = $row['value'];
+    $query = '';
+    switch ($new_val) {
+    case 1:
+         if ($val > 0) {
+             $query = 'UPDATE confa_posts set likes=likes+1 where id=' . $msg_id;
+         }
+         break;
+    case -1:
+         if ($val < 0) {
+             $query = 'UPDATE confa_posts set dislikes=dislikes+1 where id=' . $msg_id;
+         }
+         break;
+    case 0:
+         if ($val > 0) {
+             $query = 'UPDATE confa_posts set dislikes=dislikes-1 where id=' . $msg_id;
+         } else /* dislike */ {
+             $query = 'UPDATE confa_posts set likes=likes-1 where id=' . $msg_id;
+         }
+        break;
+    } 
+    if (strlen($query) > 0 ) {
+      $result = mysql_query($query);
+      if (!$result) {
+          mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+          return false;
+      }
+    }
+    return $new_val;
+  }
+
+  return true;
+}
 ?>

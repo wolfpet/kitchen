@@ -44,60 +44,14 @@ function unbookmark_on() {
     	}
     } 
     if (!is_null($action)) {
-      	if (!strcmp($action, "like") || !strcmp($action, "dislike")) {
-            $val = 1;
-            if (!strcmp($action, "dislike")) {
-               $val = -1;
-            }
-            $query = 'INSERT INTO confa_likes(user, post, value) values(' .
-                $user_id . ', ' . $msg_id . ', ' . $val . ') ON DUPLICATE KEY UPDATE value=value+ ' . $val ;
-
-            $result = mysql_query($query);
-            if (!$result) {
-                mysql_log( __FILE__ . ":" . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-                die('Query failed');
-            }
-            $query = 'select value from confa_likes where user=' . $user_id . ' and post = ' . $msg_id;
-
-            $result = mysql_query($query);
-            if (!$result) {
-                mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-                die('Query failed');
-            }
-            $row = mysql_fetch_assoc($result);
-            mysql_free_result($result);
-            if ($row != null) {
-                $val = $row['value'];
-                $query = '';
-                switch ($val) {
-                   case 1:
-                       if (!strcmp($action, "like")) {
-                           $query = 'UPDATE confa_posts set likes=likes+1 where id=' . $msg_id;
-                       }
-                       break;
-                   case -1:
-                       if (!strcmp($action, "dislike")) {
-                           $query = 'UPDATE confa_posts set dislikes=dislikes+1 where id=' . $msg_id;
-                       }
-                       break;
-                   case 0:
-                       if (!strcmp($action, "like")) {
-                           $query = 'UPDATE confa_posts set dislikes=dislikes-1 where id=' . $msg_id;
-                       } else /* dislike */ {
-                           $query = 'UPDATE confa_posts set likes=likes-1 where id=' . $msg_id;
-                       }
-                       break;
-                 } 
-                 if (strlen($query) > 0 ) {
-                     $result = mysql_query($query);
-                     if (!$result) {
-                         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-                         die('Query failed');
-                     }
-
-                 }
-            }
-
+      if (!strcmp($action, "like") || !strcmp($action, "dislike")) {
+        $val = 1;
+        if (!strcmp($action, "dislike")) {
+           $val = -1;
+        }
+        if (like($user_id, $msg_id, $val) == false) {
+          die('Query failed');
+        }
       } else if (!strcmp($action, "bookmark")) {
         $query = 'insert into confa_bookmarks(user, post) values(' . $user_id. ', ' . $msg_id . ');';
             $result = mysql_query($query);
