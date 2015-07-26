@@ -69,11 +69,15 @@ $thread_owner = false;
           $edit_subj = $subj;
           $edit_id = $msg_id;
         }
+
+        if (isset($nsfw)) {
+          $old_nsfw = $nsfw;
+        }
         
-        $msg_id = $re;
+        $msg_id = $re;        
 require("msg_inc.php");
 
-        // restore msg_id & subj
+        // restore msg_id, subj and nsfw flag
         if (isset($edit_id)) {
           $subj = $edit_subj;
           $msg_id = $edit_id;
@@ -82,6 +86,11 @@ require("msg_inc.php");
               $subj = 'Re: ' . $subj;
           }
           $msg_id = null;
+        }
+        if (isset($old_nsfw)) {
+          $nsfw = $old_nsfw;
+        } else if (isset($nsfw)) {
+          unset($nsfw);
         }
     }
 

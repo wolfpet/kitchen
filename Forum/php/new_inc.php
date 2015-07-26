@@ -110,7 +110,7 @@ if ($keyboard) {
 </td>
 </tr>
 <tr>
-<td colspan="3"><input name="preview" id="preview" type="checkbox" readonly value="off"/> Preview first  <input name="nsfw" id="nsfw" type="checkbox" value="true" <?=isset($nsfw)?"checked":""?>/> NSFW</td></td>
+<td colspan="3"><input name="preview" id="preview" type="checkbox" readonly value="off"/> Preview first  <input name="nsfw" id="nsfw" type="checkbox" value="true" <?=isset($nsfw) && $nsfw?"checked":""?>/> NSFW</td></td>
 </td></tr>
 <tr>
 <td colspan="3"><input tabindex="3" value="Send!" type="submit"></td>
