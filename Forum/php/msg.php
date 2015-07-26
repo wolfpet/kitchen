@@ -14,23 +14,8 @@ close/open thread */
 $managed = true;
 
 ?><script src="js/jsdiff.js"></script>
-<!-- Syntax highighting -->
-<!--
-<link rel="stylesheet" href="/path/to/styles/default.css">
-<script src="/path/to/highlight.pack.js"></script> -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-<!--
-<script language="Javascript">
-function unbookmark_on() {
-  if (document.getElementById('unbookmark').style.display != 'inline') {
-    document.getElementById('unbookmark').style.display='inline';
-  } else {
-    document.getElementById('unbookmark').style.display='none';
-  }
-}
-</script>-->
 <base target="bottom">
 </head>
 <body>

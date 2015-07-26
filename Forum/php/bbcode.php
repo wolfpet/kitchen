@@ -196,6 +196,11 @@ function include_facebook_api_if_required($body) {
   } 
 }
 
+function initialize_highlightjs_if_required($body) {
+  if (!is_null($body) && strpos($body, '<pre>') !== false) { ?><script>hljs.initHighlightingOnLoad();</script><?php  
+  }
+}
+
 /**
  * Renderers
  */

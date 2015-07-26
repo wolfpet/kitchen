@@ -1,6 +1,7 @@
 <?php
 /*$Id: msg_form_inc.php 816 2012-10-21 01:19:09Z dmitriy $*/
   include_facebook_api_if_required($msgbody);
+  initialize_highlightjs_if_required($msgbody);
 ?>
 <h3 id="subj"><?php print($subject); ?></h3>
 Author: <b><?php print($author . '</b>' . ' '); 
