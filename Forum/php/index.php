@@ -140,7 +140,6 @@ $app->get('/api/threads/{id:[0-9]+}', function($id) {
   return $response;
 });
 
-
 function api_get_threads($max_thread_id, $count=50) {
   
   if ($max_thread_id == -1) {
@@ -187,7 +186,7 @@ function api_get_body($body, $status=1) {
     $msgbody = '<font color="red">censored</font>';
   } else if ($status == 2) {
     $msgbody = '';  // message deleted
-  } else {
+  } else { /*
     $translit_done = false;
     $msgbody = translit($body, $translit_done);
     // $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
@@ -195,6 +194,8 @@ function api_get_body($body, $status=1) {
     $msgbody = do_bbcode( $msgbody );
     $msgbody = nl2br($msgbody);
     $msgbody = after_bbcode($msgbody);
+    */
+    $msgbody = render_for_display($msgbody);
   }
   return $msgbody;
 }
@@ -485,7 +486,7 @@ $app->get('/api/profile', function() use ($app) {
  * PUT /messages/$id/like
  */
 $app->put('/api/messages/{id:[0-9]+}/like', function($msg_id) {
-  global $logged_in, $user_id;
+  global $logged_in, $user_id, $err_login;
   
   $response = new Response();
 
@@ -516,7 +517,7 @@ $app->put('/api/messages/{id:[0-9]+}/like', function($msg_id) {
  * DELETE /messages/$id/like
  */
 $app->delete('/api/messages/{id:[0-9]+}/like', function($msg_id) {
-  global $logged_in, $user_id;
+  global $logged_in, $user_id, $err_login;
   
   $response = new Response();
 
@@ -548,7 +549,7 @@ $app->delete('/api/messages/{id:[0-9]+}/like', function($msg_id) {
  * PUT /messages/$id/bookmark
  */
 $app->put('/api/messages/{id:[0-9]+}/bookmark', function($msg_id) {
-  global $logged_in, $user_id;
+  global $logged_in, $user_id, $err_login;
   
   $response = new Response();
 
@@ -575,7 +576,7 @@ $app->put('/api/messages/{id:[0-9]+}/bookmark', function($msg_id) {
  * DELETE /messages/$id/bookmark
  */
 $app->delete('/api/messages/{id:[0-9]+}/bookmark', function($msg_id) {
-  global $logged_in, $user_id;
+  global $logged_in, $user_id, $err_login;
   
   $response = new Response();
 
@@ -598,7 +599,80 @@ $app->delete('/api/messages/{id:[0-9]+}/bookmark', function($msg_id) {
   
   return $response;
 });
- 
+
+/**
+ * POST /threads
+ */
+$app->post('/api/threads', function() use ($app) {
+  return api_post($app, 0, 0);
+});
+
+/**
+ * POST /messages/$id/answers
+ */
+$app->post('/api/messages/{id:[0-9]+}/answers', function($re) use ($app) {
+  return api_post($app, intval($re), 0);
+});
+
+/**
+ * PUT /messages/$id
+ */
+$app->put('/api/messages/{id:[0-9]+}', function($msg_id) use ($app) {
+  return api_post($app, 0, intval($msg_id));
+});
+
+function api_post($app, $re, $msg_id) {
+  global $logged_in, $user_id, $err_login;
+  
+  $response = new Response();
+
+  if (!$logged_in) {
+    
+    $response->setStatusCode(403, 'Authentication error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
+    
+    return $response;
+  }
+
+  // retrieve the parameters: 
+  $msg = $app->request->getJsonRawBody();
+  
+  // mandatory
+  $subj = $msg->subject;
+  $body = $msg->body;
+  
+  // optional
+  $nsfw = $msg->nsfw;
+  $ticket = $msg->ticket;
+  
+  if ($ticket == null) $ticket = "";
+  if ($nsfw == null) $nsfw = false;
+  
+  $validation_error = validate($subj, $body);
+  if (strlen($validation_error) > 0) {
+    
+    $response->setStatusCode(404, $validation_error);
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array($validation_error)));
+    
+    return $response;
+  }
+  
+  $result = post($subj, $body, $re, $msg_id, $ticket, $nsfw);
+  
+  if (is_string($result)) {
+    $response->setStatusCode(400, $result);
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array($result)));
+  } else {
+    $response->setContentType('application/json');
+    $response->setJsonContent($result);
+  }
+    
+  return $response;
+}
+  
 $app->notFound(
     function () use ($app) {
         // echo 'Not found!';
