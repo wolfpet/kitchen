@@ -30,7 +30,7 @@ if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
     print('<!--<br/><a class="revisions_link" href="javascript:revisions_on();"><font color="gray">Revision history</font></a>--><div class="revisions" id="revisions" '
       . (isset($version) ? 'style="display:block;"' : '') .'><br/>');
  
-    include 'finediff.php';
+require_once('finediff.php');
   
     while($row = mysql_fetch_assoc($result)) {
       if ($row['status'] == 2 && (is_null( $moder ) || $moder == 0 || strcmp( $mode, "del" ))) {
@@ -63,7 +63,7 @@ if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
           $from_text = mb_convert_encoding($from_text, 'HTML-ENTITIES', 'UTF-8');
           $to_text = mb_convert_encoding($to_text, 'HTML-ENTITIES', 'UTF-8');
           $diff_opcodes = FineDiff::getDiffOpcodes($from_text, $to_text);
-          $subj = nl2br(mb_convert_encoding(FineDiff::renderDiffToHTMLFromOpcodes($from_text, $diff_opcodes), 'UTF-8', 'HTML-ENTITIES'));
+          $subj = mb_convert_encoding(FineDiff::renderDiffToHTMLFromOpcodes($from_text, $diff_opcodes), 'UTF-8', 'HTML-ENTITIES');
         }
   
         $line = $icons .'<a id="' . $msg_id.'_'.$row['id'] . '" name="' . $msg_id.'_'.$row['id'] . '" target="bottom" href="' . $root_dir . $page_version . '?id=' . $msg_id . '&ver='.$row['id'].'">' . $subj . '</a> '.$nsfw.' '.
