@@ -45,6 +45,8 @@
         <li><a href="#future" onclick="javascript:$.ui.toggleSideMenu();"  class="icon mail">Private Mail</a></li>
         <li class="divider"></li>
         <li><a href="#" onclick="javascript:$.ui.toggleSideMenu();"  class="icon pencil">New Thread</a></li>
+        <li class="divider"></li>
+        <li><a href="#login" onclick="javascript:$.ui.toggleSideMenu();"  class="icon user">Login</a></li>
     </ul>
 </nav>    
     
@@ -99,6 +101,21 @@
         </header>
         <div id="futureStuff">
             HERE WILL COME THE FUTURE (stuff)!
+        </div>
+    </div>
+        <!-- Login Test -->
+    <div class="panel" title="Login" id="login" data-footer="foo">
+        <header>
+            <a id="backBtn2"  class='backButton'  style="float:left !important">Back</a>
+            <h1>Login</h1>
+        </header>    
+        <div id="login_form">
+            <br>
+            <form>
+                <input id="username" type="text" placeholder="Username">
+                <input id="pwd" type="password" placeholder="Password">
+                <input type="submit" class="button" value="Submit" style='float:right;'>                
+            </form>            
         </div>
     </div>
 </div>
