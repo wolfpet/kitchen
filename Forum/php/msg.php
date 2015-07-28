@@ -13,7 +13,7 @@ $thread_owner = false;
 close/open thread */
 $managed = true;
 
-?><script src="js/jsdiff.js"></script>
+?><link rel="stylesheet" type="text/css" href="<?=autoversion('css/diff.css');?>">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
 <base target="bottom">

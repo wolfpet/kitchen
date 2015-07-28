@@ -14,7 +14,9 @@ require_once('head_inc.php');
 
 if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
   $query = 'SELECT p.id, p.subject, p.views, p.status, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' 
-    . $prop_tz . ':00\') as created, p.body, p.content_flags, p.chars from confa_versions p where p.parent=' . $msg_id . ' order by p.created desc';
+    . $prop_tz . ':00\') as created, p.body, p.content_flags, p.chars, pp.subject as msg_subject, (select subject from confa_versions where parent=' . $msg_id . ' and id > p.id limit 1) as compare_to'
+    . ' from confa_versions p, confa_posts pp '
+    . ' where pp.id=p.parent and p.parent=' . $msg_id . ' order by p.created desc';
       
   $result = mysql_query($query);
   if (!$result) {
@@ -27,6 +29,8 @@ if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
   if (mysql_num_rows($result) != 0) {
     print('<!--<br/><a class="revisions_link" href="javascript:revisions_on();"><font color="gray">Revision history</font></a>--><div class="revisions" id="revisions" '
       . (isset($version) ? 'style="display:block;"' : '') .'><br/>');
+ 
+    include 'finediff.php';
   
     while($row = mysql_fetch_assoc($result)) {
       if ($row['status'] == 2 && (is_null( $moder ) || $moder == 0 || strcmp( $mode, "del" ))) {
@@ -45,6 +49,23 @@ if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
         }
       
         $subj = print_subject(encode_subject($row['subject']));
+  
+        if (extension_loaded('mbstring')) {
+          $content_to_compare = $row['compare_to'];
+          
+          if (is_null($content_to_compare)) {
+            $content_to_compare = $row['msg_subject'];
+          }
+          
+          $from_text = $subj; // htmlentities($body, HTML_ENTITIES,'UTF-8');
+          $to_text = print_subject(encode_subject($content_to_compare));
+          
+          $from_text = mb_convert_encoding($from_text, 'HTML-ENTITIES', 'UTF-8');
+          $to_text = mb_convert_encoding($to_text, 'HTML-ENTITIES', 'UTF-8');
+          $diff_opcodes = FineDiff::getDiffOpcodes($from_text, $to_text);
+          $subj = nl2br(mb_convert_encoding(FineDiff::renderDiffToHTMLFromOpcodes($from_text, $diff_opcodes), 'UTF-8', 'HTML-ENTITIES'));
+        }
+  
         $line = $icons .'<a id="' . $msg_id.'_'.$row['id'] . '" name="' . $msg_id.'_'.$row['id'] . '" target="bottom" href="' . $root_dir . $page_version . '?id=' . $msg_id . '&ver='.$row['id'].'">' . $subj . '</a> '.$nsfw.' '.
           ' [' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes'; 
       }
