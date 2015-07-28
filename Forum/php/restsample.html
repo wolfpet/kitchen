@@ -1,0 +1,25 @@
+<html>
+<head>
+<script src="js/jquery-1.10.2.min.js"></script>
+<script language="javascript">
+
+function sendRequest(username, password, server_url, success_function) {
+  $.ajax
+    ({
+      type: "GET",
+      url: server_url,
+      async: false,
+      beforeSend: function (xhr) {
+        if (username !== null) {
+          xhr.setRequestHeader ("Authorization", "Basic " + btoa(username + ":" + password));
+        }
+      },    
+      success: success_function
+  });
+}
+</script>
+</head>
+<body onload="sendRequest(null, null, 'api/profile', function (data){ alert('Hello, ' + data.name + '!'); });">
+<button type=button" id="threads" onclick="this.disabled = true; sendRequest(null, null, 'api/threads', function (data){ alert('The call returned ' + data.count + ' threads!'); document.getElementById('threads').disabled=false; });">Call api/threads</button>
+</body>
+</html>

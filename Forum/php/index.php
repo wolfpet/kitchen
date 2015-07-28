@@ -60,22 +60,24 @@ $app->get('/api/threads', function() use ($app) {
   
   $count = $app->request->getQuery('count');
   
+  $response = new Response();
+      
   if (is_null($count))
-    api_get_threads($id);
+    $data = api_get_threads($id);
   else {
     $count = intval($count);
     if ($count > 0 && $count <= 1000) {
-      api_get_threads($id, $count - 1);   // -1, because query is inclusive
+      $data = api_get_threads($id, $count - 1);   // -1, because query is inclusive
     } else {
-      $response = new Response();
-      
       $response->setStatusCode(400, 'Error')->sendHeaders();
-      $response->setContentType('application/json');
-      $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Invalid parameter value ' . $count)));
-      
-      return $response;
+      $data = array('status' => 'ERROR', 'messages' => array('Invalid parameter value ' . $count));
     }
   }
+  
+  $response->setContentType('application/json');
+  $response->setJsonContent($data);
+  
+  return $response;  
 });
 
 /**
@@ -173,12 +175,10 @@ function api_get_threads($max_thread_id, $count=50) {
     $count++;
   } 
 
-  $data = array(
+  return array(
     'count' => $count,
     'threads' => $threads
   );
-
-  echo json_encode($data);
 }
 
 function api_get_body($body, $status=1) {
@@ -195,7 +195,7 @@ function api_get_body($body, $status=1) {
     $msgbody = nl2br($msgbody);
     $msgbody = after_bbcode($msgbody);
     */
-    $msgbody = render_for_display($msgbody);
+    $msgbody = render_for_display($body);
   }
   return $msgbody;
 }
@@ -315,6 +315,7 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) {
   if (!$result) {
     
     $response->setStatusCode(400, 'Error');
+    
     $response->setContentType('application/json');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
     
