@@ -14,8 +14,8 @@ require_once('head_inc.php');
 */ 
     $query = 'SELECT u.username, u.moder, v.subject, p.closed as post_closed, v.views, p.id as msg_id, v.status, p.auth, p.parent, CONVERT_TZ(v.created, \'' 
       . $server_tz . '\', \'' . $prop_tz . ':00\') as created, v.body, p.author, u.id as id, t.closed as thread_closed, p.thread_id, t.id, t.author as t_author,'
-      . 'p.subject as msg_subject, p.body as msg_body '
-      . 'from confa_users u, confa_posts p, confa_threads t, confa_versions v where p.thread_id=t.id and u.id=p.author and p.id=v.parent and p.id=' . $msg_id . ' and v.id=' . $version;
+      . 'p.subject as msg_subject, IF(nv.body is null, p.body, nv.body) as compare_to '
+      . 'from confa_users u, confa_posts p, confa_threads t, confa_versions v left join (select * from confa_versions where parent=' . $msg_id . ' and id>' . $version.' limit 1) as nv on v.parent = nv.parent where p.thread_id=t.id and u.id=p.author and p.id=v.parent and p.id=' . $msg_id . ' and v.id=' . $version;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query 2 failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -30,6 +30,7 @@ require_once('head_inc.php');
         $created = $row['created'];
         $status = $row['status'];
         $views = $row['views'];
+        $body = $row['body'];
         if ($row['status'] == 3) {
           if ( !is_null( $moder ) && $moder > 0 && !strcmp( $mode, "cens" ) ) {
             $translit_done = false;
@@ -62,6 +63,8 @@ require_once('head_inc.php');
           $msgbody = render_for_display($msgbody);
         }
 
+        $content_to_compare = $row['compare_to'];
+        
         $start ='';
         $author = $author;
         $id = $row['id'];
@@ -96,9 +99,19 @@ require_once('head_inc.php');
     $modified = null;
     $trans_body = $msgbody;
     
+    if (extension_loaded('mbstring')) {
+      include 'finediff.php';
+
+      $from_text = htmlentities($body, HTML_ENTITIES,'UTF-8');
+      $to_text = htmlentities($content_to_compare, HTML_ENTITIES,'UTF-8');
+      
+      $from_text = mb_convert_encoding($from_text, 'HTML-ENTITIES', 'UTF-8');
+      $to_text = mb_convert_encoding($to_text, 'HTML-ENTITIES', 'UTF-8');
+      $diff_opcodes = FineDiff::getDiffOpcodes($from_text, $to_text);
+      $trans_body = nl2br(mb_convert_encoding(FineDiff::renderDiffToHTMLFromOpcodes($from_text, $diff_opcodes), 'UTF-8', 'HTML-ENTITIES'));
+    }
+
 require_once('msg_form_inc.php');
-
 ?>
-
 
 

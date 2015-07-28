@@ -4,7 +4,7 @@
 require_once('head_inc.php');
 require_once('html_head_inc.php');
 
-?><script src="js/jsdiff.js"></script>
+?><link rel="stylesheet" type="text/css" href="<?=autoversion('css/diff.css');?>">
 <base target="bottom">
 </head>
 <body>
