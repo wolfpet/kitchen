@@ -27,7 +27,8 @@ function loadRootThreadsCallbackPlus(payload)
 {
     //clear the list
     $("#titleList").empty();
-    var data = $.parseJSON(payload);
+    //var data = $.parseJSON(payload);
+    var data = payload;
     for(i=0; i<data.count; i++)
     {
         //check the number of replies. if >0 then render the badge
@@ -58,7 +59,8 @@ function showRepliesCallback(payload)
 {    
     //clear the list
     $("#replyTitleList").empty();
-    var data = $.parseJSON(payload);
+    //var data = $.parseJSON(payload);
+    var data = payload;
     if(data.count>0)
     {
         //if there are replies then we add the list header
@@ -117,7 +119,8 @@ function byDateCallback(payload)
 {
     //clear the list
     $("#byDateList").empty();
-    var data = $.parseJSON(payload);
+    //var data = $.parseJSON(payload);
+    var data = payload;
     for(i=0; i<data.count; i++)
     {
         var subj = data.messages[i].subject;
@@ -163,7 +166,8 @@ function displayMessage (messageId)
 
 function displayMessageCallback(payload)
 {
-    var data = $.parseJSON(payload);
+    //var data = $.parseJSON(payload);
+    var data = payload;
     var msg = data.body.html;
     ///alert(msg);
     //$.ui.popup(msg);
