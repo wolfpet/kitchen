@@ -638,18 +638,18 @@ function api_post($app, $re, $msg_id) {
 
   // retrieve the parameters: 
   $msg = $app->request->getJsonRawBody();
-  
+
+  $subj = $body = $ticket = "";
+  $nsfw = false;
+
   // mandatory
-  $subj = $msg->subject;
-  $body = $msg->body;
-  
+  if (array_key_exists('subject', $msg)) $subj = $msg->subject;
+  if (array_key_exists('body', $msg)) $body = $msg->body;
+
   // optional
-  $nsfw = $msg->nsfw;
-  $ticket = $msg->ticket;
-  
-  if ($ticket == null) $ticket = "";
-  if ($nsfw == null) $nsfw = false;
-  
+  if (array_key_exists('ticket', $msg)) $ticket = $msg->ticket;
+  if (array_key_exists('nsfw', $msg)) $nsfw = $msg->nsfw;
+
   $validation_error = validate($subj, $body);
   if (strlen($validation_error) > 0) {
     
