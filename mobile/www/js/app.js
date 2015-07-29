@@ -4,13 +4,20 @@ var currentParentID=0;
 var currentLevel=0;
 var currentView="threads"; //"message", "byDate"
 
+//Auth data
+var username = null;
+
+
+
+
 function onAppReady() 
 {
     if( navigator.splashscreen && navigator.splashscreen.hide ) 
     {   // Cordova API detected
-        navigator.splashscreen.hide() ;
+        navigator.splashscreen.hide();
     }
-    loadRootThreadsPlus()
+    checkUserProfile();
+    loadRootThreadsPlus();
 }
 document.addEventListener("app.Ready", onAppReady, false) ;
 
@@ -71,7 +78,7 @@ function showRepliesCallback(payload)
         li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML="<center><b>"+data.count+" REPLIES</b></center>"
+        li.innerHTML="<center><b>"+data.count+" REPLIES</b></center>";
         replyTitleList.appendChild(li);
     
         li = document.createElement('li');
@@ -91,7 +98,7 @@ function showRepliesCallback(payload)
             badgeHtml= "<span class='af-badge tr'>"+data.messages[i].answers+"</span>";          
         }
         //Append the title to the list
-        li = document.createElement('li');
+        var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
         li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote: <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
@@ -143,8 +150,45 @@ function byDateCallback(payload)
     }
 }
 
+function checkUserProfile()
+{
+    checkUserProfileCall(function(data)
+    {
+     if(data.name.length>0)
+     {
+         username = data.name;
+         return true;
+     }
+        else
+        {
+            return false;
+        }
+    });   
+}
+
+function checkUserProfileCall(success_function)
+{
+    var url = mainUrl+ "api/profile";
+    $.ajax
+    ({
+      type: "GET",
+      url: url,
+      async: true,
+      beforeSend: function (xhr) {
+        if (username !== null) {
+          xhr.setRequestHeader ("Authorization", "Basic " + btoa(username + ":" + password));
+        }
+      },    
+      success: success_function        
+  });
+    
+}
 
 
+function test()
+{
+    alert(username);
+}
 
 
 
