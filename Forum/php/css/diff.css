@@ -1,9 +1,14 @@
 ins {
-	background-color: lightgreen;
+	/* background-color: lightgreen; */
+  background-color: #ddfade;
+  border-color: #93c49f;
   text-decoration: none;
 }
 
 del {
-	background-color: OrangeRed;
-  text-decoration: none;
+	/* background-color: OrangeRed;
+  text-decoration: none; */
+  background-color: #ffe7e7;
+  border-color: #df9898;
+  text-decoration: line-through; 
 }
