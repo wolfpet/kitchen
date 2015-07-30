@@ -1,0 +1,2 @@
+ALTER TABLE confa_sessions ADD COLUMN safe_mode SMALLINT NULL DEFAULT 0;
+
