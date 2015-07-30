@@ -6,6 +6,8 @@ var currentView="threads"; //"message", "byDate"
 
 //Auth data
 var username = null;
+var password = null;
+var tempvar=null;
 
 
 
@@ -152,28 +154,19 @@ function byDateCallback(payload)
 
 function checkUserProfile()
 {
-    checkUserProfileCall(function(data)
-    {
-     if(data.name.length>0)
-     {
-         username = data.name;
-         return true;
-     }
-        else
-        {
-            return false;
-        }
-    });   
+    checkUserProfileCall(username, password, function(data){ tempvar = data.name;});
+    if(tempvar != null)return true;
+    else return false;
 }
 
-function checkUserProfileCall(success_function)
+function checkUserProfileCall(username, password, success_function)
 {
     var url = mainUrl+ "api/profile";
     $.ajax
     ({
       type: "GET",
       url: url,
-      async: true,
+      async: false,
       beforeSend: function (xhr) {
         if (username !== null) {
           xhr.setRequestHeader ("Authorization", "Basic " + btoa(username + ":" + password));
@@ -187,8 +180,15 @@ function checkUserProfileCall(success_function)
 
 function test()
 {
-    alert(username);
+    var isLoggedIn = checkUserProfile();
+    alert(isLoggedIn);
 }
+
+
+
+
+
+
 
 
 
