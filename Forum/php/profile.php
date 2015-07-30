@@ -54,6 +54,19 @@ $(document).ready(function() {
   		});
                 e.preventDefault();
             });
+            $('#safe_mode').change( function(e) {
+              $("#status_text").html("&nbsp;");
+              var safe_mode = 1;
+              if ($('#safe_mode').is(':checked')) {
+                safe_mode = 0;	
+              } 
+              $.post("api.php", {'update_safe_mode' : safe_mode}, function(data,status){
+                $("#status_text").html(data);
+                if (status == "success" && parent.contents !== undefined) {
+                  parent.contents.location.reload(); 
+                }
+              });
+            });            
         });
 
 </script>
@@ -61,20 +74,11 @@ $(document).ready(function() {
 <base target="bottom">
 </head>
 <body>
-<table width="95%"><tr>
-<td>
 <h3><?php print($title);?></h3>
-</td>
-
-</tr></table>
-<B>
-<font color="red">
-<div id="status_text">&nbsp;</div>
-</font>
-</B>
+<span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>
 <?php
 
-    $query=' SELECT email, prop_bold, prop_tz from confa_users where id = ' . $user_id;
+    $query=' SELECT email, prop_bold, prop_tz, safe_mode from confa_users where id = ' . $user_id;
     $result = mysql_query( $query );
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -85,10 +89,9 @@ $(document).ready(function() {
     $email2 = $email;
     $profile_bold = $row['prop_bold'];
     $prop_tz = $row['prop_tz'];
- 
+?>
+<div style="position:absolute;left: 0px;top: 0px;width: 100%;z-index: 9999;text-align: right;"><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>><i>Show NSFW content</i></input>&nbsp;</div>
+<?php
 require_once("profile_inc.php");
 require_once('tail_inc.php');
-
 ?>
-
-

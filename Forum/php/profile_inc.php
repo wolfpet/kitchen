@@ -1,9 +1,10 @@
 <?php
 /*$Id: profile_inc.php 942 2013-09-01 12:10:18Z dmitriy $*/
 ?>
-
-<BR>
-<table> <tr><td width="50%" valign="top">
+<p/>
+<table> 
+<tr>
+<td valign="top" nowrap>
 <form action="<?php print( $root_dir . $page_update ); ?>" method="post">
 <table>
 <tr>
@@ -66,7 +67,7 @@
 </form>
 
 </td>
-<td width="50%" valign="top">
+<td valign="top">
 <!-- Start ignore tablre -->
 
 <?php
@@ -120,7 +121,8 @@
   }
 ?>
 </select>
-<BR>
+<!--<BR>-->
+</td> </tr>
 <?php
       $query = "SELECT show_hidden from confa_users where id=" . $user_id;
       $result = mysql_query($query);
@@ -134,13 +136,13 @@
         $checked = "checked";
       }
 ?>
+<tr><td colspan=3>
 <input type="checkbox" name="show_hidden" value="show_hidden" id="show_hidden" <?php print ($checked); ?>>Show placeholder for hidden messages<br>
 <INPUT type="submit" value="Save" id="Save">
 <!--</form>-->
 </td> </tr>
 </table>
 <!-- end ignore table -->
-
 </td> </tr> </table>
 </body>
 </html>

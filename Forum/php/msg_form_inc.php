@@ -20,6 +20,9 @@ if (isset($nsfw)) {
 <?php print($in_response); ?><hr><div id="msgbody"><?php 
 if (is_null($msgbody) || strlen($msgbody) == 0) {
   print(''); 
+} else if (isset($nsfw) && $nsfw && isset($safe_mode) && $safe_mode != 0) {
+  // print('<span style="color:gray; display: table-cell; vertical-align: middle; text-align:center;"><i>Content is blocked for your safety</i></span>');
+  print('<H3 style="color:lightgray; display: table-cell; vertical-align: middle; text-align:center;">NSFW</H3>');
 } else {
   print($trans_body); 
 }

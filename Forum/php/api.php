@@ -8,7 +8,7 @@ require_once('head_inc.php');
 $status = 401;
 $text = "Not authorized";
 
-mysql_log(__FILE__, "check");
+// mysql_log(__FILE__, "check");
 if ($logged_in) {
 
     $request = "";
@@ -33,22 +33,29 @@ if ($logged_in) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
       }
-
     }
-    if (array_key_exists("ignored", $_POST)) {
-     $ignored = $_POST['ignored'];
-     mysql_log(__FILE__, "" . __LINE__);
-     while (list($key, $val) = each($ignored)) {
-       $query = "INSERT INTO confa_ignor(ignored_by, ignored) values(" . $user_id . ", " . $val . ")";
+    if (array_key_exists('update_safe_mode', $_POST)) {
+      $update_safe_mode = intval(trim($_POST['update_safe_mode']), 10);
+      $query = "UPDATE confa_sessions set safe_mode=" . $update_safe_mode . " where user_id=" . $user_id . ' and hash =\'' . $auth_cookie . '\'';
       $result = mysql_query($query);
       if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
       }
-     }
-
     }
-  $text = "Your changes has been saved.";
+    if (array_key_exists("ignored", $_POST)) {
+      $ignored = $_POST['ignored'];
+      mysql_log(__FILE__, "" . __LINE__);
+      while (list($key, $val) = each($ignored)) {
+        $query = "INSERT INTO confa_ignor(ignored_by, ignored) values(" . $user_id . ", " . $val . ")";
+        $result = mysql_query($query);
+        if (!$result) {
+          mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+          die('Query failed');
+        }
+      }
+    }
+  $text = "Your changes have been saved.";
   $status = 201;
 } else {
   $result = "Failed";
