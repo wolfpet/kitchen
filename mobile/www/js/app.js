@@ -242,12 +242,12 @@ function sendReply()
    var url = mainUrl+ "api/messages/445286/answers";    
     $.post
     (url,
-        {
+        JSON.stringify({
             "subject":"subject goes here", 
             "body":"this is a message body", 
             "ticket":"000111", 
             "nsfw":false
-        },
+        }),
         function(data, status)
         {
             alert("posted");
