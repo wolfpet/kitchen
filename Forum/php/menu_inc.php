@@ -2,7 +2,7 @@
 /*$Id: menu_inc.php 875 2013-01-30 17:10:57Z dmitriy $*/
 ?>
 <?php notify_about_new_pm($user_id, $last_pm_check_time);?>
-<div id="safe_mode_ind" style="font-size:9px;color:blue;position:absolute;left: 0px;top: 0px;width: 100%;height: 9px;z-index: 9999;text-align: left;">&nbsp;&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "Safe Mode" : ""?>&nbsp;&nbsp;&nbsp;&nbsp;</div><table width="100%">
+<div id="safe_mode_ind">&nbsp;&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "Safe Mode" : ""?>&nbsp;&nbsp;&nbsp;&nbsp;</div><table width="100%">
 <?php
     if (!is_null($err_login) && strlen($err_login) > 0) {
 ?>

@@ -126,3 +126,20 @@ em {
   -moz-transform: skew(20deg,0deg);     /* Firefox */
   transform: skew(20deg,0deg);
 }
+
+#safe_mode_ind {
+  color: lightgray;
+  /*
+  background: -webkit-linear-gradient(royalblue, yellow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  */
+  font-size:9px;
+  position:absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 9px;
+  z-index: 9999;
+  text-align: left;
+}
