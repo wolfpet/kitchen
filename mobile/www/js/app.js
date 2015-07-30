@@ -53,7 +53,7 @@ function loadRootThreadsCallbackPlus(payload)
         var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+"<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.threads[i].message.id+")'><b>"+data.threads[i].message.author.name+"</b> wrote:<br /><span style='color:#0088d1'>"+data.threads[i].message.subject;+"</span></a>";
+        li.innerHTML= badgeHtml+"<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.threads[i].message.id+")'><b>"+data.threads[i].message.author.name+"</b> wrote:<br /><span style='color:#0088d1'>"+data.threads[i].message.subject+"</span></a>";
         
         titleList.appendChild(li);        
     }           
@@ -73,10 +73,11 @@ function showRepliesCallback(payload)
     $("#replyTitleList").empty();
     //var data = $.parseJSON(payload);
     var data = payload;
+    var li;
     if(data.count>0)
     {
         //if there are replies then we add the list header
-        var li;
+        
         li = document.createElement('li');
         li.setAttribute('class','divider');
         replyTitleList.appendChild(li);
@@ -103,7 +104,7 @@ function showRepliesCallback(payload)
             badgeHtml= "<span class='af-badge tr'>"+data.messages[i].answers+"</span>";          
         }
         //Append the title to the list
-        var li = document.createElement('li');
+        li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
         li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote: <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
@@ -158,7 +159,7 @@ function byDateCallback(payload)
 function checkUserProfile()
 {
     checkUserProfileCall(username, password, function(data){ username = data.name;});
-    if(username != null)return true;
+    if(username !== null)return true;
     else return false;
 }
 
@@ -169,7 +170,7 @@ function checkUserProfileCall(username, password, success_function)
     ({
       type: "GET",
       url: url,
-      async: false,
+      async: true,
       beforeSend: function (xhr) {
         if (username !== null) {
           xhr.setRequestHeader ("Authorization", "Basic " + btoa(username + ":" + password));
@@ -221,7 +222,7 @@ function displayMessageCallback(payload)
     var subj = data.subject;
     var name = data.author.name;
     currentParentID = data.parent;    
-    document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /> <br /><span style='color:#008800'> Likes: " + data.likes + "</span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'> Dislikes: " + data.dislikes + "</span><br><br /><a class='button' href='#replyForm' onclick='javascript:replyTo();'>Reply</a>";
+    document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /> <br /><span style='color:#008800'> Likes: " + data.likes + "</span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'> Dislikes: " + data.dislikes + "</span><br><br /><a class='button' href='#replyForm'>Reply</a>";
 
     //display replies here if any    
     $("#replyTitleList").empty();    //clear the list
@@ -233,13 +234,30 @@ function displayMessageCallback(payload)
     document.getElementById("inResponseTo").innerHTML="In response to "+name +"'s message:";
 }
 
-//the user clicks Reply button - navigate to the form (the subj and msg data is preloaded in displayMessage()).
-function replyTo()
+//the user clicks Reply button - navigate to the form (the subj and msg data is preloaded in displayMessage()). Send reply would pick up the form data and submit to the REST method
+function sendReply()
 {
-  //alert("hello");   
+    //API call: POST http://serverURL/api/messages/$id/answers
+    //POST structure: {"subject":"subject goes here", "body":"this is a message body", "ticket":"some unique string to prevent duplicates", "nsfw":true}
+   var url = mainUrl+ "api/messages/445286/answers";    
+    $.post
+    (url,
+        {
+            "subject":"subject goes here", 
+            "body":"this is a message body", 
+            "ticket":"000111", 
+            "nsfw":false
+        },
+        function(data, status)
+        {
+            alert("posted");
+        }
+    );    
 }
 
-
+function postCallBack()
+{
+}
 
 //this function loads the root threads or goes one level up depending on where we are.
 function onBackButton()
