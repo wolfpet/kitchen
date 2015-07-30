@@ -77,22 +77,25 @@ Username: <input type="text" id="user" name="user" maxlength="64" size="16" valu
     }
     if (strcmp($cur_page, $page_expanded) == 0) {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_expanded); ?>"><I>Expanded threads</I></a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_expanded); ?>"><I>Expanded</I></a> |
 <?php
     } else {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_expanded); ?>">Expanded threads</a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_expanded); ?>">Expanded</a> |
 
 <?php
     }
     if (strcmp($cur_page, $page_collapsed) == 0) {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_collapsed); ?>"><I>Collapsed threads</I></a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_collapsed); ?>"><I>Collapsed</I></a> |
 <?php
     } else {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_collapsed); ?>">Collapsed threads</a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_collapsed); ?>">Collapsed</a> |
 
+<a target="_top" class="menu" href="cols.html">Columns</a> |
+
+<a target="_top" class="menu" href="mobile/index.html">Mobile</a> |
 
 <?php
     }
@@ -119,7 +122,7 @@ Forgot password? |
   }
 ?>
 
-<a target="_blank" class="menu" href="https://github.com/wolfpet/kitchen/pulse">Development</a> |
+<a target="_blank" class="menu" href="https://github.com/wolfpet/kitchen">Development</a> |
 
 <a target="contents" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">Refresh</a> 
 
