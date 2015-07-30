@@ -93,6 +93,27 @@
             </ul>
         </div>
     </div>
+    <div class="panel" title="Reply" id="replyForm" data-footer="foo">
+        <header>
+            <a id="backBtn2"  class='backButton'  style="float:left !important">Back</a>
+            <h1>Reply</h1>
+        </header>
+        <div id="replyForm">
+            <br>
+            <form>
+                <input id="subjectTextBox" type="text" placeholder="Subject">
+                <textarea name="messageTextArea" id="messageTextArea" cols="30" rows="5"></textarea>      
+                <input type="button" class="button" value="Send"  onclick="javascript:sendReply();">      
+            </form>      
+            <br>
+            <div id="inResponseTo">In Response to</div><br>
+            <textarea name="messageTextAreaQuote" id="messageTextAreaQuote" cols="30" rows="5"></textarea>               
+        </div>
+    </div>    
+    
+    
+    
+    
     <!-- some future stuffs -->
     <div class="panel" title="Future stuff" id="future" data-footer="foo">
         <header>
@@ -103,7 +124,7 @@
             HERE WILL COME THE FUTURE (stuff)!
         </div>
     </div>
-        <!-- Login Test -->
+    <!-- Login Test -->
     <div class="panel" title="Login" id="login" data-footer="foo">
         <header>
             <a id="backBtn2"  class='backButton'  style="float:left !important">Back</a>

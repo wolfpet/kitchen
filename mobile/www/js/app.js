@@ -9,6 +9,9 @@ var username = null;
 var password = null;
 var tempvar=null;
 
+//Reply To
+var currentMessageId = null;
+
 
 
 
@@ -154,8 +157,8 @@ function byDateCallback(payload)
 
 function checkUserProfile()
 {
-    checkUserProfileCall(username, password, function(data){ tempvar = data.name;});
-    if(tempvar != null)return true;
+    checkUserProfileCall(username, password, function(data){ username = data.name;});
+    if(username != null)return true;
     else return false;
 }
 
@@ -218,13 +221,26 @@ function displayMessageCallback(payload)
     var subj = data.subject;
     var name = data.author.name;
     currentParentID = data.parent;    
-    document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /> <br /><span style='color:#008800'> Likes: " + data.likes + "</span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'> Dislikes: " + data.dislikes + "</span><br><br />";
+    document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /> <br /><span style='color:#008800'> Likes: " + data.likes + "</span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'> Dislikes: " + data.dislikes + "</span><br><br /><a class='button' href='#replyForm' onclick='javascript:replyTo();'>Reply</a>";
 
     //display replies here if any    
     $("#replyTitleList").empty();    //clear the list
     showReplies(data.id);
+    currentMessageId= data.id;
+    //duplicate the subj in the reply form
+    document.getElementById("subjectTextBox").value=subj;
+    document.getElementById("messageTextAreaQuote").innerHTML=msg;
+    document.getElementById("inResponseTo").innerHTML="In response to "+name +"'s message:";
 }
-  
+
+//the user clicks Reply button - navigate to the form (the subj and msg data is preloaded in displayMessage()).
+function replyTo()
+{
+  //alert("hello");   
+}
+
+
+
 //this function loads the root threads or goes one level up depending on where we are.
 function onBackButton()
 {
