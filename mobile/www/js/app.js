@@ -267,13 +267,43 @@ function sendReply()
         //alert( "error" );
         //Failed to post. Not logged in most likely    
         //Clear the page. Explain that one has to login.
-        msg="You have to login. <br><a href='#login'>Click here to login</a>";
+        msg="You have to login. <br><a href='#login'>Click here to login</a><br><br>";
         $.ui.popup(msg);
     });
 }
 
-function postCallBack()
+//let's start the new thread!
+function sendNewThread()
 {
+    var url = mainUrl+ "api/threads";   
+    //Time ticks
+    var d = new Date();
+    var n = d.getTime();
+    var message = document.getElementById("newThreadTextArea").value+"\n\nSent from my phone.";
+    var subj = document.getElementById("newThreadSubjectTextBox").value;
+    if(subj=="")subj="No Subject";
+    //post the message
+    $.post
+    (url,
+        JSON.stringify({
+            "subject":subj, 
+            "body":message,
+            "ticket":n, 
+            "nsfw":false
+        }),
+        function(data, status)
+        {
+            //reload threads
+           loadRootThreadsPlus();         
+        }
+    )
+    .fail(function() {
+        //alert( "error" );
+        //Failed to post. Not logged in most likely    
+        //Clear the page. Explain that one has to login.
+        msg="You have to login. <br><a href='#login'>Click here to login</a><br><br>";
+        $.ui.popup(msg);
+    });
 }
 
 //this function loads the root threads or goes one level up depending on where we are.
