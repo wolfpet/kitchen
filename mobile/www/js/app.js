@@ -239,20 +239,37 @@ function sendReply()
 {
     //API call: POST http://serverURL/api/messages/$id/answers
     //POST structure: {"subject":"subject goes here", "body":"this is a message body", "ticket":"some unique string to prevent duplicates", "nsfw":true}
-   var url = mainUrl+ "api/messages/445286/answers";    
+   var url = mainUrl+ "api/messages/"+currentMessageId+"/answers";   
+    //Time ticks
+    var d = new Date();
+    var n = d.getTime();
+    var message = document.getElementById("messageTextArea").value+"\n\nSent from my phone.";
+    var subj = document.getElementById("subjectTextBox").value;
+    if(subj=="")subj="No Subject";
+    //post the message
     $.post
     (url,
         JSON.stringify({
-            "subject":"subject goes here", 
-            "body":"this is a message body", 
-            "ticket":"000111", 
+            "subject":subj, 
+            "body":message,
+            "ticket":n, 
             "nsfw":false
         }),
         function(data, status)
         {
-            alert("posted");
+            var newMessageId = data.id;
+            //open the new message
+            currentLevel++;
+            displayMessage(newMessageId);
         }
-    );    
+    )
+    .fail(function() {
+        //alert( "error" );
+        //Failed to post. Not logged in most likely    
+        //Clear the page. Explain that one has to login.
+        msg="You have to login. <br><a href='#login'>Click here to login</a>";
+        $.ui.popup(msg);
+    });
 }
 
 function postCallBack()

@@ -93,6 +93,7 @@
             </ul>
         </div>
     </div>
+    <!-- Reply Form -->
     <div class="panel" title="Reply" id="replyForm" data-footer="foo">
         <header>
             <a id="backBtn2"  class='backButton'  style="float:left !important">Back</a>
@@ -103,7 +104,7 @@
             <form>
                 <input id="subjectTextBox" type="text" placeholder="Subject">
                 <textarea name="messageTextArea" id="messageTextArea" cols="30" rows="5"></textarea>      
-                <input type="button" class="button" value="Send"  onclick="javascript:sendReply();">      
+                <a href="#messagePage" type="button" class="button" value="Send"  onclick="javascript:sendReply();">Send</a>    
             </form>      
             <br>
             <div id="inResponseTo">In Response to</div><br>
@@ -137,7 +138,7 @@
                 <input id="pwdTextBox" type="password" placeholder="Password">
                 <input type="submit" class="button" value="Login" style='float:right;'>            
             </form>
-            <a class="button" onclick="test();">Check Profile Test</a>
+            <!--<a class="button" onclick="test();">Check Profile Test</a>-->
         </div>
     </div>
 </div>
