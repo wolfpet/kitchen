@@ -188,6 +188,36 @@ function test()
     alert(isLoggedIn);
 }
 
+function login()
+{
+    
+    //submit the form to ../login.php
+    var actionUrl = mainUrl+ "login.php";
+    //post the message
+    $.post
+    (   actionUrl,
+        {
+            "user":document.getElementById("usernameTextBox").value, 
+            "password":document.getElementById("pwdTextBox").value,
+            "lastpage":"welc.php"            
+        },
+        function(data, status)
+        {
+            //reload threads
+            //loadRootThreadsPlus();         
+        }
+    );   
+    //check if successful.
+    var url = mainUrl+ "api/profile";
+    $.get( url, function( data ) {
+    if(data.status == "ERROR")
+    {
+        $.ui.popup("Sorry, login was unsuccessful. Please try again.");
+    }
+    })
+    .fail(function(){$.ui.popup("Sorry, login was unsuccessful. Please try again.");});
+    
+}
 
 
 
