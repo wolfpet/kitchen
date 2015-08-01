@@ -357,7 +357,7 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) {
  * Returns "Collapsed threads" view data, also a default view for mobile client. optional arguments - $max_thread_id, $count
  */
 $app->get('/api/messages', function() use ($app) {
-  global $prop_tz, $server_tz;
+  global $prop_tz, $server_tz, $root_dir, $host;
   
   $response = new Response();
   
@@ -369,9 +369,7 @@ $app->get('/api/messages', function() use ($app) {
   
   $count = $app->request->getQuery('count');
   
-  if (is_null($count)) {
-    $count = 30;
-  } else {
+  if (!is_null($count)) {
     $count = intval($count);
   }
 
@@ -386,12 +384,20 @@ $app->get('/api/messages', function() use ($app) {
   switch ($mode) {
     
     case 'bydate':
+      if (is_null($count)) {
+        $count = 30;
+      }
       $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
         . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 order by id desc limit ' . $count;
+      $result = mysql_query($query);
+      break;
+        
+    case 'answered':
+      $result = get_answered(is_null($count) ? 0 : $count);  
       break;
       
     case 'mymessages':
-    case 'answered':
+    
     default:
       $response = new Response();
       
@@ -402,7 +408,6 @@ $app->get('/api/messages', function() use ($app) {
       return $response;
   }
 
-  $result = mysql_query($query);
   if (!$result) {
       mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'max_id="' . $max_id . '"');
       die('Query failed ' . mysql_error() . ' QUERY: ' . $query );
@@ -429,6 +434,9 @@ $app->get('/api/messages', function() use ($app) {
       'level' => intval($row['level'])
     );
     $count++;
+    if ($mode == 'answered' && $count == 1) {
+      setcookie('last_answered_id2', $row['id'], 1800000000, $root_dir, $host);
+    }      
   }
 
   $response->setContentType('application/json');
@@ -638,18 +646,18 @@ function api_post($app, $re, $msg_id) {
 
   // retrieve the parameters: 
   $msg = $app->request->getJsonRawBody();
-
-  $subj = $body = $ticket = "";
-  $nsfw = false;
-
+  
   // mandatory
-  if (array_key_exists('subject', $msg)) $subj = $msg->subject;
-  if (array_key_exists('body', $msg)) $body = $msg->body;
-
+  $subj = $msg->subject;
+  $body = $msg->body;
+  
   // optional
-  if (array_key_exists('ticket', $msg)) $ticket = $msg->ticket;
-  if (array_key_exists('nsfw', $msg)) $nsfw = $msg->nsfw;
-
+  $nsfw = $msg->nsfw;
+  $ticket = $msg->ticket;
+  
+  if ($ticket == null) $ticket = "";
+  if ($nsfw == null) $nsfw = false;
+  
   $validation_error = validate($subj, $body);
   if (strlen($validation_error) > 0) {
     

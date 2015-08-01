@@ -7,11 +7,12 @@ require_once('head_inc.php');
 
     $max_id = 1;
 
+    /*
     if (is_null($last_answered_id)) {
         $last_answered_id = 0;
     }
 
-    if (/*!is_null($how_many) && ctype_digit($how_many*/ $how_many > 0) {  
+    if ($how_many > 0) {  
     	$query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, p.closed as post_closed, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars from confa_posts p, confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 order by id desc limit ' . $how_many;
     } else {
     	$query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, p.closed as post_closed, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, s.last_answered_time  from confa_posts p, confa_posts b, confa_users u, confa_sessions s where s.hash=\'' . $auth_cookie .'\' and s.last_answered_time < p.created and p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.id > ' . $last_answered_id . ' and p.status != 2 order by id desc limit 100';
@@ -28,9 +29,14 @@ require_once('head_inc.php');
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed ' );
     }
-
+    */
+    $result = get_answered($how_many);
+    if (!$result) {
+        die('Query failed');
+    }
+    
     $num = 1;  
-
+    
     $out = '';
     if (mysql_num_rows($result) == 0) {
         $max_id = $last_answered_id;
