@@ -357,7 +357,7 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) {
  * Returns "Collapsed threads" view data, also a default view for mobile client. optional arguments - $max_thread_id, $count
  */
 $app->get('/api/messages', function() use ($app) {
-  global $prop_tz, $server_tz, $root_dir, $host;
+  global $prop_tz, $server_tz, $root_dir, $host, $user_id;
   
   $response = new Response();
   
@@ -387,7 +387,8 @@ $app->get('/api/messages', function() use ($app) {
       if (is_null($count)) {
         $count = 30;
       }
-      $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
+      $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+        . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
         . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 order by id desc limit ' . $count;
       $result = mysql_query($query);
       break;
@@ -397,6 +398,15 @@ $app->get('/api/messages', function() use ($app) {
       break;
       
     case 'mymessages':
+      if (is_null($count)) {
+        $count = 50;
+      }
+      $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+        . ':00\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as id, p.page, p.parent, p.level, p.chars, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u where p.author=' 
+        . $user_id . ' and p.author=u.id and  p.status != 2 ' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' order by id desc limit ' . $count; 
+
+      $result = mysql_query($query);
+      break;
     
     default:
       $response = new Response();
