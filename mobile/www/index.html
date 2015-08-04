@@ -43,7 +43,6 @@
         <li><a href="#answered" onclick="javascript:$.ui.toggleSideMenu();answered(50);"  class="icon heart">Answered</a></li>
         <li><a href="#myMessages" onclick="javascript:$.ui.toggleSideMenu();myMessages(50);"  class="icon user">My Messages</a></li>
         <li><a href="#pmail" onclick="javascript:$.ui.toggleSideMenu();inbox();"  class="icon mail">Private Mail</a></li>
-        <li class="divider"></li>
         <li><a href="#newThread" onclick="javascript:$.ui.toggleSideMenu();"  class="icon pencil">New Thread</a></li>
         <li class="divider"></li>
         <li><a href="#login" onclick="javascript:$.ui.toggleSideMenu();"  class="icon user">Login</a></li>
@@ -56,24 +55,21 @@
     <a id="menubadge" onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
     <h1>Threads</h1>
 </header>
-<footer class="wrap-element" data-uib="app_framework/footer" data-ver="1" id="foo">
-    <a class="icon left"  onclick="javascript:onBackButton();">Back</a>
-    <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
-</footer>
+
     
 <!-- Content -->    
 <div id="content" class="uwrap"> 
     <!-- Threads go here -->
-    <div class="upage vertical-col y-scroll panel" id="mainpage" data-header="he" data-footer="foo">        
+    <div class="panel" id="mainpage" data-header="he" data-footer="foo">        
         <ul class="list widget uib_w_2 d-margins" id="titleList" data-uib="app_framework/listview" data-ver="1">                 
         </ul>
-        <span class="uib_shim"></span>                    
+        <span class="uib_shim"></span>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1"></footer>
     </div>
     <!-- individual messages open here -->
-    <div class="panel" title="Message" id="messagePage"  data-footer="foo">
-        <header>
-            <!--<a id="backBtn"  class='button' onclick="javascript:onBackButton();" style="float:left !important">Back</a>-->
-            <a id="menubadge" onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
+    <div class="panel" title="Message" id="messagePage">
+        <header  data-ver="2">
+            <a onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
             <h1>Message</h1>
         </header>
         <div id="msgBody">
@@ -81,55 +77,71 @@
         <!-- Replies go here -->
         <ul class="list widget uib_w_2 d-margins" id="replyTitleList" data-uib="app_framework/listview" data-ver="1">                 
         </ul>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
+            <a class="icon left"  onclick="javascript:onBackButton();">Back</a>
+            <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
+        </footer>
     </div>
     <!-- by date view -->
     <div class="panel" title="Recent" id="recent" data-footer="foo">
         <header>
-            <a id="menubadge" onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
+            <a onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
             <h1>Recent</h1>
         </header>
         <div id="byDate">
             <ul class="list widget uib_w_2 d-margins" id="byDateList" data-uib="app_framework/listview" data-ver="1">    
             </ul>
         </div>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
+            <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
+        </footer>
     </div>
     <!-- Answered view -->
     <div class="panel" title="Answered" id="answered" data-footer="foo">
         <header>
-            <a id="menubadge" onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
+            <a onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
             <h1>Answered</h1>
         </header>
         <div id="answeredContent">
             <ul class="list widget uib_w_2 d-margins" id="answeredList" data-uib="app_framework/listview" data-ver="1">    
             </ul>
         </div>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
+            <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
+        </footer>
     </div>    
     <!-- My Messages view -->
     <div class="panel" title="MyMessages" id="myMessages" data-footer="foo">
         <header>
-            <a id="menubadge" onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
+            <a onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
             <h1>My Messages</h1>
         </header>
         <div id="myMessagesContent">
             <ul class="list widget uib_w_2 d-margins" id="myMessagesList" data-uib="app_framework/listview" data-ver="1">    
             </ul>
         </div>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
+            <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
+        </footer>
     </div>
     <!-- Pmail view -->
     <div class="panel" title="PmailContent" id="pmail" data-footer="foo">
         <header>
-            <a id="menubadge" onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
+            <a onclick='$.ui.toggleSideMenu();' class='menuButton' style="float:left !important" ></a>
             <h1>Private Mail</h1>
         </header>
         <div id="inboxContent">
             <ul class="list widget uib_w_2 d-margins" id="inboxList" data-uib="app_framework/listview" data-ver="1">    
             </ul>
         </div>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
+            <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
+        </footer>
     </div>
     <!-- Reply Form -->
     <div class="panel" title="Reply" id="replyForm" data-footer="foo">
         <header>
-            <a id="backBtn2"  class='backButton'  style="float:left !important">Back</a>
+            <a class='backButton'  style="float:left !important">Back</a>
             <h1>Reply</h1>
         </header>
         <div id="replyForm">
@@ -143,11 +155,13 @@
             <div id="inResponseTo">In Response to</div><br>
             <textarea name="messageTextAreaQuote" id="messageTextAreaQuote" cols="30" rows="5"></textarea>               
         </div>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">            
+        </footer>
     </div>    
     <!-- New Thread Form -->
     <div class="panel" title="newThread" id="newThread" data-footer="foo">
         <header>
-            <a id="backBtn2"  class='backButton'  style="float:left !important">Back</a>
+            <a class='backButton'  style="float:left !important">Back</a>
             <h1>New Thread</h1>
         </header>
         <div id="newThreadForm">
@@ -158,11 +172,13 @@
                 <a href="#mainpage" type="button" class="button" value="Send"  onclick="javascript:sendNewThread();">Send</a>    
             </form>                              
         </div>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
+        </footer>
     </div>        
     <!-- Login Form -->
     <div class="panel" title="Login" id="login" data-footer="foo">
         <header>
-            <a id="backBtn2"  class='backButton'  style="float:left !important">Back</a>
+            <a class='backButton'  style="float:left !important">Back</a>
             <h1>Please Login</h1>
         </header>    
         <div id="login_form">
@@ -174,6 +190,8 @@
             </form>
             <!--<a class="button" onclick="test();">Check Profile Test</a>-->
         </div>
+        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
+        </footer>
     </div>
         <!-- some future stuffs -->
     <div class="panel" title="Future stuff" id="future" data-footer="foo">
