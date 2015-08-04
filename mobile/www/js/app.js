@@ -53,7 +53,7 @@ function loadRootThreadsCallbackPlus(payload)
         var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+"<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.threads[i].message.id+")'><b>"+data.threads[i].message.author.name+"</b> wrote:<br /><span style='color:#0088d1'>"+data.threads[i].message.subject+"</span></a>";
+        li.innerHTML= badgeHtml+"<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.threads[i].message.id+")'><b>"+data.threads[i].message.author.name+"</b> :<br /><span style='color:#0088d1'>"+data.threads[i].message.subject+"</span></a>";
         
         titleList.appendChild(li);        
     }           
@@ -107,32 +107,45 @@ function showRepliesCallback(payload)
         li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote: <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
+        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> : <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
                           
         replyTitleList.appendChild(li);                
     }               
 }
 
-//By Date
-//example: http://kirdyk.radier.ca/api/messages?mode=bydate&id=444842&count=5
-//this will change when proper authentication is implemented and it's possible to determine
-//which messages were posted since the last check.
-//for now we just show last 30.
-function byDate(howMany)
+
+//By Date view
+function byDate2(count)
 {
-    currentView="byDate";
-    var url = mainUrl+ "api/messages?mode=bydate&count=" + howMany;
-    
-    
-    titleList = document.getElementById("byDateList");
-    var apiCall = $.get(url, function(data) {byDateCallback(data);}); 
-    currentLevel=0; //we are on the top level of the tree
+    loadFilteredMessages("api/messages?mode=bydate&count="+count, "byDateList", "byDate");
 }
-function byDateCallback(payload)
+
+//Answered view
+function answered(count)
+{
+    loadFilteredMessages("api/messages?mode=answered&count=" + count, "answeredList", "answered");
+}
+
+//my messages view
+function myMessages(count)
+{
+     loadFilteredMessages("api/messages?mode=mymessages&count=" + count, "myMessagesList", "myMessages");
+}
+
+
+//universal function that loads the list from given REST call to given html list.
+function loadFilteredMessages(restSubUrl, listName, viewName)
+{
+    currentView = viewName;
+    var url = mainUrl+ restSubUrl;    
+    titleList = document.getElementById(listName); //e.g listName=byDateList
+    var apiCall = $.get(url, function(data) {loadFilteredMessagesCallback(data, listName);}); 
+}
+function loadFilteredMessagesCallback(payload, titleListname)
 {
     //clear the list
-    $("#byDateList").empty();
-    //var data = $.parseJSON(payload);
+    titleList = document.getElementById(titleListname); 
+    $("#" + titleListname).empty();
     var data = payload;
     for(i=0; i<data.count; i++)
     {
@@ -155,6 +168,8 @@ function byDateCallback(payload)
          titleList.appendChild(li);       
     }
 }
+
+
 
 function checkUserProfile()
 {
@@ -182,11 +197,7 @@ function checkUserProfileCall(username, password, success_function)
 }
 
 
-function test()
-{
-    var isLoggedIn = checkUserProfile();
-    alert(isLoggedIn);
-}
+
 
 function login()
 {
