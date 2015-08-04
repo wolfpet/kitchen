@@ -99,6 +99,7 @@ function showRepliesCallback(payload)
         var replyLinkHtml="";
         var showRepliesHtml="";
         var readMsgButtonHtml ="<div class='button-grouped'>";
+        var replyLevel = data.messages[i].level +1;
         if(data.messages[i].answers > 0)
         {
             badgeHtml= "<span class='af-badge tr'>"+data.messages[i].answers+"</span>";          
@@ -107,7 +108,7 @@ function showRepliesCallback(payload)
         li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> : <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
+        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+replyLevel+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> : <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
                           
         replyTitleList.appendChild(li);                
     }               
