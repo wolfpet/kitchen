@@ -196,9 +196,6 @@ function checkUserProfileCall(username, password, success_function)
     
 }
 
-
-
-
 function login()
 {
     
@@ -226,24 +223,28 @@ function login()
         $.ui.popup("Sorry, login was unsuccessful. Please try again.");
     }
     })
-    .fail(function(){$.ui.popup("Sorry, login was unsuccessful. Please try again.");});
-    
+    .fail(function(){$.ui.popup("Sorry, login was unsuccessful. Please try again.");});    
 }
 
+function like(messageID)
+{
+    var url = mainUrl+ "api/messages/"+messageID+"/like";
+    $.ajax({
+            url: url,
+            type: 'PUT'}
+        );
+    $.ui.popup("Liked the message "+ messageID);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+function dislike(messageID)
+{
+    var url = mainUrl+ "api/messages/"+messageID+"/like";
+    $.ajax({
+            url: url,
+            type: 'DELETE'}
+        );
+    $.ui.popup("Disliked the message "+ messageID);
+}
 
 //the user clicks on the title, then we display the message body in the pop-up
 function displayMessage (messageId)
@@ -263,7 +264,7 @@ function displayMessageCallback(payload)
     var subj = data.subject;
     var name = data.author.name;
     currentParentID = data.parent;    
-    document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /> <br /><span style='color:#008800'> Likes: " + data.likes + "</span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'> Dislikes: " + data.dislikes + "</span><br><br /><a class='button' href='#replyForm'>Reply</a>";
+    document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /> <br /><span style='color:#008800'><a onclick='like("+data.id+");'> Likes: " + data.likes + "</a></span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'><a onclick='dislike("+data.id+");'> Dislikes: " + data.dislikes + "</a></span><br><br /><a class='button' href='#replyForm'>Reply</a>";
 
     //display replies here if any    
     $("#replyTitleList").empty();    //clear the list
