@@ -43,3 +43,8 @@ body {
   width: 250px;
     margin-bottom: 1px;    
 }
+.icon:before {
+    
+    top: 7px;
+    left: -10px;
+}
