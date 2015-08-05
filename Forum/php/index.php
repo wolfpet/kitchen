@@ -186,15 +186,7 @@ function api_get_body($body, $status=1) {
     $msgbody = '<font color="red">censored</font>';
   } else if ($status == 2) {
     $msgbody = '';  // message deleted
-  } else { /*
-    $translit_done = false;
-    $msgbody = translit($body, $translit_done);
-    // $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
-    $msgbody = before_bbcode($msgbody);
-    $msgbody = do_bbcode( $msgbody );
-    $msgbody = nl2br($msgbody);
-    $msgbody = after_bbcode($msgbody);
-    */
+  } else {
     $msgbody = render_for_display($body);
   }
   return $msgbody;
@@ -691,7 +683,132 @@ function api_post($app, $re, $msg_id) {
     
   return $response;
 }
+
+/*******************  
+    Private Mail
+ *******************/
+
+$app->get('/api/inbox', function() use ($app) {
+  return api_pmail_list($app);
+});
+
+$app->get('/api/inbox/{id:[0-9]+}', function($msg_id) use ($app) {
+  return api_pmail($app, $msg_id);
+});
+
+$app->get('/api/sent', function() use ($app) {
+  return api_pmail_list($app, false);
+});
+
+$app->get('/api/sent/{id:[0-9]+}', function($msg_id) use ($app) {
+  return api_pmail($app, $msg_id);
+});
+
+$app->post('/api/sent', function() use ($app) {
+});
+
+function api_pmail_list($app, $inbox=true) {
+  global $prop_tz, $server_tz, $user_id, $pm_deleted_by_receiver, $pm_deleted_by_sender;
   
+  $response = new Response();
+    
+  $count = $app->request->getQuery('count');
+  
+  if (!is_null($count)) {
+    $count = intval($count);
+  } else {
+    $count = 20;
+  }
+
+  $max_id = $app->request->getQuery('id');
+
+  if (is_null($max_id)) {
+    $max_id = -1;
+  } else {
+    $max_id = intval($max_id);
+  }
+  
+  if ($inbox) {
+    $search_condition = 'receiver=' . $user_id . ' and !(p.status &'.$pm_deleted_by_receiver.')'; 
+  } else {
+    $search_condition = 'sender=' . $user_id . ' and !(p.status & '.$pm_deleted_by_sender.')'; 
+  }
+
+  $query = 'SELECT s.username, p.id as id, p.sender, p.receiver, p.subject, p.body, '
+  . 'CONVERT_TZ(p.created, \'' . $server_tz . '\', \''.$prop_tz.':00\') as created, p.status, p.chars from confa_pm p, confa_users s where p.sender=s.id and '
+  . $search_condition . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' order by id desc limit ' . $count;
+
+  $result = mysql_query($query);
+
+  if (!$result) {
+      mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . ' max_id="' . $max_id . '"');
+      die('Query failed ' . mysql_error() . ' QUERY: ' . $query );
+  }
+
+  $messages = array();
+  $count = 0;
+  
+  while ($row = mysql_fetch_assoc($result)) {
+    $messages[] = array(
+      'id' => intval($row['id']),
+      'status' => intval($row['status']),
+      'subject' => api_get_subject($row['subject'], $row['status']),
+      ($inbox ? 'author' : 'recipient') => array('id'  => intval($row[ $inbox ? 'sender' : 'receiver']), 'name' => $row['username']),
+      'created' => $row['created'],
+      'chars' => intval($row['chars'])
+    );
+    $count++;
+  }
+
+  $response->setContentType('application/json');
+  $response->setJsonContent(array('count' => $count,'messages' => $messages));
+  
+  return $response;  
+}
+
+function api_pmail($app, $msg_id) {
+  global $prop_tz, $server_tz, $user_id, $pm_deleted_by_receiver, $pm_deleted_by_sender;
+  
+  $response = new Response();
+    
+  $query = 'SELECT s.username as author, ss.username as recipient, p.subject, p.id as msg_id, p.sender, p.receiver,  CONVERT_TZ(p.created, \'' . $server_tz . 
+    '\', \''.$prop_tz.':00\') as created, p.body, s.id as sid, ss.id as rid, p.status, p.chars from confa_users s, confa_users ss, confa_pm p where s.id=p.sender and ss.id=p.receiver and p.id=' . $msg_id . ' and '. 
+    '(p.sender='.$user_id.' and !(p.status & '.$pm_deleted_by_sender.') or p.receiver='.$user_id.' and !(p.status & '.$pm_deleted_by_receiver.'))';
+
+  $result = mysql_query($query);
+
+  if (!$result) {
+    
+    $response->setStatusCode(400, 'Error');
+    $response->setContentType('application/json');    
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+
+    return $response;
+  }
+
+  if (mysql_num_rows($result) != 0) {
+    $row = mysql_fetch_assoc($result);
+
+    $response->setContentType('application/json');    
+    $response->setJsonContent(array(
+      'id' => intval($row['msg_id']),
+      'status' => intval($row['status']),
+      'subject' => api_get_subject($row['subject']),
+      'author' => array('id'  => intval($row['sid']), 'name' => $row['author']),
+      'recipient' => array('id'  => intval($row['rid']), 'name' => $row['recipient']),
+      'created' => $row['created'],
+      'body' => array('html' => api_get_body($row['body']))
+    ));
+      
+  } else {
+    $response->setStatusCode(404, 'Not Found')->sendHeaders();
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Message not found')));
+  }
+  
+  return $response;  
+}
+
 $app->notFound(
     function () use ($app) {
         // echo 'Not found!';

@@ -13,16 +13,7 @@ require_once('head_inc.php');
     $max_id = 1;
 
     $last_id = 0;
-/*
-    $query = 'select id from confa_users where username=\'' . $user . '\'';
-    $result = mysql_query($query);
-    if (!$result) {
-        mysql_log(__FILE__, 'get_user_props failed ' . mysql_error() . ' QUERY: ' . $query);
-        die('Query failed');
-    }
-    $row = mysql_fetch_row($result);
-    $user_id = $row[0];
-*/
+
     $search_condition = 'sender=' . $user_id . ' and !(p.status & '.$pm_deleted_by_sender.')';
     $query = 'SELECT count(*) from confa_pm p where '.$search_condition;
     $result = mysql_query($query);

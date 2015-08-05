@@ -18,7 +18,7 @@ if(!extension_loaded('fastbbcode')) {
     $in_response ='';
     // Performing SQL query
     $query = 'SELECT s.username, p.subject, p.id as msg_id, p.sender, p.receiver,  CONVERT_TZ(p.created, \'' . $server_tz . 
-      '\', \'EST\') as created, p.body, s.id as id, p.status from confa_users s, confa_pm p where s.id=p.sender and p.id=' . $msg_id . ' and '. 
+      '\', \''.$prop_tz.':00\') as created, p.body, s.id as id, p.status from confa_users s, confa_pm p where s.id=p.sender and p.id=' . $msg_id . ' and '. 
       '(p.sender='.$user_id.' and !(p.status & '.$pm_deleted_by_sender.') or p.receiver='.$user_id.' and !(p.status & '.$pm_deleted_by_receiver.'))';
     $result = mysql_query($query);
     if (!$result) {
