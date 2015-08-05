@@ -50,11 +50,6 @@
     </ul>
 </nav>    
     
-    
-<!-- Main page header and footer -->
-
-
-    
 <!-- Content -->    
 <div id="content" class="uwrap"> 
     <!-- Threads go here -->
@@ -63,7 +58,7 @@
         <header  data-ver="2" id="he">
 
             <a class='Button'  style="float:left !important; font-size: 30px; top: 7px" onclick='$.ui.toggleSideMenu();'>&nbsp;&nbsp;&#9776;&nbsp;&nbsp;</a>
-            <a href="#login" class='icon user' style="float:right; color: #fff;" ></a>
+            <a href="#login" onclick="userPageInit();" class='icon user' style="float:right; color: #fff;" ></a>
         <h1>Threads</h1>
     </header>
         <ul class="list widget uib_w_2 d-margins" id="titleList" data-uib="app_framework/listview" data-ver="1">                 
@@ -141,8 +136,7 @@
             <h1>Private Mail</h1>
         </header>
         <div id="inboxContent">
-            <ul class="list widget uib_w_2 d-margins" id="inboxList" data-uib="app_framework/listview" data-ver="1">    
-            </ul>
+            <br> Coming Soon...
         </div>
         <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
             <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
@@ -189,8 +183,9 @@
     <div class="panel" title="Login" id="login" data-footer="foo">
         <header>
             <a class='backButton'  style="float:left !important">Back</a>
-            <h1>Please Login</h1>
-        </header>    
+            <div id="loginHeaderTitle"> <h1>Please Login</h1></div>
+        </header>
+        <div id="userPageContent"></div>
         <div id="login_form">
             <br>
             <form>

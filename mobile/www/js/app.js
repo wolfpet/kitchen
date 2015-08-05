@@ -197,6 +197,20 @@ function checkUserProfileCall(username, password, success_function)
     
 }
 
+function userPageInit()
+{
+    //if the user is already logged in say something nice
+    var hiStr = "<br>Hello <b>" +username + "</b>,<br>You are logged in.<br>Welcome to the forum!";
+    if(username !=null)
+    {
+        document.getElementById("userPageContent").innerHTML=hiStr;
+        //already logged in. Login form is not needed.
+        $("#login_form").empty();  
+        //no need to login so alter the header title
+        document.getElementById("loginHeaderTitle").innerHTML="<h1>Welcome</h1>";
+    }
+}
+
 function login()
 {
     
