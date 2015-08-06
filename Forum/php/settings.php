@@ -14,5 +14,7 @@ date_default_timezone_set('America/Toronto');
 
 $title='<forum title>';
 $from_email = '<supportemailaddress>';
+
+// $google_key = ""; // (optional) specify your Google API key here to enable YouTube metadata
 ?>
 
