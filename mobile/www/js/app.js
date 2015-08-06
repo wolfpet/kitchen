@@ -289,6 +289,8 @@ function displayMessageCallback(payload)
     document.getElementById("subjectTextBox").value=subj;
     document.getElementById("messageTextAreaQuote").innerHTML=msg;
     document.getElementById("inResponseTo").innerHTML="In response to "+name +"'s message:";
+    //update message level label
+    document.getElementById("levelLabel").innerHTML = "Message (Level " + currentLevel + ")";
 }
 
 //the user clicks Reply button - navigate to the form (the subj and msg data is preloaded in displayMessage()). Send reply would pick up the form data and submit to the REST method
