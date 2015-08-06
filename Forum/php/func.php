@@ -919,50 +919,68 @@ function sendmail($address, $subj, $body) {
 	return $result;
 }
 
+// =================== YOUTUBE/RUTUBE ===================
+
+function unless_in_url_tag($pattern) {
+return '\[url='.$pattern.'|\[url\]'.$pattern.'|('.$pattern.')';
+}
+
 function youtube($body, $embed = true) {
-  global $host;
+  global $host, $google_key;
   
-	$result = preg_replace_callback('#(?<!\[url(=|\]))((?:https?://)(?:www\.|m\.)?(?:youtu\.be/|youtube\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#i',
-
-    function ($matches) use ($embed, $host) {
-      $url = $matches[2];
-			$id  = $matches[3];
+  $pattern = '(?:https?://)?(?:www\.|m\.)?(?:youtu\.be/|youtube\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?';
+	
+  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
+    function ($matches) use ($embed, $host, $pattern, $google_key) {
+      if(!empty($matches[1])) return $matches[0];
       
-			$obj2 = file_get_contents(
-        "https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=" . $id . "&key=AIzaSyAMBQ3QfviQCDu8G1jeLlPsex16hhbw9jI&fields=pageInfo(totalResults),items(id,contentDetails/duration,snippet(title,thumbnails/default))");
-      
-      if($obj2 === FALSE) 
-        return $url;
+      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+        return $matches[0];
 
-      $ar2 = json_decode($obj2);
-      /*
-       1. check pageInfo.totalResults (== 1)
-       2. .items[0].contentDetails.duration
-       3. .items[0].snippet.title
-       4. .items[0].snippet.thumbnails.default
-      */
-      // var_dump($ar2);         			 
+      $url = $matches[0];
+			$id  = $matches[1];
+
       $new_body = $url;
-      if ($ar2->pageInfo->totalResults == 1) {
-        $duration = '';
-        $di = new DateInterval($ar2->items[0]->contentDetails->duration);
-        if ($di->h > 0) {
-          $duration .= $di->h.':';
-        }
-        $duration .= $di->i . ':' . $di->s;
-        $title = $ar2->items[0]->snippet->title;
-        if ($embed) {
-          //$new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?fs=1&enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen]';
-          $new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"]';
-          $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
-          //$new_body .= "\nLink: ".$url;
-       } else {
-          $thumbnail = $ar2->items[0]->snippet->thumbnails->{'default'}->url;
-          $new_body .= "\n[i][color=lightslategrey]( " . "[b]" . $title . "[/b]; " . $duration . ")[/color][/i] ";
-          $new_body .= "\n[img=" . $thumbnail . "]";
+      
+      if (isset($google_key)) {
+        if (strcmp($google_key, "TEST") == 0) {
+            $duration = "11:22:33";
+            $title = "Test title";
+            $thumbnail = 'http://files.softicons.com/download/system-icons/oxygen-icons-by-oxygen/png/128x128/actions/thumbnail.png';
+        } else {          
+          $obj2 = file_get_contents(
+            "https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=" . $id . "&key=".$google_key."&fields=pageInfo(totalResults),items(id,contentDetails/duration,snippet(title,thumbnails/default))");
+          
+          if($obj2 === FALSE) 
+            return $url;
+
+          $ar2 = json_decode($obj2);
+          // var_dump($ar2);         			 
+          if ($ar2->pageInfo->totalResults == 1) {
+            $duration = '';
+            $di = new DateInterval($ar2->items[0]->contentDetails->duration);
+            if ($di->h > 0) {
+              $duration .= $di->h.':';
+            }
+            $duration .= $di->i . ':' . $di->s;
+            $title = $ar2->items[0]->snippet->title;
+            $thumbnail = $ar2->items[0]->snippet->thumbnails->{'default'}->url;
+          }
         }
       }
-			return $new_body;
+      if ($embed) {
+          //$new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?fs=1&enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen]';
+          $new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"]';
+          if (isset($title)) {
+            $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
+          } else {
+            $new_body .= "\nLink: [url]".$url."[/url]";
+          }
+      } else if (isset($title)) {
+          $new_body = "\n[i][color=lightslategrey]( " . "[b]" . $title . "[/b]; " . $duration . ")[/color][/i] ";
+          $new_body .= "\n[img=" . $thumbnail . "]";
+      }
+      return $new_body;
 		},
 		$body
 	);
