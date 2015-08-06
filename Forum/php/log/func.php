@@ -1276,7 +1276,7 @@ function bookmark($user_id, $msg_id, $add=true) {
   return $result;
 }
 
-function validate($subj, $body, $to) {
+function validate($subj, $body) {
   global $err_login, $logged_in, $ban, $ban_ends;
 
   $err = '';
@@ -1294,9 +1294,6 @@ function validate($subj, $body, $to) {
         $err = 'You have been banned from this forum till ' . $ban_ends;
         break;
     }
-    if (isset($to) && (is_null($to) || strlen($to) == 0)) {
-        $err .= "Recipient not defined<BR/>";
-    }
     if (strlen($subj) > 254) {
         $err .= "Subject longer 254 bytes<BR/>";
     } else if (strlen(trim($subj)) == 0) {
@@ -1311,11 +1308,11 @@ function validate($subj, $body, $to) {
 }
 
 // Returns an error string, or array with an ID if successful
-function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
+function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false) {
   global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw;
   
-  $err = validate($subj, $body, $to);
-  
+  $err = validate($subj, $body);
+
   if (strlen($err) != 0) {
     return $err;
   } else if (!$logged_in || $ban) { // just in case
@@ -1344,20 +1341,6 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     $content_flags |= $content_nsfw;
   }
 
-  if (isset($to)) {
-    $query = 'SELECT id from confa_users where username=\'' . mysql_escape_string($to) . '\' and status != 2';
-    $result = mysql_query($query);
-    if (!$result) {
-        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-        return 'Query failed';
-    }
-    $row = mysql_fetch_assoc($result);
-    $to_id = $row['id'];
-    if (is_null($to_id)) {
-        return "No such recipient";
-    }
-  }
-  
   if ( strlen($ticket) > 0 ) {
     $query = 'INSERT into confa_tickets(ticket) values(\'' . $ticket . '\')';
     $result = mysql_query($query);
@@ -1367,23 +1350,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     }
   }
   
-  if (isset($to_id)) {
-    // send pmail
-    $query = 'INSERT INTO confa_pm(sender, receiver, subject, body, chars) values(' . $user_id . ', ' . $to_id 
-      . ', \'' . mysql_escape_string($subj) . '\', ' . $ibody . ', ' . $chars . ')';
-
-    $result = mysql_query($query);
-    if (!$result) {
-        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-        return 'Query failed';
-    }
-
-    $msg_id = mysql_insert_id();
-    update_new_pm_count($to_id);
-    
-    return array("id" => $msg_id);
-    
-  } else if ( isset($msg_id) && $msg_id > 0 ) {
+  if ( isset($msg_id) && $msg_id > 0 ) {
     // update existing post
     $query = 'SELECT p.subject, p.body, p.status, p.author, p.created, p.thread_id, p.level, p.closed as post_closed, p.id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page from confa_posts p, confa_threads t where t.id=p.thread_id and p.id=' . $msg_id;
     $result = mysql_query($query);

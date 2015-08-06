@@ -632,7 +632,7 @@ $app->put('/api/messages/{id:[0-9]+}', function($msg_id) use ($app) {
   return api_post($app, 0, intval($msg_id));
 });
 
-function api_post($app, $re, $msg_id, $privately=false) {
+function api_post($app, $re, $msg_id) {
   global $logged_in, $user_id, $err_login;
   
   $response = new Response();
@@ -652,7 +652,6 @@ function api_post($app, $re, $msg_id, $privately=false) {
   // mandatory
   $subj = $msg->subject;
   $body = $msg->body;
-  $to = $msg->recipient;
   
   // optional
   $nsfw = $msg->nsfw;
@@ -660,10 +659,8 @@ function api_post($app, $re, $msg_id, $privately=false) {
   
   if ($ticket == null) $ticket = "";
   if ($nsfw == null) $nsfw = false;
-  if ($privately && !isset($to)) $to = "";
-
-  $validation_error = validate($subj, $body, $to);
   
+  $validation_error = validate($subj, $body);
   if (strlen($validation_error) > 0) {
     
     $response->setStatusCode(404, $validation_error);
@@ -673,7 +670,7 @@ function api_post($app, $re, $msg_id, $privately=false) {
     return $response;
   }
   
-  $result = post($subj, $body, $re, $msg_id, $ticket, $nsfw, $to);
+  $result = post($subj, $body, $re, $msg_id, $ticket, $nsfw);
   
   if (is_string($result)) {
     $response->setStatusCode(400, $result);
@@ -708,7 +705,6 @@ $app->get('/api/sent/{id:[0-9]+}', function($msg_id) use ($app) {
 });
 
 $app->post('/api/sent', function() use ($app) {
-  return api_post($app, 0, 0, true);
 });
 
 function api_pmail_list($app, $inbox=true) {
