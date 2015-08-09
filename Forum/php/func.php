@@ -1055,7 +1055,7 @@ function twitter($body, $embed = true) {
 
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
-      return $ar2->html;
+      return trim(preg_replace('/\s\s+/', ' ', $ar2->html));
 		},
 		$body
 	);
