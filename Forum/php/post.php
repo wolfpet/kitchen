@@ -63,5 +63,3 @@ require_once('msg_form_inc.php');
 require('new_inc.php');
 require_once('tail_inc.php');
 ?>
-
-

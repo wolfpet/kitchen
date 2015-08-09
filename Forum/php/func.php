@@ -932,7 +932,8 @@ function youtube($body, $embed = true) {
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
     function ($matches) use ($embed, $host, $pattern, $google_key) {
-      if(!empty($matches[1])) return $matches[0];
+      // var_dump($matches);
+      if(count($matches) < 5) return $matches[0];
       
       if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
         return $matches[0];
@@ -1027,6 +1028,38 @@ function rutube($body, $embed = true) {
 			$body
 		);
 		
+	return $result;
+}
+
+function twitter($body, $embed = true) {
+  if (!$embed) return $body;
+  
+  // e.g. https://twitter.com/elonmusk/status/627040381729906688
+  $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)';
+	
+  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
+    function ($matches) use ($embed, $pattern) {
+      // var_dump($matches);
+      if(count($matches) < 5) return $matches[0];
+      
+      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+        return $matches[0];
+
+      $url = $matches[0];
+			$id  = $matches[1];
+
+      $obj2 = file_get_contents("https://api.twitter.com/1/statuses/oembed.json?url=" . $url);
+      
+      if($obj2 === FALSE) 
+        return $url;
+
+      $ar2 = json_decode($obj2);
+      // var_dump($ar2);         			 
+      return $ar2->html;
+		},
+		$body
+	);
+  
 	return $result;
 }
 

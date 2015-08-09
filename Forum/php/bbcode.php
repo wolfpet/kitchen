@@ -138,7 +138,10 @@ function before_bbcode($body) {
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2">$2</a></div>'
     ), $body);    
-       
+
+  // Embedding Twitter links
+  $body = twitter($body);
+    
   return $body;
 }
 
