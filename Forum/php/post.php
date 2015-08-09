@@ -28,8 +28,9 @@ require_once('dump.php');
       $log = post($subj, $body, $re, isset($msg_id) ? $msg_id : 0, $ticket, isset($nsfw) ? $nsfw : false);
       if (is_string($log)) {
         die($log);
-      }
+      } 
       
+      $msg_id = $log['id'];
       $result = mysql_query('SELECT username from confa_users where id=' . $user_id) or die('Cannot get username');
       $row = mysql_fetch_row($result);
       $username = $row[0];      

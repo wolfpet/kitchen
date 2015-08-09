@@ -1378,10 +1378,10 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
         return 'Query failed';
     }
 
-    $msg_id = mysql_insert_id();
+    $id = mysql_insert_id();
     update_new_pm_count($to_id);
     
-    return array("id" => $msg_id);
+    return array("id" => $id);
     
   } else if ( isset($msg_id) && $msg_id > 0 ) {
     // update existing post
@@ -1458,7 +1458,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
       return 'Query failed';
     }
-    $msg_id = mysql_insert_id();
+    $id = mysql_insert_id();
     $query = "UPDATE confa_users set status = 1 where id=" . $user_id;
     $result = mysql_query($query);
     if (!$result) {
@@ -1466,7 +1466,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       return 'Query failed';
     }
     
-    return array("id" => $thread_id);
+    return array("id" => $id, "thread_id" => $thread_id);
     
   } else {
     // respond to an existing post
@@ -1509,7 +1509,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
       return 'Query failed';
     }
-    $msg_id = mysql_insert_id();
+    $id = mysql_insert_id();
     
     // wtf is this for?
     $query = "UPDATE confa_users set status = 1 where id=" . $user_id;
@@ -1519,7 +1519,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       return 'Query failed';
     }
     
-    return array("id" => $msg_id);
+    return array("id" => $id);
   }
   
   return "";
