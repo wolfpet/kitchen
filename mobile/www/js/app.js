@@ -1,4 +1,7 @@
+//TODO: we gotta change this so it's auto-detected
 var mainUrl = "http://kirdyk.radier.ca/";
+
+//navigation
 var titleList;
 var currentParentID=0;
 var currentLevel=0;
@@ -13,8 +16,6 @@ var tempvar=null;
 var currentMessageId = null;
 
 
-
-
 function onAppReady() 
 {
     if( navigator.splashscreen && navigator.splashscreen.hide ) 
@@ -23,6 +24,16 @@ function onAppReady()
     }
     checkUserProfile();
     loadRootThreadsPlus();
+    //windows phone menu fix
+    if(navigator.userAgent.match(/Windows Phone/i))
+    {
+        //make menu visible
+        $("#menu").css('z-index', 999);
+         //remove metro menu!
+        var element = document.getElementById("metroMenu");
+        element.parentNode.removeChild(element);
+    }
+   
 }
 document.addEventListener("app.Ready", onAppReady, false) ;
 
@@ -385,5 +396,16 @@ function onBackButton()
         //level up
         currentLevel--;
         displayMessage(currentParentID);        
+    }
+}
+
+function win8MenuFix()
+{
+
+        if(navigator.userAgent.match(/Windows Phone/i))
+    {
+         //remove metro menu!
+        var element = document.getElementById("metroMenu");
+        element.parentNode.removeChild(element);
     }
 }
