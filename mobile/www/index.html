@@ -42,7 +42,7 @@
         <li><a href="#recent" onclick="javascript:$.ui.toggleSideMenu();win8MenuFix();msgBody.InnerHTML='';byDate2(50);" class="icon clock">Most Recent</a></li>
         <li><a href="#answered" onclick="javascript:$.ui.toggleSideMenu();win8MenuFix();answered(50);"  class="icon heart">Answered</a></li>
         <li><a href="#myMessages" onclick="javascript:$.ui.toggleSideMenu();win8MenuFix();myMessages(50);"  class="icon user">My Messages</a></li>
-        <li><a href="#pmail" onclick="javascript:$.ui.toggleSideMenu();win8MenuFix();inbox();"  class="icon mail">Private Mail</a></li>
+        <li><a href="#pmail" onclick="javascript:$.ui.toggleSideMenu();win8MenuFix();getInbox();"  class="icon mail">Private Mail</a></li>
         <li class="divider"></li>
         <li><a href="#newThread" onclick="javascript:$.ui.toggleSideMenu();win8MenuFix();"  class="icon pencil">New Thread</a></li>
         
@@ -136,7 +136,8 @@
             <h1>Private Mail</h1>
         </header>
         <div id="inboxContent">
-            <br> Coming Soon...
+            <ul class="list widget uib_w_2 d-margins" id="myInboxList" data-uib="app_framework/listview" data-ver="1">    
+            </ul>
         </div>
         <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
             <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
@@ -151,6 +152,7 @@
         <div id="replyForm">
             <br>
             <form>
+                <input type="hidden" id="recipient" value="">
                 <input id="subjectTextBox" type="text" placeholder="Subject">
                 <textarea name="messageTextArea" id="messageTextArea" cols="30" rows="5"></textarea>      
                 <a href="#messagePage" type="button" class="button" value="Send"  onclick="javascript:sendReply();">Send</a>    

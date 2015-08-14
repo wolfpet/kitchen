@@ -14,6 +14,7 @@ var tempvar=null;
 
 //Reply To
 var currentMessageId = null;
+var replyPrivate = false;
 
 
 function onAppReady() 
@@ -64,7 +65,7 @@ function loadRootThreadsCallbackPlus(payload)
         var li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+"<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.threads[i].message.id+")'><b>"+data.threads[i].message.author.name+"</b> :<br /><span style='color:#0088d1'>"+data.threads[i].message.subject+"</span></a>";
+        li.innerHTML= badgeHtml+"<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.threads[i].message.id+", false)'><b>"+data.threads[i].message.author.name+"</b> :<br /><span style='color:#0088d1'>"+data.threads[i].message.subject+"</span></a>";
         
         titleList.appendChild(li);        
     }           
@@ -119,7 +120,7 @@ function showRepliesCallback(payload)
         li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+replyLevel+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> : <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
+        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+replyLevel+";displayMessage("+data.messages[i].id+", false)'><b>"+data.messages[i].author.name+"</b> : <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
                           
         replyTitleList.appendChild(li);                
     }               
@@ -129,36 +130,36 @@ function showRepliesCallback(payload)
 //By Date view
 function byDate2(count)
 {
-    loadFilteredMessages("api/messages?mode=bydate&count="+count, "byDateList", "byDate");
+    loadFilteredMessages("api/messages?mode=bydate&count="+count, "byDateList", "byDate", false);
 }
 
 //Answered view
 function answered(count)
 {
-    loadFilteredMessages("api/messages?mode=answered&count=" + count, "answeredList", "answered");
+    loadFilteredMessages("api/messages?mode=answered&count=" + count, "answeredList", "answered",false);
 }
 
 //my messages view
 function myMessages(count)
 {
-     loadFilteredMessages("api/messages?mode=mymessages&count=" + count, "myMessagesList", "myMessages");
+     loadFilteredMessages("api/messages?mode=mymessages&count=" + count, "myMessagesList", "myMessages",false);
 }
 
 
 //universal function that loads the list from given REST call to given html list.
-function loadFilteredMessages(restSubUrl, listName, viewName)
+function loadFilteredMessages(restSubUrl, listName, viewName, private)
 {
     currentView = viewName;
     var url = mainUrl+ restSubUrl;    
     titleList = document.getElementById(listName); //e.g listName=byDateList
-    var apiCall = $.get(url, function(data) {loadFilteredMessagesCallback(data, listName);}); 
+    var apiCall = $.get(url, function(data) {loadFilteredMessagesCallback(data, listName, private);}); 
 }
-function loadFilteredMessagesCallback(payload, titleListname)
+function loadFilteredMessagesCallback(payload, titleListname, private)
 {
     //clear the list
     titleList = document.getElementById(titleListname); 
     $("#" + titleListname).empty();
-    var data = payload;
+    var data = payload;    
     for(i=0; i<data.count; i++)
     {
         var subj = data.messages[i].subject;
@@ -175,7 +176,7 @@ function loadFilteredMessagesCallback(payload, titleListname)
         li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+")'><b>"+data.messages[i].author.name+"</b> wrote on "+data.messages[i].created+": <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
+        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+", "+private+")'><b>"+data.messages[i].author.name+"</b> wrote on "+data.messages[i].created+": <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
                           
          titleList.appendChild(li);       
     }
@@ -273,10 +274,14 @@ function dislike(messageID)
 }
 
 //the user clicks on the title, then we display the message body in the pop-up
-function displayMessage (messageId)
+function displayMessage (messageId, private)
 {
+    replyPrivate = private; //the reply form will know which api to use.
     currentView="message";    
-    var url = mainUrl+"api/messages/" + messageId;
+    var url="";
+    if(private){url=mainUrl+"api/inbox/" + messageId;}
+    else {url=mainUrl+"api/messages/" + messageId;}
+    
     var apiCall = $.get(url, function(data) {displayMessageCallback(data);}); 
 }
 
@@ -302,6 +307,7 @@ function displayMessageCallback(payload)
     document.getElementById("inResponseTo").innerHTML="In response to "+name +"'s message:";
     //update message level label
     document.getElementById("levelLabel").innerHTML = "Message (Level " + currentLevel + ")";
+    document.getElementById("recipient").value = name;
 }
 
 //the user clicks Reply button - navigate to the form (the subj and msg data is preloaded in displayMessage()). Send reply would pick up the form data and submit to the REST method
@@ -309,28 +315,50 @@ function sendReply()
 {
     //API call: POST http://serverURL/api/messages/$id/answers
     //POST structure: {"subject":"subject goes here", "body":"this is a message body", "ticket":"some unique string to prevent duplicates", "nsfw":true}
-   var url = mainUrl+ "api/messages/"+currentMessageId+"/answers";   
+    
+    //api url
+    var url = ""
     //Time ticks
     var d = new Date();
     var n = d.getTime();
     var message = document.getElementById("messageTextArea").value+"\n\nSent from my phone.";
     var subj = document.getElementById("subjectTextBox").value;
+    var recipient = document.getElementById("recipient").value;
     if(subj=="")subj="No Subject";
-    //post the message
-    $.post
-    (url,
-        JSON.stringify({
+    var responsePackage;
+    if(replyPrivate)
+    {
+        url=mainUrl+"api/sent";
+        responsePackage= JSON.stringify({
             "subject":subj, 
             "body":message,
             "ticket":n, 
-            "nsfw":false
-        }),
+            "nsfw":false,
+            "recipient":recipient
+        });
+    }
+    else
+    {
+        url=mainUrl+ "api/messages/"+currentMessageId+"/answers";
+        responsePackage= JSON.stringify({
+            "subject":subj, 
+            "body":message,
+            "ticket":n, 
+            "nsfw":false,
+        });
+    }
+    
+    
+    //post the private message
+    $.post
+    (url,
+        responsePackage,
         function(data, status)
         {
             var newMessageId = data.id;
             //open the new message
             currentLevel++;
-            displayMessage(newMessageId);
+            displayMessage(newMessageId,replyPrivate);
         }
     )
     .fail(function() {
@@ -395,13 +423,12 @@ function onBackButton()
     {   
         //level up
         currentLevel--;
-        displayMessage(currentParentID);        
+        displayMessage(currentParentID,false);        
     }
 }
 
 function win8MenuFix()
 {
-
         if(navigator.userAgent.match(/Windows Phone/i))
     {
          //remove metro menu!
@@ -409,3 +436,16 @@ function win8MenuFix()
         element.parentNode.removeChild(element);
     }
 }
+
+
+
+
+// -----------------  PMAIL ---------------------------------------
+
+//Inbox view
+function getInbox()
+{
+    loadFilteredMessages("api/inbox", "myInboxList", "inboxContent", true);
+}
+
+
