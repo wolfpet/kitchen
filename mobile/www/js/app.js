@@ -26,7 +26,7 @@ function onAppReady()
     checkUserProfile();
     loadRootThreadsPlus();
     //windows phone menu fix
-    if(navigator.userAgent.match(/Windows Phone/i))
+    if(navigator.userAgent.match(/Windows Phone/i) || navigator.userAgent.match(/WPDesktop/i))
     {
         //make menu visible
         $("#menu").css('z-index', 999);
@@ -429,11 +429,11 @@ function onBackButton()
 
 function win8MenuFix()
 {
-        if(navigator.userAgent.match(/Windows Phone/i))
+        if(navigator.userAgent.match(/Windows Phone/i) || navigator.userAgent.match(/WPDesktop/i))
     {
          //remove metro menu!
         var element = document.getElementById("metroMenu");
-        element.parentNode.removeChild(element);
+        if(element != null)element.parentNode.removeChild(element);
     }
 }
 
