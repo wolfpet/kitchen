@@ -70,7 +70,7 @@
     <div class="panel" title="Message" id="messagePage">
         <header  data-ver="2">
             <a class='Button'  style="float:left !important; font-size: 30px; top: 7px" onclick='$.ui.toggleSideMenu();win8MenuFix();'>&nbsp;&nbsp;&#9776;&nbsp;&nbsp;</a>
-            <a href="#login" class='icon user' style="float:right; color: #fff;" ></a>       
+            <a href="#login" onclick="userPageInit();" class='icon user' style="float:right; color: #fff;" ></a>       
             <h1><div id=levelLabel>Message (Level 1)</div></h1>
         </header>
         <div id="msgBody">
@@ -78,7 +78,7 @@
         <!-- Replies go here -->
         <ul class="list widget uib_w_2 d-margins" id="replyTitleList" data-uib="app_framework/listview" data-ver="1">                 
         </ul>
-        <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
+        <footer id="msgFooter" class="wrap-element" data-uib="app_framework/footer" data-ver="1">
             <a class="icon left"  onclick="javascript:onBackButton();">Back</a>
             <a class="icon up" href="#mainpage"  onclick="javascript:loadRootThreadsPlus();">Top</a>
         </footer>
@@ -87,7 +87,7 @@
     <div class="panel" title="Recent" id="recent" data-footer="foo">
         <header>
             <a class='Button'  style="float:left !important; font-size: 30px; top: 7px" onclick='$.ui.toggleSideMenu();win8MenuFix();'>&nbsp;&nbsp;&#9776;&nbsp;&nbsp;</a>
-            <a href="#login" class='icon user' style="float:right; color: #fff;" ></a>
+            <a href="#login" onclick="userPageInit();" class='icon user' style="float:right; color: #fff;" ></a>
             <h1>Recent</h1>
         </header>
         <div id="byDate">
@@ -102,7 +102,7 @@
     <div class="panel" title="Answered" id="answered" data-footer="foo">
         <header>
             <a class='Button'  style="float:left !important; font-size: 30px; top: 7px" onclick='$.ui.toggleSideMenu();win8MenuFix();'>&nbsp;&nbsp;&#9776;&nbsp;&nbsp;</a>
-            <a href="#login" class='icon user' style="float:right; color: #fff;" ></a>
+            <a href="#login" onclick="userPageInit();" class='icon user' style="float:right; color: #fff;" ></a>
             <h1>Answered</h1>
         </header>
         <div id="answeredContent">
@@ -117,7 +117,7 @@
     <div class="panel" title="MyMessages" id="myMessages" data-footer="foo">
         <header>
             <a class='Button'  style="float:left !important; font-size: 30px; top: 7px" onclick='$.ui.toggleSideMenu();win8MenuFix();'>&nbsp;&nbsp;&#9776;&nbsp;&nbsp;</a>
-            <a href="#login" class='icon user' style="float:right; color: #fff;" ></a>
+            <a href="#login" onclick="userPageInit();" class='icon user' style="float:right; color: #fff;" ></a>
             <h1>My Messages</h1>
         </header>
         <div id="myMessagesContent">
@@ -132,7 +132,7 @@
     <div class="panel" title="PmailContent" id="pmail" data-footer="foo">
         <header>
             <a class='Button'  style="float:left !important; font-size: 30px; top: 7px" onclick='$.ui.toggleSideMenu();win8MenuFix();'>&nbsp;&nbsp;&#9776;&nbsp;&nbsp;</a>
-            <a href="#login" class='icon user' style="float:right; color: #fff;" ></a>
+            <a href="#login" onclick="userPageInit();" class='icon user' style="float:right; color: #fff;" ></a>
             <h1>Private Mail</h1>
         </header>
         <div id="inboxContent">

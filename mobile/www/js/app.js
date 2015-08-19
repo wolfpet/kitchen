@@ -69,6 +69,7 @@ function loadRootThreadsCallbackPlus(payload)
         
         titleList.appendChild(li);        
     }           
+    win8MenuFix();
 }
 
 //see the current level replies
@@ -180,6 +181,7 @@ function loadFilteredMessagesCallback(payload, titleListname, private)
                           
          titleList.appendChild(li);       
     }
+    win8MenuFix();
 }
 
 
@@ -221,6 +223,7 @@ function userPageInit()
         //no need to login so alter the header title
         document.getElementById("loginHeaderTitle").innerHTML="<h1>Welcome</h1>";
     }
+    win8MenuFix();
 }
 
 function login()
@@ -308,6 +311,8 @@ function displayMessageCallback(payload)
     //update message level label
     document.getElementById("levelLabel").innerHTML = "Message (Level " + currentLevel + ")";
     document.getElementById("recipient").value = name;
+    //cleanup footer
+    win8MenuFix();
 }
 
 //the user clicks Reply button - navigate to the form (the subj and msg data is preloaded in displayMessage()). Send reply would pick up the form data and submit to the REST method
@@ -425,6 +430,7 @@ function onBackButton()
         currentLevel--;
         displayMessage(currentParentID,false);        
     }
+    win8MenuFix();
 }
 
 function win8MenuFix()
@@ -435,7 +441,11 @@ function win8MenuFix()
         var element = document.getElementById("metroMenu");
         if(element != null)element.parentNode.removeChild(element);
     }
+    
+        var xxx = $("#metroMenu").parent(0);
+        var yyy=0;
 }
+
 
 
 
