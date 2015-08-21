@@ -297,8 +297,13 @@ function displayMessageCallback(payload)
     //$.ui.popup(msg);
     var subj = data.subject;
     var name = data.author.name;
-    currentParentID = data.parent;    
-    document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /> <br /><span style='color:#008800'><a onclick='like("+data.id+");'> Likes: " + data.likes + "</a></span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'><a onclick='dislike("+data.id+");'> Dislikes: " + data.dislikes + "</a></span><br><br /><a class='button' href='#replyForm'>Reply</a>";
+    currentParentID = data.parent;
+    //likes/dislikes html if not private msg
+    var likesDislikesHTML="";     
+    if(data.likes != undefined){ likesDislikesHTML="<br /><span style='color:#008800'><a onclick='like("+data.id+");'> Likes: " + data.likes + "</a></span>&nbsp;&nbsp;&nbsp;<span style='color:#880000'><a onclick='dislike("+data.id+");'> Dislikes: " + data.dislikes + "</a></span><br><br>";}
+    
+    //render the message
+    document.getElementById('msgBody').innerHTML = "<br /><b>"+name+ "</b> wrote: " + data.created + "<br /><br /><span style='color:#0088d1'><b>"+subj+"</b></span><br /><br />"+msg + "<br /><br />" +likesDislikesHTML+"<a class='button' href='#replyForm'>Reply</a>";
 
     //display replies here if any    
     $("#replyTitleList").empty();    //clear the list
@@ -309,7 +314,8 @@ function displayMessageCallback(payload)
     document.getElementById("messageTextAreaQuote").innerHTML=msg;
     document.getElementById("inResponseTo").innerHTML="In response to "+name +"'s message:";
     //update message level label
-    document.getElementById("levelLabel").innerHTML = "Message (Level " + currentLevel + ")";
+    if(currentLevel == undefined)currentLevel=1;
+    document.getElementById("levelLabel").innerHTML = "Message (L:" + currentLevel + ")";
     document.getElementById("recipient").value = name;
     //cleanup footer
     win8MenuFix();
