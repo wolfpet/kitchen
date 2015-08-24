@@ -146,6 +146,20 @@ function myMessages(count)
      loadFilteredMessages("api/messages?mode=mymessages&count=" + count, "myMessagesList", "myMessages",false);
 }
 
+//Inbox view
+function getInbox()
+{
+    //loadinbox
+    loadFilteredMessages("api/inbox", "myInboxList", "inboxContent", true);
+}
+
+//Sent view
+function getSent()
+{
+    //loadinbox
+    loadFilteredMessages("api/sent", "myInboxList", "inboxContent", true);
+}
+
 
 //universal function that loads the list from given REST call to given html list.
 function loadFilteredMessages(restSubUrl, listName, viewName, private)
@@ -160,7 +174,16 @@ function loadFilteredMessagesCallback(payload, titleListname, private)
     //clear the list
     titleList = document.getElementById(titleListname); 
     $("#" + titleListname).empty();
-    var data = payload;    
+    var data = payload;
+    var li;
+    //inbox Sent for PMail
+    if(private)
+    {
+       li = document.createElement('li');
+       li.innerHTML= "<center><a class='button' onclick='getInbox();'>Inbox</a>&nbsp;&nbsp;&nbsp;<a class='button' onclick='getSent();'>Sent</a></center>";
+        titleList.appendChild(li);  
+    }
+    //load content
     for(i=0; i<data.count; i++)
     {
         var subj = data.messages[i].subject;
@@ -173,11 +196,22 @@ function loadFilteredMessagesCallback(payload, titleListname, private)
         {
             badgeHtml= "<span class='af-badge tr'>"+data.messages[i].answers+"</span>";          
         }
+        
+        var author;
+        try{
+            author = "<b>" + data.messages[i].author.name + "</b> wrote on ";
+        }catch(err){author=undefined;}
+        if(author == undefined)
+        {
+            //probably Sent folder in PM.
+            author = "I wrote to <b>" + data.messages[i].recipient.name + "</b> on ";
+        }
+        
         //Append the title to the list
         li = document.createElement('li');
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
-        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+", "+private+")'><b>"+data.messages[i].author.name+"</b> wrote on "+data.messages[i].created+": <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
+        li.innerHTML= badgeHtml+ "<a href='#messagePage' onclick='javascript:currentLevel="+data.messages[i].level+";displayMessage("+data.messages[i].id+", "+private+")'>"+ author +" "+data.messages[i].created+": <br /><span style='color:#0088d1'>"+subj+"</span><br /></a></br></div>";
                           
          titleList.appendChild(li);       
     }
@@ -451,17 +485,3 @@ function win8MenuFix()
         var xxx = $("#metroMenu").parent(0);
         var yyy=0;
 }
-
-
-
-
-
-// -----------------  PMAIL ---------------------------------------
-
-//Inbox view
-function getInbox()
-{
-    loadFilteredMessages("api/inbox", "myInboxList", "inboxContent", true);
-}
-
-
