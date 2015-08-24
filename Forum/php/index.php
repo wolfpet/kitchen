@@ -739,7 +739,7 @@ function api_pmail_list($app, $inbox=true) {
   }
 
   $query = 'SELECT s.username, p.id as id, p.sender, p.receiver, p.subject, p.body, '
-  . 'CONVERT_TZ(p.created, \'' . $server_tz . '\', \''.$prop_tz.':00\') as created, p.status, p.chars from confa_pm p, confa_users s where p.sender=s.id and '
+  . 'CONVERT_TZ(p.created, \'' . $server_tz . '\', \''.$prop_tz.':00\') as created, p.status, p.chars from confa_pm p, confa_users s where p.'.($inbox?'sender':'receiver').'=s.id and '
   . $search_condition . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' order by id desc limit ' . $count;
 
   $result = mysql_query($query);
