@@ -180,8 +180,10 @@ function loadFilteredMessagesCallback(payload, titleListname, private)
     if(private)
     {
        li = document.createElement('li');
-       li.innerHTML= "<center><a class='button' onclick='getInbox();'>Inbox</a>&nbsp;&nbsp;&nbsp;<a class='button' onclick='getSent();'>Sent</a>&nbsp;&nbsp;&nbsp;<a class='button' href='#replyForm'>New PM</a></center>";
-        titleList.appendChild(li);  
+       li.innerHTML= "<center><a class='button' onclick='getInbox();'>Inbox</a>&nbsp;&nbsp;&nbsp;<a class='button' onclick='getSent();'>Sent</a>&nbsp;&nbsp;&nbsp;<a class='button' onclick='prepForNewPM();'  href='#replyForm'>New PM</a></center>";
+        titleList.appendChild(li);
+        //make the new PM recipient field visible:
+        $("#recipient").css('display', 'block');
     }
     //load content
     for(i=0; i<data.count; i++)
@@ -218,7 +220,14 @@ function loadFilteredMessagesCallback(payload, titleListname, private)
     win8MenuFix();
 }
 
-
+function prepForNewPM()
+{
+    //clear the reply form just in case
+    document.getElementById("subjectTextBox").value="";
+    document.getElementById("messageTextAreaQuote").innerHTML="";
+    document.getElementById("inResponseTo").innerHTML="";
+    document.getElementById("recipient").value = "";
+}
 
 function checkUserProfile()
 {
