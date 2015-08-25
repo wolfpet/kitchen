@@ -180,7 +180,7 @@ function loadFilteredMessagesCallback(payload, titleListname, private)
     if(private)
     {
        li = document.createElement('li');
-       li.innerHTML= "<center><a class='button' onclick='getInbox();'>Inbox</a>&nbsp;&nbsp;&nbsp;<a class='button' onclick='getSent();'>Sent</a></center>";
+       li.innerHTML= "<center><a class='button' onclick='getInbox();'>Inbox</a>&nbsp;&nbsp;&nbsp;<a class='button' onclick='getSent();'>Sent</a>&nbsp;&nbsp;&nbsp;<a class='button' href='#replyForm'>New PM</a></center>";
         titleList.appendChild(li);  
     }
     //load content
@@ -316,8 +316,18 @@ function displayMessage (messageId, private)
     replyPrivate = private; //the reply form will know which api to use.
     currentView="message";    
     var url="";
-    if(private){url=mainUrl+"api/inbox/" + messageId;}
-    else {url=mainUrl+"api/messages/" + messageId;}
+    if(private)
+    {
+        url=mainUrl+"api/inbox/" + messageId;
+        //show the recipient field
+        $("#recipient").css('display', 'block');
+    }
+    else 
+    {
+        url=mainUrl+"api/messages/" + messageId;
+        //hide the recipient field
+        $("#recipient").css('display', 'none');
+    }    
     
     var apiCall = $.get(url, function(data) {displayMessageCallback(data);}); 
 }
@@ -326,6 +336,10 @@ function displayMessageCallback(payload)
 {
     //var data = $.parseJSON(payload);
     var data = payload;
+    try{
+        var test = data.body.html;
+    }
+    catch(err){$.ui.popup("Ooops! Something went wrong. Sorry about that!");return;}
     var msg = data.body.html;
     ///alert(msg);
     //$.ui.popup(msg);

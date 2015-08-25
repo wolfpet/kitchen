@@ -140,7 +140,7 @@
             <h1>Private Mail</h1>
         </header>
         <div id="inboxContent">
-            <ul class="list widget uib_w_2 d-margins" id="myInboxList" data-uib="app_framework/listview" data-ver="1">    
+            <ul class="list widget uib_w_2 d-margins" id="myInboxList" data-uib="app_framework/listview" data-ver="1" style="background-color: rgb(224, 248, 248);">    
             </ul>
         </div>
         <footer class="wrap-element" data-uib="app_framework/footer" data-ver="1">
@@ -156,7 +156,7 @@
         <div id="replyForm">
             <br>
             <form>
-                <input type="hidden" id="recipient" value="">
+                <input type="text" id="recipient" value="" style="font-size: 22px;" placeholder="To:" >
                 <input id="subjectTextBox" type="text" placeholder="Subject" style="font-size: 22px;">
                 <textarea name="messageTextArea" id="messageTextArea" cols="30" rows="5" style="font-size: 22px;"></textarea>      
                 <a href="#messagePage" type="button" class="button" value="Send"  onclick="javascript:sendReply();">Send</a>    
