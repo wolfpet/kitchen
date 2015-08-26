@@ -376,6 +376,9 @@ function displayMessageCallback(payload)
     document.getElementById("recipient").value = name;
     //cleanup footer
     win8MenuFix();
+    
+    /// Scroll up
+    document.getElementById("msgBody").parentElement.removeAttribute("style");
 }
 
 //the user clicks Reply button - navigate to the form (the subj and msg data is preloaded in displayMessage()). Send reply would pick up the form data and submit to the REST method
@@ -504,7 +507,5 @@ function win8MenuFix()
         var element = document.getElementById("metroMenu");
         if(element != null)element.parentNode.removeChild(element);
     }
-    
-        var xxx = $("#metroMenu").parent(0);
-        var yyy=0;
 }
+
