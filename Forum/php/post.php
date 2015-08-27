@@ -11,18 +11,10 @@ require_once('head_inc.php');
     if ($logged_in == false ) {
 require_once('login_inc.php');
     }
-require_once('html_head_inc.php');
-require_once('dump.php');
-?>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-</head>
-<body>
-<?php
+
   $err = validate($subj, $body);
 
-  if ( strlen($err) == 0) {
-    
+  if ( strlen($err) == 0) {   
     if (!$preview) {      
     
       $log = post($subj, $body, $re, isset($msg_id) ? $msg_id : 0, $ticket, isset($nsfw) ? $nsfw : false);
@@ -37,8 +29,20 @@ require_once('dump.php');
       $success = true;
       $confirm = $root_dir . $page_confirm . '?id=' . $msg_id . '&subj=' . urlencode(htmlentities($subj, HTML_ENTITIES,'UTF-8')) . '&page=' . $msg_page . '&author_name=' . urlencode(htmlentities( $username, HTML_ENTITIES,'UTF-8'));
       header("Location: $confirm",TRUE,302);
-      
-    } else if (!is_null($preview)) {
+      exit();
+    }
+  }    
+require_once('html_head_inc.php');
+require_once('dump.php');
+?>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+</head>
+<body>
+<?php
+  if ( strlen($err) == 0) {
+    
+    if (!is_null($preview)) {
       
       $author = $user;
       $subject = $subj;
