@@ -1,4 +1,10 @@
 <?php
+
+if(!extension_loaded('phalcon')) {
+  echo file_get_contents('index.html');
+  exit();
+}
+
 use Phalcon\Mvc\Micro, 
     Phalcon\Events\Manager as EventsManager;
 use Phalcon\Http\Response;
