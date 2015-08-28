@@ -178,6 +178,8 @@ function after_bbcode($body) {
     '<img style="max-width: 99%;max-height: 99%;" src='
     ), $body);    
        
+  $body = smiles($body);
+  
   return fix_msg_target($body);
 }
 
@@ -235,4 +237,48 @@ function render_for_editing($msgbody) {
   
   return $msgbody;
 }
+
+function smiles($body) {
+  // first translate short smiles e.g. :)
+
+  //  :D  :)  :(  :o :? 8) etc
+  $body = preg_replace( array (
+    // search
+    '#(:D)|(:\)\)+)#', 
+    '#:\)#', 
+    '#:\(+#i',
+    '#:o#i',
+    '#:\?#i',
+    '#;\)#i',
+    '#8\)#i'
+    ), array (
+    // replace
+    ':biggrin:',
+    ':smile:',
+    ':sad:',
+    ':surprised:',
+    ':confused:',
+    ':wink:',
+    ':cool:'
+    ), $body);    
+  
+  // then :<word>: e.g.  :shock: or :lol: 
+  $body = preg_replace_callback('#:([a-z]+):#is',
+    function ($matches) {
+      // var_dump($matches);
+			$name = $matches[1];
+      $path = "images/smiles/".$name.".gif";
+      $exists = file_exists($path);
+      
+      if(!$exists) 
+        return $matches[0];
+
+      return '<img src="'.$path.'" alt="'.$name.'"/>';
+		},
+		$body
+	);
+    
+  return $body;
+}
+
 ?>
