@@ -240,31 +240,38 @@ function render_for_editing($msgbody) {
 
 function smiles($body) {
   // first translate short smiles e.g. :)
-
+  global $host, $root_dir;
+  
   //  :D  :)  :(  :o :? 8) etc
   $body = preg_replace( array (
     // search
     '#(:D)|(:\)\)+)#', 
     '#:\)#', 
+    '#:-\)#', 
     '#:\(+#i',
     '#:o#i',
     '#:\?#i',
-    '#;\)#i',
-    '#8\)#i'
+    '#[;]\)#i',
+    '#[;]\-\)#i',
+    '#8\)#i',
+    '#8-\)#i'
     ), array (
     // replace
     ':biggrin:',
+    ':smile:',
     ':smile:',
     ':sad:',
     ':surprised:',
     ':confused:',
     ':wink:',
+    ':wink:',
+    ':cool:',
     ':cool:'
     ), $body);    
   
   // then :<word>: e.g.  :shock: or :lol: 
   $body = preg_replace_callback('#:([a-z]+):#is',
-    function ($matches) {
+    function ($matches) use ($host, $root_dir) {
       // var_dump($matches);
 			$name = $matches[1];
       $path = "images/smiles/".$name.".gif";
@@ -273,7 +280,7 @@ function smiles($body) {
       if(!$exists) 
         return $matches[0];
 
-      return '<img src="'.$path.'" alt="'.$name.'" title="'.$name.'"/>';
+      return '<img src="http://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
 		},
 		$body
 	);
