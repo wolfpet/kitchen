@@ -1361,7 +1361,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
   if (!is_null($body) && strlen($body) != 0) {
     $chars = strlen(utf8_decode($body));
     $length = strlen($body);
-    if (stristr(render_for_display($body), "<img ")) {
+    if (stristr(render_for_display($body), "<img style")) {
         $content_flags |= 2;
     }
     $new_body = render_for_db($body);
