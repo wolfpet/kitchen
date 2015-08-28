@@ -6,6 +6,7 @@ var titleList;
 var currentParentID=0;
 var currentLevel=0;
 var currentView="threads"; //"message", "byDate"
+var currentLastThread=0;
 
 //Auth data
 var username = null;
@@ -38,8 +39,10 @@ function onAppReady()
 }
 document.addEventListener("app.Ready", onAppReady, false) ;
 
+//this method loads the first 51 threads
 function loadRootThreadsPlus()
 {
+    $("#titleList").empty();
     currentLevel=0;
     var url = mainUrl+ "api/threads";
     titleList = document.getElementById("titleList");
@@ -47,10 +50,27 @@ function loadRootThreadsPlus()
     currentLevel=0; //we are on the top level of the tree
 }
 
+//this methods loads more threads. TODO:  ideally this should be called automatically, whenever the user reaches the end of the scroller
+function loadMoreThreads(firstThreadId)
+{
+    firstThreadId--;
+    titleList = document.getElementById("titleList");
+    //remove the Load More button.
+    var element = document.getElementById("addMoreThreadsBtn"); 
+    element.parentNode.removeChild(element);
+    //add the divider to highlight the fact thet this is a second batch
+    var li = document.createElement('li');
+    li.setAttribute('class','divider');
+    titleList.appendChild(li);
+    //this call loads threads starting with the given id
+    var url = mainUrl+ "api/threads/?id=" + firstThreadId;    
+    var apiCall = $.get(url, function(data) {loadRootThreadsCallbackPlus(data);}); 
+}
+
 function loadRootThreadsCallbackPlus(payload) 
 {
     //clear the list
-    $("#titleList").empty();
+    
     //var data = $.parseJSON(payload);
     var data = payload;
     for(i=0; i<data.count; i++)
@@ -66,9 +86,16 @@ function loadRootThreadsCallbackPlus(payload)
         li.setAttribute('class','widget uib_w_7');
         li.setAttribute('data-uib','app_framework/listitem');
         li.innerHTML= badgeHtml+"<a href='#messagePage' onclick='javascript:currentLevel++;displayMessage("+data.threads[i].message.id+", false)'><b>"+data.threads[i].message.author.name+"</b> :<br /><span style='color:#0088d1'>"+data.threads[i].message.subject+"</span></a>";
-        
-        titleList.appendChild(li);        
-    }           
+        currentLastThread=data.threads[i].id;
+        titleList.appendChild(li);
+    }
+    
+    //add Load More button
+    var loadMoreLi = document.createElement('li');
+    loadMoreLi.setAttribute('id','addMoreThreadsBtn');
+    loadMoreLi.innerHTML="<center><a class='button' onclick='loadMoreThreads(" + currentLastThread + ");'>Load more...</a>";
+    titleList.appendChild(loadMoreLi);
+    //fix win8
     win8MenuFix();
 }
 
