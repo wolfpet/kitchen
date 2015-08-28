@@ -273,7 +273,7 @@ function smiles($body) {
       if(!$exists) 
         return $matches[0];
 
-      return '<img src="'.$path.'" alt="'.$name.'"/>';
+      return '<img src="'.$path.'" alt="'.$name.'" title="'.$name.'"/>';
 		},
 		$body
 	);
