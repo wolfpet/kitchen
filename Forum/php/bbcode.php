@@ -240,33 +240,28 @@ function render_for_editing($msgbody) {
 
 function smiles($body) {
   // first translate short smiles e.g. :)
-  global $host, $root_dir;
-  
+  global $host, $root_dir;  
   //  :D  :)  :(  :o :? 8) etc
   $body = preg_replace( array (
     // search
     '#(:D)|(:\)\)+)#', 
-    '#:\)#', 
-    '#:-\)#', 
+    '#(:\)|:-\))#', 
     '#:\(+#i',
     '#:o#i',
-    '#:\?#i',
-    '#[;]\)#i',
-    '#[;]\-\)#i',
-    '#8\)#i',
-    '#8-\)#i'
+    '#:\?#',
+    '#([;]\)|[;]\-\))#i',
+    '#(8\)|8-\))#i',
+    '#(:\||:-\|)#'
     ), array (
     // replace
     ':biggrin:',
-    ':smile:',
     ':smile:',
     ':sad:',
     ':surprised:',
     ':confused:',
     ':wink:',
-    ':wink:',
     ':cool:',
-    ':cool:'
+    ':neutral:'
     ), $body);    
   
   // then :<word>: e.g.  :shock: or :lol: 
