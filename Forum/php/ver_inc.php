@@ -102,13 +102,11 @@ require_once('head_inc.php');
     if (extension_loaded('mbstring')) {
       include 'finediff.php';
 
-      $from_text = htmlentities($body, HTML_ENTITIES,'UTF-8');
-      $to_text = htmlentities($content_to_compare, HTML_ENTITIES,'UTF-8');
+      $from_text = $body;
+      $to_text = $content_to_compare;
       
-      $from_text = mb_convert_encoding($from_text, 'HTML-ENTITIES', 'UTF-8');
-      $to_text = mb_convert_encoding($to_text, 'HTML-ENTITIES', 'UTF-8');
-      $diff_opcodes = FineDiff::getDiffOpcodes($from_text, $to_text);
-      $trans_body = nl2br(mb_convert_encoding(FineDiff::renderDiffToHTMLFromOpcodes($from_text, $diff_opcodes), 'UTF-8', 'HTML-ENTITIES'));
+      $diff_opcodes = FineDiff::getDiffOpcodes($from_text, $to_text, FineDiff::$characterGranularity);
+      $trans_body = nl2br(FineDiff::renderDiffToHTMLFromOpcodes($from_text, $diff_opcodes));
     }
 
 require_once('msg_form_inc.php');
