@@ -21,24 +21,10 @@ $success = false;
 $msg_page = 1;
 
 require_once('head_inc.php');
-require_once('get_params_inc.php');
-require_once('login_inc.php');
+//require_once('login_inc.php');
 
-    $title = 'Private message';
+$title = 'Private message';
 
-?>
-<!--
-<base target="bottom">
-</head>
-<body>
-<table width="95%"><tr>
-<td>
-<h3><?php print($title);?></h3>
-</td>
-</tr></table>
--->
-
-<?php
     $to_id = NULL;
     if (is_null($to) || strlen($to) == 0) {
         $err .= "Recipient not defined.";
@@ -108,12 +94,12 @@ require_once('login_inc.php');
         $row = mysql_fetch_assoc($result);
         $email=$row['email'];
         if (!is_null($email) && strlen($email) > 0) {
-        #$to = $email;
-        $subject = "You have new private message on kirdyk.com forum website";
-        $message = $subject . ' sent by ' . $user . ' with subject: ' . $subj;
-        $from = "kitchen@kirdyk.com";
-        $headers = "From: $from";
-        mail($email,$subject,$message,$headers);
+          #$to = $email;
+          $subject = "You have new private message on kirdyk.com forum website";
+          $message = $subject . ' sent by ' . $user . ' with subject: ' . $subj;
+          $from = "kitchen@kirdyk.com";
+          $headers = "From: $from";
+          mail($email,$subject,$message,$headers);
         }
         $username = $user;      
         $success = true;
@@ -124,7 +110,6 @@ require_once('login_inc.php');
 
 require_once('html_head_inc.php');
 
-    $title = 'Private message';
 ?>
     <base target="bottom">
     </head>
