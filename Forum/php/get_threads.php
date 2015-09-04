@@ -18,7 +18,7 @@ if ( isset($msg_id) ) {
     $min_thread = $last_thread - $limit;
     $result = get_thread_starts($min_thread, $last_thread-1);
   } else {
-    $limit = 100; // 100
+    $limit = isset($custom) && is_numeric($custom) ? intval($custom) : 100; // 100
     $result = get_threads_ex($limit, $last_thread);
   }
 

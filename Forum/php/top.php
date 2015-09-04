@@ -42,7 +42,8 @@ require('menu_inc.php');
     
     print('<div id="threads">');
 
-    $limit = 200;
+    $limit = strpos($agent, 'iPad') ? 7 : (strpos($agent, 'iPhone') || strpos($agent, 'like Mac OS') ? 5 : 200); 
+    
     $result = get_threads_ex($limit);
     $content = array();
     $last_thread = -1;
