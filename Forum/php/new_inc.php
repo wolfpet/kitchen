@@ -7,16 +7,6 @@
 ?>
 <script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
 <script language="JavaScript" src="<?=autoversion('js/func.js')?>"></script>
-<script language="Javascript">
-function bbcode_on() {
-  document.getElementById('translit_help').style.display='none';
-  if (document.getElementById('bbcode_help').style.display != 'block') {
-    document.getElementById('bbcode_help').style.display='block';
-  } else {
-    document.getElementById('bbcode_help').style.display='none';
-  }
-}
-</script>
 
 <form action="<?php print($root_dir . $page_post); ?>" method="post" id="msgform" name="msgform">
 <?php
@@ -121,7 +111,7 @@ if ($keyboard) {
 <table width="100%">
 <tbody>
 <tr>
-<td align="left" valign="top" width="100%">
+<td align="left" valign="top" width="100%" nowrap><a href="javascript:smileys_on();"><U>Smileys</U></a>&nbsp;&nbsp;
 <!--<a href="javascript:translit_on()"><U>Translit help</U><a>&nbsp;&nbsp;--><a href="javascript:bbcode_on();"><U>BBCode help</U></a></td></tr>
 <tr><td align="left" valign="top" width="100%">
 <div id="bbcode_help"><table border="1">
@@ -151,6 +141,8 @@ if ($keyboard) {
 			   <tr><td>у=<font color="gray">u</font></td><td>ф=<font color="gray">f</font></td><td>х=<font color="gray">h</font></td><td>ц=<font color="gray">c</font></td><td>ч=<font color="gray">ch</font></td><td>ш=<font color="gray">sh</font></td><td>щ=<font color="gray">xh</font></td><td>ъ=<font color="gray">#</font></td><td>ы=<font color="gray">y</font></td><td>ь=<font color="gray">'</font></td></tr>
 			   <tr><td>э=<font color="gray">w</font></td><td>ю=<font color="gray">ju</font></td><td>я=<font color="gray">ja</font></td></tr>
 		</tbody></table></div><!--</div>-->
+
+<div id="smileys_help" style="display:none;"><?=smileys('body')?></div> <!-- make display style depend on user settings-->    
 	</td>
 <!--</tr>
 <tr> -->

@@ -6,7 +6,7 @@
 a:active  {color:#FF0000; font-family:Verdana,Arial; text-decoration:none;}
  a:hover   {color:#FF0000; font-family:Verdana,Arial; text-decoration:underline;}
 
-.selected  {background:#E0F1FF;}
+.selected  {background:#E0F1FF; /* Yellow = #FFFF99 */}
  
 h1	{font-family:Verdana,Arial; font-size:36pt;}
  h2	{font-family:Verdana,Arial; font-size:24pt; color:#0080c0;}
@@ -29,5 +29,5 @@ b	{font-family:Verdana, Arial;}
  .blueback {background:#DDDDFF; color:#000000; font-family:Verdana, Arial; font-size:10pt;}
 #translit_help {display:none;}
 #bbcode_help {display:none;}
-
+#smileys_help img {vertical-align:bottom;}
 a.user_link {color:black;}

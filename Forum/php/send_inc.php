@@ -10,16 +10,6 @@
 ?>
 <script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
 <script language="JavaScript" src="<?=autoversion('js/func.js')?>"></script>
-<script language="Javascript">
-function bbcode_on() {
-    document.getElementById('translit_help').style.display='none';
-    if (document.getElementById('bbcode_help').style.display != 'block') {
-        document.getElementById('bbcode_help').style.display='block';
-    } else {
-        document.getElementById('bbcode_help').style.display='none';
-    }
-}
-</script>
 
 <form action="<?php print($root_dir . $page_pm); ?>" method="post" id="msgform" name="msgform">
 <input type="hidden" name="re" id="re" value="<?php print($re); ?>"/>
@@ -88,7 +78,7 @@ function bbcode_on() {
     print($body);
  //print(nl2br(htmlentities($body, HTML_ENTITIES,'UTF-8')));
 ?></textarea>
-</td>
+</td><!--<td nowrap valign="top"><iframe width="110em" height="140em" frameborder="0" allowtransparency="true" src="smiles.php"></iframe></td>-->
 </tr>
 <tr>
 <td colspan="3"><input name="preview" id="preview" type="checkbox" readonly value="off" tabindex="4"> Preview first</td>
@@ -102,8 +92,9 @@ function bbcode_on() {
 <table width="100%">
 <tbody>
 <tr>
-<td align="left" valign="top" width="100%">
-<!--<a href="javascript:translit_on()"><U>Translit help</U><a>&nbsp;&nbsp;--><a href="javascript:bbcode_on();"><U>BBCode help</U></a></td></tr>
+<td align="left" valign="top" width="100%" nowrap><a href="javascript:smileys_on();"><U>Smileys</U></a>&nbsp;&nbsp;
+<!--<a href="javascript:translit_on()"><U>Translit help</U><a>&nbsp;&nbsp;--><a href="javascript:bbcode_on();"><U>BBCode help</U></a>
+</td></tr>
 <tr><td align="left" valign="top" width="100%">
 <div id="bbcode_help"><table border="1">
 <tbody><tr><td>[b]<font color="gray">bolded text</font>[/b]</td><td><strong>bolded text</strong></td></tr>
@@ -122,7 +113,7 @@ function bbcode_on() {
 <tr><td>[img=<font color="gray">http://<?php print( $host); ?>/images/Tip-Hat.gif</font>]</td><td><img src="http://<?php print( $host); ?>/images/Tip-Hat.gif"></td></tr>
 </tbody></table>
 </div>
-  
+
 <div id="translit_help"><font color="gray"><table><tbody><tr><td>А=<font color="gray">A</font></td><td>Б=<font color="gray">B</font></td><td>В=<font color="gray">V</font></td><td>Г=<font color="gray">G</font></td><td>Д=<font color="gray">D</font></td><td>Е=<font color="gray">E</font></td><td>Ё=<font color="gray">JO</font></td><td>Ж=<font color="gray">ZH</font></td><td>З=<font color="gray">Z</font></td><td>И=<font color="gray">I</font></td></tr>
                <tr><td>Й=<font color="gray">J</font></td><td>К=<font color="gray">K</font></td><td>Л=<font color="gray">L</font></td><td>М=<font color="gray">M</font></td><td>Н=<font color="gray">N</font></td><td>О=<font color="gray">O</font></td><td>П=<font color="gray">P</font></td><td>Р=<font color="gray">R</font></td><td>С=<font color="gray">S</font></td><td>Т=<font color="gray">T</font></td></tr>
                <tr><td>У=<font color="gray">U</font></td><td>Ф=<font color="gray">F</font></td><td>Х=<font color="gray">H</font></td><td>Ц=<font color="gray">C</font></td><td>Ч=<font color="gray">CH</font></td><td>Ш=<font color="gray">SH</font></td><td>Щ=<font color="gray">XH</font></td><td>Ъ=<font color="gray">##</font></td><td>Ы=<font color="gray">Y</font></td><td>Ь=<font color="gray">''</font></td></tr>
@@ -132,6 +123,8 @@ function bbcode_on() {
 			   <tr><td>у=<font color="gray">u</font></td><td>ф=<font color="gray">f</font></td><td>х=<font color="gray">h</font></td><td>ц=<font color="gray">c</font></td><td>ч=<font color="gray">ch</font></td><td>ш=<font color="gray">sh</font></td><td>щ=<font color="gray">xh</font></td><td>ъ=<font color="gray">#</font></td><td>ы=<font color="gray">y</font></td><td>ь=<font color="gray">'</font></td></tr>
 			   <tr><td>э=<font color="gray">w</font></td><td>ю=<font color="gray">ju</font></td><td>я=<font color="gray">ja</font></td></tr>
 		</tbody></table></div><!--</div>-->
+    
+<div id="smileys_help" style="display:none;"><?=smileys('body')?></div> <!-- make display style depend on user settings-->
 	</td>
 <!--</tr>
 <tr> -->

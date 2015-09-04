@@ -118,11 +118,58 @@ function insertBBCode(fieldId, tag)
   element.focus();
 }
 
+  function insertSmiley(fieldId, smileyName)
+  {
+    var myField = document.getElementById(fieldId);
+    if (myField != null)
+    {    
+      //Mozilla/Firefox/Netscape 7+/Opera/Chrome support
+      if (myField.selectionStart || myField.selectionStart == '0')
+      {
+        var startPos = myField.selectionStart;
+        var endPos = myField.selectionEnd;
+        myField.value = myField.value.substring(0, startPos)
+          + ":" + smileyName + ":" +  myField.value.substring(endPos, myField.value.length);
+      } 
+      //IE support
+      else if (document.selection)
+      {
+        myField.focus();
+        sel = document.selection.createRange();
+        sel.text = ":" + smileyName + ":";
+      }
+      else 
+      {
+        myField.value = myField.value + ":" + smileyName + ":";
+      }
+    }    
+  }
+
 // Basic cross browser addEvent
-function addEvent(elem, event, fn){
+function addEvent(elem, event, fn) {
   if(elem.addEventListener){
     elem.addEventListener(event, fn, false);
   }else{
     elem.attachEvent("on" + event, function(){ return(fn.call(elem, window.event)); });
   }
+}
+
+function bbcode_on() {
+    document.getElementById('translit_help').style.display='none';
+    document.getElementById('smileys_help').style.display='none';
+    if (document.getElementById('bbcode_help').style.display != 'block') {
+        document.getElementById('bbcode_help').style.display='block';
+    } else {
+        document.getElementById('bbcode_help').style.display='none';
+    }
+}
+
+function smileys_on() {
+    document.getElementById('translit_help').style.display='none';
+    document.getElementById('bbcode_help').style.display='none';
+    if (document.getElementById('smileys_help').style.display != 'block') {
+        document.getElementById('smileys_help').style.display='block';
+    } else {
+        document.getElementById('smileys_help').style.display='none';
+    }
 }
