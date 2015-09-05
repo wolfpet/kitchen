@@ -73,9 +73,13 @@ require_once('html_head_inc.php');
             if ( is_null($profile_bold) ) {
                 $profile_bold = 0;
             }
-
             $update .= ' prop_bold=' . $profile_bold; 
- 
+
+            if (strlen($update) > 0) {
+                $update .= ', ';
+            }
+            $update .= ' show_smileys=' . (isset($show_smileys) ? "1" : "0"); 
+
             if (strlen($update) > 0) {
                 $update .= ', ';
             }
@@ -85,20 +89,17 @@ require_once('html_head_inc.php');
             }
             
             $update .= ' prop_tz=\'' . mysql_escape_string($tz) . '\''; 
-      
-            $query = 'UPDATE confa_users set ' . $update . ' where username = \'' . mysql_escape_string($user) . '\'';
+            
+            $query = 'UPDATE confa_users set ' . $update . ' where id=' . $user_id; 
             $result = mysql_query($query);
             if (!$result) {
                 mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
                 die('Query failed');
             }
-            if (mysql_affected_rows($link) == 0) {
-                $err = 'User not found';
-            } else {
-                $info = 'Successfully updated profile';
-                $prop_bold = $profile_bold;
-                $prop_tz = $tz;
-            }
+            $info = 'Successfully updated profile';
+            $prop_bold = $profile_bold;
+            $prop_tz = $tz;
+            $smileys = isset($show_smileys);
         } while (false);
     }
     if ($err != '') {

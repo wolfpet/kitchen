@@ -21,7 +21,7 @@ require_once('get_params_inc.php');
 
 
     if (!is_null($auth_cookie) && !is_null($user)) {
-        $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.moder, s.safe_mode, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated, u.last_pm_check_time from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_real_escape_string($user) . '\'';
+        $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.moder, s.safe_mode, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated, u.last_pm_check_time, u.show_smileys from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_real_escape_string($user) . '\'';
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -38,6 +38,7 @@ require_once('get_params_inc.php');
             $prop_tz = $row['prop_tz'];
             $status = $row['status'];
             $safe_mode = $row['safe_mode'];
+            $smileys = $row['show_smileys'];
             $last_login = $row['updated'];
             $last_pm_check_time = $row['last_pm_check_time'];
             if ( $status == 2 ) {

@@ -1,0 +1,2 @@
+ALTER TABLE confa_users ADD COLUMN show_smileys SMALLINT NULL DEFAULT 1;
+

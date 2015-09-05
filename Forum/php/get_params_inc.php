@@ -223,6 +223,9 @@
         if (array_key_exists('profile_bold', $_POST)) {
             $profile_bold = 1;
         }
+        if (array_key_exists('show_smileys', $_POST)) {
+            $show_smileys = true;
+        }
         if (array_key_exists('custom', $_POST)) {
             $custom = trim($_POST['custom']);
         }

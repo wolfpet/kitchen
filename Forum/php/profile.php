@@ -78,7 +78,7 @@ $(document).ready(function() {
 <span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>
 <?php
 
-    $query=' SELECT email, prop_bold, prop_tz, safe_mode from confa_users where id = ' . $user_id;
+    $query=' SELECT email, prop_bold, prop_tz, safe_mode, show_smileys from confa_users where id = ' . $user_id;
     $result = mysql_query( $query );
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -89,6 +89,7 @@ $(document).ready(function() {
     $email2 = $email;
     $profile_bold = $row['prop_bold'];
     $prop_tz = $row['prop_tz'];
+    $smileys = $row['show_smileys'];
 ?>
 <div style="position:absolute;left: 0px;top: 0px;width: 100%;z-index: 9999;text-align: right;"><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>><i>Show NSFW content</i></input>&nbsp;</div>
 <?php

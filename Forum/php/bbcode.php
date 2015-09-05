@@ -149,6 +149,8 @@ function before_bbcode($body) {
  * Run this after bbcode is called to finalize the rendering of the message body 
  */
 function after_bbcode($body) {
+  global $smileys;
+  
   // handle [iframe] tag
   $body = preg_replace_callback('#\[iframe (.*)\]#i',
 		function ($matches) {
@@ -178,7 +180,9 @@ function after_bbcode($body) {
     '<img style="max-width: 99%;max-height: 99%;" src='
     ), $body);    
        
-  $body = smiles($body);
+  if ($smileys) {
+    $body = render_smileys($body);
+  }
   
   return fix_msg_target($body);
 }
@@ -238,7 +242,7 @@ function render_for_editing($msgbody) {
   return $msgbody;
 }
 
-function smiles($body) {
+function render_smileys($body) {
   // first translate short smiles e.g. :)
   global $host, $root_dir;  
   //  :D  :)  :(  :o :? 8) etc

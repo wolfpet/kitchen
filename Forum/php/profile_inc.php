@@ -28,6 +28,10 @@
 <td><input id="profile_bold" name="profile_bold" type="checkbox" maxlength="80" <?php if (!is_null($profile_bold) && $profile_bold > 0) { print("checked"); } ?>/></td>
 </tr>
 <tr>
+<td>Show smileys as icons: </td>
+<td><input id="show_smileys" name="show_smileys" type="checkbox" maxlength="80" <?=$smileys ? "checked" : ""?>/></td>
+</tr>
+<tr>
 <td>Time zone:</td>
 <td>
 <select id="tz" name="tz">

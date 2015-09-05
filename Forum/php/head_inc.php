@@ -75,6 +75,7 @@ $dislikes = 0;
 $n_ff = NULL;
 $howmanylikes = NULL;
 $likedby = NULL;
+$smileys = false;
 
 // pmail status
 $pm_new_mail = 1;
