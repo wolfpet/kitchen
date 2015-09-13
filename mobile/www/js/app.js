@@ -404,8 +404,11 @@ function displayMessageCallback(payload)
     //cleanup footer
     win8MenuFix();
     
-    /// Scroll up
-    document.getElementById("msgBody").parentElement.removeAttribute("style");
+    /// Scroll up on WP8
+    if(navigator.userAgent.match(/Windows Phone/i) || navigator.userAgent.match(/WPDesktop/i))
+    {
+     document.getElementById("msgBody").parentElement.removeAttribute("style");
+    }
 }
 
 //the user clicks Reply button - navigate to the form (the subj and msg data is preloaded in displayMessage()). Send reply would pick up the form data and submit to the REST method
