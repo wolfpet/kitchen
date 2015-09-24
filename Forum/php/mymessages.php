@@ -20,8 +20,15 @@ require_once('head_inc.php');
     $count = $row[0]; 
 
     $last_id = get_page_last_index('confa_posts where author=' . $author_id , $how_many, $page );
-    $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars  from confa_posts p, confa_users u where p.author=' . $author_id . ' and p.author=u.id and  p.status != 2 and p.id <= ' . $last_id . ' order by msg_id desc limit 50'; 
+    $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+      . ':00\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars  from confa_posts p, confa_users u where p.author=' 
+      . $author_id . ' and p.author=u.id and  p.status != 2';
 
+    if (intval($last_id) > 0)
+        $query .= ' and p.id <= ' . $last_id;
+
+    $query .= ' order by msg_id desc limit 50'; 
+    
     $result = mysql_query($query);
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
