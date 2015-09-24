@@ -11,7 +11,6 @@ function revisions_on() {
 /*$Id: msg_inc.php 988 2014-01-05 01:14:33Z dmitriy $*/
 
 require_once('head_inc.php');
-
 if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
   $query = 'SELECT p.id, p.subject, p.views, p.status, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' 
     . $prop_tz . ':00\') as created, p.body, p.content_flags, p.chars, pp.subject as msg_subject, (select subject from confa_versions where parent=' . $msg_id . ' and id > p.id limit 1) as compare_to'
@@ -30,8 +29,11 @@ if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
     print('<!--<br/><a class="revisions_link" href="javascript:revisions_on();"><font color="gray">Revision history</font></a>--><div class="revisions" id="revisions" '
       . (isset($version) ? 'style="display:block;"' : '') .'><br/>');
  
+if (extension_loaded('mbstring')) {
 require_once('finediff.php');
-  
+} else {
+print("<!-- mbstring not loaded! -->");
+}
     while($row = mysql_fetch_assoc($result)) {
       if ($row['status'] == 2 && (is_null( $moder ) || $moder == 0 || strcmp( $mode, "del" ))) {
         $line = '<I><font color="gray"><del>This version has been deleted</del></font></I> ';

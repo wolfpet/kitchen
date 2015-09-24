@@ -120,7 +120,7 @@ Closed |
        print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=closethread">Close&nbsp;Thread</a>');
      } 
    }
-   if ($revisions > 0) {
+   if (intval($revisions) > 0) {
      print(" | ");
      print('<a href="javascript:revisions_on();">Revisions</a>');
    }
