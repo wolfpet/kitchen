@@ -69,6 +69,7 @@ $pm_id = NULL;
 $content_flags = 0;
 $youtube_img = 'images/youtube12x12w.png';
 $image_img = 'images/camera12x12w.png';
+$boyan_img = 'images/boyan12x12w.png';
 $action = NULL;
 $likes = 0;
 $dislikes = 0;
@@ -88,7 +89,7 @@ $pm_read_by_sender = 16;
 $content_image  = 0x02;
 $content_video  = 0x04;
 $content_nsfw   = 0x08;
-$content_boyan  = 0x0A;
+$content_boyan  = 0x10;
 
 //$title       = 'Forum';
 $page_title = $title;

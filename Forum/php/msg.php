@@ -66,6 +66,10 @@ $managed = true;
                  die('Query failed');
             }
         }
+      } else if (!strcmp($action, "report")) {
+        if (report($user_id, $msg_id, $mode) == false) {
+          die('Query failed');
+        }
       }
    }
    $msg_bookmark = NULL;

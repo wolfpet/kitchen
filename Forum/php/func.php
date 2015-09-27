@@ -310,8 +310,10 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
   global $page_thread;
   global $prop_bold;
   global $image_img;
+  global $boyan_img;
   global $youtube_img;
   global $content_nsfw;
+  global $content_boyan;
 
   global $show_hidden;
   global $ignored;
@@ -350,6 +352,9 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
   }
   if ($row['content_flags'] & $content_nsfw) {
     $nsfw .= '<span class="nsfw">NSFW</span>';
+  }
+  if ($row['content_flags'] & $content_boyan) {
+    $icons .= ' <img border=0 src="' . $root_dir . $boyan_img . '"/> ';
   }
   if ($row['modified'] != null) {
     $date = $row['modified'] . '<span class="edited">*</span>';
@@ -1307,6 +1312,43 @@ function bookmark($user_id, $msg_id, $add=true) {
        return false;
   }
   return $result;
+}
+
+function report($user_id, $msg_id, $mode) {
+  global $content_nsfw, $content_boyan;
+  $value = 0;
+  
+  if (!strcmp($mode, "nsfw"))
+    $value |= $content_nsfw;
+  else if (!strcmp($mode, "boyan"))
+    $value |= $content_boyan;
+  
+  if ($value == 0) return true;
+
+/*
+  $query = 'update confa_reports set value = value | ' . value . ' where user=' . $user_id. ' and post=' . $msg_id . ';';
+  $result = mysql_query($query);
+  if (!$result) {
+       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+       return false;
+  }
+  if (mysql_affected_rows($result) == 0) {
+    $query = 'insert into confa_reports(user, post, value) values(' . $user_id. ',' . $msg_id . ','. $value.');';
+    $result = mysql_query($query);
+    if (!$result) {
+         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+         return false;
+    }
+  }
+*/
+  // TODO: add some logic here (optional) e.g. mark only if several users reported the message as <$mode>
+  $query = 'update confa_posts set content_flags = content_flags | ' . $value . ' where id=' . $msg_id . ';';
+  $result = mysql_query($query);
+  if (!$result) {
+    mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+    return false;
+  } 
+  return true;
 }
 
 function validate($subj, $body, $to) {
