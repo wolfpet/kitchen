@@ -13,6 +13,9 @@ print($created);
 if (isset($modified) && !is_null($modified)) {
   print(', last modified ' . $modified);
 }
+if ($content_flags & $content_boyan) {
+  print('&nbsp;<img border=0 src="' . $root_dir . $boyan_img . '" valign="middle"/>');
+}
 if (isset($nsfw)) {
   print('&nbsp;<span class="nsfw">NSFW</span>');
 }

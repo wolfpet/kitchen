@@ -8,7 +8,7 @@ require_once('head_inc.php');
     $views = 1;
     $in_response ='';
 
-    // Performing SQL query
+    // Performing SQL query to retrieve likes/dislikes
     $query = 'SELECT u.username as userlike, l.value as valuelike from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
     $result = mysql_query($query);
     if (!$result) {
@@ -46,6 +46,28 @@ require_once('head_inc.php');
     }
     mysql_free_result($result);
 
+    // Performing SQL query to retrieve reports
+    $query = 'SELECT u.username as user, r.content_flags as flags from confa_users u, confa_reports r where r.user=u.id and r.post=' . $msg_id;
+    $result = mysql_query($query);
+    if (!$result) {
+        mysql_log( __FILE__, 'query 1 failed ' . mysql_error() . ' QUERY: ' . $query);
+        die('Query failed');
+    }
+    
+    $reports = array('nsfw' => '', 'boyan' => '');
+    
+    while($row = mysql_fetch_assoc($result)) {
+        if ($row['flags'] & $content_nsfw) {
+          if ($reports['nsfw'] != '') $reports['nsfw'] .= ', ';
+          $reports['nsfw'] .= $row['user'];
+        } 
+        if ($row['flags'] & $content_boyan) {
+          if ($reports['boyan'] != '') $reports['boyan'] .= ', ';
+          $reports['boyan'] .= $row['user'];
+        }
+    }
+    mysql_free_result($result);
+    
     // Performing SQL query
     $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, '
       . 'CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' 

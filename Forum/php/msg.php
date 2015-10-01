@@ -16,6 +16,18 @@ $managed = true;
 ?><link rel="stylesheet" type="text/css" href="<?=autoversion('css/diff.css');?>">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script language="javascript">
+function report_on()
+{
+  var div = document.getElementById("report");  
+  if (div != null) {
+    if (div.style.display != 'inline')
+      div.style.display = 'inline';
+    else
+      div.style.display = 'none';
+  }
+}
+</script>
 <base target="bottom">
 </head>
 <body>
@@ -128,6 +140,12 @@ Closed |
      print(" | ");
      print('<a href="javascript:revisions_on();">Revisions</a>');
    }
+   if ($user_id != $auth_id) {
+     print(" | ");
+     print('<a target="bottom" href="javascript:report_on();">Report</a><span id="report" style="display:none;"> as <a target="bottom" href="' 
+      . $root_dir . $page_msg . '?id=' . $msg_id . '&action=report&mode=nsfw">NSFW</a> or <a target="bottom" href="' 
+      . $root_dir . $page_msg . '?id=' . $msg_id . '&action=report&mode=boyan">Repetitive</a></span>');
+   }   
    if (!$reply_closed && can_edit_post($auth_id, $created_ts, $user_id, $msg_id)) {
      print(" | ");
      if (!is_null($parent) && $parent != 0) {
@@ -165,19 +183,29 @@ Closed |
 ?>
 <BR>
 <?php
-
+$footer = '';
 if (strlen($likes) > 0) {
-  print(' <FONT color="green">' . $likes . '</FONT>');
+  $footer .= ' <FONT color="green">' . $likes . '</FONT>';
 }
 if (strlen($dislikes) > 0) {
-  print(' <FONT color="red">' . $dislikes . '</FONT>');
+  $footer .= ' <FONT color="red">' . $dislikes . '</FONT>';
 }
 if (strlen($reads) > 0) {
-  print(' <FONT color="lightgray">' . $reads . '</FONT>');
+  $footer .= ' <FONT color="lightgray">' . $reads . '</FONT>';
 }
-if (strlen($likes) > 0 || strlen($dislikes) > 0 || strlen($reads) > 0) {
-  print('<BR/>');
+if (isset($reports) && $reports['boyan'] != '') {
+  $footer .= ' <img border=0 src="' . $root_dir . $boyan_img . '" valign="middle"/>&nbsp;<span style="color:gray">' . $reports['boyan'].'</span>';
 }
+if (isset($reports) && $reports['nsfw'] != '') {
+  // $footer .= ' <span class="nsfw" title="'.$reports['nsfw'].'">NSFW</span><span style="color:gray">('.(substr_count($reports['nsfw'], ',')+1).')</span>';
+  $footer .= ' <span class="nsfw">nsfw</span>&nbsp;<span style="color:gray">'.$reports['nsfw'].'</span>';
+}
+
+if (strlen($footer) > 0) {
+  $footer .= '<BR/>';
+}
+print($footer);
+
 require_once('msg_hist_inc.php');
 require_once('tail_inc.php');
 ?>

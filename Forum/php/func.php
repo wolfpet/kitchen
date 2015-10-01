@@ -1315,39 +1315,65 @@ function bookmark($user_id, $msg_id, $add=true) {
 }
 
 function report($user_id, $msg_id, $mode) {
-  global $content_nsfw, $content_boyan;
-  $value = 0;
+  global $content_nsfw, $content_boyan, $link;
+  $content_flags = 0;
+  
+  if (is_null($user_id)) return true; // do nothing
   
   if (!strcmp($mode, "nsfw"))
-    $value |= $content_nsfw;
+    $content_flags |= $content_nsfw;
   else if (!strcmp($mode, "boyan"))
-    $value |= $content_boyan;
+    $content_flags |= $content_boyan;
   
-  if ($value == 0) return true;
+  if ($content_flags == 0) return true;
 
-/*
-  $query = 'update confa_reports set value = value | ' . value . ' where user=' . $user_id. ' and post=' . $msg_id . ';';
+  $query = 'update confa_reports set content_flags = content_flags ^ ' . $content_flags . ' where user=' . $user_id. ' and post=' . $msg_id . ';';
   $result = mysql_query($query);
   if (!$result) {
        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
        return false;
   }
-  if (mysql_affected_rows($result) == 0) {
-    $query = 'insert into confa_reports(user, post, value) values(' . $user_id. ',' . $msg_id . ','. $value.');';
+  if (mysql_affected_rows($link) == 0) {
+    $query = 'insert into confa_reports(user, post, content_flags) values(' . $user_id. ',' . $msg_id . ','. $content_flags.');';
     $result = mysql_query($query);
     if (!$result) {
          mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
          return false;
     }
   }
-*/
-  // TODO: add some logic here (optional) e.g. mark only if several users reported the message as <$mode>
-  $query = 'update confa_posts set content_flags = content_flags | ' . $value . ' where id=' . $msg_id . ';';
+  // mark the post only if several users reported the message as <$mode>
+  $content_flags = 0;
+  
+  $query = 'select count(*) from confa_reports where content_flags & ' . $content_nsfw . ' and post=' . $msg_id . ';';
   $result = mysql_query($query);
   if (!$result) {
-    mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-    return false;
-  } 
+       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+       return false;
+  }
+  if (mysql_result($result, 0) >= 2) {
+    $content_flags |= $content_nsfw;
+  }
+  
+  $query = 'select count(*) from confa_reports where content_flags & ' . $content_boyan . ' and post=' . $msg_id . ';';
+  $result = mysql_query($query);
+  if (!$result) {
+       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+       return false;
+  }
+  if (mysql_result($result, 0) >= 2) {
+    $content_flags |= $content_boyan;
+  } else {
+    $content_flags &= ~$content_boyan;
+  }
+  
+  if ($content_flags) {
+    $query = 'update confa_posts set content_flags = content_flags | ' . $content_flags . ' where id=' . $msg_id . ';';
+    $result = mysql_query($query);
+    if (!$result) {
+      mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+      return false;
+    }
+  }
   return true;
 }
 
