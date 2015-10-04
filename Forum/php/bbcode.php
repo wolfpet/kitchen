@@ -29,7 +29,8 @@ function bbcode_format($str){
       '#\[url\]((?:ftp|https?)://[^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]),
       '#\[url\]([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]) 
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image[/img])
-      '#\[img=(\S*?)\s*\]#i' // Image ([img=url_to_image[/img])
+      '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image[/img])
+      '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
   );
    
   // The matching array of strings to replace matches with
@@ -49,7 +50,8 @@ function bbcode_format($str){
       '<a target="_blank" href="$1">$1</a>',
       '<a target="_blank" href="//$1">$1</a>',
       '<img src="$1" alt=""/>',
-      '<img src="//$1" alt=""/>'
+      '<img src="//$1" alt=""/>',
+      '<img src="$1" alt=""/>'
   );
   
   // Perform the actual conversion
@@ -126,8 +128,6 @@ function before_bbcode($body) {
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/videos/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // FB video clip (temporary link) e.g. https://video-ord1-1.xx.fbcdn.net/hvideo-xap1/v/t42.1790-2/10444296_1524659357774119_1276856449_n.mp4?efg=eyJybHIiOjM2NSwicmxhIjo1MTJ9&rl=365&vabr=203&oh=e9a02a9d91fe8de7d59750a03447dc42&oe=55A5D0C0
     '#(?<!\[url(=|\]))((?:https?://)?video-[^\s<\]"]+\.mp4(?:(?:\?)[^\s<\]"]*)?)#is',
-    // FB post e.g. https://www.facebook.com/victor.tregubov.5/posts/997403940279807
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/posts/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // imgur
     '#(?<!(\[url(=|]))|\[img=)((?:https?://)(?:www\.)?i\.imgur\.com/([^\s\.]*)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // youtube with no http(s) prefix
@@ -137,7 +137,6 @@ function before_bbcode($body) {
     '<div class="coub"><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2">$2</a></div>',  
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2">$2</a>',  
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/><a href="$2">Please note that this link is only temporary and will not be available in the future</a>',
-    '<div class="fb-post" data-href="$2"></div><br/>Link: <a href="$2">$2</a>',  
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2">$2</a></div>'
     ), $body);    
@@ -202,7 +201,7 @@ function fix_msg_target($body) {
  * FaceBook API support
  */
 function include_facebook_api_if_required($body) {
-  if (!is_null($body) && (strpos($body, 'class="fb-video"') !== false || strpos($body, 'class="fb-post"') !== false)) { ?><div id="fb-root"></div><script>(function(d, s, id) {
+  if (!is_null($body) && strpos($body, 'class="fb-video"') !== false) { ?><div id="fb-root"></div><script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s); js.id = id;
