@@ -295,7 +295,7 @@ function print_threads_ex($result, &$content, &$max_thread_id, $limit = 200, $co
 }
 
 function print_subject($subj) {
-  return preg_replace('#([^\.])\.$#','$1', trim($subj));
+  return preg_replace('#([^\.])\.$#', '$1', preg_replace('#(\(\-\))|(\(edited\))#', '', trim($subj)));
 }
 
 function print_line($row, $collapsed=false, $add_arrow=true) {
@@ -351,15 +351,21 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
     $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
   }
   if ($row['content_flags'] & $content_nsfw) {
-    $nsfw .= '<span class="nsfw">NSFW</span>';
+    $nsfw .= ' <span class="nsfw">NSFW</span>';
   }
   if ($row['content_flags'] & $content_boyan) {
     $icons .= ' <img border=0 src="' . $root_dir . $boyan_img . '"/> ';
   }
+  $suffix = '';
   if ($row['modified'] != null) {
-    $date = $row['modified'] . '<span class="edited">*</span>';
+    $date = $row['modified'];// . '<span class="edited">*</span>';
+    $suffix = 'edited';
   } else {
-    $date = $row['created'];  
+    $date = $row['created'];
+    if ($length == 0) $suffix = "empty";
+  }
+  if ($suffix != "") {
+    $suffix = ' <sup class="' . $suffix . '">' . $suffix . '</sup>';
   }
   $subj = encode_subject($subj);
   $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
@@ -388,9 +394,9 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
           } else {
             $style .= 'cursor:pointer;';
           }
-          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a> '.$nsfw.' ';
+          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>'.$nsfw.$suffix.' ';
       } else {
-          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a> '.$nsfw.' ';
+          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a>'.$nsfw.$suffix.' ';
       }
   }
   

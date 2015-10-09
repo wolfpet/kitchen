@@ -104,11 +104,18 @@ blockquote.uncited {
 }
 
 .edited {
-  color: red;
+  /* color: red; */
+  font-size: 50%;
+  color: crimson;
 }
 
 .revisions {
   display:none;
+}
+
+.empty {
+  font-size:50%;
+  color:gray;
 }
 
 div#threads {
