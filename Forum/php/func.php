@@ -424,8 +424,8 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
   $arrow = ''; 
 
   if ($add_arrow) {
-    $arrow.= '<img border=0 src="images/up.gif" width=16 height=16 alt="*" ';
-    $arrow.= ' onclick="javascript:scroll2Top(\'body\');" onmouseout="this.style.opacity = 0.3;" style="opacity:0.3" onmouseover="this.style.opacity=1;" align="top">';
+    $arrow.= '<img border=0 src="images/up.png" alt="Up"';
+    $arrow.= ' onclick="javascript:scroll2Top(\'body\');" onmouseout="this.style.opacity = 0.2;" style="opacity:0.2" onmouseover="this.style.opacity=1;" align="bottom">';
   }
 
   return $line . $arrow;
