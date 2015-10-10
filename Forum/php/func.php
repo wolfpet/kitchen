@@ -295,7 +295,7 @@ function print_threads_ex($result, &$content, &$max_thread_id, $limit = 200, $co
 }
 
 function print_subject($subj) {
-  return preg_replace('#([^\.])\.$#', '$1', preg_replace('#(\(\-\))|(\(edited\))#', '', trim($subj)));
+  return preg_replace('#\((?:c|C|с|С)\)#', '©', preg_replace('#([^\.])\.$#', '$1', preg_replace('#(\(\-+\))|(\(edited\))#', '', trim($subj))));
 }
 
 function print_line($row, $collapsed=false, $add_arrow=true) {
@@ -359,13 +359,17 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
   $suffix = '';
   if ($row['modified'] != null) {
     $date = $row['modified'];// . '<span class="edited">*</span>';
-    $suffix = 'edited';
+    $suffix_style = $suffix = 'edited';
+    
   } else {
     $date = $row['created'];
-    if ($length == 0) $suffix = "empty";
+    if ($length == 0) {
+      $suffix_style = 'empty';
+      $suffix = "(-)";
+    }
   }
   if ($suffix != "") {
-    $suffix = ' <sup class="' . $suffix . '">' . $suffix . '</sup>';
+    $suffix = ' <span class="' . $suffix_style . '">' . $suffix . '</span>';
   }
   $subj = encode_subject($subj);
   $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
@@ -493,7 +497,8 @@ function print_line_in_one_thread($row) {
   global $ignored;
   
   $msg_moder = $row['moder'];
-  $subj = translit(/*nl2br(*/htmlentities($row['subject'], HTML_ENTITIES,'UTF-8')/*)*/, $proceeded);
+  //  $subj = translit(/*nl2br(*/htmlentities($row['subject'], HTML_ENTITIES,'UTF-8')/*)*/, $proceeded);
+  $subj = print_subject(encode_subject($row['subject']));
   $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
 
   $length = $row['chars'];
@@ -530,7 +535,22 @@ function print_line_in_one_thread($row) {
   } else {
     $date = $row['created'];
   }
-  $line .= ' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
+  $suffix = '';
+  if ($row['modified'] != null) {
+    $date = $row['modified'];// . '<span class="edited">*</span>';
+    $suffix_style = $suffix = 'edited';
+    
+  } else {
+    $date = $row['created'];
+    if ($length == 0) {
+      $suffix_style = 'empty';
+      $suffix = "(-)";
+    }
+  }
+  if ($suffix != "") {
+    $suffix = ' <span class="' . $suffix_style . '">' . $suffix . '</span>';
+  }
+  $line .= ' <b>' . $enc_user . '</b>' . $suffix . ' ' . '[' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
   
   if (!is_null($row['likes'])) {
     $likes = $row['likes'];

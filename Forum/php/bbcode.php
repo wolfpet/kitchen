@@ -1,16 +1,6 @@
 <?php
 
 function do_bbcode($str) {
-/*  
-  if(!extension_loaded('fastbbcode')) { */
-//  print('<div id="stamp" style="font-size: 8px;color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 8px;z-index: 9999;text-align: right;">phpBBCode&nbsp;</div>');
-/*    return bbcode_format($str);
-  } else 
-    return bbcode($str);
-}
-
-function bbcode_format($str){
-*/  
   // The array of regex patterns to look for
   $format_search = array(
       '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
@@ -172,14 +162,16 @@ function after_bbcode($body) {
     '#\[i\](.*?)\[/i\]#is', // Italics ([i]text[/i]
     '#\[u\](.*?)\[/u\]#is', // Underline ([u]text[/u])
     '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
-    '#(<img src=)#is'
+    '#(<img src=)#is',
+    '#\((?:c|C|с|С)\)#is'
     ), array (
     // replace
     '<strong>$1</strong>',
     '<em>$1</em>',
     '<span style="text-decoration: underline;">$1</span>',
     '<span style="text-decoration: line-through;">$1</span>',
-    '<img style="max-width: 99%;max-height: 99%;" src='
+    '<img style="max-width: 99%;max-height: 99%;" src=',
+    '©'
     ), $body);    
        
   if ($smileys) {

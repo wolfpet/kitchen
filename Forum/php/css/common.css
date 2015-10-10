@@ -105,7 +105,8 @@ blockquote.uncited {
 
 .edited {
   /* color: red; */
-  font-size: 50%;
+  font-size: 80%;
+	font-style: italic;
   color: crimson;
 }
 
@@ -114,7 +115,8 @@ blockquote.uncited {
 }
 
 .empty {
-  font-size:50%;
+  font-size:80%;
+	/*font-style: italic;*/
   color:gray;
 }
 
