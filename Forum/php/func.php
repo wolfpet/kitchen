@@ -358,19 +358,15 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
   }
   $suffix = '';
   if ($row['modified'] != null) {
-    $date = $row['modified'];// . '<span class="edited">*</span>';
-    $suffix_style = $suffix = 'edited';
-    
+    $date = $row['modified'] . '<span class="edited">*</span>';   
   } else {
     $date = $row['created'];
-    if ($length == 0) {
-      $suffix_style = 'empty';
-      $suffix = "(-)";
-    }
   }
-  if ($suffix != "") {
-    $suffix = ' <span class="' . $suffix_style . '">' . $suffix . '</span>';
+  if ($length == 0) {
+    $suffix_style = '';
+    $suffix .= ' <span class="empty">(-)</span>';
   }
+  
   $subj = encode_subject($subj);
   $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
   if ( !is_null( $ban_ends ) && strcmp( $ban_ends, '0000-00-00 00:00:00' ) ) {
