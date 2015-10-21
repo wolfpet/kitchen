@@ -96,11 +96,21 @@ function insertBBCode(fieldId, tag)
     } 
   }
  
+  var msgbody = document.getElementById("msgbody");
+  //console.log("tag=" + tag + " message to quote? " + (msgbody != null));
   if (st.length > 0) { // if there is selection
     element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + "[" + tag + "]" + st + "[/" + tag + "]" + 
     element.value.substring(element.value.length - tl); 
     if (element.setSelectionRange) { 
       element.setSelectionRange(element.value.length - tl, element.value.length - tl); 
+    }
+  } else if (tag == "quote" && msgbody != null && getSelectedTextWithin(msgbody) != "") {
+    // insert quoted text at insertion
+    var quote = getSelectedTextWithin(msgbody);
+    var textToInsert = '[' + tag +']' + quote + '[/' + tag +']';
+    element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + textToInsert + element.value.substring(element.value.length - tl); 
+    if (element.setSelectionRange) { 
+      element.setSelectionRange(ss + textToInsert.length, ss + textToInsert.length); 
     }
   } else { // no selection, insert the tag at selection start
     if (element.value.substring(0, ss).lastIndexOf('[/' + tag + ']') >= element.value.substring(0, ss).lastIndexOf('[' + tag /*+ ']'*/)) {  // to support tags like quote=
@@ -172,4 +182,43 @@ function smileys_on() {
     } else {
         document.getElementById('smileys_help').style.display='none';
     }
+}
+
+function getSelectedTextWithin(el) {
+    var selectedText = "";
+    if (el == null) 
+      return selectedText;
+    else if (typeof window.getSelection != "undefined") {
+        var sel = window.getSelection(), rangeCount;
+        if ( (rangeCount = sel.rangeCount) > 0 ) {
+            var range = document.createRange();
+            for (var i = 0, selRange; i < rangeCount; ++i) {
+                range.selectNodeContents(el);
+                selRange = sel.getRangeAt(i);
+                if (selRange.compareBoundaryPoints(range.START_TO_END, range) == 1 && selRange.compareBoundaryPoints(range.END_TO_START, range) == -1) {
+                    if (selRange.compareBoundaryPoints(range.START_TO_START, range) == 1) {
+                        range.setStart(selRange.startContainer, selRange.startOffset);
+                    }
+                    if (selRange.compareBoundaryPoints(range.END_TO_END, range) == -1) {
+                        range.setEnd(selRange.endContainer, selRange.endOffset);
+                    }
+                    selectedText += range.toString();
+                }
+            }
+        }
+    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+        var selTextRange = document.selection.createRange();
+        var textRange = selTextRange.duplicate();
+        textRange.moveToElementText(el);
+        if (selTextRange.compareEndPoints("EndToStart", textRange) == 1 && selTextRange.compareEndPoints("StartToEnd", textRange) == -1) {
+            if (selTextRange.compareEndPoints("StartToStart", textRange) == 1) {
+                textRange.setEndPoint("StartToStart", selTextRange);
+            }
+            if (selTextRange.compareEndPoints("EndToEnd", textRange) == -1) {
+                textRange.setEndPoint("EndToEnd", selTextRange);
+            }
+            selectedText = textRange.text;
+        }
+    }
+    return selectedText;
 }
