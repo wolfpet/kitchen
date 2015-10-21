@@ -97,6 +97,7 @@ function insertBBCode(fieldId, tag)
   }
  
   var msgbody = document.getElementById("msgbody");
+  var subject = msgbody != null ? document.getElementById("subj") : null;
   //console.log("tag=" + tag + " message to quote? " + (msgbody != null));
   if (st.length > 0) { // if there is selection
     element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + "[" + tag + "]" + st + "[/" + tag + "]" + 
@@ -104,9 +105,10 @@ function insertBBCode(fieldId, tag)
     if (element.setSelectionRange) { 
       element.setSelectionRange(element.value.length - tl, element.value.length - tl); 
     }
-  } else if (tag == "quote" && msgbody != null && getSelectedTextWithin(msgbody) != "") {
+  } else if (tag == "quote" && msgbody != null && (getSelectedTextWithin(msgbody) != "" || getSelectedTextWithin(subject) != "")) {
     // insert quoted text at insertion
     var quote = getSelectedTextWithin(msgbody);
+    if (quote == "") quote = getSelectedTextWithin(subject);
     var textToInsert = '[' + tag +']' + quote + '[/' + tag +']';
     element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + textToInsert + element.value.substring(element.value.length - tl); 
     if (element.setSelectionRange) { 
