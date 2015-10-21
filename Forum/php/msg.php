@@ -42,11 +42,11 @@ function report_on()
     } 
     if (!is_null($action)) {
       if (!strcmp($action, "like")) {
-        if (like($user_id, $msg_id, 1) == false) {
+        if (like($user_id, $msg_id, 1) === false) {
           die('Query failed');
         }
       } else if (!strcmp($action, "dislike")) {
-        if (like($user_id, $msg_id, -1) == false) {
+        if (like($user_id, $msg_id, -1) === false) {
           die('Query failed');
         }
       } else if (!strcmp($action, "bookmark")) {
