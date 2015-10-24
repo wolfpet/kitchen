@@ -1055,6 +1055,50 @@ function rutube($body, $embed = true) {
 			$body
 		);
 		
+	return dailymotion($result);
+}
+
+// Dailymotion URLs e.g. http://www.dailymotion.com/video/x3anr9r_cat-goes-nuts-chasing-light-reflection_fun
+function dailymotion($body, $embed = true) {
+	$result = preg_replace_callback('#(?<!\[url(=|]))((?:https?://)?(?:www\.)?dailymotion\.com/video/([\w-]{6,8}_?[^\s<\]"]*)(?:(?:\?|&)[^\s<\]"]*)?)#i',
+		function ($matches) use ($embed) {
+      
+      $url = $matches[2];
+			$id  = $matches[3];
+			$obj2 = file_get_contents("https://api.dailymotion.com/video/" . $id . "?fields=allow_embed,embed_html,title,duration,thumbnail_360_url");
+      // Example: {"allow_embed":true,"embed_html":"<iframe frameborder=\"0\" width=\"480\" height=\"270\" src=\"\/\/www.dailymotion.com\/embed\/video\/x26ezj5\" allowfullscreen><\/iframe>","title":"Greetings","duration":70}
+			// var_dump($obj2); 
+      if($obj2 === FALSE) return $url;
+      
+			$ar2 = json_decode($obj2);       
+			$new_body = $url;
+      
+			if ( $ar2 !== false ) {
+        // calculate duration
+        $di = intval($ar2->duration);
+        $duration = '';
+        if (((int)($di / 3600)) > 0) {
+          $duration .= ((int)($di / 3600)).':';
+        }
+        $di %= 3600;
+        $duration .= ((int)($di / 60)) . ':' . ($di % 60);
+        $title = $ar2->title;
+        
+        if ($embed && $ar2->allow_embed) {
+          $new_body = preg_replace(array('#<iframe (.*)></iframe>#i', '#width="([0-9]*)"#i', '#height="([0-9]*)"#i'), array('[iframe $1]','width="480"','height="320"'), $ar2->embed_html);
+          $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
+        } else {
+          $thumbnail = $ar2->thumbnail_360_url;
+          $new_body .= "\n[i][color=lightslategrey]( " . "[b]" . $title . "[/b]; " . $duration . ")[/color][/i] ";
+          $new_body .= "\n[img=" . $thumbnail . "]";
+        }
+        
+			 }
+			 return $new_body;
+			},
+			$body
+		);
+		
 	return $result;
 }
 
