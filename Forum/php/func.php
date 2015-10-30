@@ -317,6 +317,8 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
 
   global $show_hidden;
   global $ignored;
+  
+  global $user;
 
   $b_start = '';
   $b_end = '';
@@ -423,8 +425,8 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
 
   $arrow = ''; 
 
-  if ($add_arrow) {
-    $arrow.= '<img border=0 src="images/up.png" alt="Up"';
+  if ($add_arrow && $user != 'Merlin') {
+    $arrow.= '<img border=0 src="images/up.png" alt="Up" title="Back to top"';
     $arrow.= ' onclick="javascript:scroll2Top(\'body\');" onmouseout="this.style.opacity = 0.2;" style="opacity:0.2" onmouseover="this.style.opacity=1;" align="bottom">';
   }
 
