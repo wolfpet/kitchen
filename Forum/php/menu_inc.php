@@ -16,7 +16,7 @@
 ?>
 <tr>
 <td align="left">
-<a target="_top" href="m.php" title="Mobile version"><img src="images/ukrainian-flag2.png" alt="Кирдык"/></a>
+<a target="_top" href="m.php" title="Mobile version"><img src="images/ukrainian-flag3.png" alt="Кирдык"/></a>
 <!--<h3><?php print($title);?></h3>-->
 <!--<b>Public announcements go here</b>-->
 </td>
