@@ -41,6 +41,9 @@ function load_threads(div, id, count) {
               max_id = text.substring(id + 3, start);
               console.log("new max id=" + (max_id));
               div.innerHTML = div.innerHTML + " " + text.substring(start);
+              if (instrument !== undefined) {
+                instrument("#" + div.id);
+              }
             }
         } else {
             // alert('Error: ' + xhr.status); // An error occurred during the request.
@@ -55,17 +58,29 @@ function load_threads(div, id, count) {
 }
 
 function scroll2Top(element){ 
-  var ele = document.getElementById(element); 
-  setTimeout(window.scrollTo(ele.offsetLeft,ele.offsetTop), 100);
+  var ele = document.getElementById(element);
+  if (ele != null) {
+    var sidebar = document.getElementById("sidebar");
+    if (sidebar == null)
+      setTimeout(window.scrollTo(ele.offsetLeft,ele.offsetTop), 100);
+    else
+      sidebar.scrollTop = 0;
+  } else {
+    console.log("Cannot scroll to " + element);
+  }
 }
 
 function load_more() {
 	var div = document.getElementById("threads");
-	var contentHeight = document.getElementById("body").offsetHeight;
+  var parent = document.getElementById("body");
+	var contentHeight = parent.offsetHeight;
 	var yOffset = window.pageYOffset; 
 	var y = yOffset + window.innerHeight;
 	if ( y >= contentHeight - 300) {
 		load_threads(div, max_id, limit);
+    if (instrument !== undefined) {
+      instrument("#" + div.id);
+    }
 	}
 }
 
@@ -76,3 +91,10 @@ function set_max_id(id, how_many) {
 }
 
 window.onscroll = load_more;
+
+$( "#sidebar" ).scroll(function() {
+  if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 300) {
+    var div = document.getElementById("threads");
+		load_threads(div, max_id, limit / 2);    
+  }
+});

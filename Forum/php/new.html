@@ -1,0 +1,118 @@
+<Html>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Форум "Кирдык"</title>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<META name="description" content="Форум канадских эмигрантов">
+<link rel="stylesheet" type="text/css" href="css/common.css?<?=filemtime('css/common.css')?>">
+<link rel="stylesheet" type="text/css" href="css/disc2.css?<?=filemtime('css/disc2.css')?>">
+<link rel="stylesheet" type="text/css" href="css/new.css?<?=filemtime('css/new.css')?>">
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery.pep.js"></script>
+<script language="javascript">
+
+function load_bottom(href) {
+  $("#main").load(href, null, function() {
+    instrument("#main");
+  });    
+}
+
+function load_contents(href) {
+  $("#sidebar").load(href, null, function() {  
+    instrument("#sidebar");
+    // scroll to anchor if found
+    if (href.indexOf("#") != -1) {
+      var id = href.split("#");
+      var target = "#" + id[1];
+      // Scroll div to the top
+      $(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(this).find(target).offset().top);
+    }
+  });
+}
+
+function instrument(selector, default_window) {
+
+  if (default_window == null) {
+    default_window = $(selector).find('base').attr('target');
+  }
+
+  $(selector).find("a:not([href^='javascript'])").each(function() {
+    var href = this.href;
+    // console.log("Instrumenting " + href + " in " + default_window);
+    if (href == null) return;
+    href = href.trim();
+    if (href.indexOf('#') == 0) {
+      this.href = "javascript:scroll2Top('" + href.substring(1) + "');";
+    } else if (href.indexOf('javascript') != 0) {
+      var target = this.target;
+      target = (target == null || target.trim() == "") ? default_window : target;
+      this.href = "javascript:load_" + target + "('" + href + "');"
+    }
+  });
+
+  $(selector).find('form').each(function() {
+    var id = "#" + $(this).attr('id'), method = this.method, action = this.action; 
+    console.log("Form " + id + " action=" + action + " method=" + method);    
+    $(id).submit(function(e) {
+      $.ajax({
+             type: method,
+             url: action,
+             data: $(id).serialize(), // serializes the form's elements.
+             success: function(data)
+             {
+                 $("#main").html(data); // show response from the php script.
+                 instrument("#main");
+             }
+           });
+      e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+  });  
+  console.log("instrumentation ended for " + selector); 
+}
+
+$( document ).ready(function() {
+    var i = 0;
+    
+    var dragging = function(ev, e){
+      var event = ev.originalEvent;
+      //$('#position').html("drag: " + event.pageX +', '+ event.pageY);
+      $('#sidebar').css("height", $("#dragbar").offset().top);
+    };
+    
+    $('.pep').pep({
+      axis:   'y',
+      constrainTo : 'window', // 
+      drag : dragging,
+      //rest : dragging,
+      stop : dragging,
+      shouldEase : false,
+      debug: false
+    });
+
+    // load initial content
+    load_contents("top.php");
+    load_bottom ("welc.php");
+});
+</script>
+</head>
+<body id="body">
+<!--
+  <div id="header">
+      header
+      <span id="mousestatus"></span>
+      <span id="clickevent"></span>
+  </div>
+-->  
+  <div id="sidebar">
+      <!--<span id="position"></span>-->
+  </div>
+  <div id="dragbar" class="pep"></div>
+  <div id="main">
+  </div>
+<!--  
+  <div id="footer">
+      footer
+  </div>
+-->  
+</body>
+</html>
