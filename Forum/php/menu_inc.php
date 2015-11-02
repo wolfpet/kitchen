@@ -2,7 +2,7 @@
 /*$Id: menu_inc.php 875 2013-01-30 17:10:57Z dmitriy $*/
 ?>
 <?php notify_about_new_pm($user_id, $last_pm_check_time);?>
-<div id="safe_mode_ind">&nbsp;&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "Safe Mode" : ""?>&nbsp;&nbsp;&nbsp;&nbsp;</div><table width="100%">
+<table width="100%">
 <?php
     if (!is_null($err_login) && strlen($err_login) > 0) {
 ?>
@@ -38,7 +38,9 @@ Username: <input type="text" id="user" name="user" maxlength="64" size="16" valu
 ?>
 <td align="right" valign="bottom">
 <!--<table><tr><td align="right">
-</td></tr><tr><td align="right">-->[ <a href="<?php 
+</td></tr><tr><td align="right">-->
+<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?>
+[ <a href="<?php 
     $url = $root_dir . $cur_page . '?logout=true';
     if (!is_null( $author_id ) ) { 
         $url .= '&author_id=' . $author_id;
