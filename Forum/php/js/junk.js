@@ -4,6 +4,8 @@ var weight_collapsed = 'normal'; // bold
 var weight_normal = 'normal';
 
 function getDL(target) {
+  // get the span
+  target = target.parentNode;
   // find the end of message title  
   while (target != null && target.tagName != "BR") {
     target = target.nextSibling;
