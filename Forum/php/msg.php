@@ -189,14 +189,14 @@ Closed |
 <BR>
 <?php
 $footer = '';
+if (strlen($bookmarks) > 0) {
+  $footer .= ' <FONT color="darkblue">' . $bookmarks . '</FONT>';
+}
 if (strlen($likes) > 0) {
   $footer .= ' <FONT color="green">' . $likes . '</FONT>';
 }
 if (strlen($dislikes) > 0) {
   $footer .= ' <FONT color="red">' . $dislikes . '</FONT>';
-}
-if (strlen($bookmarks) > 0) {
-  $footer .= ' <FONT color="darkblue">' . $bookmarks . '</FONT>';
 }
 if (strlen($reads) > 0) {
   $footer .= ' <FONT color="lightgray">' . $reads . '</FONT>';
