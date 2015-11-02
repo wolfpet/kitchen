@@ -425,7 +425,7 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
 
   $arrow = ''; 
 
-  if ($add_arrow && $user != 'Merlin') {
+  if ($add_arrow && $user != 'Merlin' && $user != 'nester') {
     $arrow.= '<img border=0 src="images/up.png" alt="Up" title="Back to top"';
     $arrow.= ' onclick="javascript:scroll2Top(\'body\');" onmouseout="this.style.opacity = 0.2;" style="opacity:0.2" onmouseover="this.style.opacity=1;" align="bottom">';
   }
@@ -1108,7 +1108,7 @@ function twitter($body, $embed = true) {
   if (!$embed) return $body;
   
   // e.g. https://twitter.com/elonmusk/status/627040381729906688
-  $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)';
+  $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)(?:/[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
     function ($matches) use ($embed, $pattern) {
