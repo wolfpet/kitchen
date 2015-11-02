@@ -23,7 +23,7 @@ if (!is_null($user_id) && $user_id != null && false) {
 <link rel="stylesheet" type="text/css" href="css/m.css?<?=filemtime('css/m.css')?>">
 <meta name="viewport" content="width=240, height=320, user-scalable=yes, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
 </head> 
-<body><a target="_top" href="/" title="Full version"><img src="images/ukrainian-flag2.png" alt="Кирдык"/></a><!--<form method="post" action="" id="form1" style="display:inline;">-->
+<body><a target="_top" href="/" title="Full version"><img src="images/ukrainian-flag3.png" alt="Кирдык"/></a><!--<form method="post" action="" id="form1" style="display:inline;">-->
 <?php
 #require('menu_inc.php');
     print_pages($max_page, $page, '_self', $cur_page);
