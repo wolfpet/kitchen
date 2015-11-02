@@ -39,7 +39,9 @@ function instrument(selector, default_window) {
   $(selector).find("a:not([href^='javascript'])").each(function() {
     var href = this.href;
     // console.log("Instrumenting " + href + " in " + default_window);
-    if (href == null) return;
+    if (href == null || this.target == "_blank") {
+      return;
+    }
     href = href.trim();
     if (href.indexOf('#') == 0) {
       this.href = "javascript:scroll2Top('" + href.substring(1) + "');";
