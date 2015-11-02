@@ -85,15 +85,21 @@ function report_on()
       }
    }
    $msg_bookmark = NULL;
+   $bookmarks = '';
    if (!is_null($user_id) && is_numeric($user_id)) { 
-     $query = 'SELECT id from confa_bookmarks where user=' . $user_id . ' and post=' . $msg_id;
+     $query = 'SELECT b.id, b.user, u.username from confa_bookmarks b, confa_users u where b.user=u.id and b.post=' . $msg_id; 
      $result = mysql_query($query);
      if (!$result) {
         mysql_log( __FILE__ . ":" . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
      }
-     $row = mysql_fetch_assoc($result);
-     $msg_bookmark = $row['id'];
+     while ($row = mysql_fetch_assoc($result)) {
+       if ($row['user'] == $user_id) { 
+        $msg_bookmark = $row['id'];
+       }
+       if (strlen($bookmarks) > 0) $bookmarks .= ', ';
+       $bookmarks .= $row['username'];
+     }
    }
 
 require("msg_inc.php");
@@ -125,7 +131,6 @@ Closed |
    if (is_null($msg_bookmark)) {
        print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=bookmark">Bookmark</a>');
    } else {
-//     print('<a target="bottom" href="javascript:unbookmark_on();">In bookmarks</a><span id="unbookmark" style="display:none;">: <a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=unbookmark">Remove</a></span>');
        print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=unbookmark"><font color="black">In bookmarks</font></a>');
    }
    if ($thread_owner && $managed) {
@@ -190,6 +195,9 @@ if (strlen($likes) > 0) {
 if (strlen($dislikes) > 0) {
   $footer .= ' <FONT color="red">' . $dislikes . '</FONT>';
 }
+if (strlen($bookmarks) > 0) {
+  $footer .= ' <FONT color="darkblue">' . $bookmarks . '</FONT>';
+}
 if (strlen($reads) > 0) {
   $footer .= ' <FONT color="lightgray">' . $reads . '</FONT>';
 }
@@ -197,7 +205,6 @@ if (isset($reports) && $reports['boyan'] != '') {
   $footer .= ' <img border=0 src="' . $root_dir . $boyan_img . '" valign="middle"/>&nbsp;<span style="color:gray">' . $reports['boyan'].'</span>';
 }
 if (isset($reports) && $reports['nsfw'] != '') {
-  // $footer .= ' <span class="nsfw" title="'.$reports['nsfw'].'">NSFW</span><span style="color:gray">('.(substr_count($reports['nsfw'], ',')+1).')</span>';
   $footer .= ' <span class="nsfw">nsfw</span>&nbsp;<span style="color:gray">'.$reports['nsfw'].'</span>';
 }
 
