@@ -10,15 +10,38 @@
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/jquery.pep.js"></script>
 <script language="javascript">
+var sidebar_height = "";
+var dragbar_top = "";
 
 function load_bottom(href) {
   $("#main").load(href, null, function() {
+    console.log("load_bottom " + href);
     instrument("#main");
+    // add Close button
+    $("#main").prepend("<a id='close' href='javascript:close_main();'></a>");
+    // restore positions
+    $("#sidebar").css({ height: sidebar_height });
+    $("#dragbar").css({ top: dragbar_top });
+    // show contents
+    $("#dragbar").show();
+    $("#main").show(); 
   });    
 }
 
+function close_main() {
+  console.log("close_main");
+  // save sizes
+  sidebar_height = $("#sidebar").css( "height" ); 
+  dragbar_top = $("#dragbar").css( "top" ); 
+
+  $("#main").hide(); 
+  $("#dragbar").hide();
+
+  $("#sidebar").css({ height: "99%" });
+}
+
 function load_contents(href) {
-  $("#sidebar").load(href, null, function() {  
+  $("#sidebar").load(href, null, function() {
     instrument("#sidebar");
     // scroll to anchor if found
     if (href.indexOf("#") != -1) {
@@ -78,7 +101,7 @@ $( document ).ready(function() {
     var dragging = function(ev, e){
       var event = ev.originalEvent;
       //$('#position').html("drag: " + event.pageX +', '+ event.pageY);
-      $('#sidebar').css("height", $("#dragbar").offset().top);
+      //$('#sidebar').css("height", $("#dragbar").offset().top);
     };
     
     $('.pep').pep({
@@ -108,7 +131,7 @@ $( document ).ready(function() {
   <div id="sidebar">
       <!--<span id="position"></span>-->
   </div>
-  <div id="dragbar" class="pep"></div>
+  <div id="dragbar" class="non-pep"></div>
   <div id="main">
   </div>
 <!--  
