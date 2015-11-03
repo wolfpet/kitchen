@@ -1000,7 +1000,7 @@ function youtube($body, $embed = true) {
       }
       if ($embed) {
           //$new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?fs=1&enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen]';
-          $new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"]';
+          $new_body = '[iframe id="youtube-video" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0" allowfullscreen]';
           if (isset($title)) {
             $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
           } else {
@@ -1043,7 +1043,7 @@ function rutube($body, $embed = true) {
         $title = $ar2->title;
         
         if ($embed) {
-          $new_body = preg_replace(array('#<iframe (.*)></iframe>#i', '#width="([0-9]*)"#i', '#height="([0-9]*)"#i'), array('[iframe $1]','width="480"','height="320"'), $ar2->html);
+          $new_body = preg_replace(array('#<iframe (.*)></iframe>#i', '#width="([0-9]*)"#i', '#height="([0-9]*)"#i'), array('[iframe id="rutube-video" $1]','width="480"','height="320"'), $ar2->html);
           $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
         } else {
           $thumbnail = $ar2->thumbnail_url;
@@ -1087,7 +1087,7 @@ function dailymotion($body, $embed = true) {
         $title = $ar2->title;
         
         if ($embed && $ar2->allow_embed) {
-          $new_body = preg_replace(array('#<iframe (.*)></iframe>#i', '#width="([0-9]*)"#i', '#height="([0-9]*)"#i'), array('[iframe $1]','width="480"','height="320"'), $ar2->embed_html);
+          $new_body = preg_replace(array('#<iframe (.*)></iframe>#i', '#width="([0-9]*)"#i', '#height="([0-9]*)"#i'), array('[iframe id="dailymotion-video" $1]','width="480"','height="320"'), $ar2->embed_html);
           $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
         } else {
           $thumbnail = $ar2->thumbnail_360_url;
@@ -1501,7 +1501,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
         $content_flags |= 2;
     }
     $new_body = render_for_db($body);
-    if (strcmp($body, $new_body) != 0 || /* check for vimeo/coub/fb clips */ strcmp($body, before_bbcode($body)) != 0) {
+    if (strcmp($body, $new_body) != 0 || /* check for vimeo/coub/fb clips */ strcmp($body, before_bbcode($body)) != 0 || preg_match('/id="[a-z]*-video"/',$new_body)) {
         $content_flags |= 4;
     }
     $ibody = '\'' . mysql_escape_string($new_body) . '\'';
