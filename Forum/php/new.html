@@ -61,16 +61,23 @@ function instrument(selector, default_window) {
 
   $(selector).find("a:not([href^='javascript'])").each(function() {
     var href = this.href;
-    // console.log("Instrumenting " + href + " in " + default_window);
+    //console.log("Instrumenting " + href + " in " + default_window);
     if (href == null || this.target == "_blank") {
+      //console.log("Skipped.");
+      return;
+    } else if (href.indexOf("#") == href.length - 1) {
+      //console.log("Onclick " +  this.onclick + " click=" + this.click);
+      this.href = "javascript:void(0)";
       return;
     }
     href = href.trim();
     if (href.indexOf('#') == 0) {
+      //console.log("Replaced with 'scroll2top'");
       this.href = "javascript:scroll2Top('" + href.substring(1) + "');";
     } else if (href.indexOf('javascript') != 0) {
       var target = this.target;
       target = (target == null || target.trim() == "") ? default_window : target;
+      //console.log("Replaced with 'load_" + target + "'");
       this.href = "javascript:load_" + target + "('" + href + "');"
     }
   });
@@ -101,7 +108,7 @@ $( document ).ready(function() {
     var dragging = function(ev, e){
       var event = ev.originalEvent;
       //$('#position').html("drag: " + event.pageX +', '+ event.pageY);
-      //$('#sidebar').css("height", $("#dragbar").offset().top);
+      $('#sidebar').css("height", $("#dragbar").offset().top);
     };
     
     $('.pep').pep({
@@ -120,7 +127,7 @@ $( document ).ready(function() {
 });
 </script>
 </head>
-<body id="body">
+<body id="html_body">
 <!--
   <div id="header">
       header
@@ -128,12 +135,14 @@ $( document ).ready(function() {
       <span id="clickevent"></span>
   </div>
 -->  
+  <!-- top frame -->
   <div id="sidebar">
       <!--<span id="position"></span>-->
   </div>
+  <!-- separator --> 
   <div id="dragbar" class="non-pep"></div>
-  <div id="main">
-  </div>
+  <!-- bottom frame -->
+  <div id="main"></div>
 <!--  
   <div id="footer">
       footer

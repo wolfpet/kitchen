@@ -3,7 +3,7 @@
   include_facebook_api_if_required($msgbody);
   initialize_highlightjs_if_required($msgbody);
 ?>
-<h3 id="subj"><?php print($subject); ?></h3>
+<h3 id="subject"><?php print($subject); ?></h3>
 Author: <b><?php print($author . '</b>' . ' '); 
 if (!is_null($views)) {
   print(" [$views views] " );

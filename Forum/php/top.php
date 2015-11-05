@@ -14,7 +14,7 @@ require_once('mysql_log.php');
 <script language="JavaScript" src="<?=autoversion('js/autoload.js')?>"></script>
 <base target="bottom">
 </head>
-<body id="body"> 
+<body id="html_body"> 
 <!--
 <table width="100%"><tr><td width="40%"><H4></H4></td>
 <td width="60%" align="right">

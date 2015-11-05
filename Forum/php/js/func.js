@@ -1,6 +1,8 @@
-  function insertTag(fieldId, tagId)
-  {
+  function insertTag(fieldId, tagId) {
     var myField = fieldId == null ? lastRussianField : document.getElementById(fieldId);
+    console.log("insertTag('" + fieldId + "'," + tagId + "): " + myField);
+    if (typeof myField == 'undefined' || myField == null) return;
+
     var startTag, endTag;
     if (myField != null)
     {
@@ -76,10 +78,11 @@ function insertURL(element) {
   }, 4);
 }
 
-function insertBBCode(fieldId, tag)
-{
+function insertBBCode(fieldId, tag) {
   var element = document.getElementById(fieldId);
-
+  console.log("insertBBCode('" + fieldId + "','" + tag + "'): " + element);
+  if (typeof element == 'undefined' || element == null) return;
+  
   // get selection start, end and selected content
   var ss = element.selectionStart;
   var se = element.selectionEnd;
@@ -97,7 +100,7 @@ function insertBBCode(fieldId, tag)
   }
  
   var msgbody = document.getElementById("msgbody");
-  var subject = msgbody != null ? document.getElementById("subj") : null;
+  var subject = msgbody != null ? document.getElementById("subject") : null;
   //console.log("tag=" + tag + " message to quote? " + (msgbody != null));
   if (st.length > 0) { // if there is selection
     element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + "[" + tag + "]" + st + "[/" + tag + "]" + 

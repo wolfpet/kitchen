@@ -427,7 +427,7 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
 
   if ($add_arrow && $user != 'Merlin' && $user != 'nester') {
     $arrow.= '<img border=0 src="images/up.png" alt="Up" title="Back to top"';
-    $arrow.= ' onclick="javascript:scroll2Top(\'body\');" onmouseout="this.style.opacity = 0.2;" style="opacity:0.2" onmouseover="this.style.opacity=1;" align="bottom">';
+    $arrow.= ' onclick="javascript:scroll2Top(\'html_body\');" onmouseout="this.style.opacity = 0.2;" style="opacity:0.2" onmouseover="this.style.opacity=1;" align="bottom">';
   }
 
   return $line . $arrow;

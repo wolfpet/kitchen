@@ -14,7 +14,7 @@ require_once('html_head_inc.php');
 <script language="JavaScript" src="<?=autoversion('js/autoload.js')?>"></script>
 <base target="contents">
 </head>
-<body id="body">
+<body id="html_body">
 <!--<table width="95%"><tr>
 <td>-->
 <!--</td>

@@ -72,7 +72,11 @@ function scroll2Top(element){
 
 function load_more() {
 	var div = document.getElementById("threads");
-  var parent = document.getElementById("body");
+  var parent = document.getElementById("html_body");
+  if (parent == null || div == null) {
+    console.log("Something is not right: threads or html body element is not found");
+    return;
+  }
 	var contentHeight = parent.offsetHeight;
 	var yOffset = window.pageYOffset; 
 	var y = yOffset + window.innerHeight;
@@ -93,7 +97,7 @@ function set_max_id(id, how_many) {
 window.onscroll = load_more;
 
 $( "#sidebar" ).scroll(function() {
-  if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 300) {
+  if($(this)[0].scrollHeight - 300 > 0 && $(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 300) {
     var div = document.getElementById("threads");
 		load_threads(div, max_id, limit / 2);    
   }
