@@ -99,6 +99,7 @@ window.onscroll = load_more;
 $( "#sidebar" ).scroll(function() {
   if($(this)[0].scrollHeight - 300 > 0 && $(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 300) {
     var div = document.getElementById("threads");
-		load_threads(div, max_id, limit / 2);    
+    if (div != null)
+      load_threads(div, max_id, limit / 2);    
   }
 });

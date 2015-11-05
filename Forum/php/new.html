@@ -84,16 +84,18 @@ function instrument(selector, default_window) {
 
   $(selector).find('form').each(function() {
     var id = "#" + $(this).attr('id'), method = this.method, action = this.action; 
-    console.log("Form " + id + " action=" + action + " method=" + method);    
-    $(id).submit(function(e) {
+    var parentDiv = $(this).parents("#main, #sidebar");
+    var parentId = "#" + parentDiv.attr('id');
+    console.log("Form " + id + " action=" + action + " method=" + method + " parent div is " + parentId);    
+    $(this).submit(function(e) {
       $.ajax({
              type: method,
              url: action,
-             data: $(id).serialize(), // serializes the form's elements.
-             success: function(data)
-             {
-                 $("#main").html(data); // show response from the php script.
-                 instrument("#main");
+             data: $(this).serialize(), // serializes the form's elements.
+             success: function(data) {
+                 console.log("Loading the response into " + parentId);
+                 parentDiv.html(data); // show response from the php script.
+                 instrument(parentId);
              }
            });
       e.preventDefault(); // avoid to execute the actual submit of the form.
