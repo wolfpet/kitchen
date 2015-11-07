@@ -78,7 +78,7 @@ $(document).ready(function() {
 <span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>
 <?php
 
-    $query=' SELECT email, prop_bold, prop_tz, safe_mode, show_smileys from confa_users where id = ' . $user_id;
+    $query=' SELECT email, prop_bold, prop_tz, show_smileys from confa_users where id = ' . $user_id;
     $result = mysql_query( $query );
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
