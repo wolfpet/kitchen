@@ -60,6 +60,17 @@ function update_new_pm_count($user_id) {
     }
 }
 
+function get_regs_count() {
+    $query = 'SELECT count(*) from confa_regs';
+    $result = mysql_query($query);
+    if (!$result) {
+        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+        die('Query failed');
+    }
+    $row = mysql_fetch_row($result);
+    return intval($row[0]);
+}
+
 function notify_about_new_pm($user_id, $last_login, $target="contents") {
     global $cur_page;
     global $page_pmail;

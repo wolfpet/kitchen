@@ -209,6 +209,7 @@ New ]<?php
 
 <?php
     if (!is_null($moder) && $moder > 0) {
+      $regs = get_regs_count();
 ?>
 &nbsp;
 <SPAN STYLE="background-color: #FFE0E0">
@@ -225,7 +226,6 @@ Users |
         }
 ?>
 
-
 <?php
         if (strcmp($cur_page, $page_m_ips) == 0) {
 ?>
@@ -234,6 +234,19 @@ IPs |
         } else {
 ?>
 <a target="contents" class="menu" href="<?php print($root_dir . $page_m_ips); ?>"><font color="green">IPs</font></a> |
+<?php
+        }
+?>
+
+<?php
+    if ($regs > 0)
+        if (strcmp($cur_page, $page_registrations) == 0) {
+?>
+Registrations<?=$regs > 0 ? '(<font color="red"><b>'.$regs."</b></font>)":""?> |
+<?php
+        } else {
+?>
+<a target="contents" class="menu" href="<?php print($root_dir . $page_registrations); ?>"><font color="green">Registrations<?=$regs > 0 ? '(<b><font color="red">'.$regs."</font></b>)":""?></font></a> |
 <?php
         }
 ?>
