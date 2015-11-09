@@ -11,9 +11,8 @@ require_once('html_head_inc.php');
 <?php
 
 if (!isset($reg_type) ||
-    (isset($reg_type) && $reg_type == REG_TYPE_CLOSED)){
-  print "Go away.";
-  exit;
+    (isset($reg_type) && $reg_type == REG_TYPE_CLOSED)) {
+  die('Изза абьюза форума регистрация прекращена на неопределенный срок.');
 }
 
 if ( strlen($act_link) > 0 ) {
@@ -39,7 +38,6 @@ if ( strlen($act_link) > 0 ) {
         }
         die('The link has expired.'); 
     } 
-    #die('Изза абьюза форума регистрация прекращена на неопределенный срок.');
     $query = 'INSERT into confa_users(created, modified, username, password, email) values(NULL, NULL, \'' . $username . '\', \'' . $password . '\', \'' . $email . '\')';
     $result = mysql_query( $query );
     if (!$result) {
@@ -60,15 +58,8 @@ if ( strlen($act_link) > 0 ) {
 ?>
 
 <body>
-<table width="95%"><tr>
-<td>
-<h3><?php print($title);?></h3>
-</td>
-
-</tr></table>
-
 <?php
-    print('<B>' . $username . '</B>, your account has been activated. Now you may login to the forum<BR><a href="http://' . $host . $root_dir . '">Forum</a>');
+    print('<p><B>' . $username . '</B>, your account has been activated. Now you may login to the <a href="http://' . $host . $root_dir . '" target="_top">forum</a>');
     require_once('tail_inc.php');
 ?>
 

@@ -2,7 +2,8 @@
 /*$Id: new_user_inc.php 381 2009-11-02 20:25:46Z dmitriy $*/
 if ( isset($reg_type) && 
    ( $reg_type == REG_TYPE_OPEN ||
-     $reg_type == REG_TYPE_EMAIL )){ 
+     $reg_type == REG_TYPE_EMAIL ||
+     $reg_type == REG_TYPE_CONFIRM)) { 
 ?>
 <br>
 <form action="<?php print( $root_dir . $page_reg ); ?>" method="post">
@@ -36,7 +37,7 @@ if ( isset($reg_type) &&
 </body>
 </html>
 <?php
-}else if ( isset($reg_type) && $reg_type == REG_TYPE_CLOSED){
+} else if ( isset($reg_type) && $reg_type == REG_TYPE_CLOSED){
   if ( isset($closed_reg_message) && $closed_reg_message != "")
     print $closed_reg_message;
   else{

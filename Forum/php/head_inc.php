@@ -5,6 +5,7 @@
 define('REG_TYPE_OPEN', 0);
 define('REG_TYPE_EMAIL', 1);
 define('REG_TYPE_CLOSED', 2);
+define('REG_TYPE_CONFIRM', 3);
 
 require_once('settings.php');
 $ip          = NULL;
