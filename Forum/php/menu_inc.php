@@ -16,7 +16,9 @@
 ?>
 <tr>
 <td align="left">
-<a target="_top" href="m.php" title="Mobile version"><img src="images/ukrainian-flag3.png" alt="Кирдык"/></a>
+<?php if (isset($banner) && !is_null($banner)) { ?>
+<a target="_top" href="m.php" title="Mobile version"><img src="<?=$banner?>" alt="<?=$title?>"/></a>
+<?php } ?>
 <!--<h3><?php print($title);?></h3>-->
 <!--<b>Public announcements go here</b>-->
 </td>
