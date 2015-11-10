@@ -7,6 +7,9 @@ require_once('head_inc.php');
     $views = 1;
     $in_response ='';
 
+    $version = intval($version);
+    $msg_id  = intval($msg_id);
+    
     // Performing SQL query
 /*    
     $query = 'SELECT p.id, p.subject, p.views, p.status, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' 
@@ -16,8 +19,8 @@ require_once('head_inc.php');
       . $server_tz . '\', \'' . $prop_tz . ':00\') as created, v.body, p.author, u.id as id, t.closed as thread_closed, p.thread_id, t.id, t.author as t_author,'
       . 'p.subject as msg_subject, IF(nv.body is null, p.body, nv.body) as compare_to '
       . 'from confa_users u, confa_posts p, confa_threads t, confa_versions v left join (select * from confa_versions where parent=' 
-      . mysql_real_escape_string($msg_id) . ' and id>' . mysql_real_escape_string($version) . ' limit 1) as nv on v.parent = nv.parent where p.thread_id=t.id and u.id=p.author and p.id=v.parent and p.id=' 
-      . mysql_real_escape_string($msg_id) . ' and v.id=' . mysql_real_escape_string($version);
+      . $msg_id . ' and id>' . $version . ' limit 1) as nv on v.parent = nv.parent where p.thread_id=t.id and u.id=p.author and p.id=v.parent and p.id=' 
+      . $msg_id . ' and v.id=' . $version;
       
     $result = mysql_query($query);    
     if (!$result) {
