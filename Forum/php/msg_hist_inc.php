@@ -13,9 +13,11 @@ function revisions_on() {
 require_once('head_inc.php');
 if (/*is_null($user_id) || !in_array($user_id, $ignored)*/ true) {
   $query = 'SELECT p.id, p.subject, p.views, p.status, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' 
-    . $prop_tz . ':00\') as created, p.body, p.content_flags, p.chars, pp.subject as msg_subject, (select subject from confa_versions where parent=' . $msg_id . ' and id > p.id limit 1) as compare_to'
+    . $prop_tz . ':00\') as created, p.body, p.content_flags, p.chars, pp.subject as msg_subject, (select subject from confa_versions where parent=' 
+    . mysql_real_escape_string($msg_id) . ' and id > p.id limit 1) as compare_to'
     . ' from confa_versions p, confa_posts pp '
-    . ' where pp.id=p.parent and p.parent=' . $msg_id . ' order by p.created desc';
+    . ' where pp.id=p.parent and p.parent=' 
+    . mysql_real_escape_string($msg_id) . ' order by p.created desc';
       
   $result = mysql_query($query);
   if (!$result) {
@@ -83,6 +85,3 @@ print("<!-- mbstring not loaded! -->");
   mysql_free_result($result);
 }
 ?>
-
-
-

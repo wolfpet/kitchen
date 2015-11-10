@@ -21,7 +21,6 @@ $success = false;
 $msg_page = 1;
 
 require_once('head_inc.php');
-//require_once('login_inc.php');
 
 $title = 'Private message';
 
@@ -29,7 +28,7 @@ $title = 'Private message';
     if (is_null($to) || strlen($to) == 0) {
         $err .= "Recipient not defined.";
     } else {
-        $query = 'SELECT id from confa_users where username=\'' . $to . '\' and status != 2';
+        $query = 'SELECT id from confa_users where username=\'' . mysql_real_escape_string($to) . '\' and status != 2';
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -58,7 +57,7 @@ $title = 'Private message';
     
     if (strlen($err) == 0 && !$preview) {
         if ( strlen($ticket) > 0 ) {
-          $query = 'INSERT into confa_tickets(ticket) values(\'' . $ticket . '\')';
+          $query = 'INSERT into confa_tickets(ticket) values(\'' . mysql_real_escape_string($ticket) . '\')';
           $result = mysql_query($query);
           if (!$result) {
               mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);

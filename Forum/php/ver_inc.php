@@ -15,8 +15,11 @@ require_once('head_inc.php');
     $query = 'SELECT u.username, u.moder, v.subject, p.closed as post_closed, v.views, p.id as msg_id, v.status, p.auth, p.parent, CONVERT_TZ(v.created, \'' 
       . $server_tz . '\', \'' . $prop_tz . ':00\') as created, v.body, p.author, u.id as id, t.closed as thread_closed, p.thread_id, t.id, t.author as t_author,'
       . 'p.subject as msg_subject, IF(nv.body is null, p.body, nv.body) as compare_to '
-      . 'from confa_users u, confa_posts p, confa_threads t, confa_versions v left join (select * from confa_versions where parent=' . $msg_id . ' and id>' . $version.' limit 1) as nv on v.parent = nv.parent where p.thread_id=t.id and u.id=p.author and p.id=v.parent and p.id=' . $msg_id . ' and v.id=' . $version;
-    $result = mysql_query($query);
+      . 'from confa_users u, confa_posts p, confa_threads t, confa_versions v left join (select * from confa_versions where parent=' 
+      . mysql_real_escape_string($msg_id) . ' and id>' . mysql_real_escape_string($version) . ' limit 1) as nv on v.parent = nv.parent where p.thread_id=t.id and u.id=p.author and p.id=v.parent and p.id=' 
+      . mysql_real_escape_string($msg_id) . ' and v.id=' . mysql_real_escape_string($version);
+      
+    $result = mysql_query($query);    
     if (!$result) {
         mysql_log( __FILE__, 'query 2 failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');

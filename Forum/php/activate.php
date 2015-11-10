@@ -14,7 +14,7 @@ if (!isset($reg_type) ||
   die('Изза абьюза форума регистрация прекращена на неопределенный срок.');
 }
 if ( strlen($act_link) > 0 ) {
-    $query = 'SELECT username, password, timediff(current_timestamp, created) as td, email, actkey from confa_regs where actkey=\'' . $act_link . '\'';
+    $query = 'SELECT username, password, timediff(current_timestamp, created) as td, email, actkey from confa_regs where actkey=\'' . mysql_real_escape_string($act_link) . '\'';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
