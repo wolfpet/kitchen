@@ -13,7 +13,7 @@ require_once('get_params_inc.php');
         $ip = 'NULL';
     }
     if (!is_null($agent)) {
-        $agent = '\'' . mysql_real_escape_string($agent) . '\'';
+        $agent = '\'' . substr(mysql_real_escape_string($agent), 0, 128) . '\'';
     } else {
         $agent = 'NULL';
     }
