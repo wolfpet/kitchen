@@ -14,6 +14,7 @@ $thread_owner = false;
 </head>
 <body style="background-color: #CCEEEE;" onload="javascript:var field = document.getElementById('<?=is_null($pm_id) ? "to" : "subj"?>'); addEvent(field,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); field.focus();">
 <?php 
+    $re = $pm_id;
     if (is_null($re) || strlen($re)== 0) {
 ?>
 <table width="95%"><tr>
@@ -24,10 +25,10 @@ $thread_owner = false;
 </tr></table>
 
 <?php
-    }
+    }    
     if (!is_null($re) && strlen($re) > 0) {
         $msg_id = $re;
-require("msg_inc.php");
+require("pm_msg_inc.php");
         if (strncasecmp($subj, 're: ', 4)) {
              $subj = 'Re: ' . $subj;
         }
