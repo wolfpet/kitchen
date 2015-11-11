@@ -91,17 +91,19 @@ Username: <input type="text" id="user" name="user" maxlength="64" size="16" valu
     if (strcmp($cur_page, $page_collapsed) == 0) {
 ?>
 <a target="contents" class="menu" href="<?php print($root_dir . $page_collapsed); ?>"><I>Collapsed</I></a> |
-<?php
-    } else {
-?>
+<?php } else { ?>
 <a target="contents" class="menu" href="<?php print($root_dir . $page_collapsed); ?>">Collapsed</a> |
+<?php } ?>
 
+<?php if (isset($orientation) && $orientation == "cols") { ?>
+<a target="_top" class="menu" href=".">Rows</a> |
+<?php } else { ?>
 <a target="_top" class="menu" href="cols.html">Columns</a> |
+<?php } ?>
 
 <a target="_top" class="menu" href="mobile/index.html">Mobile</a> |
 
 <?php
-    }
   if ($logged_in == false) {
     if (strcmp($cur_page, $page_reg) == 0) {
 ?>

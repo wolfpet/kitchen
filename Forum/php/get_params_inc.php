@@ -51,6 +51,9 @@
         if (array_key_exists('last_answered_id2', $_COOKIE)) {
             $last_answered_id = $_COOKIE['last_answered_id2'];
         }
+        if (array_key_exists('orientation', $_COOKIE)) {
+            $orientation = $_COOKIE['orientation'];
+        }
     }
 
     if ( isset($_GET) && is_array($_GET) && count($_GET) > 0 ) {

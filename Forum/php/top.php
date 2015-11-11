@@ -28,7 +28,19 @@ require_once('mysql_log.php');
 
 </tr></table>-->
 <?php
-
+    // do orientation
+    if ( isset($_GET) && is_array($_GET) && count($_GET) > 0 ) {
+        if (array_key_exists('dummy', $_GET)) {
+            $dummy = intval(trim($_GET['dummy']));
+            if ($dummy) {
+              $orientation = "rows";
+              setcookie('orientation', '', time() - 100000, $root_dir, $host, false, true);              
+            } else {
+              $orientation = "cols";
+              setcookie('orientation', $orientation, 1800000000, $root_dir, $host, false, true);              
+            }
+        }
+    }    
 require('menu_inc.php');
 
     $show_hidden = 2;
