@@ -80,7 +80,7 @@ require_once('head_inc.php');
             if ( $row['status'] == 2 ) {
                 $enc_user= '<del>' . $enc_user . '</del>';
             }
-            $line = '<tr><td>' . $num . ' <a target="bottom" href="' . $root_dir . $page_m_user . '?moduserid=' . $id . '"> ' . $enc_user . ' </a>' . '</td><td>' . $id . '</td><td>' . $status . '</td><td>' . $created . '</td></tr>';
+            $line = '<tr><td>' . $num . ' <a target="bottom" href="' . $root_dir . $page_m_user . '?moduserid=' . $id . '"> ' . $enc_user . ' </a>' . '</td><td align="center">' . $id . '</td><td align="center">' . $status . '</td><td align="center">' . $created . '</td></tr>';
             $out .= $line;
             $num++;
         }
