@@ -71,11 +71,11 @@ Username: <input type="text" id="user" name="user" maxlength="64" size="16" valu
 <?php
     if (strcmp($cur_page, $page_bydate) == 0) {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_bydate); ?>?mode=bydate"><I>By date</I></a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_bydate); ?>?mode=bydate"><I id="bydate">By date</I></a> |
 <?php
     } else {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_bydate); ?>?mode=bydate">By date</a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_bydate); ?>?mode=bydate" id="bydate">By date</a> |
 <?php
     }
     if (strcmp($cur_page, $page_expanded) == 0) {

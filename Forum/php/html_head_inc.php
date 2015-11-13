@@ -70,4 +70,28 @@ function selectMsg(id) {
   }
 }
 
+$( document ).ready(function() {
+  var bydate = document.getElementById('bydate');
+  if (bydate !== null) {
+    var update_bydate_counter = function() {
+      // console.log("calling bydate()");
+      $.ajax({
+             type: "get",
+             url: "./api/messages?mode=bydate",
+             success: function(obj) {
+                var count = obj.count;
+                // console.log("bydate=" + count);
+                var text = bydate.innerHTML;
+                var braket = text.indexOf("(");
+                if (braket >= 0) text = text.substring(0, braket);
+                if (count > 0) text += "(<b>" + count + "</b>)";
+                bydate.innerHTML = text;
+             }
+           });      
+    };
+    window.setTimeout( update_bydate_counter, 1000 );
+    window.setInterval(update_bydate_counter, 60000); 
+  }
+});
+
 </script>
