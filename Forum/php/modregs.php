@@ -24,9 +24,10 @@ require_once('head_inc.php');
             $created = $row['created'];
             $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
             $md5 = $row['actkey'];
-            $line = '<tr><td align="center">'. $enc_user . '</td><td align="center">' . $created . '</td><td align="center">'
+            $line = '<tr><td align="center">'. $enc_user . '</td><td align="center">' . $created . '</td><td width="25%" align="center" nowrap>'
               .'<form method="get" action="http://'. $host . $root_dir . $page_activate .'" target="bottom">'
-              .'<input type="hidden" name="act_link" value="'. $md5.'"/><input type="submit" value="Confirm"/></form></td></tr>';
+              .'<input type="hidden" name="act_link" value="'. $md5.'"/><input name="action" type="submit" value="Confirm"/><input name="action" type="submit" value="Decline"/></form>'
+              .'</td></tr>';
             $out .= $line;
             $num++;
         }

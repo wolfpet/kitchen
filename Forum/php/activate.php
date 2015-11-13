@@ -27,14 +27,19 @@ if ( strlen($act_link) > 0 ) {
     $username = $row['username'];
     $password = $row['password'];
     $email = $row['email'];
-    if ($row['td'] > 86400) {
+    $action = strtolower($action);
+    $action_deny = 'decline';
+    if ($row['td'] > 86400 || $action == $action_deny) {
         $query = 'DELETE from confa_regs where username=\'' . $row['username'] . '\'';
         $result = mysql_query( $query );
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
             die('Query failed');
         }
-        die('The link has expired.'); 
+        if ($action == $action_deny)
+          die('The registration of user <b>' . $username. '</b> has been declined.'); 
+        else
+          die('The link has expired.'); 
     } 
     $query = 'INSERT into confa_users(created, modified, username, password, email) values(NULL, NULL, \'' . $username . '\', \'' . $password . '\', \'' . $email . '\')';
     $result = mysql_query( $query );
@@ -49,10 +54,9 @@ if ( strlen($act_link) > 0 ) {
         die('Query failed');
     }
 
-    } else {
-        die('Invalid request');
-    }
-
+  } else {
+      die('Invalid request');
+  }
 ?>
 
 <body>
