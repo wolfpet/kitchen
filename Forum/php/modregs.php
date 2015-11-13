@@ -59,7 +59,7 @@ require('menu_inc.php');
 
 <!--<ol>-->
 <table width="95%">
-<tr><th>Username</th><th>Created</th><th>Status</th></tr>
+<tr><th>Username</th><th>Created</th><th>Action</th></tr>
 <?php print($out); ?>
 </table>
 <!--</ol>-->
