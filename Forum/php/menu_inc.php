@@ -17,7 +17,7 @@
 <tr>
 <td align="left">
 <?php if (isset($banner) && !is_null($banner)) { ?>
-<a target="_top" href="m.php" title="Mobile version"><img src="<?=$banner?>" alt="<?=$title?>"/></a>
+<img src="<?=$banner?>" alt="<?=$title?>"/>
 <?php } ?>
 <!--<h3><?php print($title);?></h3>-->
 <!--<b>Public announcements go here</b>-->
@@ -101,7 +101,8 @@ Username: <input type="text" id="user" name="user" maxlength="64" size="16" valu
 <a target="_top" class="menu" href="cols.html">Columns</a> |
 <?php } ?>
 
-<a target="_top" class="menu" href="mobile/index.html">Mobile</a> |
+<a target="_top" class="menu" href="m.php" title="Flat">Flat</a> |
+<a target="_top" class="menu" href="mobile/index.html">Phone</a> |
 
 <?php
   if ($logged_in == false) {
@@ -127,7 +128,7 @@ Forgot password? |
   }
 ?>
 
-<a target="_blank" class="menu" href="https://github.com/wolfpet/kitchen">Development</a> |
+<a target="_blank" class="menu" href="https://github.com/wolfpet/kitchen">Code</a> |
 
 <a target="contents" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">Refresh</a> 
 
