@@ -2,7 +2,11 @@
 /*$Id: pm_del.php 378 2009-11-02 19:36:24Z dmitriy $*/
 
 require_once('head_inc.php');
-  
+
+    if (isset($pm_id) && !is_null($pm_id)) {
+      $pmdel = array($pm_id);
+    }
+    
     if (!isset($pmdel) || count($pmdel) == 0) {
         $err = 'No messages were selected<BR>';
     } else {
