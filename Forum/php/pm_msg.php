@@ -24,7 +24,7 @@ require("pm_msg_inc.php");
 
 
 <a href="<?php print($root_dir . $page_pmail_send . '?to=' . $author . '&pm_id=' . $msg_id); ?>">Reply to sender (private)</a> |
-<a href="<?php print($root_dir . $page_pm_del . '?pm_id=' . $msg_id); ?>" target="contents">Delete message</a>
+<a href="<?php print($root_dir . $page_pm_del . '?pm_id=' . $msg_id); ?>" target="contents" onclick="return confirm('Delete the message?');">Delete message</a>
 
 
 
