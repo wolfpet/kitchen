@@ -14,8 +14,7 @@ $thread_owner = false;
 </head>
 <body style="background-color: #CCEEEE;" onload="javascript:var field = document.getElementById('<?=is_null($pm_id) ? "to" : "subj"?>'); addEvent(field,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); field.focus();">
 <?php 
-    $re = $pm_id;
-    if (is_null($re) || strlen($re)== 0) {
+    if ((is_null($re) || strlen($re)== 0) && (is_null($pm_id) || strlen($pm_id)== 0)) {
 ?>
 <table width="95%"><tr>
 <td>
@@ -28,24 +27,16 @@ $thread_owner = false;
     }    
     if (!is_null($re) && strlen($re) > 0) {
         $msg_id = $re;
-require("pm_msg_inc.php");
+require("msg_inc.php");
         if (strncasecmp($subj, 're: ', 4)) {
              $subj = 'Re: ' . $subj;
         }
     } else if (!is_null($pm_id) && strlen($pm_id) > 0) {
-      
-    	$query = 'select subject from confa_pm where id=' . $pm_id;
-    	$result = mysql_query($query);
-    	if (!$result) {
-        	mysql_log(__FILE__, ' query failed ' . mysql_error() . ' QUERY: ' . $query);
-        	die('Query failed');
-    	}
-    	$row = mysql_fetch_row($result);
-        if (!is_null($row[0]) && strncasecmp($row[0], 're: ', 4)) {
-    	  $subj = 'Re: ' . $row[0];
-        } else {
-          $subj = $row[0];
-        }
+        $msg_id = $pm_id;
+require("pm_msg_inc.php");
+      if (strncasecmp($subj, 're: ', 4)) {
+             $subj = 'Re: ' . $subj;
+        }        
     }
 
 require('send_inc.php'); 
