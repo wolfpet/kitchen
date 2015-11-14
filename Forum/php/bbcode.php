@@ -136,7 +136,10 @@ function before_bbcode($body) {
 
   // Embedding Twitter links
   $body = twitter($body);
-    
+  
+  // Fix postimage.org tags
+  $body = fix_postimage_tags($body);
+  
   return $body;
 }
 
@@ -211,6 +214,11 @@ function initialize_highlightjs_if_required($body) {
   }
 }
 
+function fix_postimage_tags( $str ) {
+// [url=http://postimage.org/][img]http://s29.postimg.org/gi2p1c6pz/spasibo.jpg[/img][/url]
+  return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]#i", "[img]$1[/img]", $str);
+}
+
 /**
  * Renderers
  */
@@ -228,6 +236,7 @@ function render_for_display($msgbody) {
 function render_for_db($msgbody) {
 
   $msgbody = youtube( $msgbody );
+  $msgbody = fix_postimage_tags( $msgbody );
   
   return $msgbody;
 }
