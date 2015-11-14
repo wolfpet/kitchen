@@ -72,59 +72,13 @@ require_once('html_head_inc.php');
             }
         }
 
-require("msg_inc.php");
+        $action = "";
+        
+require("msg.php");
 
-
-
-if ( $reply_closed ) {
-
-?>
-Closed |
-<?php
-} else {
-?>
-
-
-
-<a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>">Reply</a> |
-<span style="background-color: rgb(224, 224, 224);"><a href="<?php print( $root_dir . $page_pmail_send . '?to=' . $author); ?>">Reply to sender (private)</a> </span>|
-<?php
-}
-?>
-
-<a target="contents" name="<?php print($msg_id); ?>" href="<?php print($root_dir . $page_expanded); ?>?page=<?php print($msg_page . '#' .$msg_id);?>">Synchronize</a> |
-<a target="bottom" href="<?php print($root_dir . $page_thread); ?>?id=<?php print($msg_id); ?>">Thread</a>
-<?php
-
-        if ( !is_null( $moder ) && $moder > 0 ) {
-            print( '&nbsp;&nbsp;&nbsp;<SPAN STYLE="background-color: #FFE0E0">[ ' );
-            if ( $msg_status == 3 ) {
-                print( '<a href="' . $root_dir . 'modcensor.php' . '?action=uncensor&id=' . $msg_id . '"><font color="green">Uncensor message</font></A> |' );
-            } else {
-                print( '<a href="' . $root_dir . 'modcensor.php' . '?action=censor&id=' . $msg_id . '"><font color="green">Censor message</font></A> |' );
-            }
-            if ( $msg_status == 2 ) {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=undelete&id=' . $msg_id . '"><font color="green">Undelete message</font></A> |' );
-            } else {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=delete&id=' . $msg_id . '"><font color="green">Delete message</font></A> |' );
-            }
-            if ( $thread_closed ) {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openthread&id=' . $msg_id . '"><font color="green">Open thread</font></A> |' );
-            } else {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closethread&id=' . $msg_id . '"><font color="green">Close thread</font></A> |' );
-            }
-            if ( $post_closed ) {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openpost&id=' . $msg_id . '"><font color="green">Open post</font></A> ' );
-            } else {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closepost&id=' . $msg_id . '"><font color="green">Close post</font></A> ' );
-            }
-
-            print( ']</SPAN>' );
-        }
-
-    } else {
+   } else {
         print(" You have no rights to access this page." );
-    }
+   }
 ?>
 
 </body>

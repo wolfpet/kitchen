@@ -17,9 +17,16 @@ $managed = true;
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
 <script language="javascript">
-function report_on()
-{
-  var div = document.getElementById("report");  
+function report_on() {
+  toggleDiv("report");
+}
+
+function moderate_on() {
+  toggleDiv("moderate")  
+}
+
+function toggleDiv(id) {
+  var div = document.getElementById(id);  
   if (div != null) {
     if (div.style.display != 'inline')
       div.style.display = 'inline';
@@ -161,26 +168,26 @@ Closed |
    }
 } // !is_null($user)
     if ( !is_null( $moder ) && $moder > 0 ) {
-        print( '&nbsp;&nbsp;&nbsp;<SPAN STYLE="background-color: #FFE0E0">[ ' );
+        print( '&nbsp;&nbsp;<a target="bottom" href="javascript:toggleDiv(\'moderate\');"><font color="green">&gt;&gt;</font></a>&nbsp;<SPAN STYLE="background-color: #FFE0E0; display:none;" id="moderate">[ ' );
         if ( $msg_status == 3 ) {
-            print( '<a href="' . $root_dir . 'modcensor.php' . '?action=uncensor&id=' . $msg_id . '"><font color="green">Uncensor message</font></A> |' );
+            print( '<a href="' . $root_dir . 'modcensor.php' . '?action=uncensor&id=' . $msg_id . '"><font color="green">Uncensor&nbsp;message</font></A> |' );
         } else {
-            print( '<a href="' . $root_dir . 'modcensor.php' . '?action=censor&id=' . $msg_id . '"><font color="green">Censor message</font></A> |' );
+            print( '<a href="' . $root_dir . 'modcensor.php' . '?action=censor&id=' . $msg_id . '"><font color="green">Censor&nbsp;message</font></A> |' );
         }
         if ( $msg_status == 2 ) {
-            print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=undelete&id=' . $msg_id . '"><font color="green">Undelete message</font></A> |' );
+            print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=undelete&id=' . $msg_id . '"><font color="green">Undelete&nbsp;message</font></A> |' );
         } else {
-            print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=delete&id=' . $msg_id . '"><font color="green">Delete message</font></A> |' );
+            print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=delete&id=' . $msg_id . '"><font color="green">Delete&nbsp;message</font></A> |' );
         }
             if ( $thread_closed ) {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openthread&id=' . $msg_id . '"><font color="green">Open thread</font></A> |' );
+                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openthread&id=' . $msg_id . '"><font color="green">Open&nbsp;thread</font></A> |' );
             } else {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closethread&id=' . $msg_id . '"><font color="green">Close thread</font></A> |' );
+                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closethread&id=' . $msg_id . '"><font color="green">Close&nbsp;thread</font></A> |' );
             }
             if ( $post_closed ) {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openpost&id=' . $msg_id . '"><font color="green">Open post</font></A> ' );
+                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openpost&id=' . $msg_id . '"><font color="green">Open&nbsp;post</font></A> ' );
             } else {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closepost&id=' . $msg_id . '"><font color="green">Close post</font></A> ' );
+                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closepost&id=' . $msg_id . '"><font color="green">Close&nbsp;post</font></A> ' );
             }
 
         print( ']</SPAN>' );
