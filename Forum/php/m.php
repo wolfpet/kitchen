@@ -15,7 +15,7 @@ if (!is_null($user_id) && $user_id != null && false) {
     $css = $row['css'];
   } 
 }
-?><title>Кирдык</title>
+?><title>Forum Flat UI</title>
 <script src="js/func.js?<?=filemtime('js/func.js')?>" type="text/javascript"></script>
 <script src="js/translit.js?<?=filemtime('js/translit.js')?>" type="text/javascript"></script>
 <script src="js/ajax.js?<?=filemtime('js/ajax.js')?>" type="text/javascript"></script>
