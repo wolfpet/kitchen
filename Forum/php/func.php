@@ -1010,8 +1010,12 @@ function youtube($body, $embed = true) {
         }
       }
       if ($embed) {
+          $time = '0';
+          if (preg_match('#t=([0-9]+)(?:$|&)#i', $url, $times)) {
+            $time = $times[1];
+          }
           //$new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?fs=1&enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen]';
-          $new_body = '[iframe id="youtube-video" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0" allowfullscreen]';
+          $new_body = '[iframe id="youtube-video" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1&start='.$time.'&wmode=transparent&origin=http://' . $host . '" frameborder="0" allowfullscreen]';
           if (isset($title)) {
             $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
           } else {
