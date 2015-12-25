@@ -9,7 +9,7 @@ require_once('get_params_inc.php');
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
         #For ban history:
-        if ( $ban_time > 0 && ( is_null( $ban_reason ) || strlen(trim($ban_reason)) == 0 ) ) {
+        if ( $bantime > 0 && ( is_null( $ban_reason ) || strlen(trim($ban_reason)) == 0 ) ) {
             $err_ban_reason='Reason is required';
 require_once('moduser.php');
             exit;

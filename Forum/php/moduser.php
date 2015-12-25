@@ -64,7 +64,9 @@ require_once('html_head_inc.php');
             $ips .= '<a target="contents" href="' . $root_dir . $page_m_users . '?byip=' . $row[0] . '">'. $row[0] . '</a> ';
         }
 
-        $query = 'SELECT username,  pban, CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, status, moder, ban, email, CONVERT_TZ(ban_ends, \'-5:00\', \'' . $prop_tz . ':00\') as ban_ends from confa_users where id=' . $moduserid;
+        $query = 'SELECT u.username,  u.pban, CONVERT_TZ(u.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, u.status, u.moder, u.ban, u.email, CONVERT_TZ(u.ban_ends, \'' 
+          . $server_tz . '\', \'' . $prop_tz . ':00\') as ban_ends, u2.username as banned_by, h.ban_reason from confa_users u '
+          . 'left join confa_ban_history h on h.victim=u.id and h.expires=u.ban_ends left join confa_users u2 on h.moder=u2.id where u.id=' . $moduserid;
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -79,6 +81,8 @@ require_once('html_head_inc.php');
         $email = $row['email'];
         $ban_ends = $row['ban_ends'];
         $pban = $row['pban'];
+        $banned_reason = $row['ban_reason'];
+        $banned_by = $row['banned_by'];
         if (is_null($email) || strlen($email) == 0) {
             $email = '-';
         }
@@ -89,7 +93,10 @@ require_once('html_head_inc.php');
                 $status = 'Active';
                 if (!is_null($ban_ends) && strcmp($ban_ends, '0000-00-00 00:00:00')) {
                     $banned = true;
-                    $status = 'Banned till ' . $ban_ends;
+                    $status = 'Banned'.(is_null($banned_by) ? '' : ' by <i>'.$banned_by.'</i>').' until ' . $ban_ends;
+                    if (!is_null($banned_reason)) {
+                      $status .= '. Reason: ' . $banned_reason;
+                    }
                 }
                 break;
                 case 2:
@@ -99,7 +106,7 @@ require_once('html_head_inc.php');
         }
 
 ?>
-<h3><?php print( '<del>' . htmlentities($username,HTML_ENTITIES,'UTF-8') . '</del>' ); ?></h3>
+<h3><?php print( htmlentities($username,HTML_ENTITIES,'UTF-8') ); ?></h3>
 <table>
 <tr><td>Account created:</td><td><b><?php print($created); ?></b></td></tr>
 <tr><td>Status:</td><td><b><?php print($status); ?></b> <?php if ($banned && $pban  == 0) { print('<a href="' . $root_dir . $page_ban . '?moduserid=' . $moduserid . '&bantime=-1">Remove ban</a>'); }?></td></tr>
@@ -131,7 +138,7 @@ Ban this user for
             print( 'Reason: ');
         }
 ?>
-<input type="text" id="ban_reason" size="80" maxlength="127" name="ban_reason" value="<?print( $ban_reason );?>"/>
+<input type="text" id="ban_reason" size="80" maxlength="127" name="ban_reason" value=""/>
 <input type="Submit" value="Ban this user"/>
 </form>
 <?php
