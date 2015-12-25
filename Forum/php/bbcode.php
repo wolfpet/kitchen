@@ -106,7 +106,7 @@ function bbcode_naked_urls($str) {
 /** 
  * Run this before bbcode is called to render content before bbcode() had a chance to mess it up
  */
-function before_bbcode($body) {
+function before_bbcode($original_body, &$has_video) {
   global $host;
   
   $body = preg_replace( array (
@@ -132,7 +132,9 @@ function before_bbcode($body) {
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2">$2</a>',  
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2">$2</a></div>'
-    ), $body);    
+    ), $original_body);    
+    
+  if (isset($has_video)) $has_video = strcmp($body, $original_body) != 0;
 
   // Embedding Twitter links
   $body = twitter($body);

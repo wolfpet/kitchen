@@ -1516,7 +1516,9 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
         $content_flags |= 2;
     }
     $new_body = render_for_db($body);
-    if (strcmp($body, $new_body) != 0 || /* check for vimeo/coub/fb clips */ strcmp($body, before_bbcode($body)) != 0 || preg_match('/id="[a-z]*-video"/',$new_body)) {
+    $has_video = false;
+    before_bbcode($body, $has_video);
+    if (/* check for vimeo/coub/fb clips */ $has_video || preg_match('/id="[a-z]*-video"/', $new_body)) {
         $content_flags |= 4;
     }
     $ibody = '\'' . mysql_escape_string($new_body) . '\'';
