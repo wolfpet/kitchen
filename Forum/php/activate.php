@@ -53,7 +53,6 @@ if ( strlen($act_link) > 0 ) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
     }
-
   } else {
       die('Invalid request');
   }
@@ -61,10 +60,12 @@ if ( strlen($act_link) > 0 ) {
 
 <body>
 <?php
-    if (isset($reg_type) && $reg_type == REG_TYPE_CONFIRM) 
-      print('<p>Account <B>' . $username . '</B> has been activated. The user may now login to the <a href="http://' . $host . $root_dir . '" target="_top">forum');
-    else
+    if (isset($reg_type) && $reg_type == REG_TYPE_CONFIRM) {
+      print('<p>Account <B>' . $username . '</B> has been activated. The user may now login to the <a href="http://' . $host . $root_dir . '" target="_top">forum');      
+      post('Welcome, ' . $username.'!', 'Your account has been activated, you may now login to the forum.');
+    } else {
       print('<p><B>' . $username . '</B>, your account has been activated. Now you may login to the <a href="http://' . $host . $root_dir . '" target="_top">forum</a>');
+    }
     require_once('tail_inc.php');
 ?>
 
