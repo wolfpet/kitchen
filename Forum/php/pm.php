@@ -95,7 +95,8 @@ $title = 'Private message';
         if (!is_null($email) && strlen($email) > 0) {
           #$to = $email;
           $subject = "You have new private message on kirdyk.com forum website";
-          $message = $subject . ' sent by ' . $user . ' with subject: ' . $subj;
+          $message = $subject . ' sent by ' . $user . ' with subject: ' . $subj . "\n\n";
+          $message .= $body;
           $from = "kitchen@kirdyk.com";
           $headers = "From: $from";
           mail($email,$subject,$message,$headers);
