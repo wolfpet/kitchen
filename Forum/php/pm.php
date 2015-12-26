@@ -28,7 +28,7 @@ $title = 'Private message';
     if (is_null($to) || strlen($to) == 0) {
         $err .= "Recipient not defined.";
     } else {
-        $query = 'SELECT id from confa_users where username=\'' . mysql_real_escape_string($to) . '\' and status != 2';
+        $query = 'SELECT u.id, i.ignored from confa_users u left join confa_ignor i on u.id=i.ignored_by and i.ignored='.$user_id.' where username=\'' . mysql_real_escape_string($to) . '\' and status != 2';
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -37,7 +37,9 @@ $title = 'Private message';
         $row = mysql_fetch_assoc($result);
         $to_id = $row['id'];
         if (is_null($to_id)) {
-            $err .= "No such recipient(" . $to . ")";
+            $err .= "No such recipient (" . $to . ")<BR>";
+        } else if (!is_null($row['ignored'])) {
+            $err .= "Sorry, " . $to ." prefers not to receive mail from you<BR>";
         }
     }
     if (strlen($subj) > 254){
