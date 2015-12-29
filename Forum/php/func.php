@@ -1496,7 +1496,7 @@ function validate($subj, $body, $to) {
 
 // Returns an error string, or array with an ID if successful
 function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
-  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw;
+  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email;
   
   $err = validate($subj, $body, $to);
   
@@ -1656,7 +1656,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     
   } else {
     // respond to an existing post
-    $query = 'SELECT p.thread_id, p.level, p.closed as post_closed, p.id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page from confa_posts p, confa_threads t where t.id=p.thread_id and p.id=' . $re;
+    $query = 'SELECT p.thread_id, p.level, p.closed as post_closed, p.id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.author as author_id, p.subject as old_subj from confa_posts p, confa_threads t where t.id=p.thread_id and p.id=' . $re;
     $result = mysql_query($query);
     if (!$result) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1686,6 +1686,9 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         return 'Query failed';
       }
+
+      $author_id = $row['author_id'];
+      $old_subj = $row['old_subj'];
     } else {
         return 'Cannot find parent for msg=' . $re;
     }
@@ -1705,6 +1708,37 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       return 'Query failed';
     }
     
+    // Send nottificaton e-mail (if needed)
+    // Find author's e-mail (his/her post is being replied)
+    $query = "SELECT email, reply_to_email FROM confa_users WHERE id=$author_id";
+    $result = mysql_query($query);
+    if (!$result) {
+      mysql_log( __FILE__ . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+    }else if (mysql_num_rows($result) != 0) {
+      $row = mysql_fetch_assoc($result);
+      if ($row['reply_to_email']){
+        // User wants to receive e-mail notifications
+        $author_email = $row['email'];
+        if (strlen($author_email) > 0){
+          // Find username of the person who replied
+          $query = "SELECT username FROM confa_users WHERE id=$user_id";
+          $result = mysql_query($query);
+          if (!$result) {
+            mysql_log( __FILE__ . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+          }else{
+            if (mysql_num_rows($result) != 0) {
+              $row = mysql_fetch_assoc($result);
+              $who_replied = $row['username'];
+              $email_subject = "You have a reply to your post on $host forum website";
+              $message = "$who_replied replied to your post with subject: '$old_subj'\n\n--- The reply's body is below ---\n\n$body\n\n--- End of reply's body ---";
+              $headers = "From: $from_email";
+              mail($author_email,$email_subject,$message,$headers); 
+            }
+          }
+        }
+      }
+    }
+
     return array("id" => $id);
   }
   

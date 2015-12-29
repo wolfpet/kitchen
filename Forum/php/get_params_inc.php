@@ -229,6 +229,9 @@
         if (array_key_exists('show_smileys', $_POST)) {
             $show_smileys = true;
         }
+        if (array_key_exists('reply_to_email', $_POST)) {
+            $reply_to_email = true;
+        }
         if (array_key_exists('custom', $_POST)) {
             $custom = trim($_POST['custom']);
         }
