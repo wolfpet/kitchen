@@ -106,7 +106,7 @@ function bbcode_naked_urls($str) {
 /** 
  * Run this before bbcode is called to render content before bbcode() had a chance to mess it up
  */
-function before_bbcode($original_body, &$has_video) {
+function before_bbcode($original_body, &$has_video = false) {
   global $host;
   
   $body = preg_replace( array (
