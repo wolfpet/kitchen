@@ -15,6 +15,8 @@ require_once('head_inc.php');
     $last_id = 0;
     $search_condition = 'receiver=' . $user_id . ' and !(p.status &'.$pm_deleted_by_receiver.')';
     
+    if (!is_null($author_id)) $search_condition .= ' and sender='.$author_id;
+    
     $query = 'SELECT count(*) from confa_pm p where '.$search_condition;
     $result = mysql_query($query);
     if (!$result) {
@@ -52,6 +54,7 @@ require_once('head_inc.php');
         $created = $row['created'];
         $chars = $row['chars'];
         $status = $row['status'];
+        $sender_id = $row['sender'];
         $st_in = '';
         $st_out = '';
         if ($status & 1) {
@@ -61,7 +64,9 @@ require_once('head_inc.php');
    
         $subj = htmlentities($subj, HTML_ENTITIES,'UTF-8');
         $enc_user = htmlentities($sender, HTML_ENTITIES,'UTF-8');
-        $line = '<li><INPUT TYPE=CHECKBOX NAME="pmdel[]" value="' . $id . '"/>' . $st_in . ' <a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg_pm . '?id=' . $id . '"> ' . $subj . ' </a>' . $st_out . ' <b>' . $enc_user . '</b>' . $auth_text . ' ' . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes</li>';
+        $line = '<li><INPUT TYPE=CHECKBOX NAME="pmdel[]" value="' . $id . '"/>' . $st_in . ' <a target="bottom" name="' . $id . '" href="' 
+          . $root_dir . $page_msg_pm . '?id=' . $id . '"> ' . $subj . ' </a>' . $st_out . ' <a class="user_link" href="' 
+          . $root_dir . $page_pmail . '?author_id=' . $sender_id . '" target="contents"><b>' . $enc_user . '</b></a>' . $auth_text . ' ' . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes</li>';
         $out .= $line;
         $num++;
     }
