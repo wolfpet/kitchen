@@ -32,7 +32,7 @@
 <td><input id="show_smileys" name="show_smileys" type="checkbox" maxlength="80" <?=$smileys ? "checked" : ""?>/></td>
 </tr>
 <tr>
-<td>Send e-mail about a reply to your post: </td>
+<td>Send email about a reply to your post: </td>
 <td><input id="reply_to_email" name="reply_to_email" type="checkbox" maxlength="80" <?=$reply_to_email ? "checked" : ""?>/></td>
 </tr>
 <tr>
