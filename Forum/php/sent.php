@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*$Id: pmail.php 803 2012-10-14 19:35:33Z dmitriy $*/
 
 require_once('head_inc.php');
@@ -64,9 +64,9 @@ require_once('head_inc.php');
         }
         if ($status & $pm_read_by_receiver) {
           // $icon = '<i><img src="images/mail-opened.png" alt="(Read by recipient)"/></i>';
-          // $icon = '<span style="color:gray;"><i>(сообщение получено)</i></span>';
+          // $icon = '<span style="color:gray;"><i>(delivered)</i></span>';
         } else {
-          $icon = '<span style="color:gray;"><i>(не прочитано получателем)</i></span>';
+          $icon = '<span style="color:gray;"><i>(not delivered yet)</i></span>';
         }
    
         $subj = htmlentities($subj, HTML_ENTITIES,'UTF-8');
