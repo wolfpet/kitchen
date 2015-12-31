@@ -84,6 +84,8 @@ require_once('html_head_inc.php');
                 $update .= ', ';
             }
  
+            $update .= ' reply_to_email=' . (isset($reply_to_email) ? "1" : "0") . ', '; 
+
             if (is_null($tz)) {
                 $tz = explode(":", $server_tz)[0];
             }
@@ -100,6 +102,7 @@ require_once('html_head_inc.php');
             $prop_bold = $profile_bold;
             $prop_tz = $tz;
             $smileys = isset($show_smileys);
+            $reply_to_email = isset($reply_to_email);
         } while (false);
     }
     if ($err != '') {
