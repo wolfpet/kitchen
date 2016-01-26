@@ -97,10 +97,21 @@ $title = 'Private message';
         if (!is_null($email) && strlen($email) > 0) {
           #$to = $email;
           $subject = "You have new private message on $host forum website";
-          $message = $subject . ' sent by ' . $user . ' with subject: ' . $subj . "\n\n";
-          $message .= $body;
-          $from = $from_email;
-          $headers = "From: $from";
+          $message = "";
+//        $message = $subject . ' sent by ' . $user . ' with subject: ' . $subj . "\n\n";
+//        $message .= render_for_display($body);
+          $message .= '<html><body><style type="text/css">';
+          $message .= file_get_contents('css/disc2.css');          
+          $message .= '</style><h3 id="subject">'.$subj.'</h3>';
+          $message .= 'Author: <b>'.$user.'</b> ';
+          $message .= '<hr><div id="msgbody">';
+          $message .= render_for_display($body);
+          $message .= '</div><hr/>';
+          $message .= '<p>Visit <a href="http://'.$host.'">'.$host.'</a> to reply</p>';
+          $message .= '</body></html>';
+          $headers = "From: $from_email\r\n";
+          $headers .= "MIME-Version: 1.0\r\n";
+          $headers .= "Content-Type: text/html; charset=UTF-8\r\n"; // ISO-8859-1
           mail($email,$subject,$message,$headers);
         }
         $username = $user;      
