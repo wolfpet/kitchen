@@ -50,7 +50,7 @@ require_once('head_inc.php');
     if (is_null($last_id)) {
       $last_id = 0;
     }
-    $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'EST\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars, b.user, b.post  from confa_posts p, confa_users u, confa_bookmarks b where b.user=' . $user_id . ' and b.post=p.id and p.author=u.id and  p.status != 2 and b.id <= ' . $last_id . ' order by msg_id desc limit 50'; 
+    $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars, b.user, b.post  from confa_posts p, confa_users u, confa_bookmarks b where b.user=' . $user_id . ' and b.post=p.id and p.author=u.id and  p.status != 2 and b.id <= ' . $last_id . ' order by msg_id desc limit 50'; 
 
     $result = mysql_query($query);
     if (!$result) {
@@ -66,7 +66,8 @@ require_once('head_inc.php');
     }
     while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
         $msg_id = $row['msg_id'];
-        $moder = $row['moder'];
+        $moder2 = $row['moder'];
+        $length = $row['chars'];
 
         $subj = $row['subject'];
         $subj = htmlentities($subj, HTML_ENTITIES,'UTF-8');
@@ -78,8 +79,26 @@ require_once('head_inc.php');
         if ($row['content_flags'] & 0x04) {
           $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
         }
+        $nsfw = '';
+        if ($row['content_flags'] & $content_nsfw) {
+          $nsfw .= ' <span class="nsfw">NSFW</span>';
+        }
+        if ($row['content_flags'] & $content_boyan) {
+          $icons .= ' <img border=0 src="' . $root_dir . $boyan_img . '"/> ';
+        }
+        $suffix = '';
+        if ($row['modified'] != null) {
+          $date = $row['modified'] . '<span class="edited">*</span>';   
+        } else {
+          $date = $row['created'];
+        }
+        if ($length == 0) {
+          $suffix .= ' <span class="empty">(-)</span>';
+        }
 
-        $line = '<li><INPUT TYPE=CHECKBOX NAME="pmdel[]" value="' . $msg_id . '"/><a target="bottom" name="' . $msg_id . '" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '"> ' . $icons . $subj . ' </a> <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
+        $line = '<li><INPUT TYPE=CHECKBOX NAME="pmdel[]" value="' . $msg_id . '"/>';
+        $line .= ' <a target="bottom" name="' . $msg_id . '" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '">' . $icons . $subj . '</a> '.$nsfw.$suffix.' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $date . ' <b>' . $length . '</b> bytes';
+
         if (!is_null($row['likes'])) {
           $likes = $row['likes'];
           if ($likes > 0) {
