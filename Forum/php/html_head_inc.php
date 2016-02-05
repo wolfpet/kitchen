@@ -92,5 +92,34 @@ $( document ).ready(function() {
     window.setInterval(update_bydate_counter, 60000); 
   }
 });
+var focused = null;
+
+// shift - select
+$(document).ready(function(){
+ // add click function to checkboxes
+ $(document).find(':checkbox').each(function() {
+    $(this).click(function(e) {
+      if (e.shiftKey) {
+        if (focused != null) {
+          var checked = this.checked;
+          var current = this;
+          // make all checkboxes between 'focused' and 'current' same as 'current'
+          var inside = false;
+          $(document).find(':checkbox').each(function() {
+            if (this.value == current.value || this.value == focused.value) {
+              this.checked = checked;
+              inside = !inside;
+              if (!inside) return;
+            } else if (inside) {
+              this.checked = checked;
+            }
+          });
+        }
+      } else {
+        focused = this;
+      }
+    });
+  });
+});
 
 </script>
