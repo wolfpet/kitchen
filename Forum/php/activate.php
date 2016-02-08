@@ -36,9 +36,14 @@ if ( strlen($act_link) > 0 ) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
             die('Query failed');
         }
-        if ($action == $action_deny)
-          die('The registration of user <b>' . $username. '</b> has been declined.'); 
-        else
+        if ($action == $action_deny) {
+          // notify the user
+          $email_subject = "Your registration on $host forum website";
+          $email_message = "We regret to inform that your request of registration the user '$username' has been declined.\n\nThe administration wishes you luck in your future endeavors.";
+          $email_headers = "From: $from_email";
+          mail($email,$email_subject,$email_message,$email_headers);
+          die('The registration of user <b>' . $username. '</b> has been declined.');           
+        } else
           die('The link has expired.'); 
     } 
     $query = 'INSERT into confa_users(created, modified, username, password, email) values(NULL, NULL, \'' . $username . '\', \'' . $password . '\', \'' . $email . '\')';
@@ -62,7 +67,13 @@ if ( strlen($act_link) > 0 ) {
 <?php
     if (isset($reg_type) && $reg_type == REG_TYPE_CONFIRM) {
       print('<p>Account <B>' . $username . '</B> has been activated. The user may now login to the <a href="http://' . $host . $root_dir . '" target="_top">forum');      
-      post('Welcome, ' . $username.'!', 'Your account has been activated, you may now login to the forum.');
+      // post a welcome to forum
+      // post('Welcome, ' . $username.'!', 'Your account has been activated, you may now login to the forum.');
+      // send an email to the user
+      $email_subject = "Your registration on $host forum website";
+      $email_message = "Welcome, ". $username."!\n\nYour account has been activated, you may now login to the forum.";
+      $email_headers = "From: $from_email";
+      mail($email,$email_subject,$email_message,$email_headers);
     } else {
       print('<p><B>' . $username . '</B>, your account has been activated. Now you may login to the <a href="http://' . $host . $root_dir . '" target="_top">forum</a>');
     }
