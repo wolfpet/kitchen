@@ -114,7 +114,7 @@ $show_hidden = 2;
         }
         $enc_user = '<a class="user_link" href="' . $root_dir . $page_byuser . '?author_id=' . $row['author'] . '" target="contents">' . $enc_user . '</a>';
         if ($num == 1) {
-            setcookie('last_id2', $id, 1800000000, $root_dir, $host);
+            setcookie('last_id2', $id, 1800000000, $root_dir, $host, false, true);
             $max_id = $id;
         }
         $icons = '';

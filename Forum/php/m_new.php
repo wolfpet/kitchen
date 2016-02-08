@@ -66,7 +66,7 @@ if (strlen($err) != 0) {
 <td nowrap colspan="3">From: <input onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" type="text" id="user" name="user" value="<?php print($user); ?>" size="32" maxlength="64"/></td>
 </tr>
 <tr>
-<td nowrap colspan="3">Password: <input type="password" id="password" name="password" size="16" maxlength="16"/></td>
+<td nowrap colspan="3">Password: <input type="password" id="password" name="password" size="16" maxlength="16" autocomplete="off"/></td>
 </tr>
 <?php
  } else {

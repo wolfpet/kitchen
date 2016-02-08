@@ -30,7 +30,7 @@
 <td/>
 </tr>
 <tr>
-<td nowrap>Password:</td><td><input type="password" id="password" name="password" size="16" maxlength="16"/></td>
+<td nowrap>Password:</td><td><input type="password" id="password" name="password" size="16" maxlength="16" autocomplete="off"/></td>
 <td/>
 </tr>
 <?php

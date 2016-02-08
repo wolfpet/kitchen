@@ -33,7 +33,7 @@
             print('<input type="hidden" name="author_id" id="author_id" value="' . $author_id . '"/>');
         }
 ?>
-Username: <input type="text" id="user" name="user" maxlength="64" size="16" value="<?php htmlentities($user, HTML_ENTITIES,'UTF-8');?>"/> Password: <input type="password" id="password" name="password" size="8" maxlength="16"/> <input type="Submit" value="Login"/>
+Username: <input type="text" id="user" name="user" maxlength="64" size="16" value="<?php htmlentities($user, HTML_ENTITIES,'UTF-8');?>"/> Password: <input type="password" id="password" name="password" size="8" maxlength="16" autocomplete="off"/> <input type="Submit" value="Login"/>
 </form></td>
 <?php
     } else {

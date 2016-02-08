@@ -9,11 +9,11 @@
 <table>
 <tr>
 <td>Password <font color="grey">(16 characters maximum, 4 minimum)</font></td>
-<td><input id="password" name="password" type="password" maxlength="16"/></td>
+<td><input id="password" name="password" type="password" maxlength="16" autocomplete="off"/></td>
 </tr>
 <tr>
 <td>Retype password: </td>
-<td><input id="password2" name="password2" type="password" maxlength="16"/></td>
+<td><input id="password2" name="password2" type="password" maxlength="16" autocomplete="off"/></td>
 </tr>
 <tr>
 <td>Email</td>
