@@ -1496,7 +1496,7 @@ function validate($subj, $body, $to) {
 
 // Returns an error string, or array with an ID if successful
 function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
-  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email;
+  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email, $host;
   
   $err = validate($subj, $body, $to);
   
@@ -1730,8 +1730,22 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
               $row = mysql_fetch_assoc($result);
               $who_replied = $row['username'];
               $email_subject = "You have a reply to your post on $host forum website";
-              $message = "$who_replied replied to your post with subject: '$old_subj'\n\n--- The reply's body is below ---\n\n$body\n\n--- End of reply's body ---";
-              $headers = "From: $from_email";
+//            $message = "$who_replied replied to your post with subject: '$old_subj'\n\n--- The reply's body is below ---\n\n$body\n\n--- End of reply's body ---";
+//            $headers = "From: $from_email";
+              $message = "";
+              $message .= '<html><body><style type="text/css">';
+              $message .= file_get_contents('css/disc2.css');          
+              $message .= '</style><h3 id="subject">'.$subj.'</h3>';
+              $message .= 'Author: <b>'.$who_replied.'</b><br/>';
+              $message .= 'In response to your post: <b>'.$old_subj.'</b>';
+              $message .= '<hr><div id="msgbody">';
+              $message .= render_for_display($body);
+              $message .= '</div><hr/>';
+              $message .= '<p>Visit <a href="http://'.$host.'">'.$host.'</a> to reply</p>';
+              $message .= '</body></html>';
+              $headers = "From: $from_email\r\n";
+              $headers .= "MIME-Version: 1.0\r\n";
+              $headers .= "Content-Type: text/html; charset=UTF-8\r\n"; // ISO-8859-1
               mail($author_email,$email_subject,$message,$headers); 
             }
           }
