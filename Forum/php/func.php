@@ -1151,6 +1151,38 @@ function twitter($body, $embed = true) {
 	return $result;
 }
 
+function gfycat($body, $embed = true) {
+  if (!$embed) return $body;
+  
+  // e.g. https://gfycat.com/BrightFragrantAmurstarfish
+  $pattern = '(?:https?:\/\/)(?:gfycat\.com\/)([^\s<\]"]*)(?:\/[^\s<\]"]*)?';
+	
+  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
+    function ($matches) use ($embed, $pattern) {
+      // var_dump($matches);
+      if(count($matches) < 4) return $matches[0];
+      
+      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+        return $matches[0];
+
+      $url = $matches[0];
+			$id  = $matches[1];
+
+      $obj2 = file_get_contents("https://gfycat.com/cajax/get/" . $id);
+      
+      if($obj2 === FALSE) 
+        return $url;
+
+      $ar2 = json_decode($obj2);
+      // var_dump($ar2);
+      return trim(preg_replace('/\s\s+/', ' ', $ar2->gfyItem->gifUrl)).'<br/>Direct link: <a href="'.$url.'">'.$url.'</a>';
+		},
+		$body
+	);
+  
+	return $result;
+}
+
 // Returns random Chuck Norris fact in $percentage cases
 function chuck($percentage) {
  if (rand(0, 100) < $percentage) {

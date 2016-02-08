@@ -106,7 +106,7 @@ function bbcode_naked_urls($str) {
 /** 
  * Run this before bbcode is called to render content before bbcode() had a chance to mess it up
  */
-function before_bbcode($original_body, &$has_video = false) {
+function before_bbcode($original_body, &$has_video=null) {
   global $host;
   
   $body = preg_replace( array (
@@ -124,7 +124,7 @@ function before_bbcode($original_body, &$has_video = false) {
     '#(?<!(\[url(=|]))|\[img=)((?:https?://)(?:www\.)?i\.imgur\.com/([^\s\.]*)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // youtube with no http(s) prefix
     '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#is'
-    ), array (
+     ), array (
     '<div class="vimeo"><iframe src="https://player.vimeo.com/video/$3" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br/>Link: <a href="$2">$2</a></div>',
     '<div class="coub"><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2">$2</a></div>',  
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2">$2</a>',  
@@ -134,10 +134,10 @@ function before_bbcode($original_body, &$has_video = false) {
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2">$2</a></div>'
     ), $original_body);    
     
-  if (isset($has_video)) $has_video = strcmp($body, $original_body) != 0;
+  if (isset($has_video) && !is_null($has_video)) $has_video = strcmp($body, $original_body) != 0;
 
-  // Embedding Twitter links
-  $body = twitter($body);
+  // Embedding Twitter and other links
+  $body = gfycat(twitter($body));
   
   // Fix postimage.org tags
   $body = fix_postimage_tags($body);
