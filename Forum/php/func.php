@@ -1528,7 +1528,7 @@ function validate($subj, $body, $to) {
 
 // Returns an error string, or array with an ID if successful
 function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
-  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email, $host, $user;
+  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email, $host, $user, $page_goto;
   
   $err = validate($subj, $body, $to);
   
@@ -1688,7 +1688,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     
   } else {
     // respond to an existing post
-    $query = 'SELECT p.thread_id, p.level, p.closed as post_closed, p.id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.author as author_id, p.subject as old_subj from confa_posts p, confa_threads t where t.id=p.thread_id and p.id=' . $re;
+    $query = 'SELECT p.thread_id, p.level, p.closed as post_closed, p.id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.author as author_id, p.subject as old_subj, p.page as old_page from confa_posts p, confa_threads t where t.id=p.thread_id and p.id=' . $re;
     $result = mysql_query($query);
     if (!$result) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1721,10 +1721,11 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
 
       $author_id = $row['author_id'];
       $old_subj = $row['old_subj'];
+      $old_page = $row['old_page'];
     } else {
         return 'Cannot find parent for msg=' . $re;
     }
-    $query = 'INSERT INTO confa_posts(status, parent, level, author, subject, body, created, thread_id, chars, auth, ip, user_agent, content_flags) values( 1, ' . $re . ', ' . $level . ', ' . $user_id . ',\'' . mysql_escape_string($subj) . '\', ' . $ibody . ', now(), ' . $thread_id . ', ' . $chars . ', 1, ' . $ip . ', ' . $agent . ', ' . $content_flags . ')'; 
+    $query = 'INSERT INTO confa_posts(status, parent, level, author, subject, body, created, thread_id, chars, auth, ip, user_agent, content_flags, page) values( 1, ' . $re . ', ' . $level . ', ' . $user_id . ',\'' . mysql_escape_string($subj) . '\', ' . $ibody . ', now(), ' . $thread_id . ', ' . $chars . ', 1, ' . $ip . ', ' . $agent . ', ' . $content_flags . ', '. $msg_page . ')'; 
     $result = mysql_query($query);
     if (!$result) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1761,11 +1762,11 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
           $message .= file_get_contents('css/disc2.css');          
           $message .= '</style><h3 id="subject">'.$subj.'</h3>';
           $message .= 'Author: <b>'.$who_replied.'</b><br/>';
-          $message .= 'In response to your post: <b>'.$old_subj.'</b>';
+          $message .= 'In response to your post: <a href="http://'.$host.'/'.$page_goto.'?id='.$re.'&page='.$old_page.'">'.$old_subj.'</a>';
           $message .= '<hr><div id="msgbody">';
           $message .= render_for_display($body);
           $message .= '</div><hr/>';
-          $message .= '<p>Visit <a href="http://'.$host.'">'.$host.'</a> to reply!</p>';
+          $message .= '<p>Visit <a href="http://'.$host.'/'.$page_goto.'?re='.$id.'&page='.$msg_page.'">'.$host.'</a> to reply!</p>';
           $message .= '</body></html>';
           $headers = "From: $from_email\r\n";
           $headers .= "MIME-Version: 1.0\r\n";

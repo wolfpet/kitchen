@@ -143,6 +143,7 @@ $page_banned = 'banned.php';
 $page_pay_ban = 'pay_ban.php';
 $page_my_bookmarhs='mybookmarks.php';
 $page_registrations='modregs.php';
+$page_goto='navigate.php';
 
 // Redirect if URL is not correct
 
