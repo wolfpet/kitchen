@@ -1528,7 +1528,7 @@ function validate($subj, $body, $to) {
 
 // Returns an error string, or array with an ID if successful
 function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
-  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email, $host;
+  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email, $host, $user;
   
   $err = validate($subj, $body, $to);
   
@@ -1740,47 +1740,37 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       return 'Query failed';
     }
     
-    // Send nottificaton e-mail (if needed)
-    // Find author's e-mail (his/her post is being replied)
-    $query = "SELECT email, reply_to_email FROM confa_users WHERE id=$author_id";
+    // Send notificaton e-mail (if needed)
+    // Find e-mail of the author of the post being replied to
+    $query = "SELECT u.email, u.reply_to_email, i.ignored FROM confa_users u left join confa_ignor i on u.id=i.ignored_by and i.ignored=$user_id WHERE u.id=$author_id";
     $result = mysql_query($query);
     if (!$result) {
       mysql_log( __FILE__ . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
     }else if (mysql_num_rows($result) != 0) {
       $row = mysql_fetch_assoc($result);
-      if ($row['reply_to_email']){
+      if ($row['reply_to_email'] && is_null($row['ignored'])){
         // User wants to receive e-mail notifications
         $author_email = $row['email'];
         if (strlen($author_email) > 0){
-          // Find username of the person who replied
-          $query = "SELECT username FROM confa_users WHERE id=$user_id";
-          $result = mysql_query($query);
-          if (!$result) {
-            mysql_log( __FILE__ . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-          }else{
-            if (mysql_num_rows($result) != 0) {
-              $row = mysql_fetch_assoc($result);
-              $who_replied = $row['username'];
-              $email_subject = "You have a reply to your post on $host forum website";
+          $who_replied = $user; // $row['username'];
+          $email_subject = "You have a reply to your post on $host forum website";
 //            $message = "$who_replied replied to your post with subject: '$old_subj'\n\n--- The reply's body is below ---\n\n$body\n\n--- End of reply's body ---";
 //            $headers = "From: $from_email";
-              $message = "";
-              $message .= '<html><body><style type="text/css">';
-              $message .= file_get_contents('css/disc2.css');          
-              $message .= '</style><h3 id="subject">'.$subj.'</h3>';
-              $message .= 'Author: <b>'.$who_replied.'</b><br/>';
-              $message .= 'In response to your post: <b>'.$old_subj.'</b>';
-              $message .= '<hr><div id="msgbody">';
-              $message .= render_for_display($body);
-              $message .= '</div><hr/>';
-              $message .= '<p>Visit <a href="http://'.$host.'">'.$host.'</a> to reply</p>';
-              $message .= '</body></html>';
-              $headers = "From: $from_email\r\n";
-              $headers .= "MIME-Version: 1.0\r\n";
-              $headers .= "Content-Type: text/html; charset=UTF-8\r\n"; // ISO-8859-1
-              mail($author_email,$email_subject,$message,$headers); 
-            }
-          }
+          $message = "";
+          $message .= '<html><body><style type="text/css">';
+          $message .= file_get_contents('css/disc2.css');          
+          $message .= '</style><h3 id="subject">'.$subj.'</h3>';
+          $message .= 'Author: <b>'.$who_replied.'</b><br/>';
+          $message .= 'In response to your post: <b>'.$old_subj.'</b>';
+          $message .= '<hr><div id="msgbody">';
+          $message .= render_for_display($body);
+          $message .= '</div><hr/>';
+          $message .= '<p>Visit <a href="http://'.$host.'">'.$host.'</a> to reply!</p>';
+          $message .= '</body></html>';
+          $headers = "From: $from_email\r\n";
+          $headers .= "MIME-Version: 1.0\r\n";
+          $headers .= "Content-Type: text/html; charset=UTF-8\r\n"; // ISO-8859-1
+          mail($author_email,$email_subject,$message,$headers); 
         }
       }
     }
