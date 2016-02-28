@@ -229,15 +229,10 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) {
     return $response;
   }
 
-  // get likes/dislikes/readss
-  $likes = 0;
-  $dislikes = 0;
-  $ratings = array();
-  
-  $query = 'SELECT u.username as userlike, l.value as valuelike from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
-  $result = mysql_query($query);
-  if (!$result) {
-    
+  // get likes/dislikes/reads
+  $ratings = api_get_ratings($msg_id);
+  if (!$ratings) {
+    // error
     $response->setStatusCode(400, 'Error')->sendHeaders();
     $response->setContentType('application/json');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
@@ -245,16 +240,6 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) {
     return $response;
   }
   
-  while($row = mysql_fetch_assoc($result)) {
-      if ($row['valuelike'] > 0) {
-        $likes++;
-      } else if ($row['valuelike'] < 0){
-        $dislikes++;
-      }
-      $ratings[] = array( 'name' => $row['userlike'], 'count' => intval($row['valuelike']));
-  }
-  mysql_free_result($result);
-
   // retrieve the message
   $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.body, p.author, u.id as id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.status, t.author as t_author, t.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
   $result = mysql_query($query);
@@ -279,9 +264,9 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) {
       'author' => array('id'  => intval($row['author']), 'name' => $row['username']),
       'created' => $row['created'],
       'views' => intval($row['views']),
-      'likes' => $likes,
-      'dislikes' => $dislikes,
-      'ratings' => $ratings,
+      'likes' => $ratings['likes'],
+      'dislikes' => $ratings['dislikes'],
+      'ratings' => $ratings['ratings'],
       'page' => intval($row['page']),
       'parent' => intval($row['parent']),
       'closed' => filter_var($row['post_closed'], FILTER_VALIDATE_BOOLEAN),
@@ -532,13 +517,44 @@ $app->put('/api/messages/{id:[0-9]+}/like', function($msg_id) {
     $response->setStatusCode(400, 'Error');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
   } else {
-    $response->setJsonContent(array('value' => intval($new_value)));
+    $ratings = api_get_ratings($msg_id);
+    if (!$ratings) {
+      // error
+      $response->setStatusCode(400, 'Error');
+      $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+    } else {
+      $response->setJsonContent(array('value' => intval($new_value), 'ratings' => $ratings['ratings']));
+    }
   }
 
   $response->setContentType('application/json');
   
   return $response;
 });
+
+function api_get_ratings($msg_id) {
+  $likes = 0;
+  $dislikes = 0;
+  $ratings = array();
+  
+  $query = 'SELECT u.username as userlike, l.value as valuelike from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
+  $result = mysql_query($query);
+  if (!$result) {
+    return $result;
+  }
+  
+  while($row = mysql_fetch_assoc($result)) {
+      if ($row['valuelike'] > 0) {
+        $likes++;
+      } else if ($row['valuelike'] < 0){
+        $dislikes++;
+      }
+      $ratings[] = array( 'name' => $row['userlike'], 'count' => intval($row['valuelike']));
+  }
+  mysql_free_result($result);
+
+  return array('likes' => $likes, 'dislikes' => $dislikes, 'ratings' => $ratings);
+}
 
 /**
  * DELETE /messages/$id/like
@@ -564,7 +580,14 @@ $app->delete('/api/messages/{id:[0-9]+}/like', function($msg_id) {
     $response->setStatusCode(400, 'Error');
     $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
   } else {
-    $response->setJsonContent(array('value' => intval($new_value)));
+    $ratings = api_get_ratings($msg_id);
+    if (!$ratings) {
+      // error
+      $response->setStatusCode(400, 'Error');
+      $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+    } else {
+      $response->setJsonContent(array('value' => intval($new_value), 'ratings' => $ratings['ratings']));
+    }
   }
 
   $response->setContentType('application/json');
