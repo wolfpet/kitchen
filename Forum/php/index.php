@@ -187,13 +187,13 @@ function api_get_threads($max_thread_id, $count=50) {
   );
 }
 
-function api_get_body($body, $status=1) {
+function api_get_body($body, $status=1, $format='html') {
   if ($status == 3) {
-    $msgbody = '<font color="red">censored</font>';
+    $msgbody = $format == 'raw' ? '' : '<font color="red">censored</font>';
   } else if ($status == 2) {
     $msgbody = '';  // message deleted
   } else {
-    $msgbody = render_for_display($body);
+    $msgbody = $format == 'raw' ? $body : render_for_display($body);
   }
   return $msgbody;
 }
@@ -212,11 +212,17 @@ function api_get_subject($subject, $status=1) {
  * Returns one message
  */
 
-$app->get('/api/messages/{id:[0-9]+}', function($msg_id) {
+$app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($app) {
   global $prop_tz, $server_tz;
   
   $response = new Response();
 
+  $format = $app->request->getQuery('format');  
+  if (is_null($format)) 
+    $format = 'html';
+  else
+    $format = strtolower($format);
+ 
   // update views
   $query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id;
   $result = mysql_query($query);
@@ -270,7 +276,7 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) {
       'page' => intval($row['page']),
       'parent' => intval($row['parent']),
       'closed' => filter_var($row['post_closed'], FILTER_VALIDATE_BOOLEAN),
-      'body' => array('html' => api_get_body($row['body'], $row['status']))
+      'body' => array(($format == 'raw' ? 'raw' : 'html') => api_get_body($row['body'], $row['status'], $format))
     ));
       
   } else {
@@ -335,7 +341,7 @@ $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) {
 });
 
 /**
- * GET /api/messages?mode=<bydate|mymessages|answered>&count=50&id=<max_msg_id>
+ * GET /api/messages?mode=<bydate|mymessages|answered|bookmarks>&count=50&id=<max_msg_id>
  *
  */
 $app->get('/api/messages', function() use ($app) {
@@ -398,6 +404,17 @@ $app->get('/api/messages', function() use ($app) {
         . ':00\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as id, p.page, p.parent, p.level, p.chars, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u where p.author=' 
         . $user_id . ' and p.author=u.id and  p.status != 2 ' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' order by id desc limit ' . $count; 
 
+      $result = mysql_query($query);
+      break;
+    
+    case 'bookmarks':
+      if (is_null($count)) {
+        $count = 50;
+      }
+      $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+        . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars, b.user, b.post  from confa_posts p, confa_users u, confa_bookmarks b where b.user=' 
+        . $user_id . ' and b.post=p.id and p.author=u.id and p.status != 2 ' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : ''). ' order by msg_id desc limit ' . $count; 
+      
       $result = mysql_query($query);
       break;
     
@@ -735,7 +752,13 @@ $app->get('/api/inbox', function() use ($app) {
 });
 
 $app->get('/api/inbox/{id:[0-9]+}', function($msg_id) use ($app) {
-  return api_pmail($app, $msg_id);
+  $format = $app->request->getQuery('format');  
+  if (is_null($format)) 
+    $format = 'html';
+  else
+    $format = strtolower($format);
+     
+  return api_pmail($app, $msg_id, $format);
 });
 
 $app->get('/api/sent', function() use ($app) {
@@ -743,7 +766,13 @@ $app->get('/api/sent', function() use ($app) {
 });
 
 $app->get('/api/sent/{id:[0-9]+}', function($msg_id) use ($app) {
-  return api_pmail($app, $msg_id);
+  $format = $app->request->getQuery('format');  
+  if (is_null($format)) 
+    $format = 'html';
+  else
+    $format = strtolower($format);
+   
+  return api_pmail($app, $msg_id, $format);
 });
 
 $app->post('/api/sent', function() use ($app) {
@@ -809,7 +838,7 @@ function api_pmail_list($app, $inbox=true) {
   return $response;  
 }
 
-function api_pmail($app, $msg_id) {
+function api_pmail($app, $msg_id, $format) {
   global $prop_tz, $server_tz, $user_id, $pm_deleted_by_receiver, $pm_deleted_by_sender;
   
   $response = new Response();
@@ -840,7 +869,7 @@ function api_pmail($app, $msg_id) {
       'author' => array('id'  => intval($row['sid']), 'name' => $row['author']),
       'recipient' => array('id'  => intval($row['rid']), 'name' => $row['recipient']),
       'created' => $row['created'],
-      'body' => array('html' => api_get_body($row['body']))
+      'body' => array(($format == 'raw' ? 'raw' : 'html') => api_get_body($row['body'], 1, $format))
     ));
       
   } else {
