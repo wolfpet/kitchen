@@ -51,30 +51,33 @@ function insertURL(element) {
   var ss = element.selectionStart;
   var se = element.selectionEnd;
   var st = ""; // selected text
-  var tl = 0;  // length of text after selected text
+  var tv = ""; // text after selection
   
   if (typeof ss === "number" && typeof se === "number") { // Support real browsers only. Because f### MS.
     st = element.value.substring(ss, se);
-    tl = element.value.length - se;
+    tv = element.value.substring(se);
+    // console.log("insertURL: [" + st + "] ss=" + ss + " se=" + se);
   } else {
     return;
   }
   
   setTimeout(function() {
-    var nt = element.value.substring(ss, element.value.length - tl);
+    var value = element.value;
+    var ep = value.lastIndexOf(tv);   // new 'after selection' position
+    var nt = value.substring(ss, ep); // new text
     var pattern = /(\.jpg|jpeg|gif|png|bmp|googleusercontent\.com)/i;
     if (st.length > 0) { // Only activate if there is selection
       if (nt.indexOf("http") == 0) {
-        element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + "[url=" + nt + "]" + 
-          (st.length > 1 && st.charAt(st.length-1) == ' ' ? st.substring(0, st.length-1) : st) + "[/url]" + (st.length > 1 && st.charAt(st.length-1) == ' ' ? " " : "") + element.value.substring(element.value.length - tl); 
+        // console.log("insertURL: nt=[" + nt + "]");
+        element.value = ((ss > 0) ? value.substring(0, ss) : "") + "[url=" + nt + "]" + 
+          (st.length > 1 && st.charAt(st.length-1) == ' ' ? st.substring(0, st.length-1) : st) + "[/url]" +
+          (st.length > 1 && st.charAt(st.length-1) == ' ' ? " " : "") + value.substring(ep);
         if (element.setSelectionRange) { 
-          element.setSelectionRange(element.value.length - tl, element.value.length - tl); 
+          ep = element.value.lastIndexOf(tv);
+          element.setSelectionRange(ep, ep); 
         }
       }
-/*  // image links are processed by renderer anyway, without img tag, let's not step on its toes
-    } else if (nt.indexOf("http") == 0 && pattern.test(nt)) { // image?
-        element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + "[img=" + nt + "]" + element.value.substring(element.value.length - tl);        
-*/  }
+    }
   }, 4);
 }
 
