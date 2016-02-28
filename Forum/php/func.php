@@ -190,7 +190,7 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
     global $prop_tz;
     global $server_tz;
 
-    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter from confa_posts p, confa_users u, confa_threads t ';
+    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_users u, confa_threads t ';
     if ( $min_thread_id < 0 ) {
         $min_thread_id = 0;
     }
@@ -251,7 +251,10 @@ function get_threads_ex($limit = 200, $thread_id = null) {
   global $work_page;
   global $server_tz;
 
-  $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter from confa_posts p, confa_users u, confa_threads t ';
+  $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' 
+    . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
+    . ':00\') as modified, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter,'
+    . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_users u, confa_threads t ';
   $query.= 'where p.author=u.id and t.id = p.thread_id and t.status != 2 ';
 	
 	if (is_null($thread_id)) {
@@ -415,6 +418,12 @@ function print_line($row, $collapsed=false, $add_arrow=true) {
   
   $line .= '<b>' . $enc_user . '</b>' .  ' [' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
   
+  if (!is_null($row['bookmarks'])) {
+    $bookmarks = $row['bookmarks'];
+    if ($bookmarks > 0) {
+      $line .= ' <font color="blue"><b>' . $bookmarks . '</b></font>';
+    }
+  }
   if (!is_null($row['likes'])) {
     $likes = $row['likes'];
     if ($likes > 0) {
@@ -452,7 +461,7 @@ function get_thread($thread_id) {
   $query = 'SELECT u.username, u.moder, p.auth, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes,'.
     ' CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created,'.
     ' CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.body, p.status, p.content_flags, LENGTH(IFNULL(p.body,"")) as len,'.
-    ' p.thread_id, p.level, p.id as id, p.chars, p.page, t.closed as t_closed  from confa_posts p, confa_users u, confa_threads t '.
+    ' p.thread_id, p.level, p.id as id, p.chars, p.page, t.closed as t_closed, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_users u, confa_threads t '.
     ' WHERE p.author=u.id and thread_id = ' . $thread_id . ' and t.id = thread_id order by thread_id desc, level, id desc';
   
   $result = mysql_query($query);
@@ -561,6 +570,12 @@ function print_line_in_one_thread($row) {
   }
   $line .= ' <b>' . $enc_user . '</b>' . $suffix . ' ' . '[' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
   
+  if (!is_null($row['bookmarks'])) {
+    $bookmarks = $row['bookmarks'];
+    if ($bookmarks > 0) {
+      $line .= ' <font color="blue"><b>' . $bookmarks . '</b></font>';
+    }
+  }
   if (!is_null($row['likes'])) {
     $likes = $row['likes'];
     if ($likes > 0) {

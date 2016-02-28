@@ -104,8 +104,8 @@ function toggleDiv(id) {
        if ($row['user'] == $user_id) { 
         $msg_bookmark = $row['id'];
        }
-       if (strlen($bookmarks) > 0) $bookmarks .= ', ';
-       $bookmarks .= $row['username'];
+       // if (strlen($bookmarks) > 0) $bookmarks .= ', ';
+       // $bookmarks .= $row['username'];
      }
    }
 
