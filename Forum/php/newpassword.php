@@ -1,24 +1,12 @@
 <?php
 /*$Id: newpassword.php 883 2013-03-11 16:35:42Z dmitriy $*/
 require_once('head_inc.php');
-require_once('get_params_inc.php');
 require_once('html_head_inc.php');
-require_once('mail.php');
-
 ?>
-
 <base target="bottom">
 </head>
 <body>
-<table width="95%"><tr>
-<td>
-<h3><?php print($title);?></h3>
-</td>
-
-</tr></table>
-
 <?php
-
     if ((is_null($user) || strlen($user) == 0) && (is_null($email) || strlen($email) == 0)) {
         $err .= 'Either - username or email is required<BR>';
     } else {
@@ -60,24 +48,28 @@ require_once('mail.php');
                 $email = $row['email'];
                 $userid = $row['id'];
                 $newpass = generatePassword(6, 7);
-                $query = 'UPDATE confa_users set password=password(\'' . $newpass . '\'), modified=NULL  where username=\'' . $user . '\'';
-                $result = mysql_query($query);
-                if (!$result) {
-                    mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-                    die('Query failed');
-                }
-                if (mysql_affected_rows($link) != 1) {
-                    mysql_log( __FILE__, 'insert updated password failed ' . mysql_error() . ' QUERY: ' . $query);
-                    die('Query failed');
-                }
-                $query = 'DELETE from confa_sessions where user_id=' . $userid;
-                $result = mysql_query($query);
+
                 $to = $email;
                 $subject = "Forum's new password";
-                $message = $user . ", your new generated password is\n" . $newpass . "\nFeel free to login and change it in your profile";
+                $message = $user . ", your new generated password is\n\n" . $newpass . "\n\nFeel free to login and change it in your profile";
                 $from = $from_email;
                 $headers = "From: $from";
-                send_mail($to,$subject,$message);
+                if (mail($to,$subject,$message,$headers)) {
+                  $query = 'UPDATE confa_users set password=password(\'' . $newpass . '\'), modified=NULL  where username=\'' . $user . '\'';
+                  $result = mysql_query($query);
+                  if (!$result) {
+                      mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+                      die('Query failed');
+                  }
+                  if (mysql_affected_rows($link) != 1) {
+                      mysql_log( __FILE__, 'insert updated password failed ' . mysql_error() . ' QUERY: ' . $query);
+                      die('Query failed');
+                  }
+                  $query = 'DELETE from confa_sessions where user_id=' . $userid;
+                  $result = mysql_query($query);
+                } else {
+                  die("Email could not be sent");
+                }                  
             } while(false);
         } 
     }
@@ -85,10 +77,12 @@ require_once('mail.php');
         print('<font color="red"><b>' . $err . '</b></font>');
         require_once("forgot_inc.php");
     } else {
-        print("<B>" . $user . "</B>, new generated password has been sent to your email\n");// . $email . "\n");
+?><h3>Confirmation</h3>
+Thank you, <b><?php print(htmlentities($user, HTML_ENTITIES,'UTF-8')); ?></b>!<br/><p>
+New generated password has been sent to your email.</p><p>
+<?php
     }
 
 require_once('tail_inc.php');
-
 ?>
 
