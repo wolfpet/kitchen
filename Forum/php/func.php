@@ -554,16 +554,9 @@ function print_line_in_one_thread($row) {
     $date = $row['created'];
   }
   $suffix = '';
-  if ($row['modified'] != null) {
-    $date = $row['modified'];// . '<span class="edited">*</span>';
-    $suffix_style = $suffix = 'edited';
-    
-  } else {
-    $date = $row['created'];
-    if ($length == 0) {
-      $suffix_style = 'empty';
-      $suffix = "(-)";
-    }
+  if ($length == 0) {
+    $suffix_style = 'empty';
+    $suffix = "(-)";
   }
   if ($suffix != "") {
     $suffix = ' <span class="' . $suffix_style . '">' . $suffix . '</span>';
