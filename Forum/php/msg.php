@@ -34,6 +34,59 @@ function toggleDiv(id) {
       div.style.display = 'none';
   }
 }
+
+var test = false;
+
+function load_rating(data) {
+      console.log("Loading the rating " + JSON.stringify(data));
+      var rating = '<font color="green">';
+      var likes = '';
+      for (var i=0; i < data.ratings.length; i++) {
+        if (data.ratings[i].count > 0) {
+          if (likes.length > 0) likes += ',';
+          likes += ' ' + data.ratings[i].name;
+          if (data.ratings[i].count > 1) 
+          likes += '(' + data.ratings[i].count + ')';
+        }
+      }
+      rating += likes + '</font><font color="red">';
+      likes = '';
+      for (var i=0; i < data.ratings.length; i++) {
+        if (data.ratings[i].count < 0) {
+          if (likes.length > 0) likes += ',';
+          likes += ' ' + data.ratings[i].name;
+          if (data.ratings[i].count < -1) 
+          likes += '(' + (-data.ratings[i].count) + ')';
+        }
+      }
+      rating += likes + '</font><font color="lightgray">';
+      likes = '';
+      for (var i=0; i < data.ratings.length; i++) {
+        if (data.ratings[i].count == 0) {
+          if (likes.length > 0) likes += ',';
+          likes += ' ' + data.ratings[i].name;
+        }
+      }
+      rating += likes + '</font>';
+      console.log(rating);
+      $('#rating').html(rating); // show response from the php script.
+    }
+    
+function like(msg_id, rating) {
+  var method = rating > 0 ? "PUT" : "DELETE";
+  var action = "/api/messages/"  + msg_id + "/like";
+  console.log(method + " " + action);
+  if (test) {
+    load_rating({ratings:[{name:"name1",count:1},{name:"name2",count:-2},{name:"name3",count:2}, {name:"name4", count:0}]});
+  } else {
+    $.ajax({
+      type: method,
+      url: action,
+      success: load_rating
+    });
+  }
+}
+
 </script>
 <base target="bottom">
 </head>
@@ -130,9 +183,9 @@ Closed |
   if (!is_null($user_id)) {
 ?>
 |
-<a target="bottom" href="<?php print($root_dir . $page_msg); ?>?id=<?php print($msg_id); ?>&action=like"><font color="green"><!--&#8679;-->+</FONT></a>
+<a target="bottom" href="javascript:like(<?=$msg_id?>,1);"><font color="green">+</FONT></a>
  <font color="blue">Reputation</font>
-<a target="bottom" href="<?php print($root_dir . $page_msg); ?>?id=<?php print($msg_id); ?>&action=dislike"><font color="red"><!--&#8681;-->-</font></a>
+<a target="bottom" href="javascript:like(<?=$msg_id?>,-1);"><font color="red">-</font></a>
 |
 <?php
    if (is_null($msg_bookmark)) {
@@ -195,7 +248,7 @@ Closed |
 ?>
 <BR>
 <?php
-$footer = '';
+$footer = '<div><span id="rating">';
 if (strlen($bookmarks) > 0) {
   $footer .= ' <FONT color="darkblue">' . $bookmarks . '</FONT>';
 }
@@ -208,16 +261,14 @@ if (strlen($dislikes) > 0) {
 if (strlen($reads) > 0) {
   $footer .= ' <FONT color="lightgray">' . $reads . '</FONT>';
 }
+$footer .= '</span>';
 if (isset($reports) && $reports['boyan'] != '') {
   $footer .= ' <img border=0 src="' . $root_dir . $boyan_img . '" valign="middle"/>&nbsp;<span style="color:gray">' . $reports['boyan'].'</span>';
 }
 if (isset($reports) && $reports['nsfw'] != '') {
   $footer .= ' <span class="nsfw">nsfw</span>&nbsp;<span style="color:gray">'.$reports['nsfw'].'</span>';
 }
-
-if (strlen($footer) > 0) {
-  $footer .= '<BR/>';
-}
+$footer .= '</div>';
 print($footer);
 
 require_once('msg_hist_inc.php');
