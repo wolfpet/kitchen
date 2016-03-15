@@ -29,6 +29,15 @@ if ( isset($reg_type) &&
 <td>Retype email: </td>
 <td><input id="email2" name="email2" type="text" maxlength="80" value="<?php print($email2); ?>"/></td>
 </tr>
+<?php
+if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
+?>
+<tr>
+<td colspan="2"><div class="g-recaptcha" data-sitekey="<?=$recaptcha_site_key?>"></div></td>
+</tr>
+<?php 
+}
+?>
 <tr>
 <td colspan="2"> <input type="submit" value="Register"/></td>
 </tr>

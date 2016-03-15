@@ -9,6 +9,13 @@ require_once('html_head_inc.php');
 ?>
 
 <base target="bottom">
+<?php
+if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
+?>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<?php 
+}
+?>
 </head>
 <body>
 <table width="95%"><tr>

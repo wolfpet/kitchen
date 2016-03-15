@@ -6,8 +6,14 @@ require_once('get_params_inc.php');
 require_once('html_head_inc.php');
 
 ?>
-
 <base target="bottom">
+<?php
+if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
+?>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<?php 
+}
+?>
 </head>
 <body>
 <table width="95%"><tr>
@@ -22,9 +28,36 @@ require_once('html_head_inc.php');
     if (is_null($user) || strlen($user) == 0) {
         $err .= 'No username<BR>';
     } else {
+		if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
+			$captcha = $_POST['g-recaptcha-response'];
+			if ($captcha) {
+				// Verify captcha
+				$options = array(
+					'http' => array(
+						'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+						'method'  => 'POST',
+						'content' => http_build_query(array('secret' => $recaptcha_secret_key, 'response' => $captcha, 'remoteip' => $ip)),
+					),
+				);
+				$context  = stream_context_create($options);
+				$result = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
+				
+				if ($result === FALSE) { /* Handle error */ 
+					$err .= 'reCAPTCHA check failed<BR>';
+				} else {
+					// var_dump($result)
+		      $ar2 = json_decode($result);
+					if (!$ar2->success) {
+						$err .= "Sorry, your reCAPTCHA response is invalid<BR>";
+					}
+				}
+			} else {
+				$err .= 'Please prove that you are not a bot by completing reCAPTCHA<BR>';
+			}
+		}
         if (strlen($user) > 63) {
             $err .= 'Username is too long<BR>';
-        } else {
+        } else if ( strlen( $err ) == 0) {
             $query = 'SELECT username from confa_users where username = \'' . mysql_escape_string($user) . '\'';
             $result = mysql_query($query);
             if (!$result) {
