@@ -38,7 +38,7 @@ $thread_owner = false;
         
         $title = 'Edit message';
 
-        $body = $row['body'];
+        $body = render_for_editing($row['body']);
         $subj = $row['subject'];
         
         mysql_free_result($result);

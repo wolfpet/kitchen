@@ -22,13 +22,7 @@ if(!empty($mess_id)){
 			if (!is_null($s_mess) && strlen($s_mess) > 0 && !is_null($prefix) && strlen($prefix) > 0){
 				$s_mess = $prefix . ' ' . str_replace("\n", "\n" . $prefix . ' ', $s_mess);
 			}
-			$s_mess = htmlentities($s_mess, HTML_ENTITIES,'UTF-8');
-
-      $s_mess = before_bbcode($s_mess);
-      $s_mess = do_bbcode ( $s_mess );
-      $s_mess = nl2br($s_mess);
-      $s_mess = after_bbcode($s_mess);
-
+      $s_mess = render_for_display($s_mess);
 			echo trim($s_mess);
 			}	
 		}

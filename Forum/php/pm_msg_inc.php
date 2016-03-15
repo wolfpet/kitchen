@@ -4,18 +4,10 @@
 require_once('head_inc.php');
 require_once('func.php');
 
-/*
-if(!extension_loaded('fastbbcode')) {
-    dl('fastbbcode.' . PHP_SHLIB_SUFFIX);
-}
-*/
-    $proceeded = false;
-
-
     $moder = NULL;
-
     $proceeded = false;
     $in_response ='';
+
     // Performing SQL query
     $query = 'SELECT s.username, p.subject, p.id as msg_id, p.sender, p.receiver,  CONVERT_TZ(p.created, \'' . $server_tz . 
       '\', \''.$prop_tz.':00\') as created, p.body, s.id as id, p.status from confa_users s, confa_pm p where s.id=p.sender and p.id=' . $msg_id . ' and '. 
@@ -25,7 +17,6 @@ if(!extension_loaded('fastbbcode')) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
     }
-
     if (mysql_num_rows($result) != 0) {
         $row = mysql_fetch_assoc($result);
         $subject = htmlentities(translit($row['subject'], $proceeded), HTML_ENTITIES,'UTF-8');
@@ -39,11 +30,8 @@ if(!extension_loaded('fastbbcode')) {
         if (!is_null($msgbody) && strlen($msgbody) > 0 && !is_null($prefix) && strlen($prefix) > 0){
             $msgbody = $prefix . ' ' . str_replace("\n", "\n" . $prefix . ' ', $msgbody);
         }
-        $msgbody = htmlentities($msgbody, HTML_ENTITIES,'UTF-8');
-        $msgbody = before_bbcode($msgbody);
-        $msgbody = do_bbcode ( $msgbody );
-        $msgbody = nl2br($msgbody);
-        $msgbody = after_bbcode($msgbody);
+        
+        $msgbody = render_for_display($msgbody);
 
         #Translit - start
         $trans_body = $msgbody; //translit($msgbody, $translit_done);

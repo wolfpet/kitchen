@@ -226,6 +226,8 @@ function fix_postimage_tags( $str ) {
  */
 function render_for_display($msgbody) {
 
+  $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$2", $msgbody);
+
   $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
   $msgbody = before_bbcode($msgbody);
   $msgbody = do_bbcode ( $msgbody );
@@ -244,8 +246,7 @@ function render_for_db($msgbody) {
 }
 
 function render_for_editing($msgbody) {
-
-  // TODO:
+  $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$1", $msgbody);
   
   return $msgbody;
 }

@@ -1032,9 +1032,11 @@ function youtube($body, $embed = true) {
           } else {
             $new_body .= "\nLink: [url]".$url."[/url]";
           }
+          $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
       } else if (isset($title)) {
           $new_body = "\n[i][color=lightslategrey]( " . "[b]" . $title . "[/b]; " . $duration . ")[/color][/i] ";
           $new_body .= "\n[img=" . $thumbnail . "]";
+          $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
       }
       return $new_body;
 		},
@@ -1076,7 +1078,7 @@ function rutube($body, $embed = true) {
           $new_body .= "\n[i][color=lightslategrey]( " . "[b]" . $title . "[/b]; " . $duration . ")[/color][/i] ";
           $new_body .= "\n[img=" . $thumbnail . "]";
         }
-        
+        $new_body = '[render=' . $url . ']' . $new_body . '[/render]';        
 			 }
 			 return $new_body;
 			},
@@ -1120,7 +1122,7 @@ function dailymotion($body, $embed = true) {
           $new_body .= "\n[i][color=lightslategrey]( " . "[b]" . $title . "[/b]; " . $duration . ")[/color][/i] ";
           $new_body .= "\n[img=" . $thumbnail . "]";
         }
-        
+        $new_body = '[render=' . $url . ']' . $new_body . '[/render]';        
 			 }
 			 return $new_body;
 			},

@@ -54,7 +54,8 @@ $title = 'Private message';
     $chars = 0;
     if (strlen($body) != 0) {
         $chars = strlen(utf8_decode($body));
-        $ibody = '\'' . mysql_escape_string($body) . '\'';
+        $new_body = render_for_db($body);
+        $ibody = '\'' . mysql_escape_string($new_body) . '\'';
     }
     
     if (strlen($err) == 0 && !$preview) {
@@ -98,8 +99,6 @@ $title = 'Private message';
           #$to = $email;
           $subject = "You have new private message on $host forum website";
           $message = "";
-//        $message = $subject . ' sent by ' . $user . ' with subject: ' . $subj . "\n\n";
-//        $message .= render_for_display($body);
           $message .= '<html><body><style type="text/css">';
           $message .= file_get_contents('css/disc2.css');          
           $message .= '</style><h3 id="subject">'.$subj.'</h3>';
@@ -127,27 +126,19 @@ require_once('html_head_inc.php');
     <base target="bottom">
     </head>
     <body style="background-color: #CCEEEE;">
-    <table width="95%"><tr>
-    <td>
     <h3><?php print($title);?></h3>
-    </td>
-    </tr></table>
 <?php
     if (!is_null($preview)) {
         $author = $user;
         $subject = $subj;
         $created = $time = strftime('%Y-%m-%d %H:%M:%S');
         $translit_done = false;
-        $msgbody = translit($body, $translit_done);
+        $new_body = render_for_db($body);
+        $msgbody = translit($new_body, $translit_done);
         if (!is_null($msgbody) && strlen($msgbody) > 0 && !is_null($prefix) && strlen($prefix) > 0){
             $msgbody = $prefix . ' ' . str_replace("\n", "\n" . $prefix . ' ', $msgbody);
-        }
-        $msgbody = htmlentities($msgbody, HTML_ENTITIES,'UTF-8');
-        $msgbody = before_bbcode($msgbody);
-        $msgbody = do_bbcode ( $msgbody );
-        $msgbody = nl2br($msgbody);
-        $msgbody = after_bbcode($msgbody);
-        
+        }        
+        $msgbody = render_for_display($msgbody);
         $trans_body = $msgbody;
         if ($translit_done === true) {
             $trans_body .= '<BR><BR>[Message was transliterated]';
