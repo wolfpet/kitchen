@@ -183,7 +183,7 @@ function after_bbcode($body) {
     ), $body);    
        
   if ($smileys) {
-    $body = render_smileys($body);
+    $body = render_smileys_but_exclude_pre_tags($body); // render_smileys($body);
   }
   
   return fix_msg_target($body);
@@ -249,6 +249,43 @@ function render_for_editing($msgbody) {
   $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$1", $msgbody);
   
   return $msgbody;
+}
+
+function render_smileys_but_exclude_pre_tags($body) {
+  $pres = array();
+  // exclude pre tags
+  $pos = 0;
+  do {
+    $pos = strpos($body, '<pre>', $pos);
+    if ($pos != FALSE) {
+      $pos += 5; // length of '<pre>'
+      $end = strpos($body, '</pre>', $pos);
+      if ($end != FALSE) {
+        $pres[] = substr($body, $pos, $end-$pos);
+        $body = substr($body, 0, $pos) . substr($body, $end);
+        $pos += 6; // length of </pre>
+      }
+    }
+  } while ($pos != FALSE);  
+  // print(' Body without pre tags: ['.htmlentities( $body, HTML_ENTITIES,'UTF-8').']');
+  
+  // do smileys
+  $body = render_smileys($body);
+  
+  if (count($pres) > 0) {
+    // restore pre tags
+    $i = $pos = 0;
+    do {
+      $pos = strpos($body, '<pre>', $pos);
+      if ($pos != FALSE) {
+        $pos += 5; // length of '<pre>'
+        $body = substr($body, 0, $pos) . $pres[$i++] . substr($body, $pos);
+      }
+    } while ($pos != FALSE);
+    // print(' Body with restored pre tags: ['.htmlentities( $body, HTML_ENTITIES,'UTF-8').']');
+  }
+  
+  return $body;
 }
 
 function render_smileys($body) {
