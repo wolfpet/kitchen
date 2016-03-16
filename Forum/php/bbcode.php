@@ -257,7 +257,7 @@ function render_smileys_but_exclude_pre_tags($body) {
   $pos = 0;
   do {
     $pos = strpos($body, '<pre>', $pos);
-    if ($pos != FALSE) {
+    if ($pos !== FALSE) {
       $pos += 5; // length of '<pre>'
       $end = strpos($body, '</pre>', $pos);
       if ($end != FALSE) {
@@ -266,8 +266,8 @@ function render_smileys_but_exclude_pre_tags($body) {
         $pos += 6; // length of </pre>
       }
     }
-  } while ($pos != FALSE);  
-  // print(' Body without pre tags: ['.htmlentities( $body, HTML_ENTITIES,'UTF-8').']');
+  } while ($pos !== FALSE);  
+  //print(' Body without pre tags: ['.htmlentities( $body, HTML_ENTITIES,'UTF-8').']');
   
   // do smileys
   $body = render_smileys($body);
@@ -277,12 +277,12 @@ function render_smileys_but_exclude_pre_tags($body) {
     $i = $pos = 0;
     do {
       $pos = strpos($body, '<pre>', $pos);
-      if ($pos != FALSE) {
+      if ($pos !== FALSE) {
         $pos += 5; // length of '<pre>'
         $body = substr($body, 0, $pos) . $pres[$i++] . substr($body, $pos);
       }
-    } while ($pos != FALSE);
-    // print(' Body with restored pre tags: ['.htmlentities( $body, HTML_ENTITIES,'UTF-8').']');
+    } while ($pos !== FALSE);
+    //print(' Body with restored pre tags: ['.htmlentities( $body, HTML_ENTITIES,'UTF-8').']');
   }
   
   return $body;
