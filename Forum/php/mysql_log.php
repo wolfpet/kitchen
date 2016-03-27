@@ -4,6 +4,9 @@
 function mysql_log($page, $msg) {
     $time = strftime('%Y-%m-%d %H:%M:%S') . "\n";
   
+	if (!file_exists("log")) {
+		if (!mkdir("log")) return;
+	}
     $log_name = "log/mysql-" .  date("Y-m-d") . ".log"; 
     $fp=fopen( $log_name, 'a' ); 
     if (flock($fp, LOCK_EX)) {
