@@ -12,12 +12,12 @@ require_once('head_inc.php');
 require_once('login_inc.php');
     }
 
-  $err = validate($subj, $body);
+  $err = @validate($subj, $body);
 
   if ( strlen($err) == 0) {   
     if (!$preview) {      
     
-      $log = post($subj, $body, $re, isset($msg_id) ? $msg_id : 0, $ticket, isset($nsfw) ? $nsfw : false);
+      $log = @post($subj, $body, $re, isset($msg_id) ? $msg_id : 0, $ticket, isset($nsfw) ? $nsfw : false);
       if (is_string($log)) {
         die($log);
       } 

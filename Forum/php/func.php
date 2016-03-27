@@ -1550,7 +1550,7 @@ function validate($subj, $body, $to) {
 function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
   global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email, $host, $user, $page_goto;
   
-  $err = validate($subj, $body, $to);
+  $err = @validate($subj, $body, $to);
   
   if (strlen($err) != 0) {
     return $err;
