@@ -1271,7 +1271,7 @@ function login($username, $passw, $create_session=true) {
             $err_login = 'Password is required';
             break;
         }     
-        $query = 'SELECT id, username, password, prop_bold, prop_tz, status, moder, ban, ban_ends, new_pm  FROM confa_users where username = \'' . mysql_escape_string($user) . '\' and password=password(\'' . mysql_escape_string($password) . '\')';
+        $query = 'SELECT id, username, password, prop_bold, prop_tz, status, moder, ban, ban_ends, new_pm  FROM confa_users where username = \'' . mysql_real_escape_string($user) . '\' and password=password(\'' . mysql_real_escape_string($password) . '\')';
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1279,18 +1279,25 @@ function login($username, $passw, $create_session=true) {
         }
         mysql_log( __FILE__ . ':' . __LINE__, 'query succeded numrows= ' . mysql_num_rows($result) . ' for username= ' . $user . ' QUERY: ' . $query);
         if (mysql_num_rows($result)  < 1) {
-        mysql_log( __FILE__ . ':' . __LINE__, 'num_rows < 1' . $user . ' QUERY: ' . $query);
-            $query = 'SELECT id, username, password, prop_bold, prop_tz, status, moder, ban, ban_ends, new_pm  FROM confa_users where username = \'' . mysql_escape_string($user) . '\' and password=old_password(\'' . mysql_escape_string($password) . '\')';
+            mysql_log( __FILE__ . ':' . __LINE__, 'num_rows < 1' . $user . ' QUERY: ' . $query);
+            $query = 'SELECT id, username, password, prop_bold, prop_tz, status, moder, ban, ban_ends, new_pm  FROM confa_users where username = \'' . mysql_real_escape_string($user) . '\' and password=old_password(\'' . mysql_real_escape_string($password) . '\')';
             $result = mysql_query($query);
-        mysql_log( __FILE__ . ':' . __LINE__, 'result ' . $user . ' QUERY: ' . $query);
+            mysql_log( __FILE__ . ':' . __LINE__, 'result ' . $user . ' QUERY: ' . $query);
             if (!$result) {
                 mysql_log( __FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
                 die('Query failed');
             } 
-        mysql_log( __FILE__ . ':' . __LINE__, '2 ' . $user . ' QUERY: ' . $query);
+            mysql_log( __FILE__ . ':' . __LINE__, '2 ' . $user . ' QUERY: ' . $query);
             if (mysql_num_rows($result) == 0) {
-                $err_login = 'Wrong username or password';
-                break;
+                $query = 'SELECT id, username, password, prop_bold, prop_tz, status, moder, ban, ban_ends, new_pm  FROM confa_users where username = \'' . mysql_real_escape_string($user) . '\' and password=\'' . mysql_real_escape_string($password) . '\'';
+                $result = mysql_query($query);            
+                mysql_log( __FILE__ . ':' . __LINE__, '2 ' . $user . ' QUERY: ' . $query);
+                if (mysql_num_rows($result) == 0) {
+                  $err_login = 'Wrong username or password';
+                  break;
+                } else {
+                  mysql_log( __FILE__ . ':' . __LINE__, 'successfull login with plain password');
+                }
             } else {
                 mysql_log( __FILE__ . ':' . __LINE__, 'successfull login with old password');
             }
@@ -1566,7 +1573,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     if (/* check for vimeo/coub/fb clips */ $has_video || preg_match('/id="[a-z]*-video"/', $new_body)) {
         $content_flags |= 4;
     }
-    $ibody = '\'' . mysql_escape_string($new_body) . '\'';
+    $ibody = '\'' . mysql_real_escape_string($new_body) . '\'';
   } else {
     $ibody = "''";
   }
@@ -1576,7 +1583,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
   }
 
   if (isset($to)) {
-    $query = 'SELECT id from confa_users where username=\'' . mysql_escape_string($to) . '\' and status != 2';
+    $query = 'SELECT id from confa_users where username=\'' . mysql_real_escape_string($to) . '\' and status != 2';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1601,7 +1608,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
   if (isset($to_id)) {
     // send pmail
     $query = 'INSERT INTO confa_pm(sender, receiver, subject, body, chars) values(' . $user_id . ', ' . $to_id 
-      . ', \'' . mysql_escape_string($subj) . '\', ' . $ibody . ', ' . $chars . ')';
+      . ', \'' . mysql_real_escape_string($subj) . '\', ' . $ibody . ', ' . $chars . ')';
 
     $result = mysql_query($query);
     if (!$result) {
@@ -1649,7 +1656,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       } 
     }
     // update post
-    $query = 'UPDATE confa_posts SET subject=\'' . mysql_escape_string($subj) . '\',body=' . $ibody . ',modified=now(),ip=' .$ip. ',user_agent=' .$agent. ',content_flags='.$content_flags . ', chars='. $chars . ',views=0 WHERE id=' . $msg_id;
+    $query = 'UPDATE confa_posts SET subject=\'' . mysql_real_escape_string($subj) . '\',body=' . $ibody . ',modified=now(),ip=' .$ip. ',user_agent=' .$agent. ',content_flags='.$content_flags . ', chars='. $chars . ',views=0 WHERE id=' . $msg_id;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1683,7 +1690,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     }
 
     $thread_id = mysql_insert_id();
-    $query = 'INSERT INTO confa_posts(status, parent, author, subject, body, created, thread_id, chars, auth, ip, user_agent, content_flags) values(1, 0, ' . $user_id . ',\'' . mysql_escape_string($subj) . '\', ' . $ibody . ', now(), ' .$thread_id . ', ' . $chars . ', 1, ' . $ip . ', ' . $agent . ', ' . $content_flags . ')';
+    $query = 'INSERT INTO confa_posts(status, parent, author, subject, body, created, thread_id, chars, auth, ip, user_agent, content_flags) values(1, 0, ' . $user_id . ',\'' . mysql_real_escape_string($subj) . '\', ' . $ibody . ', now(), ' .$thread_id . ', ' . $chars . ', 1, ' . $ip . ', ' . $agent . ', ' . $content_flags . ')';
     $result = mysql_query($query);
     if (!$result) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1738,7 +1745,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     } else {
         return 'Cannot find parent for msg=' . $re;
     }
-    $query = 'INSERT INTO confa_posts(status, parent, level, author, subject, body, created, thread_id, chars, auth, ip, user_agent, content_flags, page) values( 1, ' . $re . ', ' . $level . ', ' . $user_id . ',\'' . mysql_escape_string($subj) . '\', ' . $ibody . ', now(), ' . $thread_id . ', ' . $chars . ', 1, ' . $ip . ', ' . $agent . ', ' . $content_flags . ', '. $msg_page . ')'; 
+    $query = 'INSERT INTO confa_posts(status, parent, level, author, subject, body, created, thread_id, chars, auth, ip, user_agent, content_flags, page) values( 1, ' . $re . ', ' . $level . ', ' . $user_id . ',\'' . mysql_real_escape_string($subj) . '\', ' . $ibody . ', now(), ' . $thread_id . ', ' . $chars . ', 1, ' . $ip . ', ' . $agent . ', ' . $content_flags . ', '. $msg_page . ')'; 
     $result = mysql_query($query);
     if (!$result) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1842,5 +1849,22 @@ function smileys($fieldId=null) {
     closedir($handle);
   }
   return $out;
+}
+
+function isonline($host) {
+  if($socket =@ fsockopen($host, 80, $errno, $errstr, 0.5)) {
+    fclose($socket);
+    return true;
+  } else {
+    return false;
+  }  
+}
+
+function add_postimage() {
+  if (isonline('mod.postimage.org')) {
+    return '<script type="text/javascript" src="http://mod.postimage.org/website-english-hotlink-family.js" charset="utf-8"></script>';
+  } else {
+    return '<!-- postimage server is down -->';
+  }
 }
 ?>

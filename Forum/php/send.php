@@ -9,7 +9,7 @@ require_once('html_head_inc.php');
     $ticket = '' . ip2long(substr($ip, 1, strlen($ip) - 2)) . '-' . time();
 $thread_owner = false;
 ?>
-<script type="text/javascript" src="http://mod.postimage.org/website-english-hotlink-family.js" charset="utf-8"></script>
+<?=add_postimage()?>
 <base target="bottom">
 </head>
 <body style="background-color: #CCEEEE;" onload="javascript:var field = document.getElementById('<?=is_null($pm_id) ? "to" : "subj"?>'); addEvent(field,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); field.focus();">
