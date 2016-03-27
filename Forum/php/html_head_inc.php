@@ -66,6 +66,7 @@ $( document ).ready(function() {
   var bydate = document.getElementById('bydate');
   if (bydate !== null) {
     var update_bydate_counter = function() {
+      var url1 = "./api/messages?mode=bydate&format=count_only";
       console.log("calling bydate("+url1+")");
       $.ajax({
              type: "GET",
