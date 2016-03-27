@@ -3,7 +3,7 @@
 
   require_once('login_inc.php');
   $lastpage = basename($lastpage);
-  header("Location: $lastpage", TRUE, 302);
+  // header("Location: $lastpage", TRUE, 302);
   require_once($lastpage);
 ?>
 
