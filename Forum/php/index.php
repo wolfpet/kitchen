@@ -36,7 +36,14 @@ $eventManager->attach('micro', function($event, $app) {
     } else {
       // if cookies are set, they would have already been handled by auth.php
     }
-
+/* Turn the caching off for IE (seriously... fuck M$)
+header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+header('Pragma: no-cache');
+*/
+    $app->response->setRawHeader('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
+    $app->response->setRawHeader('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+    $app->response->setRawHeader('Pragma: no-cache');
     // Return false to stop the operation
     return true;
   }
@@ -354,6 +361,11 @@ $app->get('/api/messages', function() use ($app) {
   if (is_null($mode)) {
     $mode = 'bydate';
   }
+
+  $format = $app->request->getQuery('format');
+  if (is_null($format)) {
+    $format = 'all';
+  }
   
   $count = $app->request->getQuery('count');
   
@@ -460,7 +472,11 @@ $app->get('/api/messages', function() use ($app) {
   }
 
   $response->setContentType('application/json');
-  $response->setJsonContent(array('count' => $count,'messages' => $messages));
+  if ($format=="count_only") {
+    $response->setJsonContent(array('count' => $count));        
+  } else {
+    $response->setJsonContent(array('count' => $count,'messages' => $messages));    
+  }
   
   return $response;  
 });

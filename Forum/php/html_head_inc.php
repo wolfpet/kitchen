@@ -59,27 +59,42 @@ function selectMsg(id) {
   }
 }
 
+var bydate_timer = -1;
+var bydate_count = 0;
+
 $( document ).ready(function() {
   var bydate = document.getElementById('bydate');
   if (bydate !== null) {
     var update_bydate_counter = function() {
-      // console.log("calling bydate()");
+      console.log("calling bydate("+url1+")");
       $.ajax({
-             type: "get",
-             url: "./api/messages?mode=bydate",
-             success: function(obj) {
-                var count = obj.count;
-                // console.log("bydate=" + count);
+             type: "GET",
+             url: url1,
+             success: function(obj1) {
+                console.log("bydate object=" + obj1);
+                var count = obj1.count;
+                console.log("bydate=" + count);
                 var text = bydate.innerHTML;
                 var braket = text.indexOf("(");
                 if (braket >= 0) text = text.substring(0, braket);
                 if (count > 0) text += "(<b>" + count + "</b>)";
                 bydate.innerHTML = text;
+                // adjust frequency of calls if necessary
+                if (bydate_count == 10) {
+                  window.clearInterval(bydate_timer);
+                  bydate_timer = window.setInterval(function() {update_bydate_counter();}, 5*60000);                   
+                  console.log('Checking bydate every 5 min');
+                } else if (bydate_count == 20) {
+                  window.clearInterval(bydate_timer);
+                  bydate_timer = window.setInterval(function() {update_bydate_counter();}, 15*60000);                   
+                  console.log('Checking bydate every 15 min');
+                }                   
              }
            });      
     };
-    window.setTimeout( update_bydate_counter, 1000 );
-    window.setInterval(update_bydate_counter, 60000); 
+    window.setTimeout( function() {update_bydate_counter();}, 1000 );
+    bydate_timer = window.setInterval(function(){update_bydate_counter();}, 60000); 
+    console.log('Checking bydate every minute');
   }
 });
 
