@@ -149,7 +149,6 @@ function before_bbcode($original_body, &$has_video=null) {
  * Run this after bbcode is called to finalize the rendering of the message body 
  */
 function after_bbcode($body) {
-  global $smileys;
   
   // handle [iframe] tag
   $body = preg_replace_callback('#\[iframe (.*)\]#i',
@@ -182,10 +181,6 @@ function after_bbcode($body) {
     '©'
     ), $body);    
        
-  if ($smileys) {
-    $body = render_smileys_but_exclude_pre_tags($body); // render_smileys($body);
-  }
-  
   return fix_msg_target($body);
 }
 
@@ -228,11 +223,25 @@ function render_for_display($msgbody) {
 
   $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$2", $msgbody);
 
-  $msgbody = htmlentities( $msgbody, HTML_ENTITIES,'UTF-8');
-  $msgbody = before_bbcode($msgbody);
-  $msgbody = do_bbcode ( $msgbody );
-  $msgbody = nl2br($msgbody);
-  $msgbody = after_bbcode($msgbody);
+  $msgbody = render_but_exclude_tags($msgbody, function($body) {
+    global $smileys;
+
+    if ($smileys) {
+      $body = render_smileys_step1($body); 
+    }
+
+    $body = htmlentities($body, HTML_ENTITIES,'UTF-8');
+
+    if ($smileys) {
+      $body = render_smileys_step2($body); 
+    }
+
+	  $body = before_bbcode($body);
+	  $body = do_bbcode( $body );
+	  $body = nl2br($body);
+	  $body = after_bbcode($body);
+	  return $body;
+  }, '[code]','<code>');
   
   return $msgbody;
 }
@@ -246,51 +255,63 @@ function render_for_db($msgbody) {
 }
 
 function render_for_editing($msgbody) {
+  // process [render] tags 
   $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$1", $msgbody);
   
   return $msgbody;
 }
 
 function render_smileys_but_exclude_pre_tags($body) {
+	return render_but_exclude_tags($body, 'render_smileys');
+}
+
+function render_but_exclude_tags($body, $func, $tag='<pre>', $rendered_tag='<pre>') {
   $pres = array();
-  // exclude pre tags
+  
+  $taglen = strlen($tag);
+  $closing_tag = substr($tag,0,1) . '/' . substr($tag, 1);
+  
+  // exclude tags
   $pos = 0;
   do {
-    $pos = strpos($body, '<pre>', $pos);
+    $pos = strpos($body, $tag, $pos);
     if ($pos !== FALSE) {
-      $pos += 5; // length of '<pre>'
-      $end = strpos($body, '</pre>', $pos);
+      $pos += $taglen; 
+      $end = strpos($body, $closing_tag, $pos);
       if ($end != FALSE) {
         $pres[] = substr($body, $pos, $end-$pos);
         $body = substr($body, 0, $pos) . substr($body, $end);
-        $pos += 6; // length of </pre>
+        $pos += $taglen + 1; // length of closing tag
       }
     }
   } while ($pos !== FALSE);  
-  //print(' Body without pre tags: ['.htmlentities( $body, HTML_ENTITIES,'UTF-8').']');
+  // print(' Body without '.$tag.' tags: "'.htmlentities($body, HTML_ENTITIES,'UTF-8').'" taglen='.$taglen.' closing tag='.$closing_tag);
   
-  // do smileys
-  $body = render_smileys($body);
+  // do actual work
+  $body = $func($body);
   
   if (count($pres) > 0) {
     // restore pre tags
     $i = $pos = 0;
     do {
-      $pos = strpos($body, '<pre>', $pos);
+      $pos = strpos($body, $rendered_tag, $pos);
       if ($pos !== FALSE) {
-        $pos += 5; // length of '<pre>'
+        $pos += strlen($rendered_tag); 
         $body = substr($body, 0, $pos) . $pres[$i++] . substr($body, $pos);
       }
     } while ($pos !== FALSE);
-    //print(' Body with restored pre tags: ['.htmlentities( $body, HTML_ENTITIES,'UTF-8').']');
+    // print(' Body with restored '.$tag.' tags: "'.htmlentities( $body, HTML_ENTITIES,'UTF-8').'"');
   }
   
   return $body;
 }
 
 function render_smileys($body) {
+  return render_smileys_step2(render_smileys_step1($body));
+}
+
+function render_smileys_step1($body) {
   // first translate short smiles e.g. :)
-  global $host, $root_dir;  
   //  :D  :)  :(  :o :? 8) etc
   $body = preg_replace( array (
     // search
@@ -313,7 +334,12 @@ function render_smileys($body) {
     ':cool:',
     ':neutral:'
     ), $body);    
-  
+
+  return $body;
+}
+
+function render_smileys_step2($body) {
+  global $host, $root_dir;  
   // then :<word>: e.g.  :shock: or :lol: 
   $body = preg_replace_callback('#:([a-z]+):#is',
     function ($matches) use ($host, $root_dir) {
@@ -332,5 +358,6 @@ function render_smileys($body) {
     
   return $body;
 }
+
 
 ?>
