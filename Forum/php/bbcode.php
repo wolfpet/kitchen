@@ -297,7 +297,7 @@ function render_but_exclude_tags($body, $func, $tag='<pre>', $rendered_tag='<pre
       $pos = strpos($body, $rendered_tag, $pos);
       if ($pos !== FALSE) {
         $pos += strlen($rendered_tag); 
-        $body = substr($body, 0, $pos) . $pres[$i++] . substr($body, $pos);
+        $body = substr($body, 0, $pos) . htmlentities($pres[$i++], HTML_ENTITIES,'UTF-8') . substr($body, $pos);
       }
     } while ($pos !== FALSE);
     // print(' Body with restored '.$tag.' tags: "'.htmlentities( $body, HTML_ENTITIES,'UTF-8').'"');
