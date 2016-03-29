@@ -1564,7 +1564,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
   if (!is_null($body) && strlen($body) != 0) {
     $chars = strlen(utf8_decode($body));
     $length = strlen($body);
-    if (stristr(render_for_display($body), "<img style")) {
+    if (has_images($body)) {
         $content_flags |= 2;
     }
     $new_body = render_for_db($body);

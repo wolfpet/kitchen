@@ -219,20 +219,25 @@ function fix_postimage_tags( $str ) {
 /**
  * Renderers
  */
-function render_for_display($msgbody) {
+function render_for_display($msgbody, $render_smiles=true) {
 
   $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$2", $msgbody);
 
-  $msgbody = render_but_exclude_tags($msgbody, function($body) {
+  $msgbody = render_but_exclude_tags($msgbody, function($body) use ($render_smiles) {
     global $smileys;
 
     if ($smileys) {
+      // do nothing
+    } else 
+      $render_smiles = false;
+    
+    if ($render_smiles) {
       $body = render_smileys_step1($body); 
     }
 
     $body = htmlentities($body, HTML_ENTITIES,'UTF-8');
 
-    if ($smileys) {
+    if ($render_smiles) {
       $body = render_smileys_step2($body); 
     }
 
@@ -359,5 +364,7 @@ function render_smileys_step2($body) {
   return $body;
 }
 
-
+function has_images($body) {
+  return stristr(render_for_display($body, false), "<img style");
+}
 ?>
