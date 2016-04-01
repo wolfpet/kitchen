@@ -10,7 +10,7 @@
         if (tagId == 1)
         {
           startTag = '[url=';
-          endTag = ']Title[/url]';
+          endTag = ']Link[/url]';
         }
         // Image tag
         else if (tagId == 2)
@@ -30,6 +30,11 @@
         myField.value = myField.value.substring(0, startPos)
           + startTag + myField.value.substring(startPos, endPos)
           + endTag + myField.value.substring(endPos, myField.value.length);
+        if (tagId == 1 && myField.setSelectionRange) { 
+          var pos = startPos + startTag.length + (endPos - startPos) + 1;
+          myField.setSelectionRange(pos, pos + 4); // length of 'Link'
+        }
+        myField.focus();          
       } 
       //IE support
       else if (document.selection)
