@@ -566,15 +566,19 @@ $app->put('/api/messages/{id:[0-9]+}/like', function($msg_id) {
 });
 
 function api_get_ratings($msg_id) {
+  global $reactions, $host, $root_dir;
   $likes = 0;
   $dislikes = 0;
   $ratings = array();
+  $reactions1 = array();
   
-  $query = 'SELECT u.username as userlike, l.value as valuelike from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
+  $query = 'SELECT u.username as userlike, l.value as valuelike, l.reaction from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
   $result = mysql_query($query);
   if (!$result) {
     return $result;
   }
+  
+  $debug = '';
   
   while($row = mysql_fetch_assoc($result)) {
       if ($row['valuelike'] > 0) {
@@ -582,11 +586,25 @@ function api_get_ratings($msg_id) {
       } else if ($row['valuelike'] < 0){
         $dislikes++;
       }
-      $ratings[] = array( 'name' => $row['userlike'], 'count' => intval($row['valuelike']));
+      if ($row['reaction'] != null) {
+        $reaction = $row['reaction'];
+        if (array_key_exists($reaction, $reactions1)) {
+          $reactions1[$reaction]['users'][] = $row['userlike'];
+        } else {
+          $reactions1[$reaction] = array("users" => array($row['userlike']), "url" => 'http://'.$host.$root_dir.'images/smiles/'.$row['reaction'].'.gif');
+        }
+      }
+      if (!is_null($row['valuelike']))
+        $ratings[] = array( 'name' => $row['userlike'], 'count' => intval($row['valuelike']));
   }
   mysql_free_result($result);
 
-  return array('likes' => $likes, 'dislikes' => $dislikes, 'ratings' => $ratings);
+  $result = array('likes' => $likes, 'dislikes' => $dislikes, 'ratings' => $ratings);
+  
+  if (sizeof($reactions1) > 0) {
+      $result['reactions'] = $reactions1;
+  }
+  return $result;
 }
 
 /**
@@ -618,6 +636,60 @@ $app->delete('/api/messages/{id:[0-9]+}/like', function($msg_id) {
       // error
       $response->setStatusCode(400, 'Error');
       $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+    } else {
+      $response->setJsonContent(array('value' => intval($new_value), 'ratings' => $ratings['ratings']));
+    }
+  }
+
+  $response->setContentType('application/json');
+  
+  return $response;
+});
+
+/**
+ * PATCH /messages/$id/reaction/{reaction}
+ */
+$app->patch('/api/messages/{id:[0-9]+}/reactions/{reaction:[a-z]+}', function($msg_id, $reaction) {
+  global $logged_in, $user_id, $err_login, $reactions;
+  
+  $response = new Response();
+
+  if (!$logged_in) {
+    $response->setStatusCode(403, 'Authentication error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
+    
+    return $response;
+  }
+  
+  if (!isset($reactions)) {
+    $response->setStatusCode(501, 'Not Implemented');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( "Reactions not enabled on this forum" )));
+    
+    return $response;    
+  } else if (!array_key_exists($reaction, $reactions)) {
+    $response->setStatusCode(400, 'Error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( "Reaction '$reaction' not allowed on this forum" )));
+    
+    return $response;
+  }
+  
+  $new_value = like($user_id, $msg_id, null, $reaction);
+  
+  if ($new_value === false) {
+    // error
+    $response->setStatusCode(400, 'Error');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+  } else {
+    $ratings = api_get_ratings($msg_id);
+    if (!$ratings) {
+      // error
+      $response->setStatusCode(400, 'Error');
+      $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+    } else if (array_key_exists('reactions', $ratings)) {
+      $response->setJsonContent(array('value' => intval($new_value), 'ratings' => $ratings['ratings'], 'reactions' => $ratings['reactions']));
     } else {
       $response->setJsonContent(array('value' => intval($new_value), 'ratings' => $ratings['ratings']));
     }

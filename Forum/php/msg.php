@@ -248,7 +248,19 @@ Closed |
 ?>
 <BR>
 <?php
-$footer = '<div><span id="rating">';
+$footer = '<div>';
+// Reactions
+if (sizeof($reaction) > 0) {
+  $footer .= '<span id="reaction">';
+  $keys = array_keys($reaction);
+  sort($keys);
+  foreach ($keys as $key) {
+    $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" title="'.$reaction[$key].'"/ valign="middle">';
+  }
+$footer .= '</span> ';
+}
+// Ratings
+$footer .= '<span id="rating">';
 if (strlen($bookmarks) > 0) {
   $footer .= ' <FONT color="darkblue">' . $bookmarks . '</FONT>';
 }

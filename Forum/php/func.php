@@ -1380,11 +1380,17 @@ function login($username, $passw, $create_session=true) {
     return $logged_in;
 }
 
-function like($user_id, $msg_id, $val=1) {
+function like($user_id, $msg_id, $val=1, $reaction=null) {
   
-  $query = 'INSERT INTO confa_likes(user, post, value) values(' .
-      $user_id . ', ' . $msg_id . ', ' . $val . ') ON DUPLICATE KEY UPDATE value=value+ ' . $val ;
-
+  if (is_null($reaction)) 
+    $query = 'INSERT INTO confa_likes(user, post, value) values(' .
+      $user_id . ', ' . $msg_id . ', ' . $val . ') ON DUPLICATE KEY UPDATE value=value+' . $val;
+  else
+    $query = 'INSERT INTO confa_likes(user, post, reaction) values(' .
+      $user_id . ', ' . $msg_id . ', \''. mysql_real_escape_string($reaction).'\') ON DUPLICATE KEY UPDATE reaction=\'' . mysql_real_escape_string($reaction) . '\'';
+  
+  mysql_log( __FILE__ . ":" . __LINE__, 'Reaction QUERY: ' . $query);
+  
   $result = mysql_query($query);
   if (!$result) {
       mysql_log( __FILE__ . ":" . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -1417,7 +1423,7 @@ function like($user_id, $msg_id, $val=1) {
     case 0:
          if ($val > 0) {
              $query = 'UPDATE confa_posts set dislikes=dislikes-1 where id=' . $msg_id;
-         } else /* dislike */ {
+         } else if ($val < 0)/* dislike */ {
              $query = 'UPDATE confa_posts set likes=likes-1 where id=' . $msg_id;
          }
         break;

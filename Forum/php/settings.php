@@ -15,6 +15,20 @@ date_default_timezone_set('America/Toronto');
 $title='<forum title>';
 $from_email = '<supportemailaddress>';
 
+// Registration mode (by default, closed)
+$reg_type = REG_TYPE_CLOSED; // REG_TYPE_OPEN, REG_TYPE_CONFIRM;
+
+$reactions = array(
+  'clap' => 0,
+  'lol' => 0,
+  'rofl' => 0,
+  'confused' => 0,
+  'shock' => 0,
+  'weep' => 0,
+  'facepalm' => 0,
+  'mad' => 0,
+);
+
 // $google_key = ""; // (optional) specify your Google API key here to enable YouTube metadata
 
 // $recaptcha_site_key = ''; // (optional) specify your Google reCAPTCHA site key here to enable bot protection for registration page

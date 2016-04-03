@@ -9,7 +9,7 @@ require_once('head_inc.php');
     $in_response ='';
 
     // Performing SQL query to retrieve likes/dislikes
-    $query = 'SELECT u.username as userlike, l.value as valuelike from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
+    $query = 'SELECT u.username as userlike, l.value as valuelike, l.reaction from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query 1 failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -19,6 +19,7 @@ require_once('head_inc.php');
     $reads = '';
     $likes = '';
     $dislikes = '';
+    $reaction = array(); // reaction to names
     
     while($row = mysql_fetch_assoc($result)) {
         if ($row['valuelike'] > 0) {
@@ -37,11 +38,18 @@ require_once('head_inc.php');
           if ($row['valuelike'] < -1) {
             $dislikes .= '(' . ( 0 - $row['valuelike']) . ')';
           }
-        } else {
+        } else if (!is_null($row['valuelike'])){
           if (strlen($reads) > 0) {
             $reads .= ', ';
           }
           $reads .= $row['userlike'];
+        }
+        if (!is_null($row['reaction']) && isset($reactions) && array_key_exists($row['reaction'], $reactions)) {
+          if (array_key_exists($row['reaction'], $reaction)) {
+            $reaction[$row['reaction']] .= ", ".$row['userlike'];
+          } else {
+            $reaction[$row['reaction']] = $row['userlike'];
+          }
         }
     }
     mysql_free_result($result);
