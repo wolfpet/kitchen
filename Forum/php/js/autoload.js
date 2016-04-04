@@ -62,7 +62,8 @@ function scroll2Top(element){
   if (ele != null) {
     var sidebar = document.getElementById("sidebar");
     if (sidebar == null)
-      setTimeout(window.scrollTo(ele.offsetLeft,ele.offsetTop), 100);
+      // setTimeout(window.scrollTo(ele.offsetLeft,ele.offsetTop), 100);
+      $('#'+element).scrollTop(0);
     else
       sidebar.scrollTop = 0;
   } else {
