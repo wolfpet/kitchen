@@ -58,7 +58,7 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
         if (strlen($user) > 63) {
             $err .= 'Username is too long<BR>';
         } else if ( strlen( $err ) == 0) {
-            $query = 'SELECT username from confa_users where username = \'' . mysql_escape_string($user) . '\'';
+            $query = 'SELECT username from confa_users where username = \'' . mysql_real_escape_string($user) . '\'';
             $result = mysql_query($query);
             if (!$result) {
                 mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -73,7 +73,7 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
                     mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
                     die('Query failed');
                 }
-                $query = 'SELECT username from confa_regs  where username = \'' . mysql_escape_string($user) . '\'';
+                $query = 'SELECT username from confa_regs  where username = \'' . mysql_real_escape_string($user) . '\'';
                 $result = mysql_query($query);
                 if (!$result) {
                     mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -132,7 +132,7 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
     if (strlen($err) == 0) {
         $tm = date('Y-m-d H:i:s');
         $md5 = md5($tm . $user);
-        $query = 'INSERT into confa_regs(username, password, email, actkey) values(\'' .  mysql_escape_string($user) . '\', password(\'' . $password . '\'), \'' . $email . '\', \'' . $md5 . '\')';
+        $query = 'INSERT into confa_regs(username, password, email, actkey) values(\'' .  mysql_real_escape_string($user) . '\', password(\'' . $password . '\'), \'' . $email . '\', \'' . $md5 . '\')';
         $result = mysql_query( $query );
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query); 
@@ -147,7 +147,7 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
         $message = "To activate your account, please click the following link or copy and paste it in your browser:<p><a href=\"http://" . $host . $root_dir . $page_activate . '?act_link=' . $md5 . '">http://' . $host . $root_dir . $page_activate . '?act_link=' . $md5 . "</a><p>This link will be valid for 24 hours.\n";
         $from = $from_email;
         $headers = "From: $from";
-        if ( isset($reg_type) && $reg_type == REG_TYPE_OPEN )
+        if ( !isset($reg_type) || $reg_type == REG_TYPE_OPEN )
           print($message);
         else if ( isset($reg_type) && $reg_type == REG_TYPE_EMAIL ) {
           mail($to,$subject,$message,$headers);

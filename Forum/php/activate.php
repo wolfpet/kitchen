@@ -9,9 +9,8 @@ require_once('html_head_inc.php');
 </head>
 <?php
 
-if (!isset($reg_type) ||
-    (isset($reg_type) && $reg_type == REG_TYPE_CLOSED)) {
-  die('Изза абьюза форума регистрация прекращена на неопределенный срок.');
+if (isset($reg_type) && $reg_type == REG_TYPE_CLOSED) {
+  die('Registration is closed');
 }
 if ( strlen($act_link) > 0 ) {
     $query = 'SELECT username, password, timediff(current_timestamp, created) as td, email, actkey from confa_regs where actkey=\'' . mysql_real_escape_string($act_link) . '\'';

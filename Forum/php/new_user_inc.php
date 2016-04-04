@@ -1,6 +1,6 @@
 <?php
 /*$Id: new_user_inc.php 381 2009-11-02 20:25:46Z dmitriy $*/
-if ( isset($reg_type) && 
+if ( !isset($reg_type) || 
    ( $reg_type == REG_TYPE_OPEN ||
      $reg_type == REG_TYPE_EMAIL ||
      $reg_type == REG_TYPE_CONFIRM)) { 
@@ -56,7 +56,7 @@ Due to abuse of free, impersonated automatic registration system, a new way of r
 Goal is to make sure a person, trying to be registered is a real person, is not trying to register multiple accounts
 and planning to be a good member of our community. In a very rare, unlikely case, as a result of long and multiple 
 conflicts with the community, account may be suspended.
-<br>To register, simply send email with request and desired nick to <B>dmitriy@radier.ca</B><!--<img src="/images/myemail.png"/>-->,
+<br>To register, simply send email with request and desired nick to <B><?=$from_email?></B><!--<img src="/images/myemail.png"/>-->,
 you will get response with the password shortly.
 However, in some cases, identification through some of the acceptable ways may be requested, such as request
 to send email through linkedin or other methods.
