@@ -589,9 +589,9 @@ function api_get_ratings($msg_id) {
       if ($row['reaction'] != null) {
         $reaction = $row['reaction'];
         if (array_key_exists($reaction, $reactions1)) {
-          $reactions1[$reaction]['users'][] = $row['userlike'];
+          $reactions1[$reaction]['names'][] = $row['userlike'];
         } else {
-          $reactions1[$reaction] = array("users" => array($row['userlike']), "url" => 'http://'.$host.$root_dir.'images/smiles/'.$row['reaction'].'.gif');
+          $reactions1[$reaction] = array("names" => array($row['userlike']), "url" => 'http://'.$host.$root_dir.'images/smiles/'.$row['reaction'].'.gif');
         }
       }
       if (!is_null($row['valuelike']))
