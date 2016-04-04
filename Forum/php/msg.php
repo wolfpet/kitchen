@@ -290,15 +290,17 @@ if (isset($reactions)) {
 <?php
 $footer = '<div>';
 // Reactions
+$footer .= '<span id="reaction">';
 if (sizeof($reaction) > 0) {
-  $footer .= '<span id="reaction">';
-  $keys = array_keys($reaction);
-  sort($keys);
-  foreach ($keys as $key) {
-    $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" title="'.$reaction[$key].'" valign="middle"/>';
+  $add_space = false;
+  foreach (array_keys($reactions) as $key) {
+    if (array_key_exists($key, $reaction)) {
+      if ($add_space) $footer .= "&nbsp;"; else $add_space = true;
+      $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" title="'.$reaction[$key].'" valign="middle"/>';
+    }
   }
-  $footer .= '</span> ';
 }
+$footer .= '</span>';
 // Ratings
 $footer .= '<span id="rating">';
 if (strlen($bookmarks) > 0) {
