@@ -173,3 +173,14 @@ em {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+/* Scroll2Top */
+#scroll2top {
+    position: fixed;
+    top: 8px !important;
+    left: 8px !important; 
+    display:none;
+}
+#scroll2top a {
+  padding:5px;
+}

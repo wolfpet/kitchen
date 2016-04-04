@@ -41,7 +41,7 @@ function load_threads(div, id, count) {
               max_id = text.substring(id + 3, start);
               console.log("new max id=" + (max_id));
               div.innerHTML = div.innerHTML + " " + text.substring(start);
-              if (instrument !== undefined) {
+              if (typeof instrument !== 'undefined') {
                 instrument("#" + div.id);
               }
             }
@@ -82,10 +82,20 @@ function load_more() {
 	var y = yOffset + window.innerHeight;
 	if ( y >= contentHeight - 300) {
 		load_threads(div, max_id, limit);
-    if (instrument !== undefined) {
+    if (typeof instrument !== 'undefined') {
       instrument("#" + div.id);
     }
 	}
+  var scroller = document.getElementById("scroll2top");
+  if (scroller != null) {
+    var rect = div.getBoundingClientRect();
+    // console.log("scroller y=" + y + " yOffset=" + yOffset + " threadsY=" + rect.top);
+    if (rect.top < 0) {
+      scroller.style.display = "block";
+    } else {
+      scroller.style.display = "none";
+    }
+  }
 }
 
 function set_max_id(id, how_many) {

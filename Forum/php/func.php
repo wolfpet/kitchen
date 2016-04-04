@@ -209,6 +209,7 @@ function autoload_threads($last_thread, $limit) {?>
   <script language="JavaScript">
     set_max_id(<?=$last_thread?>, "<?=$limit?>");
   </script>
+  <div id="scroll2top"><a href="javascript:scroll2Top('html_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity = 0.2;" style="opacity:0.2" onmouseover="this.style.opacity=1;"></a></div>
   <div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div><?php 
 }
 
@@ -312,7 +313,7 @@ function print_subject($subj) {
   return preg_replace('#\((?:c|C|с|С)\)#', '©', preg_replace('#([^\.])\.$#', '$1', preg_replace('#(\(\-+\))|(\(edited\))#', '', trim($subj))));
 }
 
-function print_line($row, $collapsed=false, $add_arrow=true) {
+function print_line($row, $collapsed=false, $add_arrow=false) {
   
   global $root_dir;
   global $page_msg;
