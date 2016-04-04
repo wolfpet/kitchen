@@ -38,39 +38,39 @@ function toggleDiv(id) {
 var test = false;
 
 function load_rating(data) {
-      console.log("Loading the rating " + JSON.stringify(data));
-      var rating = '<font color="green">';
-      var likes = '';
-      for (var i=0; i < data.ratings.length; i++) {
-        if (data.ratings[i].count > 0) {
-          if (likes.length > 0) likes += ',';
-          likes += ' ' + data.ratings[i].name;
-          if (data.ratings[i].count > 1) 
-          likes += '(' + data.ratings[i].count + ')';
-        }
-      }
-      rating += likes + '</font><font color="red">';
-      likes = '';
-      for (var i=0; i < data.ratings.length; i++) {
-        if (data.ratings[i].count < 0) {
-          if (likes.length > 0) likes += ',';
-          likes += ' ' + data.ratings[i].name;
-          if (data.ratings[i].count < -1) 
-          likes += '(' + (-data.ratings[i].count) + ')';
-        }
-      }
-      rating += likes + '</font><font color="lightgray">';
-      likes = '';
-      for (var i=0; i < data.ratings.length; i++) {
-        if (data.ratings[i].count == 0) {
-          if (likes.length > 0) likes += ',';
-          likes += ' ' + data.ratings[i].name;
-        }
-      }
-      rating += likes + '</font>';
-      console.log(rating);
-      $('#rating').html(rating); // show response from the php script.
+  console.log("Loading the rating " + JSON.stringify(data));
+  var rating = '<font color="green">';
+  var likes = '';
+  for (var i=0; i < data.ratings.length; i++) {
+    if (data.ratings[i].count > 0) {
+      if (likes.length > 0) likes += ',';
+      likes += ' ' + data.ratings[i].name;
+      if (data.ratings[i].count > 1) 
+      likes += '(' + data.ratings[i].count + ')';
     }
+  }
+  rating += likes + '</font><font color="red">';
+  likes = '';
+  for (var i=0; i < data.ratings.length; i++) {
+    if (data.ratings[i].count < 0) {
+      if (likes.length > 0) likes += ',';
+      likes += ' ' + data.ratings[i].name;
+      if (data.ratings[i].count < -1) 
+      likes += '(' + (-data.ratings[i].count) + ')';
+    }
+  }
+  rating += likes + '</font><font color="lightgray">';
+  likes = '';
+  for (var i=0; i < data.ratings.length; i++) {
+    if (data.ratings[i].count == 0) {
+      if (likes.length > 0) likes += ',';
+      likes += ' ' + data.ratings[i].name;
+    }
+  }
+  rating += likes + '</font>';
+  console.log(rating);
+  $('#rating').html(rating); // show response from the php script.
+}
     
 function like(msg_id, rating) {
   var method = rating > 0 ? "PUT" : "DELETE";
@@ -85,6 +85,27 @@ function like(msg_id, rating) {
       success: load_rating
     });
   }
+}
+
+function load_reaction(data) {
+  console.log("Loading the reaction " + JSON.stringify(data));
+  var reaction = '';
+  for (var r in data.reactions) {
+    reaction += '<img src="' + data.reactions[r].url + '" alt="' + r + '" title="' + data.reactions[r].names.join() + '" valign="middle"/>';
+  }
+  console.log(reaction);
+  $('#reaction').html(reaction); // show response from the php script.
+}
+
+function react(msg_id, reaction) {
+  var method = "PATCH";
+  var action = "/api/messages/"  + msg_id + "/reactions/" + reaction;
+  console.log(method + " " + action);
+  $.ajax({
+    type: method,
+    url: action,
+    success: load_reaction
+  });
 }
 
 </script>
@@ -184,7 +205,26 @@ Closed |
 ?>
 |
 <a target="bottom" href="javascript:like(<?=$msg_id?>,1);"><font color="green">+</FONT></a>
- <font color="blue">Reputation</font>
+<?php
+if (isset($reactions)) {
+?>
+<div class="dropdown"><span><font color="blue">Reaction</font></span><div class="dropdown-content">
+<?php
+  $icons = '';
+  foreach (array_keys($reactions) as $key) {
+    if (strlen($icons) > 0) $icons .= '&nbsp;';
+    $icons .= '<a href="javascript:react('.$msg_id.',\''.$key.'\');"><img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" title="'.$key.'" valign="middle"/></a>';
+  }
+  print($icons);
+?>
+</div></div>
+<?php 
+} else { 
+?>
+<font color="blue">Reputation</font>
+<?php 
+}
+?>
 <a target="bottom" href="javascript:like(<?=$msg_id?>,-1);"><font color="red">-</font></a>
 |
 <?php
@@ -255,9 +295,9 @@ if (sizeof($reaction) > 0) {
   $keys = array_keys($reaction);
   sort($keys);
   foreach ($keys as $key) {
-    $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" title="'.$reaction[$key].'"/ valign="middle">';
+    $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" title="'.$reaction[$key].'" valign="middle"/>';
   }
-$footer .= '</span> ';
+  $footer .= '</span> ';
 }
 // Ratings
 $footer .= '<span id="rating">';
