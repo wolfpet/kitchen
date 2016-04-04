@@ -1384,7 +1384,7 @@ function like($user_id, $msg_id, $val=1, $reaction=null) {
   
   if (is_null($reaction)) 
     $query = 'INSERT INTO confa_likes(user, post, value) values(' .
-      $user_id . ', ' . $msg_id . ', ' . $val . ') ON DUPLICATE KEY UPDATE value=value+' . $val;
+      $user_id . ', ' . $msg_id . ', ' . $val . ') ON DUPLICATE KEY UPDATE value=IFNULL(value+' . $val.', '.$val.')';
   else
     $query = 'INSERT INTO confa_likes(user, post, reaction) values(' .
       $user_id . ', ' . $msg_id . ', \''. mysql_real_escape_string($reaction).'\') ON DUPLICATE KEY UPDATE reaction=IF(reaction=\'' . mysql_real_escape_string($reaction) . '\', NULL, \'' . mysql_real_escape_string($reaction) . '\')';
