@@ -523,6 +523,37 @@ $app->get('/api/profile', function() use ($app) {
   return $response;
 });
 
+/**
+ * GET /api/reactions
+ *
+ * Returns reactions configured on the server
+ */
+$app->get('/api/reactions', function() use ($app) {
+  global $host, $root_dir;
+
+  global $reactions;
+  
+  $response = new Response();
+  
+  if (isset($reactions)) {
+    $result = array();
+    foreach (array_keys($reactions) as $reaction) {
+      $result[] = array(
+        'label' => $reaction,
+        'url' => 'http://'.$host.$root_dir.'images/smiles/'.$reaction.'.gif'
+      );
+    }
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('count' => sizeof($result), 'reactions' => $result));
+  } else {
+    $response->setStatusCode(501, 'Not implemented');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array("Reactions are not enabled on this server")));
+  }
+
+  return $response;
+});
+
 /**********************************************************
  * Updates
  **********************************************************/
