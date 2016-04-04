@@ -18,8 +18,12 @@
 <td align="left">
 <?php if (isset($banner) && !is_null($banner)) { ?>
 <img src="<?=$banner?>" alt="<?=$title?>"/>
-<?php } ?>
-<!--<h3><?php print($title);?></h3>-->
+<?php } 
+if (isset($title) && $title != null) { ?>
+<h3 style="padding:0px;margin:0px;"><?php print($title);?></h3>
+<?php 
+}
+?>
 <!--<b>Public announcements go here</b>-->
 </td>
 <?php
