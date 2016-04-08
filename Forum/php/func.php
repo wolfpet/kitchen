@@ -209,7 +209,7 @@ function autoload_threads($last_thread, $limit) {?>
   <script language="JavaScript">
     set_max_id(<?=$last_thread?>, "<?=$limit?>");
   </script>
-  <div id="scroll2top"><a href="javascript:scroll2Top('html_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity = 0.2;" style="opacity:0.2" onmouseover="this.style.opacity=1;"></a></div>
+  <div id="scroll2top"><a href="javascript:scroll2Top('html_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;"></a></div>
   <div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div><?php 
 }
 
@@ -1048,11 +1048,21 @@ function youtube($body, $embed = true) {
 }
 
 function rutube($body, $embed = true) {
-	$result = preg_replace_callback('#(?<!\[url(=|]))((?:https?://)?(?:www\.)?rutube\.ru/video/([\w-]{10,32})/(?:(?:\?|&)[^\s<\]"]*)?)#i',
-		function ($matches) use ($embed) {
+  global $host;
+  
+  $pattern = '(?:https?://)?(?:www\.)?rutube\.ru/video/([\w-]{10,32})/(?:(?:\?|&)[^\s<\]"]*)?';
+	
+  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
+    function ($matches) use ($embed, $host, $pattern) {
+      // var_dump($matches);
+      if(count($matches) < 5) return $matches[0];
       
-      $url = $matches[2];
-			$id  = $matches[3];
+      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+        return $matches[0];
+
+      $url = $matches[0];
+			$id  = $matches[1];
+
 			$obj2 = file_get_contents("http://www.rutube.ru/api/video/" . $id . "/");
 			//var_dump($obj2);
       if($obj2 === FALSE) return $url;
@@ -1091,12 +1101,22 @@ function rutube($body, $embed = true) {
 
 // Dailymotion URLs e.g. http://www.dailymotion.com/video/x3anr9r_cat-goes-nuts-chasing-light-reflection_fun
 function dailymotion($body, $embed = true) {
-	$result = preg_replace_callback('#(?<!\[url(=|]))((?:https?://)?(?:www\.)?dailymotion\.com/video/([\w-]{6,8}_?[^\s<\]"]*)(?:(?:\?|&)[^\s<\]"]*)?)#i',
-		function ($matches) use ($embed) {
+  global $host;
+  
+  $pattern = '(?:https?://)?(?:www\.)?dailymotion\.com/video/([0-9a-z]{6,8})_?[^\s<\]"]*(?:(?:\?|&)[^\s<\]"]*)?';
+	
+  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
+    function ($matches) use ($embed, $host, $pattern) {
+      // var_dump($matches);
+      if(count($matches) < 5) return $matches[0];
       
-      $url = $matches[2];
-			$id  = $matches[3];
-			$obj2 = file_get_contents("https://api.dailymotion.com/video/" . $id . "?fields=allow_embed,embed_html,title,duration,thumbnail_360_url");
+      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+        return $matches[0];
+
+      $url = $matches[0];
+			$id  = $matches[1];
+  
+			$obj2 = file_get_contents("https://api.dailymotion.com/video/".$id."?fields=allow_embed,embed_html,title,duration,thumbnail_360_url");
       // Example: {"allow_embed":true,"embed_html":"<iframe frameborder=\"0\" width=\"480\" height=\"270\" src=\"\/\/www.dailymotion.com\/embed\/video\/x26ezj5\" allowfullscreen><\/iframe>","title":"Greetings","duration":70}
 			// var_dump($obj2); 
       if($obj2 === FALSE) return $url;
