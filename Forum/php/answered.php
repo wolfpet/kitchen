@@ -7,29 +7,8 @@ require_once('head_inc.php');
 
     $max_id = 1;
 
-    /*
-    if (is_null($last_answered_id)) {
-        $last_answered_id = 0;
-    }
+    get_show_hidden_and_ignored();
 
-    if ($how_many > 0) {  
-    	$query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, p.closed as post_closed, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars from confa_posts p, confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 order by id desc limit ' . $how_many;
-    } else {
-    	$query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, p.closed as post_closed, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, s.last_answered_time  from confa_posts p, confa_posts b, confa_users u, confa_sessions s where s.hash=\'' . $auth_cookie .'\' and s.last_answered_time < p.created and p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.id > ' . $last_answered_id . ' and p.status != 2 order by id desc limit 100';
-    }
-    $result = mysql_query($query);
-    if (!$result) {
-        mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-        die('Query failed ' );
-    }
-
-    $query = 'UPDATE confa_sessions set last_answered_time=current_timestamp where user_id = ' . $user_id;
-    $result2 = mysql_query($query);
-    if (!$result2) {
-        mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-        die('Query failed ' );
-    }
-    */
     $result = get_answered($how_many);
     if (!$result) {
         die('Query failed');
@@ -54,6 +33,7 @@ require_once('head_inc.php');
             setcookie('last_answered_id2', $id, 1800000000, $root_dir, $host);
             $max_id = $id;
         }
+        /*
         $icons = '';
         if ($row['content_flags'] & 0x02) {
           $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
@@ -81,6 +61,8 @@ require_once('head_inc.php');
             $line .= ' <font color="red"><b>-' . $dislikes . '</b></font>';
           }
         }
+        */
+        $line = '<li>' . print_line($row, false, false, false, false);
         $line .= "</li>";
         $out .= $line;
         $num++;

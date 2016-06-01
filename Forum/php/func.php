@@ -313,7 +313,7 @@ function print_subject($subj) {
   return preg_replace('#\((?:c|C|с|С)\)#', '©', preg_replace('#([^\.])\.$#', '$1', preg_replace('#(\(\-+\))|(\(edited\))#', '', trim($subj))));
 }
 
-function print_line($row, $collapsed=false, $add_arrow=false) {
+function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $indent=true) {
   
   global $root_dir;
   global $page_msg;
@@ -347,7 +347,7 @@ function print_line($row, $collapsed=false, $add_arrow=false) {
   }
 
   if ($show_hidden == 1 && in_array($row['user_id'], $ignored)) {
-    return "<font color=\"lightgrey\"/>Hidden msg by " . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . "</font>";
+    return ($indent ? '&nbsp;' : '') . "<font color=\"lightgrey\"/>Hidden msg by " . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . "</font>";
   }
   if ($show_hidden == 0 && in_array($row['user_id'], $ignored)) {
     return "";
@@ -394,12 +394,15 @@ function print_line($row, $collapsed=false, $add_arrow=false) {
   }
   $enc_user = '<a class="user_link" href="' . $root_dir . $page_byuser . '?author_id=' . $row['user_id'] . '" target="contents">' . $enc_user . '</a>';  
   if ($row['status'] == 2 ) {
-
-      if ($row['level'] == 0) {
-          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/bs.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
-      } else {
-          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> <I><font color="gray"><del>This message has been deleted</del></font></I> ';
+      $line = ($indent ? '&nbsp;' : '') . '<span id="sp_'.$row['msg_id'].'">';
+      if ($add_icon) {
+        if ($row['level'] == 0) {
+            $line .= '<img border=0 src="images/bs.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> ';
+        } else {
+            $line .= '<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> ';
+        }
       }
+      $line .= '<I><font color="gray"><del>This message has been deleted</del></font></I> ';
   } else {
       $subj = print_subject($subj);
       if ($row['level'] == 0) {
@@ -411,10 +414,17 @@ function print_line($row, $collapsed=false, $add_arrow=false) {
           } else {
             $style .= 'cursor:pointer;';
           }
-          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>'.$nsfw.$suffix.' ';
+          $icon = '<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ';
+          // $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>'.$nsfw.$suffix.' ';
       } else {
-          $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a>'.$nsfw.$suffix.' ';
+          $icon = '<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> ';          
+          // $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a>'.$nsfw.$suffix.' ';
       }
+      $line = ($indent ? '&nbsp;' : '') . '<span id="sp_'.$row['msg_id'].'">';
+      if ($add_icon) {
+        $line .= $icon;
+      }
+      $line .= $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>'.$nsfw.$suffix.' ';
   }
   
   $line .= '<b>' . $enc_user . '</b>' .  ' [' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
@@ -1837,9 +1847,9 @@ function get_answered($how_many=0) {
   }
 
   if (/*!is_null($how_many) && ctype_digit($how_many*/ $how_many > 0) {  
-    $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, p.closed as post_closed, p.level, p.page, p.parent, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 order by id desc limit ' . $how_many;
+    $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, u.ban_ends, u.id as user_id, u.moder, p.closed as post_closed, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.parent, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.id as msg_id, p.chars, (select count(*) from confa_posts where parent = p.id) as counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 order by id desc limit ' . $how_many;
   } else {
-    $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, p.closed as post_closed, p.level, p.page, p.parent, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, s.last_answered_time, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_posts b, confa_users u, confa_sessions s where s.hash=\'' . $auth_cookie .'\' and s.last_answered_time < p.created and p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.id > ' . $last_answered_id . ' and p.status != 2 order by id desc limit 100';
+    $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, u.ban_ends, u.id as user_id, u.moder, p.closed as post_closed, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.parent, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.id as msg_id, p.chars, s.last_answered_time, (select count(*) from confa_posts where parent = p.id) as counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_posts b, confa_users u, confa_sessions s where s.hash=\'' . $auth_cookie .'\' and s.last_answered_time < p.created and p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.id > ' . $last_answered_id . ' and p.status != 2 order by id desc limit 100';
   }
   $result = mysql_query($query);
   if (!$result) {
