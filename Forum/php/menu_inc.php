@@ -20,7 +20,7 @@
 <img src="<?=$banner?>" alt="<?=$title?>"/>
 <?php } 
 if (isset($title) && $title != null) { ?>
-<h3 style="padding:0px;margin:0px;"><?php print($title);?></h3>
+<h3 style="padding:0px;margin:0px;" class="emboss"><?php print($title);?></h3>
 <?php 
 }
 ?>

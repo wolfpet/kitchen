@@ -38,6 +38,10 @@ blockquote.uncited {
 	padding-top: 25px;
 }
 
+.emboss {
+  text-shadow:rgba(255,255,255,.1) -1px -1px 1px,rgba(0,0,0,.5) 1px 1px 1px;
+}
+
 /* You've got mail! modal dialog */
 .modalDialog {
     position: fixed;
