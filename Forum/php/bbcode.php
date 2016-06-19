@@ -137,7 +137,7 @@ function before_bbcode($original_body, &$has_video=null) {
   if (isset($has_video) && !is_null($has_video)) $has_video = strcmp($body, $original_body) != 0;
 
   // Embedding Twitter and other links
-  $body = gfycat(twitter($body));
+  $body = instagram(gfycat(twitter($body)));
   
   // Fix postimage.org tags
   $body = fix_postimage_tags($body);
