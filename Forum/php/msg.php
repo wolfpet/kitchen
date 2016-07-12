@@ -91,7 +91,7 @@ function load_reaction(data) {
   console.log("Loading the reaction " + JSON.stringify(data));
   var reaction = '';
   for (var r in data.reactions) {
-    reaction += '<img src="' + data.reactions[r].url + '" alt="' + r + '" title="' + data.reactions[r].names.join() + '" valign="middle"/>';
+    reaction += '&nbsp;<img src="' + data.reactions[r].url + '" alt="' + r + '" valign="middle"/>&nbsp;' + data.reactions[r].names.join();
   }
   console.log(reaction);
   $('#reaction').html(reaction); // show response from the php script.
@@ -289,18 +289,6 @@ if (isset($reactions)) {
 <BR>
 <?php
 $footer = '<div>';
-// Reactions
-$footer .= '<span id="reaction">';
-if (sizeof($reaction) > 0) {
-  $add_space = false;
-  foreach (array_keys($reactions) as $key) {
-    if (array_key_exists($key, $reaction)) {
-      if ($add_space) $footer .= "&nbsp;"; else $add_space = true;
-      $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" title="'.$reaction[$key].'" valign="middle"/>';
-    }
-  }
-}
-$footer .= '</span>';
 // Ratings
 $footer .= '<span id="rating">';
 if (strlen($bookmarks) > 0) {
@@ -314,6 +302,16 @@ if (strlen($dislikes) > 0) {
 }
 if (strlen($reads) > 0) {
   $footer .= ' <FONT color="lightgray">' . $reads . '</FONT>';
+}
+$footer .= '</span>';
+// Reactions
+$footer .= '<span id="reaction">';
+if (sizeof($reaction) > 0) {
+  foreach (array_keys($reactions) as $key) {
+    if (array_key_exists($key, $reaction)) {
+      $footer .= '&nbsp;<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;'.$reaction[$key];
+    }
+  }
 }
 $footer .= '</span>';
 if (isset($reports) && $reports['boyan'] != '') {
