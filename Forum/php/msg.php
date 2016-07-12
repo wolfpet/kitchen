@@ -67,7 +67,7 @@ function load_rating(data) {
       likes += ' ' + data.ratings[i].name;
     }
   }
-  rating += likes + '</font>';
+  rating += likes + '</font> ';
   console.log(rating);
   $('#rating').html(rating); // show response from the php script.
 }
@@ -90,8 +90,11 @@ function like(msg_id, rating) {
 function load_reaction(data) {
   console.log("Loading the reaction " + JSON.stringify(data));
   var reaction = '';
+  var index = 0;
   for (var r in data.reactions) {
-    reaction += '&nbsp;<img src="' + data.reactions[r].url + '" alt="' + r + '" valign="middle"/>&nbsp;' + data.reactions[r].names.join(", ");
+    if (index > 0) reaction+='&nbsp';
+    reaction += '<img src="' + data.reactions[r].url + '" alt="' + r + '" valign="middle"/>&nbsp;' + data.reactions[r].names.join(", ");
+    index++;
   }
   console.log(reaction);
   $('#reaction').html(reaction); // show response from the php script.
@@ -303,17 +306,17 @@ if (strlen($dislikes) > 0) {
 if (strlen($reads) > 0) {
   $footer .= ' <FONT color="lightgray">' . $reads . '</FONT>';
 }
-$footer .= '</span>';
+$footer .= '</span> ';
 // Reactions
 $footer .= '<span id="reaction">';
 if (sizeof($reaction) > 0) {
   $index = 0;
   foreach (array_keys($reactions) as $key) {
     if (array_key_exists($key, $reaction)) {
-      if ($index > 0 || strpos($footer, 'rating"> ')  !== false) {
+      if ($index > 0) {
         $footer .= '&nbsp;';
       }
-      $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;'.$reaction[$key];
+      $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;<font color="garkgray">'.$reaction[$key].'</font>';
       $index++;
     }
   }

@@ -291,7 +291,7 @@ function print_threads_ex($result, &$content, &$max_thread_id, $limit = 200, $co
           break;
       
         $max_thread_id = $row['thread_id'];      
-        $msgs[$row['msg_id']] = print_line($row, $collapsed);
+        $msgs[$row['msg_id']] = print_line($row, $collapsed, true, true, false); // $row, $collapsed=false, $add_arrow=false, $add_icon=true, $indent=true
 
         $armass[$l] = array();
 

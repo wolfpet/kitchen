@@ -39,7 +39,7 @@ blockquote.uncited {
 }
 
 .emboss {
-  text-shadow:rgba(255,255,255,.1) -1px -1px 1px,rgba(0,0,0,.5) 1px 1px 1px;
+  text-shadow:rgba(255,255,255,.1) -1px -1px 1px,rgba(100,100,100,.5) 1px 1px 1px;
 }
 
 /* You've got mail! modal dialog */
@@ -163,6 +163,10 @@ em {
     display: inline-block;
 }
 
+#reaction {
+    color: gray;  
+}
+
 .dropdown-content {
     display: none;
     position: absolute;
@@ -182,7 +186,7 @@ em {
 #scroll2top {
     position: fixed;
     top: 8px !important;
-    left: 8px !important; 
+    left: 6px !important; 
     display:none;
 }
 #scroll2top a {
