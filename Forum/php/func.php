@@ -310,7 +310,7 @@ function print_threads_ex($result, &$content, &$max_thread_id, $limit = 200, $co
 }
 
 function print_subject($subj) {
-  return preg_replace('#\((?:c|C|с|С)\)#', '©', preg_replace('#([^\.])\.$#', '$1', preg_replace('#(\(\-+\))|(\(edited\))#', '', trim($subj))));
+  return preg_replace('#\((?:c|C|с|С)\)#', '©', preg_replace('#([^\.])\.$#', '$1', preg_replace('#(\(\-+\))|(\(edited\))#', '', trim(grammar_nazi($subj)))));
 }
 
 function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $indent=true) {
@@ -1650,6 +1650,8 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
   if (isset($nsfw) && $nsfw !== false) {
     $content_flags |= $content_nsfw;
   }
+  
+  $subj = grammar_nazi($subj);
 
   if (isset($to)) {
     $query = 'SELECT id from confa_users where username=\'' . mysql_real_escape_string($to) . '\' and status != 2';

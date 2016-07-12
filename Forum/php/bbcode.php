@@ -245,6 +245,9 @@ function render_for_display($msgbody, $render_smiles=true) {
 	  $body = do_bbcode( $body );
 	  $body = nl2br($body);
 	  $body = after_bbcode($body);
+
+    $body = grammar_nazi($body);
+    
 	  return $body;
   }, '[code]','<code>');
   
@@ -255,6 +258,7 @@ function render_for_db($msgbody) {
 
   $msgbody = youtube( $msgbody );
   $msgbody = fix_postimage_tags( $msgbody );
+  $msgbody = grammar_nazi($msgbody);
   
   return $msgbody;
 }
@@ -367,4 +371,31 @@ function render_smileys_step2($body) {
 function has_images($body) {
   return stristr(render_for_display($body, false), "<img style");
 }
+
+function grammar_nazi($body) {
+  return preg_replace( array (
+    // search
+    '#оффис#', 
+    '#рассо#', 
+    '#расса#',
+    '#рассе#',
+    '#расси#',
+    '#бизнесс#',
+    '#дессерт#',
+    '#галлере#',
+    '#адресс#'
+    ), array (
+    // replace
+    'офис',
+    'расо',
+    'раса',
+    'расе',
+    'раси',
+    'бизнес',
+    'десерт',
+    'галере',
+    'адрес'
+    ), $body);    
+}
+
 ?>
