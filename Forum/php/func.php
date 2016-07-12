@@ -190,7 +190,7 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
     global $prop_tz;
     global $server_tz;
 
-    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_users u, confa_threads t ';
+    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t ';
     if ( $min_thread_id < 0 ) {
         $min_thread_id = 0;
     }
@@ -255,7 +255,7 @@ function get_threads_ex($limit = 200, $thread_id = null) {
   $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' 
     . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
     . ':00\') as modified, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter,'
-    . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_users u, confa_threads t ';
+    . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t ';
   $query.= 'where p.author=u.id and t.id = p.thread_id and t.status != 2 ';
 	
 	if (is_null($thread_id)) {
@@ -346,11 +346,13 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
       $b_end = '</b>';
   }
 
-  if ($show_hidden == 1 && in_array($row['user_id'], $ignored)) {
-    return ($indent ? '&nbsp;' : '') . "<font color=\"lightgrey\"/>Hidden msg by " . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . "</font>";
-  }
-  if ($show_hidden == 0 && in_array($row['user_id'], $ignored)) {
-    return "";
+  if ($ignored != null) {
+    if ($show_hidden == 1 && in_array($row['user_id'], $ignored)) {
+      return ($indent ? '&nbsp;' : '') . "<font color=\"lightgrey\"/>Hidden msg by " . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . "</font>";
+    }
+    if ($show_hidden == 0 && in_array($row['user_id'], $ignored)) {
+      return "";
+    }
   }
   
   $length = $row['chars'];
@@ -447,6 +449,12 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
       $line .= ' <font color="red"><b>-' . $dislikes . '</b></font>';
     }
   }
+  if (array_key_exists('reactions', $row) && !is_null($row['reactions'])) {
+    $reactions = $row['reactions'];
+    if ($reactions > 0) {
+      $line .= ' <font color="orange"><b>+' . $reactions . '</b></font>';
+    }
+  }
 
   if ( $collapsed ) {
       $line .= ' <font color="gray">[ <a href="' . $root_dir . $page_topthread . '?thread=' . $row['thread_id'] . '&page=' . $page . '" target="contents">+' . $row['counter'] . '</a> ] </font> </span>   ';
@@ -472,7 +480,7 @@ function get_thread($thread_id) {
   $query = 'SELECT u.username, u.moder, p.auth, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes,'.
     ' CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created,'.
     ' CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.body, p.status, p.content_flags, LENGTH(IFNULL(p.body,"")) as len,'.
-    ' p.thread_id, p.level, p.id as id, p.chars, p.page, t.closed as t_closed, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_users u, confa_threads t '.
+    ' p.thread_id, p.level, p.id as id, p.chars, p.page, t.closed as t_closed, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t '.
     ' WHERE p.author=u.id and thread_id = ' . $thread_id . ' and t.id = thread_id order by thread_id desc, level, id desc';
   
   $result = mysql_query($query);
@@ -1881,9 +1889,9 @@ function get_answered($how_many=0) {
   }
 
   if (/*!is_null($how_many) && ctype_digit($how_many*/ $how_many > 0) {  
-    $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, u.ban_ends, u.id as user_id, u.moder, p.closed as post_closed, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.parent, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.id as msg_id, p.chars, (select count(*) from confa_posts where parent = p.id) as counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 order by id desc limit ' . $how_many;
+    $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, u.ban_ends, u.id as user_id, u.moder, p.closed as post_closed, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.parent, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.id as msg_id, p.chars, (select count(*) from confa_posts where parent = p.id) as counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 order by id desc limit ' . $how_many;
   } else {
-    $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, u.ban_ends, u.id as user_id, u.moder, p.closed as post_closed, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.parent, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.id as msg_id, p.chars, s.last_answered_time, (select count(*) from confa_posts where parent = p.id) as counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks from confa_posts p, confa_posts b, confa_users u, confa_sessions s where s.hash=\'' . $auth_cookie .'\' and s.last_answered_time < p.created and p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.id > ' . $last_answered_id . ' and p.status != 2 order by id desc limit 100';
+    $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, u.ban_ends, u.id as user_id, u.moder, p.closed as post_closed, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.parent, p.auth, p.views, p.content_flags, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.id as msg_id, p.chars, s.last_answered_time, (select count(*) from confa_posts where parent = p.id) as counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_posts b, confa_users u, confa_sessions s where s.hash=\'' . $auth_cookie .'\' and s.last_answered_time < p.created and p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.id > ' . $last_answered_id . ' and p.status != 2 order by id desc limit 100';
   }
   $result = mysql_query($query);
   if (!$result) {

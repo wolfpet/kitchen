@@ -20,9 +20,10 @@ require_once('head_inc.php');
     $count = $row[0]; 
 
     $last_id = get_page_last_index('confa_posts where author=' . $author_id , $how_many, $page );
-    $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
-      . ':00\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars  from confa_posts p, confa_users u where p.author=' 
-      . $author_id . ' and p.author=u.id and  p.status != 2';
+    $query = 'SELECT u.username, u.id as user_id, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+      . ':00\') as created, u.ban_ends, p.level, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
+      . ':00\') as modified, t.closed as thread_closed, t.counter, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t where p.author=' 
+      . $author_id . ' and p.author=u.id and p.status != 2 and t.id = p.thread_id';
 
     if (intval($last_id) > 0)
         $query .= ' and p.id <= ' . $last_id;
@@ -42,41 +43,7 @@ require_once('head_inc.php');
         $max_id = $last_id;
     }
     while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-        $msg_id = $row['msg_id'];
-        $moder = $row['moder'];
-
-        $subj = $row['subject'];
-        $subj = htmlentities($subj, HTML_ENTITIES,'UTF-8');
-        $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
-        $icons = '';
-        if ($row['content_flags'] & 0x02) {
-          $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
-        }
-        if ($row['content_flags'] & 0x04) {
-          $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
-        }
-        $nsfw = '';
-        global $content_nsfw;
-        if ($row['content_flags'] & $content_nsfw) {
-          $nsfw .= ' <span class="nsfw">NSFW</span>';
-        }                  
-
-        $line = '<li> ' . $icons . '<a target="bottom" name="' . $msg_id . '" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '">' . print_subject($subj) . '</a> '.$nsfw.' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
-        
-        if (!is_null($row['likes'])) {
-          $likes = $row['likes'];
-          if ($likes > 0) {
-            $line .= ' <font color="green"><b>+' . $likes . '</b></font>';
-          }
-        }
-        if (!is_null($row['dislikes'])) {
-          $dislikes = $row['dislikes'];
-          if ($dislikes > 0) {
-            $line .= ' <font color="red"><b>-' . $dislikes . '</b></font>';
-          }
-        }
-        $line .= "</li>";
-
+        $line = '<li>'. print_line($row, false, false, false, false) . '</li>';  // $collapsed=false, $add_arrow=false, $add_icon=true, $indent=true
         $out .= $line;
         $num++;
     }

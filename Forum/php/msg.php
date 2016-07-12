@@ -91,7 +91,7 @@ function load_reaction(data) {
   console.log("Loading the reaction " + JSON.stringify(data));
   var reaction = '';
   for (var r in data.reactions) {
-    reaction += '&nbsp;<img src="' + data.reactions[r].url + '" alt="' + r + '" valign="middle"/>&nbsp;' + data.reactions[r].names.join();
+    reaction += '&nbsp;<img src="' + data.reactions[r].url + '" alt="' + r + '" valign="middle"/>&nbsp;' + data.reactions[r].names.join(", ");
   }
   console.log(reaction);
   $('#reaction').html(reaction); // show response from the php script.
@@ -208,7 +208,7 @@ Closed |
 <?php
 if (isset($reactions)) {
 ?>
-<div class="dropdown"><span><font color="blue">Reaction</font></span><div class="dropdown-content">
+<div class="dropdown"><span><a target="bottom" href="javascript:;">Reaction</a></span><div class="dropdown-content">
 <?php
   $icons = '';
   foreach (array_keys($reactions) as $key) {
@@ -307,9 +307,14 @@ $footer .= '</span>';
 // Reactions
 $footer .= '<span id="reaction">';
 if (sizeof($reaction) > 0) {
+  $index = 0;
   foreach (array_keys($reactions) as $key) {
     if (array_key_exists($key, $reaction)) {
-      $footer .= '&nbsp;<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;'.$reaction[$key];
+      if ($index > 0 || strpos($footer, 'rating"> ')  !== false) {
+        $footer .= '&nbsp;';
+      }
+      $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;'.$reaction[$key];
+      $index++;
     }
   }
 }

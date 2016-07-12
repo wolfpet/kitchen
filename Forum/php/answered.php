@@ -33,35 +33,6 @@ require_once('head_inc.php');
             setcookie('last_answered_id2', $id, 1800000000, $root_dir, $host);
             $max_id = $id;
         }
-        /*
-        $icons = '';
-        if ($row['content_flags'] & 0x02) {
-          $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
-        }
-        if ($row['content_flags'] & 0x04) {
-          $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
-        }
-        $nsfw = '';
-        global $content_nsfw;
-        if ($row['content_flags'] & $content_nsfw) {
-          $nsfw .= ' <span class="nsfw">NSFW</span>';
-        }                  
-
-        $line = '<li> ' . $icons . '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '">' . print_subject($subj) . '</a> '.$nsfw.' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] '  . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
-        
-        if (!is_null($row['likes'])) {
-          $likes = $row['likes'];
-          if ($likes > 0) {
-            $line .= ' <font color="green"><b>+' . $likes . '</b></font>';
-          }
-        }
-        if (!is_null($row['dislikes'])) {
-          $dislikes = $row['dislikes'];
-          if ($dislikes > 0) {
-            $line .= ' <font color="red"><b>-' . $dislikes . '</b></font>';
-          }
-        }
-        */
         $line = '<li>' . print_line($row, false, false, false, false);
         $line .= "</li>";
         $out .= $line;
