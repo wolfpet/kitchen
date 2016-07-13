@@ -19,6 +19,7 @@ function getDL(target) {
 }
 
 function decorate(target, topic, display_value) {
+  // console.log("decorating " + target + " topic= " + topic + " " + display_value);
   target.style.display = display_value;
   if (display_value == 'none') {
     topic.style.fontStyle = style_collapsed;
@@ -31,18 +32,22 @@ function decorate(target, topic, display_value) {
 
 function toggle(target) {
   if (target.nextSibling == null) return;
-
+  
+  var id  = target.parentNode.id; 
   var src = target;  
-  var id = src.nextSibling.name; 
   
   target = getDL(src);
-  
   if (target == null) return;
   
+  var topic = src.nextSibling;
+  while (topic != null && topic.tagName != 'A') {
+    topic = topic.nextSibling;    
+  } 
+    
   if (target.style.display == "none") {
-	decorate(target, src.nextSibling, "inline");
+	decorate(target, topic, "block");
   } else {
-	decorate(target, src.nextSibling, "none");
+	decorate(target, topic, "none");
   }  
   // use Web Storage to persist user's selection
   if(typeof(Storage)!=="undefined") {
@@ -61,8 +66,7 @@ function recall_state() {
     for (var i = 0; i < array.length; ++i) {
       var item = array[i];	  
       if (item.target != "bottom") continue; 
-      
-      var value = localStorage.getItem(item.name);
+      var value = localStorage.getItem(item.parentNode.id);
             
       if (value != null) { // topic visibility state found in local storage
         var target = getDL(item);           
@@ -81,7 +85,7 @@ window.onload = function (e) {
     recall_state();
     console.log("recall_state() called");
   } catch (e) {
-    console.log("recall_state() failed");
+    console.log("recall_state() failed: " + e);
   }
   if (windowonloadbeforejunk != null) {
      windowonloadbeforejunk(e);

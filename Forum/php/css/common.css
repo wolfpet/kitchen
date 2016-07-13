@@ -164,7 +164,6 @@ em {
 }
 
 #reaction {
-    color: gray;  
 }
 
 .dropdown-content {
@@ -190,5 +189,18 @@ em {
     display:none;
 }
 #scroll2top a {
-  padding:5px;
+  padding:0.3em;
+}
+
+.footer {
+  padding: 0.3em 0 0 0;  
+}
+
+dd {
+  margin: 0;
+  padding: 0 0 0 0;
+}
+
+dl {
+  margin-left: 1.3em;
 }

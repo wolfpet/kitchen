@@ -417,10 +417,8 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
             $style .= 'cursor:pointer;';
           }
           $icon = '<img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ';
-          // $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" onclick="javascript:toggle(this);" align="top" style="'.$style.'"> ' . $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>'.$nsfw.$suffix.' ';
       } else {
           $icon = '<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> ';          
-          // $line = '&nbsp;<span id="sp_'.$row['msg_id'].'"><img border=0 src="images/' . $icon . '" width=16 height=16 alt="*" align="top" style="'.$style.'"> '. $icons .'<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $subj . '</a>'.$nsfw.$suffix.' ';
       }
       $line = ($indent ? '&nbsp;' : '') . '<span id="sp_'.$row['msg_id'].'">';
       if ($add_icon) {
@@ -463,11 +461,6 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
   }
 
   $arrow = ''; 
-
-  if ($add_arrow && $user != 'Merlin' && $user != 'nester') {
-    $arrow.= '<img border=0 src="images/up.png" alt="Up" title="Back to top"';
-    $arrow.= ' onclick="javascript:scroll2Top(\'html_body\');" onmouseout="this.style.opacity = 0.2;" style="opacity:0.2" onmouseover="this.style.opacity=1;" align="bottom">';
-  }
 
   return $line . $arrow;
 }
@@ -759,7 +752,7 @@ function print_pages_old($max_page, $page, $target, $cur_page) {
 function print_msgs($ar, $msgs) {
 
     $keys = array_keys($ar);
-    print("<dl style='position:relative; left:0px'><dd>\n");
+    print("<dl><dd>\n");
     foreach ($keys as $key) {
         //if ($msgs[$key] != "") {
         print($msgs[$key]);

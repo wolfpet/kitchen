@@ -291,7 +291,7 @@ if (isset($reactions)) {
 ?>
 <BR>
 <?php
-$footer = '<div>';
+$footer = '<div class="footer">';
 // Ratings
 $footer .= '<span id="rating">';
 if (strlen($bookmarks) > 0) {
@@ -316,7 +316,7 @@ if (sizeof($reaction) > 0) {
       if ($index > 0) {
         $footer .= '&nbsp;';
       }
-      $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;<font color="garkgray">'.$reaction[$key].'</font>';
+      $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;'.$reaction[$key].'';
       $index++;
     }
   }
