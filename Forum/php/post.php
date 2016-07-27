@@ -16,7 +16,6 @@ require_once('login_inc.php');
 
   if ( strlen($err) == 0) {   
     if (!$preview) {      
-    
       $log = @post($subj, $body, $re, isset($msg_id) ? $msg_id : 0, $ticket, isset($nsfw) ? $nsfw : false);
       if (is_string($log)) {
         die($log);
@@ -47,7 +46,7 @@ require_once('dump.php');
       
       $author = $user;
       $subject = $subj;
-      $created = $time = strftime('%Y-%m-%d %H:%M:%S');
+      $created = $time = gmdate('Y-M-d H:i:s', time() + $prop_tz * 3600); 
       $translit_done = false;
       $new_body = render_for_db($body);
       $msgbody = translit($new_body, $translit_done);
