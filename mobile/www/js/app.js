@@ -1,5 +1,4 @@
 //TODO: we gotta change this so it's auto-detected
-var mainUrl = "http://kirdyk.radier.ca/";
 
 //navigation
 var titleList;
@@ -311,19 +310,7 @@ function login()
         },
         function(data, status)
         {
-            //reload threads
-            //loadRootThreadsPlus();         
         }
-    );   
-    //check if successful.
-    var url = mainUrl+ "api/profile";
-    $.get( url, function( data ) {
-    if(data.status == "ERROR")
-    {
-        $.ui.popup("Sorry, login was unsuccessful. Please try again.");
-    }
-    })
-    .fail(function(){$.ui.popup("Sorry, login was unsuccessful. Please try again.");});    
 }
 
 function like(messageID)
