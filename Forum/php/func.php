@@ -1985,7 +1985,7 @@ function get_tz_list() {
     
     uasort($result, function ($a, $b) {
       if ($a['offset'] == $b['offset']) {
-          return 0;
+          return strcmp($a['name'], $b['name']);
       }
       return ($a['offset'] < $b['offset']) ? -1 : 1;
     });
