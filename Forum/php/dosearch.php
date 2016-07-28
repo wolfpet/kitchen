@@ -9,9 +9,6 @@ require_once('head_inc.php');
 
     $max_id = 1;
 
-    if (is_null($prop_tz)) {
-        $prop_tz = -5;
-    }
     $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.status, p.id as id, p.chars  from confa_posts p, confa_users u where p.author=u.id and p.status != 2 ';
 
     if (!is_null($howmanylikes) && strlen($howmanylikes)) {

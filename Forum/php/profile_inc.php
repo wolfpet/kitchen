@@ -1,6 +1,7 @@
 <?php
 /*$Id: profile_inc.php 942 2013-09-01 12:10:18Z dmitriy $*/
 ?>
+<div style="position:absolute;left: 0px;top: 0px;width: 100%;z-index: 9999;text-align: right;"><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>><i>Show NSFW content</i></input>&nbsp;</div>
 <p/>
 <table> 
 <tr>
@@ -39,32 +40,14 @@
 <td>Time zone:</td>
 <td>
 <select id="tz" name="tz">
-<option value="-11" <?=$prop_tz == "-11" ? "selected=\"selected\"" : "" ?>>(GMT-11) Samoa</option>
-<option value="-10" <?=$prop_tz == "-10" ? "selected=\"selected\"" : "" ?>>(GMT-10) Hawaii</option>
-<option value="-9" <?=$prop_tz == "-9" ? "selected=\"selected\"" : "" ?>>(GMT-9) Alaska</option>
-<option value="-8" <?=$prop_tz == "-8" ? "selected=\"selected\"" : "" ?>>(GMT-8) Vancouver</option>
-<option value="-7" <?=$prop_tz == "-7" ? "selected=\"selected\"" : "" ?>>(GMT-7) Calgary</option>
-<option value="-6" <?=$prop_tz == "-6" ? "selected=\"selected\"" : "" ?>>(GMT-6) Regina</option>
-<option value="-5" <?=$prop_tz == "-5" ? "selected=\"selected\"" : "" ?>>(GMT-5) Ottawa, Toronto</option>
-<option value="-4" <?=$prop_tz == "-4" ? "selected=\"selected\"" : "" ?>>(GMT-4) Atlantic Time</option>
-<option value="-3" <?=$prop_tz == "-3" ? "selected=\"selected\"" : "" ?>>(GMT-3) Greenland Time</option>
-<option value="-2" <?=$prop_tz == "-2" ? "selected=\"selected\"" : "" ?>>(GMT-2) Mid-Atlantic </option>
-<option value="-1" <?=$prop_tz == "-1" ? "selected=\"selected\"" : "" ?>>(GMT-1) Azores</option>
-<option value="0" <?=$prop_tz == "0" ? "selected=\"selected\"" : "" ?>>(GMT+0) London, Dublin</option>
-<option value="1" <?=$prop_tz == "1" ? "selected=\"selected\"" : "" ?>>(GMT+1) Amsterdam</option>
-<option value="2" <?=$prop_tz == "2" ? "selected=\"selected\"" : "" ?>>(GMT+2) Kyiv, Jerusalem</option>
-<option value="3" <?=$prop_tz == "3" ? "selected=\"selected\"" : "" ?>>(GMT+3) St. Petersburg</option>
-<option value="4" <?=$prop_tz == "4" ? "selected=\"selected\"" : "" ?>>(GMT+4) Yerevan</option>
-<option value="5" <?=$prop_tz == "5" ? "selected=\"selected\"" : "" ?>>(GMT+5) Yekaterinburg</option>
-<option value="6" <?=$prop_tz == "6" ? "selected=\"selected\"" : "" ?>>(GMT+6) Novosibirsk</option>
-<option value="7" <?=$prop_tz == "7" ? "selected=\"selected\"" : "" ?>>(GMT+7) Krasnoyarsk</option>
-<option value="8" <?=$prop_tz == "8" ? "selected=\"selected\"" : "" ?>>(GMT+8) Irkutsk, Beijing</option>
-<option value="9" <?=$prop_tz == "9" ? "selected=\"selected\"" : "" ?>>(GMT+9) Tokyo, Seoul</option>
-<option value="10" <?=$prop_tz == "10" ? "selected=\"selected\"" : "" ?>>(GMT+10) Vladivostok</option>
-<option value="11" <?=$prop_tz == "11" ? "selected=\"selected\"" : "" ?>>(GMT+11) Magadan</option>
-<option value="12" <?=$prop_tz == "12" ? "selected=\"selected\"" : "" ?>>(GMT+12) New Zealand</option>
-<option value="13" <?=$prop_tz == "13" ? "selected=\"selected\"" : "" ?>>(GMT+13) Phoenix Islands</option>
-<option value="14" <?=$prop_tz == "14" ? "selected=\"selected\"" : "" ?>>(GMT+14) Line Island</option>
+<?php
+ $tz_list = get_tz_list();
+ foreach($tz_list AS $key => $tz) {
+?>
+  <option value="<?=$key?>" <?=$prop_tz_name == $key ? "selected=\"selected\"" : "" ?>>(UTC<?=$tz['offset'] < 0 ? '' : '+'?><?=$tz['offset']?>) <?=$tz['name']?></option>
+<?php
+}
+?>
 </select>
 </td>
 </tr>
@@ -76,7 +59,7 @@
 
 </td>
 <td valign="top">
-<!-- Start ignore tablre -->
+<!-- Start ignore table -->
 
 <?php
     $query = "SELECT i.ignored, i.ignored_by, u.username, u.id from confa_users u, confa_ignor i where i.ignored_by=" . $user_id . " and i.ignored=u.id order by username";

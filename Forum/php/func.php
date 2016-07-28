@@ -1940,4 +1940,56 @@ function add_postimage() {
     return '<!-- postimage server is down -->';
   }
 }
+
+function get_tz_offset($tz_name) {
+  $theTime = time(); // specific date/time we're checking, in epoch seconds.
+
+  $tz = new DateTimeZone($tz_name); // e.g. 'America/Los_Angeles'
+  $transition = $tz->getTransitions($theTime, $theTime);
+
+  // only one array should be returned into $transition. Now get the data: 
+  $offset = $transition[0]['offset']; 
+  // $abbr = $transition[0]['abbr'];
+
+  return $offset / 3600;  
+}
+
+function get_tz_list() {
+    $all = timezone_identifiers_list();
+
+    $i = 0;
+    foreach($all AS $zone) {
+      $zone = explode('/',$zone);
+      $zonen[$i]['continent'] = isset($zone[0]) ? $zone[0] : '';
+      $zonen[$i]['city'] = isset($zone[1]) ? $zone[1] : '';
+      $zonen[$i]['subcity'] = isset($zone[2]) ? $zone[2] : '';
+      $i++;
+    }
+
+    asort($zonen);
+    $result = array();
+    
+    foreach($zonen AS $zone) {
+      extract($zone);
+      if($continent == 'America' || $continent == 'Asia' || /* $continent == 'Australia' || $continent == 'Pacific' */ $continent == 'Europe') {
+        $key = $continent.'/'.$city;
+        if (!array_key_exists($key, $result) ) {
+          try {
+            $offset = get_tz_offset($key);
+            $result[$key] = array('name' => str_replace('_',' ',$city), 'offset' => $offset);
+          } catch (Exception $e) {          
+          }
+        }
+      }
+    }
+    
+    uasort($result, function ($a, $b) {
+      if ($a['offset'] == $b['offset']) {
+          return 0;
+      }
+      return ($a['offset'] < $b['offset']) ? -1 : 1;
+    });
+    
+    return $result;
+}
 ?>

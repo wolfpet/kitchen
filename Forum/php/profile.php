@@ -88,11 +88,11 @@ $(document).ready(function() {
     $email = $row['email'];
     $email2 = $email;
     $profile_bold = $row['prop_bold'];
-    $prop_tz = $row['prop_tz'];
+    $prop_tz_name = $row['prop_tz'];
+    $prop_tz = get_tz_offset($row['prop_tz']);
     $smileys = $row['show_smileys'];
-    $reply_to_email = $row['reply_to_email'];
+    $reply_to_email = $row['reply_to_email'];    
 ?>
-<div style="position:absolute;left: 0px;top: 0px;width: 100%;z-index: 9999;text-align: right;"><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>><i>Show NSFW content</i></input>&nbsp;</div>
 <?php
 require_once("profile_inc.php");
 require_once('tail_inc.php');

@@ -46,7 +46,7 @@ require_once('html_head_inc.php');
             }
             if (is_null($email) || strlen($email) == 0) {
                 if (strlen($update) == 0) {
-                    $err = 'At least one - email or passwordi should be populated for the update';
+                    $err = 'At least one - email or password should be populated for the update';
                     break;
                 }
             } else {
@@ -65,7 +65,7 @@ require_once('html_head_inc.php');
                 if (strlen($update) > 0) {
                     $update .= ', ';
                 }
-                $update .= 'email=\'' . mysql_escape_string( $email ). '\' ';
+                $update .= 'email=\'' . mysql_real_escape_string( $email ). '\' ';
             }
             if (strlen($update) > 0) {
                 $update .= ', ';
@@ -90,7 +90,7 @@ require_once('html_head_inc.php');
                 $tz = explode(":", $server_tz)[0];
             }
             
-            $update .= ' prop_tz=\'' . mysql_escape_string($tz) . '\''; 
+            $update .= ' prop_tz=\'' . mysql_real_escape_string($tz) . '\''; 
             
             $query = 'UPDATE confa_users set ' . $update . ' where id=' . $user_id; 
             $result = mysql_query($query);
@@ -100,7 +100,8 @@ require_once('html_head_inc.php');
             }
             $info = 'Successfully updated profile';
             $prop_bold = $profile_bold;
-            $prop_tz = $tz;
+            $prop_tz_name = $tz;
+            $prop_tz = get_tz_offset($tz);
             $smileys = isset($show_smileys);
             $reply_to_email = isset($reply_to_email);
         } while (false);
