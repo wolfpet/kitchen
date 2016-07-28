@@ -16,13 +16,7 @@ function local_time($time, $format) {
   
   $offset = intval($prop_tz) - intval(explode(":", $server_tz)[0]);
   
-  $date = new DateTime("now");
-  if ($offset < 0) 
-    $date->sub( new DateInterval('PT'.(-$offset).'H'));
-  else
-    $date->add( new DateInterval('PT'.$offset.'H'));
-  
-  return $date->format($format);
+  return gmdate($format, $time + intval($prop_tz) * 3600);
 }
 
 function autoversion($file) {
