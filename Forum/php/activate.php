@@ -45,7 +45,7 @@ if ( strlen($act_link) > 0 ) {
         } else
           die('The link has expired.'); 
     } 
-    $query = 'INSERT into confa_users(created, modified, username, password, email) values(NULL, NULL, \'' . $username . '\', \'' . $password . '\', \'' . $email . '\')';
+    $query = 'INSERT into confa_users(created, modified, username, password, email, prop_tz) values(NULL, NULL, \'' . $username . '\', \'' . $password . '\', \'' . $email . '\', \'' . $prop_tz_name . '\')';
     $result = mysql_query( $query );
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);

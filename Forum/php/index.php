@@ -36,11 +36,7 @@ $eventManager->attach('micro', function($event, $app) {
     } else {
       // if cookies are set, they would have already been handled by auth.php
     }
-/* Turn the caching off for IE (seriously... fuck M$)
-header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-header('Pragma: no-cache');
-*/
+    // Turn the caching off for IE (seriously... fuck M$)
     $app->response->setRawHeader('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
     $app->response->setRawHeader('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
     $app->response->setRawHeader('Pragma: no-cache');
@@ -384,9 +380,8 @@ $app->get('/api/messages', function() use ($app) {
   switch ($mode) {
     
     case 'bydate':
-      $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
-        . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
-        . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 order by id desc limit ' . $count;
+      $default_count = 30;
+      $query = null;
       if (is_null($count)) {
         if ($max_id < 0 && !is_null($user_id)) { // 'since last user's check' mode
           $query2 = "select max(last_bydate_id) as max_id from confa_sessions where user_id=" . $user_id;
@@ -396,10 +391,18 @@ $app->get('/api/messages', function() use ($app) {
             $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
               . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
               . ' where p.author=u.id and p.id > ' . $max_id . ' and p.status != 2 order by id desc limit 500';
-          } 
-        } else {
-          $count = 30;
+          } else { // could not find the last id
+            $count = $default_count;
+          }
+        } else { // max_id given, but no $count
+            $count = $default_count;
         }
+      }
+      
+      if (is_null($query)) {
+        $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+          . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
+          . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 order by id desc limit ' . $count;        
       }
       $result = mysql_query($query);
       break;
@@ -441,7 +444,7 @@ $app->get('/api/messages', function() use ($app) {
   }
 
   if (!$result) {
-      mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . 'max_id="' . $max_id . '"');
+      mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . '; max_id="' . $max_id . '"');
       die('Query failed ' . mysql_error() . ' QUERY: ' . $query );
   }
 
@@ -932,7 +935,7 @@ function api_pmail_list($app, $inbox=true) {
   $result = mysql_query($query);
 
   if (!$result) {
-      mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . ' max_id="' . $max_id . '"');
+      mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . '; max_id="' . $max_id . '"');
       die('Query failed ' . mysql_error() . ' QUERY: ' . $query );
   }
 
