@@ -1,4 +1,4 @@
-//TODO: we gotta change this so it's auto-detected
+var mainUrl = window.location.origin + "/";
 
 //navigation
 var titleList;
@@ -310,7 +310,18 @@ function login()
         },
         function(data, status)
         {
+          //check if successful.
+          var url = mainUrl+ "api/profile";
+          $.get( url, function( data ) {
+          if(data.status == "ERROR")
+          {
+              $.ui.popup("Sorry, login was unsuccessful. Please try again.");
+          }
+          })
+          .fail(function(){$.ui.popup("Sorry, login was unsuccessful. Please try again later.");});    
         }
+    )
+    .fail(function(){$.ui.popup("Sorry, login was unsuccessful. Please try again!");});   
 }
 
 function like(messageID)
