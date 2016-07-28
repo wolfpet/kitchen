@@ -46,7 +46,7 @@ require_once('dump.php');
       
       $author = $user;
       $subject = $subj;
-      $created = $time = gmdate('Y-M-d H:i:s', time() + $prop_tz * 3600); 
+      $created = $time = local_time(time(), 'Y-m-d H:i:s'); 
       $translit_done = false;
       $new_body = render_for_db($body);
       $msgbody = translit($new_body, $translit_done);
