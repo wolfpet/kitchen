@@ -90,17 +90,17 @@ require_once('html_head_inc.php');
         if (!is_null($status)) {
             switch ($status) {
                 case 1:
-                $status = 'Active';
+                $status = '<b>Active</b>';
                 if (!is_null($ban_ends) && strcmp($ban_ends, '0000-00-00 00:00:00')) {
                     $banned = true;
-                    $status = 'Banned'.(is_null($banned_by) ? '' : ' by <i>'.$banned_by.'</i>').' until ' . $ban_ends;
+                    $status = '<font color="red"><b>Banned</b></font>'.(is_null($banned_by) ? '' : ' by <b>'.$banned_by.'</b>').' until <u>' . $ban_ends . '</u>';
                     if (!is_null($banned_reason)) {
-                      $status .= '. Reason: ' . $banned_reason;
+                      $status .= '. <b>Reason</b>: ' . $banned_reason;
                     }
                 }
                 break;
                 case 2:
-                $status = 'Disabled';
+                $status = '<b><font color="gray">Disabled</font></b>';
                 break;
             }
         }
@@ -109,7 +109,7 @@ require_once('html_head_inc.php');
 <h3><?php print( htmlentities($username,HTML_ENTITIES,'UTF-8') ); ?></h3>
 <table>
 <tr><td>Account created:</td><td><b><?php print($created); ?></b></td></tr>
-<tr><td>Status:</td><td><b><?php print($status); ?></b> <?php if ($banned && $pban  == 0) { print('<a href="' . $root_dir . $page_ban . '?moduserid=' . $moduserid . '&bantime=-1">Remove ban</a>'); }?></td></tr>
+<tr><td>Status:</td><td><?php print($status); ?> <?php if ($banned && $pban  == 0) { print('<a href="' . $root_dir . $page_ban . '?moduserid=' . $moduserid . '&bantime=-1"><b>Remove ban</b</a>'); }?></td></tr>
 <tr><td>Email</td><td><b><?php print($email); ?></b></td></tr>
 <tr><td>Total posts</td><td><b><?php print($posts); ?></b></td></tr>
 </table>
@@ -132,6 +132,16 @@ Ban this user for
   <option value="96">4 days</option>
   <option value="168">1 week</option>
   <option value="336">2 weeks</option>
+  <option value="504">3 weeks</option>
+  <option value="1m">1 month</option>
+  <option value="2m">2 months</option>
+  <option value="3m">3 months</option>
+  <option value="6m">6 months</option>
+  <option value="1y">1 year</option>
+  <option value="3y">3 years</option>
+  <option value="5y">5 years</option>
+  <option value="10y">10 years</option>
+  <option value="p">*eternity*</option>
 </select>
 <?php
         if ( !is_null( $err_ban_reason) ) { print("<font color='red'><b>" . $err_ban_reason . "</b></font> ");}else{
