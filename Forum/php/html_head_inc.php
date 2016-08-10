@@ -75,11 +75,10 @@ $( document ).ready(function() {
                 console.log("bydate object=" + obj1);
                 var count = obj1.count;
                 console.log("bydate=" + count);
-                var text = bydate.innerHTML;
-                var braket = text.indexOf("(");
-                if (braket >= 0) text = text.substring(0, braket);
-                if (count > 0) text += "(<b>" + count + "</b>)";
-                bydate.innerHTML = text;
+                bydate.innerHTML = addCounter(bydate.innerHTML, count, true, false);
+                var newTitle = addCounter(window.parent.document.title, count, false, true);
+                console.log(newTitle);
+                window.parent.document.title = newTitle;
                 // adjust frequency of calls if necessary
                 if (bydate_count == 10) {
                   window.clearInterval(bydate_timer);
@@ -98,6 +97,14 @@ $( document ).ready(function() {
     console.log('Checking bydate every minute');
   }
 });
+
+function addCounter(text, count, bold, pad) {
+    var prefix = pad ? " (" : "(";
+    var braket = text.indexOf(prefix);
+    if (braket >= 0) text = text.substring(0, braket);
+    if (count > 0) text += prefix + (bold?"<b>":"") + count + (bold?"</b>":"") +")";
+    return text;                 
+}
 
 var focused = null;
 // shift - select
