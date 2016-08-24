@@ -186,7 +186,7 @@ em {
 #scroll2top {
     position: fixed;
     top: 8px !important;
-    left: 6px !important; 
+    left: 5px !important; 
     display:none;
 }
 #scroll2top a {

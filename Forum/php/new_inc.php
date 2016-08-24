@@ -111,8 +111,7 @@ if ($keyboard) {
 <table width="100%">
 <tbody>
 <tr>
-<td align="left" valign="top" width="100%" nowrap><a href="javascript:smileys_on();"><U>Smileys</U></a>&nbsp;&nbsp;
-<!--<a href="javascript:translit_on()"><U>Translit help</U><a>&nbsp;&nbsp;--><a href="javascript:bbcode_on();"><U>BBCode help</U></a></td></tr>
+<td align="left" valign="top" width="100%" nowrap><a href="javascript:smileys_on();"><U>Smileys</U></a>&nbsp;&nbsp;<a href="javascript:bbcode_on();"><U>BBCode help</U></a>&nbsp;&nbsp;<a href="javascript:translit_on()"><U>Translit help</U><a></td></tr>
 <tr><td align="left" valign="top" width="100%">
 <div id="bbcode_help"><table border="1">
 <tbody><tr><td>[b]<font color="gray">bolded text</font>[/b]</td><td><strong>bolded text</strong></td></tr>

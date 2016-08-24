@@ -197,6 +197,16 @@ function smileys_on() {
     }
 }
 
+function translit_on() {
+    document.getElementById('bbcode_help').style.display='none';
+    document.getElementById('smileys_help').style.display='none';
+    if (document.getElementById('translit_help').style.display != 'block') {
+        document.getElementById('translit_help').style.display='block';
+    } else {
+        document.getElementById('translit_help').style.display='none';
+    }
+}
+
 function getSelectedTextWithin(el) {
     var selectedText = "";
     if (el == null) 
