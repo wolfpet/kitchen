@@ -201,9 +201,11 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
 
 function autoload_threads($last_thread, $limit) {?>
   <script language="JavaScript">
+  
     set_max_id(<?=$last_thread?>, "<?=$limit?>");
+    
   </script>
-  <div id="scroll2top"><a href="javascript:scroll2Top('html_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;"></a></div>
+  <div id="scroll2top"><a href="#" target="contents" onclick="javascript:scroll2Top2('html_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;"></a></div>
   <div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div><?php 
 }
 
@@ -693,13 +695,16 @@ function get_max_pages_expanded(){
     return $max_page;
 }
 
-function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = true) {
+function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = true, $prefix = true) {
 
     global $root_dir;
     if ($br) print('<BR>');
-    print('<B>Pages</B>: ');
-    $start = $page - 10;
-    $end = $page + 9;
+    if ($prefix) {
+      print('<B>Pages</B>: ');
+    }
+    $how_many = 10;
+    $start = $page - $how_many;
+    $end = $page + $how_many - 1;
     if ( $start > 0 ) {
         if ( $start > 1 ) {
             print(' <a target="' . $target . '" href="' . $root_dir . $cur_page . '?page=1' . $param . '">&lt;&lt;</a> |');
@@ -1161,8 +1166,8 @@ function dailymotion($body, $embed = true) {
 function twitter($body, $embed = true) {
   if (!$embed) return $body;
   
-  // e.g. https://twitter.com/elonmusk/status/627040381729906688
-  $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)(?:/[^\s<\]"]*)?';
+  // e.g. https://twitter.com/elonmusk/status/627040381729906688 or https://twitter.com/K4rlHungus/status/772244915128598528?s=09
+  $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)(?:/[^\s<\]"]*)?(?:(?:\?|&)[^\s<\]"]*)?\s*';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
     function ($matches) use ($embed, $pattern) {
@@ -1172,7 +1177,7 @@ function twitter($body, $embed = true) {
       if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
         return $matches[0];
 
-      $url = $matches[0];
+      $url = preg_replace('/\s+/', '', $matches[0]);
 			$id  = $matches[1];
 
       $obj2 = file_get_contents("https://api.twitter.com/1/statuses/oembed.json?url=" . $url);
@@ -1182,7 +1187,7 @@ function twitter($body, $embed = true) {
 
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
-      return trim(preg_replace('/\s\s+/', ' ', $ar2->html));
+      return trim(preg_replace('/\s+/', ' ', $ar2->html));
 		},
 		$body
 	);
@@ -1304,6 +1309,7 @@ function login($username, $passw, $create_session=true) {
     global $ban_ends;
     global $new_pm;
     global $prop_bold;
+    global $server_tz;
     global $prop_tz;
     global $ban_time;
     global $logged_in;
