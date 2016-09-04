@@ -57,19 +57,21 @@ function load_threads(div, id, count) {
   xhr.send(null);
 }
 
-function scroll2Top(element){ 
+function scroll2Top2(element){ 
   var ele = document.getElementById(element);
   if (ele != null) {
     var sidebar = document.getElementById("sidebar");
-    if (sidebar == null)
+    if (sidebar == null) {
       // setTimeout(window.scrollTo(ele.offsetLeft,ele.offsetTop), 100);
       $('#'+element).scrollTop(0);
-    else
+    } else {
       sidebar.scrollTop = 0;
+    }
   } else {
     console.log("Cannot scroll to " + element);
   }
-}
+  return false;
+}    
 
 function load_more() {
 	var div = document.getElementById("threads");

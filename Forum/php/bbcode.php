@@ -49,14 +49,14 @@ function do_bbcode($str) {
 
   // Deal with quotes
   $format_search =  array(
-    '#\[quote(?!.*\[quote)\](.*?)\[/quote\]#is', // Quote ([quote]text[/quote])
-	  '#\[quote(?!.*\[quote)=(.*?)\](.*?)\[/quote\]#is', // Quote with author ([quote=author]text[/quote])
+    '#\[quote(?!.*\[quote)\](.*?)\[/quote\]\s*#is', // Quote ([quote]text[/quote])
+	  '#\[quote(?!.*\[quote)=(.*?)\](.*?)\[/quote\]\s*#is', // Quote with author ([quote=author]text[/quote])
   );
    
   // The matching array of strings to replace matches with
   $format_replace = array(
-    '<blockquote><div>$1</div></blockquote>',
-    '<blockquote><div><cite>$1:</cite>$2</div></blockquote>',
+    '<blockquote><div>$1</div></blockquote><br/>',
+    '<blockquote><div><cite>$1:</cite>$2</div></blockquote><br/>',
   );
    
   // Perform the actual quotes conversion
@@ -384,7 +384,8 @@ function grammar_nazi($body) {
     '#дессерт#',
     '#галлере#',
     '#аддресс#',
-    '#адресс#'
+    '#адресс#',
+    '#p\.s\.\s*#'
     ), array (
     // replace
     'офис',
@@ -396,7 +397,8 @@ function grammar_nazi($body) {
     'десерт',
     'галере',
     'адрес',
-    'адрес'
+    'адрес',
+    'P.S. '
     ), $body);    
 }
 
