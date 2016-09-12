@@ -6,3 +6,11 @@
 .ribbonIcon:hover { 
 	background-color: #0090c0;
 }
+
+svg.ribbonIcon {
+	color: #ffffff;
+	pointer-events: none;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
