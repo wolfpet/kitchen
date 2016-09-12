@@ -1,0 +1,8 @@
+.ribbonIcon { 
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+}
+.ribbonIcon:hover { 
+	background-color: #0090c0;
+}
