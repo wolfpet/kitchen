@@ -8,6 +8,24 @@
 	color: #ffffff;
 	overflow: hidden;	
 }
+.ribbonGroup{
+	height: 44px;
+	display: inline-block;
+	padding-top: 4px;
+	border: #0090c0;
+	border-style: solid;
+}
+
+@media screen and (max-width: 700px) {
+	.ribbon {height: 40px;}
+	.ribbonGroup {display: none;}
+}
+@media screen and (max-width: 600px) {
+	.ribbon {height: 140px;}
+	.ribbonGroup {display: none;}
+}
+
+
 .ribbonIcon { 
 	display: inline-block;
 	width: 28px;
@@ -63,4 +81,5 @@ svg.ribbonIcon {
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
 }
