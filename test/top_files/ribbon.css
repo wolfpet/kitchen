@@ -1,3 +1,4 @@
+/* This style defines the entire ribbon bar */
 .ribbon {
  	display: block;
 	width:100%;
@@ -8,6 +9,7 @@
 	color: #ffffff;
 	overflow: hidden;	
 }
+/* The group div contains the title and a set of icons. It gets invisible on mobile screens */
 .ribbonGroup{
 	height: 44px;
 	display: inline-block;
@@ -15,18 +17,35 @@
 	border: #0090c0;
 	border-style: solid;
 }
-
-@media screen and (max-width: 600px) {
-	.ribbon {height: 80px;}
-	.ribbonGroup {display: none;}
+/* The mobile group div remains visible and gets larger on mobile screens */
+.ribbonGroupMobile{
+	height: 44px;
+	display: inline-block;
+	padding-top: 4px;
+	border: #0090c0;
+	border-style: solid;
 }
-
-
 .ribbonIcon { 
 	display: inline-block;
 	width: 28px;
 	height: 28px;
 }
+
+.ribbonGroupTitle{
+	padding-bottom: 4px; 
+	text-align: center;
+}
+
+/* We consider screens less than 600 px mobile */
+@media screen and (max-width: 600px) {
+	.ribbon {height: 67px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 64px; height: 64px;}
+	.ribbonGroupTitle{display: none;}
+}
+
+
 .ribbonIcon:hover { 
 	background-color: #0090c0;
 	cursor: pointer;

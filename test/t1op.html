@@ -122,9 +122,9 @@ $(document).ready(function(){
 
 <body id="html_body">
 <div id="Ribbon" class="ribbon">
-	<div id="ForumTitle" style="width: 100px;height: 44px;display: inline-block;padding-top: 10px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11;">VIP</div>
-	<div id="SortRibbonGroup" class="ribbonGroup";">
-		<div id="SortRibbonGroupTitle" style="padding-bottom: 4px; text-align: center;">Sort</div>
+	<div id="ForumTitle" class="ribbonGroup"; style="width: 100px;height: 44px;padding-top: 10px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11;">VIP</div>
+	<div id="SortRibbonGroup" class="ribbonGroupMobile";">
+		<div id="SortRibbonGroupTitle" class="ribbonGroupTitle">Sort</div>
 		<div id="SortRibbonGroupIconContainer">
 			<span class="ribbonIcon tooltip" id="ByDateIcon">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="white" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g></svg>
@@ -140,8 +140,8 @@ $(document).ready(function(){
 			</span> 
 		</div>
 	</div>
-	<div id="WriteRibbonGroup" class="ribbonGroup">
-		<div id="WriteRibbonGroupTitle" style="padding-bottom: 4px; text-align: center;">Write</div>
+	<div id="WriteRibbonGroup" class="ribbonGroupMobile">
+		<div id="WriteRibbonGroupTitle" class="ribbonGroupTitle">Write</div>
 		<div id="WriteRibbonGroupIconContainer">
 			<span id="NewThreadIcon" class="ribbonIcon tooltip">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M17.75 7L14 3.25l-10 10V17h3.75l10-10zm2.96-2.96c.39-.39.39-1.02 0-1.41L18.37.29c-.39-.39-1.02-.39-1.41 0L15 2.25 18.75 6l1.96-1.96z"></path></g></svg>
@@ -151,7 +151,7 @@ $(document).ready(function(){
 	</div>
 
 	<div id="FindRibbonGroup" class="ribbonGroup">
-		<div id="FindRibbonGroupTitle" style="padding-bottom: 4px; text-align: center;">Find</div>
+		<div id="FindRibbonGroupTitle" class="ribbonGroupTitle">Find</div>
 		<div id="FindRibbonGroupIconContainer">
 			<span id="MyMessages" class="ribbonIcon tooltip">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"></path></g></svg>
@@ -173,7 +173,7 @@ $(document).ready(function(){
 	</div>
 
 	<div id="ViewRibbonGroup" class="ribbonGroup";>
-		<div id="ViewRibbonGroupTitle1" style="padding-bottom: 4px; text-align: center;">View</div>
+		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
 		<div id="ViewRibbonGroupIconContainer">
 			<span id="Horizontal" class="ribbonIcon tooltip">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M4 18h17v-6H4v6zM4 5v6h17V5H4z"></path></g></svg>
@@ -193,8 +193,8 @@ $(document).ready(function(){
 			</span> 
 		</div>
 	</div>
-	<div id="ProfileRibbonGroup" class="ribbonGroup"; style="float: right;">
-		<div id="ProfileRibbonGroupTitle1" style="padding-bottom: 4px; text-align: center;">Username</div>
+	<div id="ProfileRibbonGroup" class="ribbonGroupMobile"; style="float: right;">
+		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">Username</div>
 		<div id="ProfileRibbonGroupIconContainer">
 			<span id="Settings" class="ribbonIcon tooltip">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
