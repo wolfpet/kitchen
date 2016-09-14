@@ -16,12 +16,8 @@
 	border-style: solid;
 }
 
-@media screen and (max-width: 700px) {
-	.ribbon {height: 40px;}
-	.ribbonGroup {display: none;}
-}
 @media screen and (max-width: 600px) {
-	.ribbon {height: 140px;}
+	.ribbon {height: 80px;}
 	.ribbonGroup {display: none;}
 }
 
