@@ -38,13 +38,21 @@
 
 /* We consider screens less than 600 px mobile */
 @media screen and (max-width: 600px) {
-	.ribbon {height: 67px;}
+	.ribbon {height: 57px;}
 	.ribbonGroup {display: none;}
 	.ribbonGroupMobile{border-style: none;}
-	.ribbonIcon{width: 64px; height: 64px;}
+	.ribbonIcon{width: 54px; height: 54px;}
 	.ribbonGroupTitle{display: none;}
 }
 
+/* Really small phone screens! */
+@media screen and (max-width: 400px) {
+	.ribbon {height: 47px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 44px; height: 44px;}
+	.ribbonGroupTitle{display: none;}
+}
 
 .ribbonIcon:hover { 
 	background-color: #0090c0;
