@@ -106,7 +106,7 @@ svg.ribbonIcon {
     opacity: 1;
 }
 
-
+/* Dropdown menu for PMAIL:  incox, sent and new */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -134,3 +134,16 @@ svg.ribbonIcon {
     display: block;
 }
 
+/* Badges to indicate the number of new items (new pmail, new posts, etc */
+.button__badge {
+  background-color: #fa3e3e;
+  border-radius: 2px;
+  color: white;
+ 
+  padding: 1px 3px;
+  font-size: 8px;
+  
+  position: absolute; /* Position the badge within the relatively positioned button */
+  top: 0;
+  right: 0;
+}
