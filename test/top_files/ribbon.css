@@ -35,6 +35,19 @@
 	padding-bottom: 4px; 
 	text-align: center;
 }
+/* Badges to indicate the number of new items (new pmail, new posts, etc */
+.button__badge {
+  background-color: #fa3e3e;
+  border-radius: 2px;
+  color: white;
+ 
+  padding: 1px 3px;
+  font-size: 8px;
+  
+  position: absolute; /* Position the badge within the relatively positioned button */
+  top: 0;
+  right: 0;
+}
 
 /* We consider screens less than 600 px mobile */
 @media screen and (max-width: 600px) {
@@ -43,6 +56,7 @@
 	.ribbonGroupMobile{border-style: none;}
 	.ribbonIcon{width: 54px; height: 54px;}
 	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 12px;}
 }
 
 /* Really small phone screens! */
@@ -52,6 +66,7 @@
 	.ribbonGroupMobile{border-style: none;}
 	.ribbonIcon{width: 44px; height: 44px;}
 	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 10px;}
 }
 
 .ribbonIcon:hover { 
@@ -134,16 +149,3 @@ svg.ribbonIcon {
     display: block;
 }
 
-/* Badges to indicate the number of new items (new pmail, new posts, etc */
-.button__badge {
-  background-color: #fa3e3e;
-  border-radius: 2px;
-  color: white;
- 
-  padding: 1px 3px;
-  font-size: 8px;
-  
-  position: absolute; /* Position the badge within the relatively positioned button */
-  top: 0;
-  right: 0;
-}
