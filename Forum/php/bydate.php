@@ -251,18 +251,7 @@ function onNewMessageCount(count, elapsed_time) {
 </script>
 <base target="bottom">
 </head>
-<body>
-<!--
-<table width="100%"><tr><td width="40%"><H4></H4></td>
-<td width="60%" align="right"> 
-<a href="http://info.flagcounter.com/6tbt"><img src="http://s01.flagcounter.com/count/6tbt/bg_FFFFFF/txt_000000/border_CCCCCC/columns_8/maxflags_16/viewers_3/labels_0/pageviews_0/flags_0/" alt="Flag Counter" border="0"></a>
-</td></tr></table>
--->
-<!--<table width="95%"><tr>
-<td>-->
-<!--</td>
-
-</tr></table>-->
+<body id="html_body">
 <?php
 
 require('menu_inc.php');
@@ -270,8 +259,8 @@ $end_timestamp = microtime(true);
     $duration = $end_timestamp - $start_timestamp;
 
 ?>
-
-<br><b id="msg_count"><?php print($max_id - $last_id); ?></b> new message(s) since you came here last time
+<div id="content">
+<b id="msg_count"><?php print($max_id - $last_id); ?></b> new message(s) since you came here last time
 &nbsp;&nbsp;&nbsp;&nbsp;Queried: <span id="query_ts"><?php printf(' (in ' . round($duration, 5) . ' seconds) <b>');  
 //print(date('Y F d H:i:s', time())); 
 print(local_time(time(), 'Y F d H:i:s'));
@@ -292,6 +281,7 @@ print(local_time(time(), 'Y F d H:i:s'));
 <input type="text" size="5" id="how_many" name="how_many" value="<? print($how_many); ?>">
 -->
 <input type="submit" value="Get them!">
+</div>
 </body>
 </html>
 <?php

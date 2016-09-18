@@ -91,17 +91,12 @@ require_once('html_head_inc.php');
 ?>
 <base target="bottom">
 </head>
-<body >
-<!--<table width="95%"><tr>
-<td>-->
-<!--<h3><?php print($title);?></h3>-->
-<!--</td>
-
-</tr></table>-->
+<body id="html_body">
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
 
 require('menu_inc.php');
+
         if (!is_null($err) && strlen($err) > 0) {
             print('<BR><font color="red"><b>' . $err . '</b></font>');
         }
@@ -128,4 +123,3 @@ require('menu_inc.php');
 require('tail_inc.php');
 
 ?>
-

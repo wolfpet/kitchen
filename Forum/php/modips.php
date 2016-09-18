@@ -53,7 +53,7 @@ require_once('html_head_inc.php');
 ?>
 <base target="bottom">
 </head>
-<body >
+<body id="html_body">
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
 
