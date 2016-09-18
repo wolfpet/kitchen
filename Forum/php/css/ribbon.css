@@ -34,6 +34,7 @@
 .ribbonGroupTitle{
 	padding-bottom: 4px; 
 	text-align: center;
+	font-size: 8pt;
 }
 /* Badges to indicate the number of new items (new pmail, new posts, etc */
 .button__badge {
