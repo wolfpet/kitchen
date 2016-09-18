@@ -56,13 +56,18 @@
 </td>
 </tr>
 <tr>
-<td colspan="2"> <input type="submit" value="Update"/></td>
+<td colspan="2"><br/> <input type="submit" value="Update"/></td>
 </tr>
 </table>
 </form>
 
 </td>
 <td valign="top">
+<!-- Start ignore table -->
+
+</td></tr>
+</table>
+
 <!-- Start ignore table -->
 
 <?php
@@ -77,6 +82,7 @@
       $ignored[$row['ignored']] = $row['username'];
     }
 ?>
+<br/>
 <table>
 <tr> <td align="center">
 <B> Not Ignored users </B>
@@ -133,12 +139,10 @@
 ?>
 <tr><td colspan=3>
 <input type="checkbox" name="show_hidden" value="show_hidden" id="show_hidden" <?php print ($checked); ?>>Show placeholder for hidden messages<br>
+</br>
 <INPUT type="submit" value="Save" id="Save">
 <!--</form>-->
 </td> </tr>
 </table>
-<!-- end ignore table -->
-</td> </tr> </table>
-</body>
 </html>
 
