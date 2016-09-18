@@ -1302,6 +1302,7 @@ function can_edit_post($msg_author, $msg_time, $current_user, $msg_id) {
 function login($username, $passw, $create_session=true) {
   
     global $auth;
+    global $moder;
     global $err_login;
     global $ban;
     global $user_id;
@@ -1313,6 +1314,7 @@ function login($username, $passw, $create_session=true) {
     global $prop_tz;
     global $ban_time;
     global $logged_in;
+    global $menu_style;
     global $ip;
     global $host;
     global $root_dir;
@@ -1375,7 +1377,8 @@ function login($username, $passw, $create_session=true) {
         $new_pm = $row["new_pm"];
         $prop_bold = $row["prop_bold"];
         $prop_tz  = $row['prop_tz'];
-        
+        $moder = $row['moder'];
+
         if (is_null($prop_tz)) {
           $prop_tz = explode(":", $server_tz)[0];
         }

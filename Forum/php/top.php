@@ -1,33 +1,6 @@
 <?php
 /*$Id: top.php 378 2009-11-02 19:36:24Z dmitriy $*/
-
 require_once('head_inc.php');
-require_once('html_head_inc.php');
-require_once('mysql_log.php');
-
-    $cur_page = $page_expanded;
-    $max_page = get_max_pages_expanded();
-    $work_page = ($max_page - $page) + 1;
-    $start_timestamp = time();
-?>
-<script language="JavaScript" src="<?=autoversion('js/junk.js')?>"></script>
-<script language="JavaScript" src="<?=autoversion('js/autoload.js')?>"></script>
-<base target="bottom">
-</head>
-<body id="html_body"> 
-<!--
-<table width="100%"><tr><td width="40%"><H4></H4></td>
-<td width="60%" align="right">
-<a href="http://info.flagcounter.com/6tbt"><img src="http://s01.flagcounter.com/count/6tbt/bg_FFFFFF/txt_000000/border_CCCCCC/columns_8/maxflags_16/viewers_3/labels_0/pageviews_0/flags_0/" alt="Flag Counter" border="0"></a>
-</td></tr></table>
--->
-<!--<table width="95%"><tr>
-<td>-->
-<!--<h3><?php //print($title);?></h3>-->
-<!--</td>
-
-</tr></table>-->
-<?php
     // do orientation
     if ( isset($_GET) && is_array($_GET) && count($_GET) > 0 ) {
         if (array_key_exists('dummy', $_GET)) {
@@ -41,6 +14,25 @@ require_once('mysql_log.php');
             }
         }
     }    
+require_once('html_head_inc.php');
+require_once('mysql_log.php');
+
+    $cur_page = $page_expanded;
+    $max_page = get_max_pages_expanded();
+    $work_page = ($max_page - $page) + 1;
+    $start_timestamp = time();
+?>
+<script language="JavaScript" src="<?=autoversion('js/junk.js')?>"></script>
+<script language="JavaScript" src="<?=autoversion('js/autoload.js')?>"></script>
+<base target="bottom">
+</head>
+<body id="html_body">
+<?php
+function _pages_function($add_fluff=false) {
+    global $max_page, $page, $cur_page;
+    print('<a id="up" name="up"></a>');
+    print_pages($max_page, $page, 'contents', $cur_page, '', $add_fluff, $add_fluff);
+}
 require('menu_inc.php');
 
     $show_hidden = 2;
@@ -48,8 +40,8 @@ require('menu_inc.php');
 
     get_show_hidden_and_ignored();
 
-    print('<a id="up" name="up"></a>');
-    print_pages($max_page, $page, 'contents', $cur_page);
+    _pages_function(true);  // to move to top, rename to "pages_function" and comment this call out
+    
     print("<p/>");
     
     print('<div id="threads">');
@@ -64,7 +56,7 @@ require('menu_inc.php');
 
     print('</div>');  
     
-    print_pages($max_page, $page, 'contents', $cur_page);
+    // print_pages($max_page, $page, 'contents', $cur_page);
     print('<BR><a href="#up" target="contents">Up</a>');
     print('&nbsp;&nbsp;<a href="javascript:load_threads(document.getElementById(\'threads\'), '.$last_thread.','.$limit.');" target="contents">More</a>');
 

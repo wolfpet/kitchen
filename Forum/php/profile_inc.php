@@ -37,6 +37,10 @@
 <td><input id="reply_to_email" name="reply_to_email" type="checkbox" maxlength="80" <?=$reply_to_email ? "checked" : ""?>/></td>
 </tr>
 <tr>
+<td>Classic forum menu: </td>
+<td><input id="menu_style" name="menu_style" type="checkbox" maxlength="80" <?=isset($menu_style) && $menu_style > 0 ? "checked" : ""?>/></td>
+</tr>
+<tr>
 <td>Time zone:</td>
 <td>
 <select id="tz" name="tz">

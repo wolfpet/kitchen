@@ -86,6 +86,8 @@ require_once('html_head_inc.php');
  
             $update .= ' reply_to_email=' . (isset($send_reply_to_email) ? "1" : "0") . ', '; 
 
+           $update .= ' menu_style=' . (isset($send_menu_style) ? "1" : "0") . ', '; 
+            
             if (is_null($tz)) {
                 $tz = explode(":", $server_tz)[0];
             }
@@ -104,6 +106,7 @@ require_once('html_head_inc.php');
             $prop_tz = get_tz_offset($tz);
             $smileys = isset($show_smileys);
             $reply_to_email = isset($send_reply_to_email);
+            $menu_style = isset($send_menu_style) ? 1 : 0;
         } while (false);
     }
     if ($err != '') {

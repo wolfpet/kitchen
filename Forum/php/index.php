@@ -388,9 +388,11 @@ $app->get('/api/messages', function() use ($app) {
           $result = mysql_query($query2);
           if ($row = mysql_fetch_assoc($result)) {
             $max_id = intval($row['max_id']);
-            $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
-              . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
-              . ' where p.author=u.id and p.id > ' . $max_id . ' and p.status != 2 order by id desc limit 500';
+            $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+              . ':00\') as created, p.subject, p.author as author, p.status, p.id as msg_id, p.chars, p.content_flags, p.parent, p.level, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
+              . ':00\') as modified, p.page, (select count(*) from confa_posts where parent = p.id) as counter, false as thread_closed,'
+              . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u' 
+              . ' where p.author=u.id and p.id > ' . $max_id . ' and p.status != 2 order by p.id desc limit 500';
           } else { // could not find the last id
             $count = $default_count;
           }
@@ -400,9 +402,11 @@ $app->get('/api/messages', function() use ($app) {
       }
       
       if (is_null($query)) {
-        $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
-          . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags, p.parent, p.level, p.page, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u' 
-          . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 order by id desc limit ' . $count;        
+        $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+          . ':00\') as created, p.subject, p.author as author, p.status, p.id as msg_id, p.chars, p.content_flags, p.parent, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
+          . ':00\') as modified, (select count(*) from confa_posts where parent = p.id) as counter, false as thread_closed,'
+          . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u' 
+          . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 order by p.id desc limit ' . $count;        
       }
       $result = mysql_query($query);
       break;
@@ -415,9 +419,11 @@ $app->get('/api/messages', function() use ($app) {
       if (is_null($count)) {
         $count = 50;
       }
-      $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
-        . ':00\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as id, p.page, p.parent, p.level, p.chars, (select count(*) from confa_posts where parent = p.id) as counter from confa_posts p, confa_users u where p.author=' 
-        . $user_id . ' and p.author=u.id and  p.status != 2 ' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' order by id desc limit ' . $count; 
+      $query = 'SELECT u.username, u.id as user_id, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+        . ':00\') as created, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.page, p.parent, p.level, p.chars, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
+        . ':00\') as modified, (select count(*) from confa_posts where parent = p.id) as counter, false as thread_closed,'
+        . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u'
+        . ' where p.author=' . $user_id . ' and p.author=u.id and  p.status != 2 ' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' order by p.id desc limit ' . $count; 
 
       $result = mysql_query($query);
       break;
@@ -426,9 +432,12 @@ $app->get('/api/messages', function() use ($app) {
       if (is_null($count)) {
         $count = 50;
       }
-      $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
-        . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars, b.user, b.post  from confa_posts p, confa_users u, confa_bookmarks b where b.user=' 
-        . $user_id . ' and b.post=p.id and p.author=u.id and p.status != 2 ' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : ''). ' order by msg_id desc limit ' . $count; 
+      $query = 'SELECT u.username, u.id as user_id, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
+        . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as modified, p.subject, p.content_flags, p.views, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
+        . ':00\') as modified, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars, b.user, b.post, false as thread_closed,'
+        . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions'
+        . ' from confa_posts p, confa_users u, confa_bookmarks b where b.user=' . $user_id . ' and b.post=p.id and p.author=u.id and p.status != 2 ' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '')
+        . ' order by msg_id desc limit ' . $count; 
       
       $result = mysql_query($query);
       break;
@@ -452,8 +461,8 @@ $app->get('/api/messages', function() use ($app) {
   $count = 0;
   
   while ($row = mysql_fetch_assoc($result)) {
-    $messages[] = array(
-      'id' => intval($row['id']),
+    $message = array(
+      'id' => intval($row['msg_id']),
       'status' => intval($row['status']),
       'subject' => api_get_subject($row['subject'], $row['status']),
       'author' => array('id'  => intval($row['auth']), 'name' => $row['username']),
@@ -468,6 +477,10 @@ $app->get('/api/messages', function() use ($app) {
       'answers' => intval($row['counter']),
       'level' => intval($row['level'])
     );
+    if ($format == "html") {
+      $message['html'] = print_line($row, false, false, false, false); // $row, $collapsed=false, $add_arrow=false, $add_icon=true, $indent=true
+    }
+    $messages[] = $message;
     $count++;
     if ($mode == 'answered' && $count == 1) {
       setcookie('last_answered_id2', $row['id'], 1800000000, $root_dir, $host);

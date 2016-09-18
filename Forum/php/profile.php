@@ -78,7 +78,7 @@ $(document).ready(function() {
 <span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>
 <?php
 
-    $query=' SELECT email, prop_bold, prop_tz, show_smileys, reply_to_email from confa_users where id = ' . $user_id;
+    $query=' SELECT email, prop_bold, prop_tz, show_smileys, reply_to_email, menu_style from confa_users where id = ' . $user_id;
     $result = mysql_query( $query );
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -91,7 +91,8 @@ $(document).ready(function() {
     $prop_tz_name = $row['prop_tz'];
     $prop_tz = get_tz_offset($row['prop_tz']);
     $smileys = $row['show_smileys'];
-    $reply_to_email = $row['reply_to_email'];    
+    $reply_to_email = $row['reply_to_email'];
+    $menu_style = $row['menu_style'];
 ?>
 <?php
 require_once("profile_inc.php");

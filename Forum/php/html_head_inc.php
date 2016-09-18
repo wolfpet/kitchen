@@ -31,6 +31,9 @@ if (!is_null($user_id) && $user_id != null) {
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/'.$css)?>">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/common.css')?>">
+<?php if (!isset($menu_style) || $menu_style == 0) { ?>
+<link rel="stylesheet" type="text/css" href="<?=autoversion('css/ribbon.css')?>">
+<?php } ?>
 <script src="js/jquery-1.10.2.min.js"></script>
 <script>
 var selected_id = "";
@@ -64,27 +67,50 @@ var bydate_count = 0;
 
 $( document ).ready(function() {
   var bydate = document.getElementById('bydate');
-  if (bydate !== null) {
+  
+  var newPostsBadge = null;
+  if (bydate == null) {
+    newPostsBadge = document.getElementById('newPostsBadge');
+  }
+  
+  if (bydate !== null || newPostsBadge != null) {
     var update_bydate_counter = function() {
       var url1 = "./api/messages?mode=bydate&format=count_only";
       console.log("calling bydate("+url1+")");
+      bydate_count++;
+      var start_time = new Date();
       $.ajax({
              type: "GET",
              url: url1,
              success: function(obj1) {
+                var end_time = new Date();
                 console.log("bydate object=" + obj1);
                 var count = obj1.count;
-                console.log("bydate=" + count);
-                bydate.innerHTML = addCounter(bydate.innerHTML, count, true, false);
+                console.log("bydate=" + count);                
+                if (bydate != null) {
+                  bydate.innerHTML = addCounter(bydate.innerHTML, count, true, false);
+                } else if (newPostsBadge != null) {
+                  if (count > 0) {
+                    newPostsBadge.innerHTML = count;
+                    newPostsBadge.style.display = 'block';
+                  } else {
+                    newPostsBadge.style.display = 'hidden';
+                  }
+                }
                 var newTitle = addCounter(window.parent.document.title, count, false, true);
                 console.log(newTitle);
                 window.parent.document.title = newTitle;
+                // call user function, if defined
+                if (typeof onNewMessageCount !== 'undefined') {
+                  console.log('calling user function');
+                  onNewMessageCount(count, end_time.getTime() - start_time.getTime());
+                }
                 // adjust frequency of calls if necessary
-                if (bydate_count == 10) {
+                if (bydate_count == 15) {
                   window.clearInterval(bydate_timer);
                   bydate_timer = window.setInterval(function() {update_bydate_counter();}, 5*60000);                   
                   console.log('Checking bydate every 5 min');
-                } else if (bydate_count == 20) {
+                } else if (bydate_count == 35) {
                   window.clearInterval(bydate_timer);
                   bydate_timer = window.setInterval(function() {update_bydate_counter();}, 15*60000);                   
                   console.log('Checking bydate every 15 min');

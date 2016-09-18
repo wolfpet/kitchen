@@ -44,17 +44,9 @@ require_once('html_head_inc.php');
 ?>
 <base target="bottom">
 </head>
-<body>
-<!--<table width="95%"><tr>
-<td>-->
-<!--<h3><?php print($title);?></h3>-->
-<!--</td>
-
-</tr></table>-->
+<body id="html_body">
 <?php
-
 require('menu_inc.php');
-
 ?>
 
 <!--<table width="100%">

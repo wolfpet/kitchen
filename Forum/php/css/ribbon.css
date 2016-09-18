@@ -1,0 +1,156 @@
+/* This style defines the entire ribbon bar */
+.ribbon {
+ 	display: block;
+	width:100%;
+	height: 54px;
+	background-color:#0080c0;
+	font-family:Verdana,Arial;
+	font-size:8pt;
+	color: #ffffff;
+	overflow: hidden;	
+}
+/* The group div contains the title and a set of icons. It gets invisible on mobile screens */
+.ribbonGroup{
+	height: 44px;
+	display: inline-block;
+	padding-top: 4px;
+	border: #0090c0;
+	border-style: solid;
+}
+/* The mobile group div remains visible and gets larger on mobile screens */
+.ribbonGroupMobile{
+	height: 44px;
+	display: inline-block;
+	padding-top: 4px;
+	border: #0090c0;
+	border-style: solid;
+}
+.ribbonIcon { 
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+}
+
+.ribbonGroupTitle{
+	padding-bottom: 4px; 
+	text-align: center;
+}
+/* Badges to indicate the number of new items (new pmail, new posts, etc */
+.button__badge {
+  background-color: #fa3e3e;
+  border-radius: 2px;
+  color: white;
+ 
+  padding: 1px 3px;
+  font-size: 8px;
+  
+  position: absolute; /* Position the badge within the relatively positioned button */
+  top: 0;
+  right: 0;
+}
+
+/* We consider screens less than 600 px mobile */
+@media screen and (max-width: 600px) {
+	.ribbon {height: 57px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 54px; height: 54px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 12px;}
+}
+
+/* Really small phone screens! */
+@media screen and (max-width: 400px) {
+	.ribbon {height: 47px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 44px; height: 44px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 10px;}
+}
+
+.ribbonIcon:hover { 
+	background-color: #0090c0;
+	cursor: pointer;
+}
+
+svg.ribbonIcon {
+	color: #ffffff;
+	pointer-events: none;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 2px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 1.2s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Dropdown menu for PMAIL:  incox, sent and new */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: fixed;
+    right: 0;
+    background-color: #0080c0;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #0090c0;}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+body#html_body {
+  margin:0;
+  padding:0;
+  border:0;
+}

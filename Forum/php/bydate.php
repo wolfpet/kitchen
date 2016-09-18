@@ -34,12 +34,12 @@ $show_hidden = 2;
     }
     if (!mysqli_query($linki, 'call get_last_ids(' . $test_user_id . ', @max_id, @last_id);')) {
       mysql_log(__FILE__ . ':' . __LINE__, 'Multiquery failed: ' . mysqli_error($linki));
-      die('multiquery failed');
+      die('multiquery failed(1)');
     }
 
     if (!($resulti = mysqli_query($linki, 'select @max_id as max_id, @last_id as last_id'))) {
       mysql_log(__FILE__ . ':' . __LINE__, 'Multiquery failed: ' . mysqli_error($linki));
-      die('multiquery failed');
+      die('multiquery failed(2)');
 
     }
 
@@ -178,7 +178,74 @@ function hide_shown_msg(msg_id) {
   var to_show = document.getElementById("hidden_msg_" + msg_id);
   to_show.style.height="auto";
   to_show.style.visibility = "visible";
+}
 
+var monthNames = [
+  "January", "February", "March",
+  "April", "May", "June", "July",
+  "August", "September", "October",
+  "November", "December"
+];
+
+// dynamic loading of titles
+function onNewMessageCount(count, elapsed_time) {
+  console.log('onNewMessageCount ' + count);
+  
+  // update counter
+  var cnt = document.getElementById("msg_count");
+  if (cnt != null) {
+    cnt.innerHTML = count;
+  }
+  
+  var date = new Date();
+  
+  // add new titles, if necessary
+  var list = document.getElementById("msg_list");
+  if (list != null && count > 0) {
+      var url1 = "./api/messages?mode=bydate&format=html";
+      console.log("retrieving new message titles "+url1);
+                
+      $.ajax({
+             type: "GET",
+             url: url1,
+             success: function(obj1) {
+                console.log("bydate object=" + obj1);
+                count = obj1.count;
+                console.log("bydate returned " + count + " messages");
+                
+                // update list of messages 
+                var new_content = '';
+                
+                for (var i = 0; i < count; i++) {
+                  if (list.innerHTML.indexOf('name="' + obj1.messages[i].id + '"') < 0) {
+                    new_content += '<li>' + obj1.messages[i].html + '</li>';
+                  }
+                }                
+                
+                list.innerHTML = new_content + list.innerHTML;                                        
+             }
+           });
+  }
+      
+  // update timestamp
+  var qts = document.getElementById("query_ts");
+  if (qts != null) {
+      var day = date.getDate();
+      if (day < 10) day = '0' + day; 
+      var monthIndex = date.getMonth();
+      var year = date.getFullYear();
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var seconds = date.getSeconds();
+      
+      hours = hours < 10 ? '0' + hours : hours;
+      minutes = minutes < 10 ? '0'+minutes : minutes;
+      seconds = seconds < 10 ? '0'+seconds : seconds;
+      
+      var strTime = hours + ':' + minutes + ':' + seconds;
+      
+      qts.innerHTML = '(in ' + (elapsed_time / 1000) +  ' seconds) <b>' + year + ' ' + monthNames[monthIndex] + ' ' + day + ' ' + strTime + '</b>';
+  }                      
 }
 
 </script>
@@ -204,13 +271,12 @@ $end_timestamp = microtime(true);
 
 ?>
 
-
-<br><b><?php print($max_id - $last_id); ?></b> new message(s) since you came here last time
-&nbsp;&nbsp;&nbsp;&nbsp;Queried: <?php printf(' (in ' . round($duration, 5) . ' seconds) <b>');  
+<br><b id="msg_count"><?php print($max_id - $last_id); ?></b> new message(s) since you came here last time
+&nbsp;&nbsp;&nbsp;&nbsp;Queried: <span id="query_ts"><?php printf(' (in ' . round($duration, 5) . ' seconds) <b>');  
 //print(date('Y F d H:i:s', time())); 
 print(local_time(time(), 'Y F d H:i:s'));
-?></b><br>
-<ol>
+?></b></span><br>
+<ol id="msg_list">
 <?php print($out); ?>
 </ol>
 <form target="contents" method=POST action="<?php print($root_dir . $page_bydate); ?>">

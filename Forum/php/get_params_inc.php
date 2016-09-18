@@ -259,6 +259,8 @@
         if (array_key_exists('mode', $_POST)) {
             $mode = trim($_POST['mode']);
         }
+        if (array_key_exists('menu_style', $_POST)) {
+            $send_menu_style = trim($_POST['menu_style']);
+        }
     }
-
 ?>
