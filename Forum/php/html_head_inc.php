@@ -29,6 +29,7 @@ if (!is_null($user_id) && $user_id != null) {
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/'.$css)?>">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/common.css')?>">
 <?php if (!isset($menu_style) || $menu_style == 0) { ?>
