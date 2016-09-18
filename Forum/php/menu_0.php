@@ -134,7 +134,7 @@
 	</div>
 <?php } ?>
 	<div id="ProfileRibbonGroup" class="ribbonGroupMobile"; style="float: right;">
-		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;<?=$logged_in ? '<b>'.$user.'</b>' : "Not logged in"?>&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?></div>
+		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;<?=$logged_in ? ''.$user.'' : "Not logged in"?>&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?></div>
 <?php if ($logged_in) { ?>
 		<div id="ProfileRibbonGroupIconContainer">
 			<span id="Pmail" class="dropdown ribbonIcon tooltip">
