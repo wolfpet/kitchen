@@ -52,20 +52,20 @@
 
 /* We consider screens less than 600 px mobile */
 @media screen and (max-width: 600px) {
-	.ribbon {height: 57px;}
+	.ribbon {height: 50px;}
 	.ribbonGroup {display: none;}
 	.ribbonGroupMobile{border-style: none;}
-	.ribbonIcon{width: 54px; height: 54px;}
+	.ribbonIcon{width: 47px; height: 47px;}
 	.ribbonGroupTitle{display: none;}
 	.button__badge{font-size: 12px;}
 }
 
 /* Really small phone screens! */
 @media screen and (max-width: 400px) {
-	.ribbon {height: 47px;}
+	.ribbon {height: 40px;}
 	.ribbonGroup {display: none;}
 	.ribbonGroupMobile{border-style: none;}
-	.ribbonIcon{width: 44px; height: 44px;}
+	.ribbonIcon{width: 37px; height: 37px;}
 	.ribbonGroupTitle{display: none;}
 	.button__badge{font-size: 10px;}
 }
@@ -77,7 +77,6 @@
 
 svg.ribbonIcon {
 	color: #ffffff;
-	pointer-events: none;
 	display: block;
 	width: 100%;
 	height: 100%;
