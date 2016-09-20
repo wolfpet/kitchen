@@ -699,6 +699,7 @@ function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = tr
 
     global $root_dir;
     if ($br) print('<BR>');
+    print('<span id="pages">');
     if ($prefix) {
       print('<B>Pages</B>: ');
     }
@@ -720,10 +721,13 @@ function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = tr
     }
 
     for ($i = $start; $i <= $end; $i++) {
+        if ($i != $start) {
+          print(' | ');
+        }
         if ( $i == $page ) {
-            print(' ' . $i . ' |');
+            print('' . $i);
         } else {
-            print(' <a target="' . $target . '" href="' . $root_dir . $cur_page . '?page=' . $i . $param . '">'. $i . '</a> |');
+            print('<a target="' . $target . '" href="' . $root_dir . $cur_page . '?page=' . $i . $param . '">'. $i . '</a>');
         }
     }
     if ( $end < $max_page ) {
@@ -732,7 +736,8 @@ function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = tr
         if ( $end < $max_page ) {
             print(' <a target="' . $target . '" href="' . $root_dir . $cur_page . '?page=' . (int) $max_page . '' . $param . '">&gt;&gt;</a> ');
         }
-    }
+    }    
+    print('&nbsp;&nbsp;</span>');
 }
 
 function print_pages_old($max_page, $page, $target, $cur_page) {
@@ -1448,7 +1453,12 @@ function login($username, $passw, $create_session=true) {
 }
 
 function like($user_id, $msg_id, $val=1, $reaction=null) {
+  global $logged_in, $ban;
   
+  if (!$logged_in || $ban) { // just in case
+    return false; // "User not logged in or banned from forum";
+  }
+
   if (is_null($reaction)) 
     $query = 'INSERT INTO confa_likes(user, post, value) values(' .
       $user_id . ', ' . $msg_id . ', ' . $val . ') ON DUPLICATE KEY UPDATE value=IFNULL(value+' . $val.', '.$val.')';
