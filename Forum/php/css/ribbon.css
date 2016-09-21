@@ -121,12 +121,12 @@ svg.ribbonIcon {
 }
 
 /* Dropdown menu for PMAIL:  incox, sent and new */
-.dropdown {
+.pmdropdown {
     position: relative;
     display: inline-block;
 }
 
-.dropdown-content {
+.pmdropdown-content {
     display: none;
     position: fixed;
     right: 0;
@@ -135,16 +135,16 @@ svg.ribbonIcon {
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
-.dropdown-content a {
+.pmdropdown-content a {
     color: white;
     padding: 10px 14px;
     text-decoration: none;
     display: block;
 }
 
-.dropdown-content a:hover {background-color: #0090c0;}
+.pmdropdown-content a:hover {background-color: #0090c0;}
 
-.dropdown:hover .dropdown-content {
+.pmdropdown:hover .pmdropdown-content {
     display: block;
 }
 

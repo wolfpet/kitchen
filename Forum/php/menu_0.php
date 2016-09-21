@@ -137,13 +137,13 @@
 		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;<?=$logged_in ? ''.$user.'' : "Not logged in"?>&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?></div>
 <?php if ($logged_in) { ?>
 		<div id="ProfileRibbonGroupIconContainer">
-			<span id="Pmail" class="dropdown ribbonIcon tooltip">
+			<span id="Pmail" class="pmdropdown ribbonIcon tooltip">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
 				<span class="tooltiptext">Pmail</span>
         <?php if (!is_null($new_pm) && $new_pm > 0) { ?>
 				<span id="newPMBadge" class="button__badge"><?=$new_pm?></span>
         <?php } ?>
-				<div class="dropdown-content">
+				<div class="pmdropdown-content">
 					<a target="contents" href="<?=$root_dir.$page_pmail?>">Inbox</a>
 					<a target="contents" href="<?=$root_dir.$page_pmail_sent?>">Sent</a>
 					<a target="bottom" href="<?=$root_dir.$page_pmail_send?>">New</a>
