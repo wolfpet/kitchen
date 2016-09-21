@@ -158,7 +158,7 @@ em {
 }
 
 /* Reactions */
-.dropdown {
+.reactions-dropdown {
     position: relative;
     display: inline-block;
 }
@@ -167,7 +167,7 @@ em {
     color: coral;  
 }
 
-.dropdown-content {
+.reactions-dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
@@ -178,7 +178,7 @@ em {
     white-space:nowrap;
 }
 
-.dropdown:hover .dropdown-content {
+.reactions-dropdown:hover .reactions-dropdown-content {
     display: block;
 }
 
