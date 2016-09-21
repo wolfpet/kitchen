@@ -211,7 +211,7 @@ Closed |
 <?php
 if (isset($reactions)) {
 ?>
-<div class="dropdown"><span><a target="bottom" href="javascript:;">Reaction</a></span><div class="dropdown-content">
+<div class="reactions-dropdown"><span><a target="bottom" href="javascript:;">Reaction</a></span><div class="reactions-dropdown-content">
 <?php
   $icons = '';
   foreach (array_keys($reactions) as $key) {
