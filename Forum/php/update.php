@@ -100,11 +100,11 @@ require_once('html_head_inc.php');
 
     if ($err != '') {
         //print('<font color="red"><b>' . $err . '</b></font>');
-                 $title = $title + ': ' + $err;
+                 $title = $title . ': ' . $err;
     } else {
         if (strlen($info) > 0) {
             //print('<font color="green"><b>' . $info . '</b></font>');
-		$title = $title + ': '+ $info;
+		$title = $title . ': '. $info;
         }
     }
 ?>
