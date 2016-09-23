@@ -74,7 +74,8 @@ $(document).ready(function() {
 <base target="bottom">
 </head>
 <body>
-<h3><?php print($title);?></h3>
+<h3 id="status_text"><?php print($title);?></h3>
+<!-- <span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>  -->
 <?php
 
     $query=' SELECT email, prop_bold, prop_tz, show_smileys, reply_to_email, menu_style from confa_users where id = ' . $user_id;

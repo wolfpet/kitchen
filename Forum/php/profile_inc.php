@@ -7,7 +7,6 @@
   <li><a class="tablinks" onclick="openTab(event, 'Ignore')">Ignore</a></li>
 </ul>
 <div id="General" class="tabcontent">
-<span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>
 <table> 
 <tr>
 <td valign="top" nowrap>

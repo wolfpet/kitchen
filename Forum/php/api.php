@@ -55,7 +55,7 @@ if ($logged_in) {
         }
       }
     }
-  $text = "Your changes have been saved.";
+  $text = "Successfully updated.";
   $status = 201;
 } else {
   $result = "Failed";
