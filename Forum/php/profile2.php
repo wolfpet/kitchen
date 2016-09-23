@@ -4,7 +4,7 @@ require_once('dump.php');
 require_once('head_inc.php');
 require_once('html_head_inc.php');
 
-    $title= 'Update profile';
+    $title= 'Profile Settings';
 
 ?>
 
