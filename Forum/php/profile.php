@@ -4,7 +4,7 @@ require_once('dump.php');
 require_once('head_inc.php');
 require_once('html_head_inc.php');
 
-    $title= 'Update profile';
+    $title= 'Profile Settings';
 
 ?>
 
@@ -75,7 +75,6 @@ $(document).ready(function() {
 </head>
 <body>
 <h3><?php print($title);?></h3>
-<span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>
 <?php
 
     $query=' SELECT email, prop_bold, prop_tz, show_smileys, reply_to_email, menu_style from confa_users where id = ' . $user_id;
