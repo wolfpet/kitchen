@@ -223,9 +223,9 @@ ul.tab li a {
     display: inline-block;
     color: black;
     text-align: center;
-    padding: 14px 16px;
+    padding: 8px 16px;
     text-decoration: none;
-    transition: 0.3s;
+    transition: 0.4s;
     cursor: pointer;
 }
 
@@ -242,7 +242,7 @@ ul.tab li a:focus, .active {
 /* Style the tab content */
 .tabcontent {
     display: none;
-    padding: 6px 12px;
+    padding: 6px 6px;
     border: 1px solid #ccc;
     border-top: none;
 }
@@ -255,18 +255,17 @@ ul.tab li a:focus, .active {
 </ul>
 
 <div id="General" class="tabcontent">
-  <h3>General</h3>
 <table> 
 <tbody><tr>
 <td valign="top" nowrap="">
 <form action="http://vipvip.ca/update.php" method="post">
 <table>
 <tbody><tr>
-<td>Password <font color="grey">(4-16 characters)</font></td>
+<td align="right">Password <font color="grey">(4-16 characters)</font></td>
 <td><input id="password" name="password" type="password" maxlength="16" autocomplete="off"></td>
 </tr>
 <tr>
-<td>Retype password: </td>
+<td align="right">Retype password: </td>
 <td><input id="password2" name="password2" type="password" maxlength="16" autocomplete="off"></td>
 </tr>
 <tr>
@@ -275,19 +274,19 @@ ul.tab li a:focus, .active {
 <td>Leave the fields blank if you <br>don't want to change your password<br><br></td>
 </tr>
 
-<td>Email</td>
+<td align="right">Email</td>
 <td><input id="email" name="email" type="text" maxlength="80" value="p_wol@hotmail.com"></td>
 </tr>
 <tr>
-<td>Retype email: </td>
+<td align="right">Retype email: </td>
 <td><input id="email2" name="email2" type="text" maxlength="80" value="p_wol@hotmail.com"></td>
 </tr>
 <tr>
-<td>Bold titles in thread mode: </td>
+<td align="right">Bold titles in thread mode: </td>
 <td><input id="profile_bold" name="profile_bold" type="checkbox" maxlength="80"></td>
 </tr>
 <tr>
-<td>Show smileys as icons: </td>
+<td align="right">Show smileys as icons: </td>
 <td><input id="show_smileys" name="show_smileys" type="checkbox" maxlength="80" checked=""></td>
 </tr>
 <!-- NOTE: This setting is in notifications now 
@@ -298,16 +297,16 @@ ul.tab li a:focus, .active {
 
 -->
 <tr>
-<td>Classic forum menu: </td>
+<td align="right">Classic forum menu: </td>
 <td><input id="menu_style" name="menu_style" type="checkbox" maxlength="80"></td>
 </tr>
 <tr>
-<td>Show NSFW content: </td>
+<td align="right">Show NSFW content: </td>
 <td><input id="safe_mode" type="checkbox" checked=""><span style="color:red; font-weight:bold;" id="status_text"></span></td>
 </tr>
 
 <tr>
-<td>Time zone:</td>
+<td align="right">Time zone:</td>
 <td>
 <select id="tz" name="tz">
   <option value="America/Adak">(UTC-9) Adak</option>
@@ -584,7 +583,6 @@ ul.tab li a:focus, .active {
 </div>
 
 <div id="Notifications" class="tabcontent">
-  <h3>Notifications</h3>
 
 <table>
 <tbody>
@@ -619,7 +617,6 @@ ul.tab li a:focus, .active {
 </div>
 
 <div id="Ignore" class="tabcontent">
-  <h3>Ignore participants</h3>
 <!-- Start ignore table -->
 
 <br>
@@ -719,6 +716,8 @@ ul.tab li a:focus, .active {
 <script>
 
 openTab(event, 'General'); //open general tab by default
+tablinks = document.getElementsByClassName("tablinks");
+tablinks[0].className += " active";
 
 function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
@@ -731,7 +730,9 @@ function openTab(evt, tabName) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
     document.getElementById(tabName).style.display = "block";
+    try{
     evt.currentTarget.className += " active";
+	}catch(err){} //ignore on the initial load since there is no click and no currentTarget defined
 }
 </script>
 
