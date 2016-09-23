@@ -156,5 +156,28 @@
 </td> </tr>
 </table>
 </div>
+<script>
+
+openTab(event, 'General'); //open general tab by default
+tablinks = document.getElementsByClassName("tablinks");
+tablinks[0].className += " active";
+
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    try{
+    evt.currentTarget.className += " active";
+	}catch(err){} //ignore on the initial load since there is no click and no currentTarget defined
+}
+</script>
+
 </html>
 
