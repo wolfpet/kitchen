@@ -4,20 +4,7 @@
 require_once('head_inc.php');
 require_once('html_head_inc.php');
 
-    $title = 'Update profile';
-?>
-
-<base target="bottom">
-</head>
-<body>
-<table width="95%"><tr>
-<td>
-<h3><?php print($title);?></h3>
-</td>
-
-</tr></table>
-
-<?php
+    $title = 'Profile Settings';
 
     $info = '';
     if (is_null($user) || strlen($user) == 0) {
@@ -100,7 +87,7 @@ require_once('html_head_inc.php');
                 mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
                 die('Query failed');
             }
-            $info = 'Successfully updated profile';
+            $info = 'Successfully updated.';
             $prop_bold = $profile_bold;
             $prop_tz_name = $tz;
             $prop_tz = get_tz_offset($tz);
@@ -109,13 +96,30 @@ require_once('html_head_inc.php');
             $menu_style = isset($send_menu_style) ? 1 : 0;
         } while (false);
     }
+
+
     if ($err != '') {
-        print('<font color="red"><b>' . $err . '</b></font>');
+        //print('<font color="red"><b>' . $err . '</b></font>');
+                 $title = $title + ': ' + $err;
     } else {
         if (strlen($info) > 0) {
-            print('<font color="green"><b>' . $info . '</b></font>');
+            //print('<font color="green"><b>' . $info . '</b></font>');
+		$title = $title + ': '+ $info;
         }
     }
+?>
+
+<base target="bottom">
+</head>
+<body>
+<table width="95%"><tr>
+<td>
+<h3><?php print($title);?></h3>
+</td>
+
+</tr></table>
+
+<?php
 
 require_once("profile_inc.php");
 require_once('tail_inc.php');
