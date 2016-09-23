@@ -22,6 +22,10 @@
 <td><input id="password2" name="password2" type="password" maxlength="16" autocomplete="off"/></td>
 </tr>
 <tr>
+<tr>
+<td></td>
+<td>Leave the fields blank if you <br>don't want to change your password<br><br></td>
+</tr>
 <td align="right">Email</td>
 <td><input id="email" name="email" type="text" maxlength="80" value="<?php print($email); ?>"/></td>
 </tr>
