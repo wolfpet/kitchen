@@ -9,45 +9,46 @@
 </ul>
 <div style="position:absolute;left: 0px;top: 0px;width: 100%;z-index: 9999;text-align: right;"><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>><i>Show NSFW content</i></input>&nbsp;</div>
 
+<div id="General" class="tabcontent">
 <table> 
 <tr>
 <td valign="top" nowrap>
 <form action="<?php print( $root_dir . $page_update ); ?>" method="post">
 <table>
 <tr>
-<td>Password <font color="grey">(16 characters maximum, 4 minimum)</font></td>
+<td align="right">Password <font color="grey">(4-16 characters)</font></td>
 <td><input id="password" name="password" type="password" maxlength="16" autocomplete="off"/></td>
 </tr>
 <tr>
-<td>Retype password: </td>
+<td align="right">Retype password: </td>
 <td><input id="password2" name="password2" type="password" maxlength="16" autocomplete="off"/></td>
 </tr>
 <tr>
-<td>Email</td>
+<td align="right">Email</td>
 <td><input id="email" name="email" type="text" maxlength="80" value="<?php print($email); ?>"/></td>
 </tr>
 <tr>
-<td>Retype email: </td>
+<td align="right">Retype email: </td>
 <td><input id="email2" name="email2" type="text" maxlength="80" value="<?php print($email2); ?>"/></td>
 </tr>
 <tr>
-<td>Bold titles in thread mode: </td>
+<td align="right">Bold titles in thread mode: </td>
 <td><input id="profile_bold" name="profile_bold" type="checkbox" maxlength="80" <?php if (!is_null($profile_bold) && $profile_bold > 0) { print("checked"); } ?>/></td>
 </tr>
 <tr>
-<td>Show smileys as icons: </td>
+<td align="right">Show smileys as icons: </td>
 <td><input id="show_smileys" name="show_smileys" type="checkbox" maxlength="80" <?=$smileys ? "checked" : ""?>/></td>
 </tr>
 <tr>
-<td>Send email about a reply to your post: </td>
+<td align="right">Reply email notification: </td>
 <td><input id="reply_to_email" name="reply_to_email" type="checkbox" maxlength="80" <?=$reply_to_email ? "checked" : ""?>/></td>
 </tr>
 <tr>
-<td>Classic forum menu: </td>
+<td align="right">Classic forum menu: </td>
 <td><input id="menu_style" name="menu_style" type="checkbox" maxlength="80" <?=isset($menu_style) && $menu_style > 0 ? "checked" : ""?>/></td>
 </tr>
 <tr>
-<td>Time zone:</td>
+<td align="right">Time zone:</td>
 <td>
 <select id="tz" name="tz">
 <?php
@@ -73,6 +74,10 @@
 
 </td></tr>
 </table>
+
+</div>
+<div id="Ignore" class="tabcontent">
+
 
 <!-- Start ignore table -->
 
@@ -150,5 +155,6 @@
 <!--</form>-->
 </td> </tr>
 </table>
+</div>
 </html>
 
