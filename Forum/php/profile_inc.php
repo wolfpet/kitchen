@@ -1,13 +1,13 @@
 <?php
 /*$Id: profile_inc.php 942 2013-09-01 12:10:18Z dmitriy $*/
 ?>
-
 <ul class="tab">
   <li><a class="tablinks" onclick="openTab(event, 'General')">General</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Notifications')">Notifications</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Ignore')">Ignore</a></li>
 </ul>
 <div id="General" class="tabcontent">
+<span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>
 <table> 
 <tr>
 <td valign="top" nowrap>
@@ -46,6 +46,10 @@
 <td><input id="menu_style" name="menu_style" type="checkbox" maxlength="80" <?=isset($menu_style) && $menu_style > 0 ? "checked" : ""?>/></td>
 </tr>
 <tr>
+<td align="right">Show NSFW content:</td>
+<td><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>></input></td>
+</tr>
+<tr>
 <td align="right">Time zone:</td>
 <td>
 <select id="tz" name="tz">
@@ -60,13 +64,6 @@
 </select>
 </td>
 </tr>
-
-<tr>
-<td align="right">Show NSFW content:</td>
-<td><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>></input></td>
-</tr>
-
-
 <tr>
 <td colspan="2"><br/> <input type="submit" value="Update"/></td>
 </tr>
