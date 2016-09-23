@@ -18,7 +18,6 @@ require_once('html_head_inc.php');
 </tr></table>
 
 <?php
-    require_once("profile_inc.php");
 
     $info = '';
     if (is_null($user) || strlen($user) == 0) {
@@ -118,6 +117,7 @@ require_once('html_head_inc.php');
         }
     }
 
+require_once("profile_inc.php");
 require_once('tail_inc.php');
 
 ?>
