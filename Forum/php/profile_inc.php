@@ -7,8 +7,6 @@
   <li><a class="tablinks" onclick="openTab(event, 'Notifications')">Notifications</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Ignore')">Ignore</a></li>
 </ul>
-<div style="position:absolute;left: 0px;top: 0px;width: 100%;z-index: 9999;text-align: right;"><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>><i>Show NSFW content</i></input>&nbsp;</div>
-
 <div id="General" class="tabcontent">
 <table> 
 <tr>
@@ -62,6 +60,13 @@
 </select>
 </td>
 </tr>
+
+<tr>
+<td align="right">Show NSFW content:</td>
+<td><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>></input></td>
+</tr>
+
+
 <tr>
 <td colspan="2"><br/> <input type="submit" value="Update"/></td>
 </tr>
