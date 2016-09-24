@@ -1,10 +1,12 @@
+function updateColors()
+{
+    //alert($("#ribbonBackground").spectrum("option", "color"));
 
-$("#update").click (function() {
-    console.log($("#full").spectrum("option", "palette"));
-    $("#full").spectrum("option", "palette", [
-        ["red", "green", "blue"]    
-    ]);
-});
+}
+
+function colorInit()
+
+{
 
 $("#ribbonBackground").spectrum({
     color: "#0080c0",
@@ -378,3 +380,5 @@ $("#textTitles").spectrum({
         "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
     ]
 });
+
+}

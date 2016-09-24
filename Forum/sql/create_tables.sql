@@ -18,7 +18,6 @@
 --
 -- Table structure for table `confa_ban_history`
 --
-
 DROP TABLE IF EXISTS `confa_ban_history`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
