@@ -117,7 +117,6 @@
 </div>
 
 <div id="Colors" class="tabcontent">
-<h3>COMING SOON!</h3>
 <table>
 <tbody>
 <tr>
