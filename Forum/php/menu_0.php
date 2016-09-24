@@ -32,7 +32,7 @@
 		<div id="WriteRibbonGroupTitle" class="ribbonGroupTitle">Write</div>
 		<div id="WriteRibbonGroupIconContainer">
 			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" href="<?=$root_dir.$page_new?>">
-				<svg class="ribbonIcon"  viewBox="-10 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg>
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg>
 				<span class="tooltiptext">New thread</span></a>
 			</span> 
 		</div>
@@ -48,6 +48,8 @@
 			<span id="Answered" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_answered?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g></svg>
 				<span class="tooltiptext">Answered</span></a>
+				<!-- This is a badge sample that indicates that there are 4 new answers -->
+				<span id="newAnswersBadge" class="button__badge" style="display:none;">4</span></a>
 			</span> 
 			<span id="Bookmark" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_my_bookmarks?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="white" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"></path></g></svg>
@@ -134,7 +136,7 @@
 	</div>
 <?php } ?>
 	<div id="ProfileRibbonGroup" class="ribbonGroupMobile"; style="float: right;">
-		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;<?=$logged_in ? ''.$user.'' : "Not logged in"?>&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?></div>
+		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;<?=$logged_in ? $user : "Not logged in"?>&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?></div>
 <?php if ($logged_in) { ?>
 		<div id="ProfileRibbonGroupIconContainer">
 			<span id="Pmail" class="pmdropdown ribbonIcon tooltip">
@@ -166,6 +168,16 @@
 		</div>
 <?php } ?>
 	</div>
+<?php if (function_exists('pages_function')) { ?>
+	<div id="PagesRibbonGroup" class="ribbonGroupMobile"; style="float: right;">
+		<div id="PagesRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;</div>
+		<div id="PagesRibbonGroupIconContainer">
+    <?php
+      pages_function();
+    ?>
+		</div>
+	</div>
+<?php } ?>
 </div>
 
 <?php if ($logged_in == false) { ?>

@@ -70,6 +70,7 @@ $( document ).ready(function() {
   var bydate = document.getElementById('bydate');
   
   var newPostsBadge = null;
+
   if (bydate == null) {
     newPostsBadge = document.getElementById('newPostsBadge');
   }
@@ -98,6 +99,33 @@ $( document ).ready(function() {
                     newPostsBadge.style.display = 'hidden';
                   }
                 }
+                // update answered badge or element
+                var newAnswersBadge = document.getElementById('newAnswersBadge');
+                var answered = null;
+                if (newAnswersBadge == null) {
+                  answered = document.getElementById('answered');
+                }
+                if (newAnswersBadge != null || answered != null) {
+                  $.ajax({
+                    type: "GET",
+                    url: "./api/messages?mode=answered&format=count_only",
+                    success: function(obj2) {
+                      var count = obj2.count;
+                      console.log("answered=" + count);
+                      if (newAnswersBadge != null) {
+                        if (count > 0) {
+                          newAnswersBadge.innerHTML = count;
+                          newAnswersBadge.style.display = 'block';
+                        } else {
+                          newAnswersBadge.style.display = 'hidden';
+                        }
+                      } else if (answered != null) {
+                        answered.innerHTML = addCounter(answered.innerHTML, count, true, false);                        
+                      }
+                    }
+                  });                             
+                }                
+                // update title
                 var newTitle = addCounter(window.parent.document.title, count, false, true);
                 console.log(newTitle);
                 window.parent.document.title = newTitle;

@@ -412,7 +412,7 @@ $app->get('/api/messages', function() use ($app) {
       break;
         
     case 'answered':
-      $result = get_answered(is_null($count) ? 0 : $count);  
+      $result = get_answered(is_null($count) ? 0 : $count, $format != "count_only" /* do not update timestamp if count_only */);  
       break;
       
     case 'mymessages':
@@ -482,9 +482,9 @@ $app->get('/api/messages', function() use ($app) {
     }
     $messages[] = $message;
     $count++;
-    if ($mode == 'answered' && $count == 1) {
+    if ($mode == 'answered' && $format != "count_only" && $count == 1) {
       setcookie('last_answered_id2', $row['id'], 1800000000, $root_dir, $host);
-    }      
+    }
   }
 
   $response->setContentType('application/json');
