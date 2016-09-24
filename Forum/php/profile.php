@@ -1,5 +1,4 @@
 <?php
-/*$Id: profile.php 942 2013-09-01 12:10:18Z dmitriy $*/
 require_once('dump.php');
 require_once('head_inc.php');
 require_once('html_head_inc.php');
@@ -10,6 +9,8 @@ require_once('html_head_inc.php');
 
 <script>
 $(document).ready(function() {
+
+colorInit();
             //$("#status_text").html("&nbsp;");
             $('#btnIgnor').click(function(e) {
             $("#status_text").html("&nbsp;");
@@ -70,6 +71,10 @@ $(document).ready(function() {
         });
 
 </script>
+
+<link rel="stylesheet" type="text/css" href="css/spectrum.css">
+<script type="text/javascript" src="js/spectrum.js"></script>
+<script type="text/javascript" src="js/profcolors.js"></script>
 
 <base target="bottom">
 </head>

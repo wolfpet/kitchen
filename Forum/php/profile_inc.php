@@ -4,6 +4,7 @@
 <ul class="tab">
   <li><a class="tablinks" onclick="openTab(event, 'General')">General</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Notifications')">Notifications</a></li>
+  <li><a class="tablinks" onclick="openTab(event, 'Colors')">Colors</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Ignore')">Ignore</a></li>
 </ul>
 <div id="General" class="tabcontent">
@@ -115,9 +116,77 @@
 </table>
 </div>
 
+<div id="Colors" class="tabcontent">
+<table>
+<tbody>
+<tr>
+<td align="right">Ribbon Color</td>
+<td>
+<input type='text' id="ribbonColor"/>
+</td>
+</tr>
+
+<tr>
+<td align="right">Ribbon Backgroud</td>
+<td>
+<input type='text' id="ribbonBackground"/>
+</td>
+</tr>
+
+<tr>
+<td align="right">Icon Hover Backgroud</td>
+<td>
+<input type='text' id="ribbonIconBg"/>
+</td>
+</tr>
+
+<tr>
+<td align="right">Ribbon Group Border</td>
+<td>
+<input type='text' id="ribbonGroupBorder"/>
+</td>
+</tr>
+
+<tr>
+<td align="right">Unread topics</td>
+<td>
+<input type='text' id="textUnread"/>
+</td>
+</tr>
+
+<tr>
+<td align="right">Topics hover</td>
+<td>
+<input type='text' id="textHover"/>
+</td>
+</tr>
+
+<tr>
+<td align="right">Visited Topics</td>
+<td>
+<input type='text' id="textRead"/>
+</td>
+</tr>
+
+<tr>
+<td align="right">Titles</td>
+<td>
+<input type='text' id="textTitles"/>
+</td>
+</tr>
+
+<tr>
+<td align="right"></td>
+<td>
+<button id="colors_update" onclick="updateColors();">Save style</button>
+</td>
+</tr>
+
+
+</table>
+</div>
 
 <div id="Ignore" class="tabcontent">
-
 
 <!-- Start ignore table -->
 
