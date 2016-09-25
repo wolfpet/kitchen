@@ -1,7 +1,25 @@
 function updateColors()
 {
-    //alert($("#ribbonBackground").spectrum("option", "color"));
+    //alert($("#ribbonBackground").spectrum("get"));
+    var ribbonColor =$("#ribbonColor").spectrum("get").toHexString();
+    var ribbonBackground = $("#ribbonBackground").spectrum("get").toHexString();
+    var ribbonIconBg = $("#ribbonIconBg").spectrum("get").toHexString();
+    var ribbonGroupBorder = $("#ribbonGroupBorder").spectrum("get").toHexString();
+    var textUnread = $("#textUnread").spectrum("get").toHexString();
+    var textHover = $("#textHover").spectrum("get").toHexString();
+    var textRead = $("#textRead").spectrum("get").toHexString();
+    var textTitles = $("#textTitles").spectrum("get").toHexString();
 
+    var colors = [ribbonColor,  ribbonBackground, ribbonIconBg, ribbonGroupBorder, textUnread, textHover, textRead, textTitles];
+    //alert(colors);
+    $.post("api.php", 	{'update_colors' : colors}, function(data,status)
+	    {  
+		//alert(data);
+		if (status == "success" && parent.contents !== undefined) 
+		{
+		    parent.contents.location.reload();
+		}
+	    });
 }
 
 function colorInit()

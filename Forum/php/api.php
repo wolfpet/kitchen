@@ -43,6 +43,26 @@ if ($logged_in) {
         die('Query failed');
       }
     }
+
+    if (array_key_exists('update_colors', $_POST)) {
+      $update_colors = $_POST['update_colors'];
+      $ribbonColor = $update_colors[0];
+      $ribbonBackground = $update_colors[1];
+      $ribbonIconBg = $update_colors[2];
+      $ribbonGroupBorder = $update_colors[3];
+      $textUnread = $update_colors[4];
+      $textHover = $update_colors[5];
+      $textRead = $update_colors[6];
+      $textTitles = $update_colors[7];
+      $query = "UPDATE confa_users set color_ribbon='" . $ribbonColor . "', color_ribbon_background='" . $ribbonBackground . "', color_icon_hover='" . $ribbonIconBg . "', color_group_border='" . $ribbonGroupBorder . "', color_topics_unread='" . $textUnread . "', color_topics_hover='". $textHover . "', color_topics_visited='" . $textRead . "', color_titles='" . $textTitles . "' where id=" . $user_id;
+      die($query);
+      $result = mysql_query($query);
+      if (!$result) {
+        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+        die('Query failed');
+      }
+    }
+
     if (array_key_exists("ignored", $_POST)) {
       $ignored = $_POST['ignored'];
       mysql_log(__FILE__, "" . __LINE__);
