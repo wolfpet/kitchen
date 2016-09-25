@@ -1888,7 +1888,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
   return "";
 }
 
-function get_answered($how_many=0) {
+function get_answered($how_many=0, $update_ts=true) {
   global $last_answered_id, $server_tz, $prop_tz, $user_id, $auth_cookie;
   
   if (is_null($last_answered_id)) {
@@ -1906,11 +1906,13 @@ function get_answered($how_many=0) {
       return false;
   } 
 
-  $query = 'UPDATE confa_sessions set last_answered_time=current_timestamp where user_id = ' . $user_id;
-  $result2 = mysql_query($query);
-  if (!$result2) {
-      mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-      return false;
+  if ($update_ts) {
+    $query = 'UPDATE confa_sessions set last_answered_time=current_timestamp where user_id = ' . $user_id;
+    $result2 = mysql_query($query);
+    if (!$result2) {
+        mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+        return false;
+    }
   }
   
   return $result;

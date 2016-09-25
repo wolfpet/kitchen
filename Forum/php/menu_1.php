@@ -195,11 +195,11 @@ New ]<?php
 <?php
     if (strcmp($cur_page, $page_answered) == 0) {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_answered); ?>"><I>Answered</I></a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_answered); ?>"><I id="answered">Answered</I></a> |
 <?php
     } else {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_answered); ?>">Answered</a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_answered); ?>" id="answered">Answered</a> |
 <?php
     }
 ?>
