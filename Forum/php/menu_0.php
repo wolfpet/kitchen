@@ -46,6 +46,30 @@ else{
     h1<---->{font-family:Verdana,Arial; font-size:36pt;}
     h2<--->{font-family:Verdana,Arial; font-size:24pt; color:#0080c0;}
     h3<--->{font-family:Verdana,Arial; font-size:14pt; color:#0080c0;}
+
+.pmdropdown {
+    position: relative;
+    display: inline-block;
+}
+.pmdropdown-content {
+    display: none;
+    position: fixed;
+    right: 0;
+    background-color: <?=$ribbonBackground?>;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.pmdropdown-content a {
+    color: <?=$ribbonColor?>;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+}
+.pmdropdown-content a:hover {background-color: <?=$iconHover;?>}
+.pmdropdown:hover .pmdropdown-content {
+    display: block;
+}
+                                                    
 </style>
 
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
@@ -193,8 +217,9 @@ else{
         <?php if (!is_null($new_pm) && $new_pm > 0) { ?>
 				<span id="newPMBadge" class="button__badge"><?=$new_pm?></span>
         <?php } ?>
-				<div class="pmdropdown-content">
-					<a target="contents" href="<?=$root_dir.$page_pmail?>">Inbox</a>
+    				<style>pmdropdown-content.a:hover {color: green;}</style>
+				<div class="pmdropdown-content" style="background-color: <?=$ribbonBackground?>">
+					<a target="contents" style="color: <?=$ribbonColor?>" href="<?=$root_dir.$page_pmail?>">Inbox</a>
 					<a target="contents" href="<?=$root_dir.$page_pmail_sent?>">Sent</a>
 					<a target="bottom" href="<?=$root_dir.$page_pmail_send?>">New</a>
 				</div>
