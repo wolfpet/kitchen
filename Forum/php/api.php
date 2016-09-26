@@ -55,7 +55,7 @@ if ($logged_in) {
       $textRead = $update_colors[6];
       $textTitles = $update_colors[7];
       $query = "UPDATE confa_users set color_ribbon='" . $ribbonColor . "', color_ribbon_background='" . $ribbonBackground . "', color_icon_hover='" . $ribbonIconBg . "', color_group_border='" . $ribbonGroupBorder . "', color_topics_unread='" . $textUnread . "', color_topics_hover='". $textHover . "', color_topics_visited='" . $textRead . "', color_titles='" . $textTitles . "' where id=" . $user_id;
-      die($query);
+      //die($query);
       $result = mysql_query($query);
       if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
