@@ -13,24 +13,41 @@ if (!is_null($user_id) && $user_id != null) {
   $ribbonBackground=$colorrow['color_ribbon_background'];  
   $iconHover=$colorrow['color_icon_hover'];
   $groupBorder=$colorrow['color_group_border'];
+  
+  $color_topics_unread= $colorrow['color_topics_unread'];
+  $color_topics_hover=$colorrow['color_topics_hover'];
+  $color_topics_visited=$colorrow['color_topics_visited'];
  }
 }
 else{
-
   $ribbonColor='white';
   $ribbonBackground='#0080c0';  
   $iconHover='#0090c0';
   $groupBorder='#0090c0';
+  
+  $color_topics_unread= '#0000FF';
+  $color_topics_hover= '#FF0000';
+  $color_topics_visited='#0080c0';
 }
 
 ?>
+
 <style>
 .ribbonIcon:hover { 
     background-color: <?=$iconHover?>;
     cursor: pointer;
-	}
-	
+}
+    a:link    {color:<?=$color_topics_unread?>; font-family:Verdana,Arial; text-decoration:none;}
+    a:visited {color:<?=$color_topics_visited?>; font-family:Verdana,Arial; text-decoration:none;}
+    a:active  {color:<?=$color_topics_hover?>; font-family:Verdana,Arial; text-decoration:none;}
+    a:hover   {color:<?=$color_topics_hover?>; font-family:Verdana,Arial; text-decoration:underline;}
+    a.user_link {color:black;}
+    .selected  {background:#E0F1FF; /* Yellow = #FFFF99 */}
+    h1<---->{font-family:Verdana,Arial; font-size:36pt;}
+    h2<--->{font-family:Verdana,Arial; font-size:24pt; color:#0080c0;}
+    h3<--->{font-family:Verdana,Arial; font-size:14pt; color:#0080c0;}
 </style>
+
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
 	<div id="ForumTitle" class="ribbonGroup"; style="width: 100px;height: 44px;padding-top: 10px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11; border: <?=$groupBorder?>; border-style: solid;">
