@@ -23,19 +23,19 @@ require_once('head_inc.php');
     if (!is_null($text) && strlen($text) > 0) {
         switch ($searchin) {
         case 1:
-            $query .= ' and ( p.subject like \'%' . mysql_escape_string( $text ) . '%\' or p.body like \'%' . mysql_escape_string( $text ) . '%\') ';
+            $query .= ' and ( p.subject like \'%' . mysql_real_escape_string( $text ) . '%\' or p.body like \'%' . mysql_real_escape_string( $text ) . '%\') ';
         break;
         case 2:
-            $query .= ' and p.body like \'%' . mysql_escape_string( $text ) . '%\' ';
+            $query .= ' and p.body like \'%' . mysql_real_escape_string( $text ) . '%\' ';
         break;
         case 3:
-            $query .= ' and p.subject like \'%' . mysql_escape_string( $text ) . '%\' ';
+            $query .= ' and p.subject like \'%' . mysql_real_escape_string( $text ) . '%\' ';
         break;
         }
     }
 
     if (!is_null($author) && strlen($author) > 0 ) {
-        $query .= ' and u.username like \'%' . mysql_escape_string($author) . '%\' ';
+        $query .= ' and u.username like \'%' . mysql_real_escape_string($author) . '%\' ';
     }
 
     $fromdate = '';

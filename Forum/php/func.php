@@ -695,9 +695,79 @@ function get_max_pages_expanded(){
     return $max_page;
 }
 
-function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = true, $prefix = true) {
-
+function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = false, $prefix = false) {
+/**
+<div class="pagination">
+				4219 тем
+					<ul>
+		<li class="active"><span>1</span></li>
+      <li class="previous"><a href="./viewforum.php?f=8&amp;start=2555" rel="prev" role="button">Пред.</a></li>
+			<li><a href="./viewforum.php?f=8&amp;start=35" role="button">2</a></li>
+			<li><a href="./viewforum.php?f=8&amp;start=70" role="button">3</a></li>
+			<li><a href="./viewforum.php?f=8&amp;start=105" role="button">4</a></li>
+			<li><a href="./viewforum.php?f=8&amp;start=140" role="button">5</a></li>
+			<li class="ellipsis" role="separator"><span>…</span></li>
+			<li><a href="./viewforum.php?f=8&amp;start=4200" role="button">121</a></li>
+			<li class="next"><a href="./viewforum.php?f=8&amp;start=35" rel="next" role="button">След.</a></li>
+	</ul>
+			</div>
+*/  
     global $root_dir;
+    
+    if ($br) print('<BR>');
+    print('<div class="pagination">');
+    if ($prefix) {
+      print('<B>Pages</B>: ');
+    }
+    print("<ul>");
+    
+    if ($page > 1) {
+      print('<li class="previous"><a target="' . $target .'" href="'. $root_dir . $cur_page . '?page=' . ($page - 1) . $param . '" rel="prev" role="button">Prev.</a></li>');
+    }
+
+    if ($page == 1) {
+      print('<li class="active"><span>1</span></li>');
+    } else {
+       print('<li><a target="' . $target .'" href="'. $root_dir . $cur_page . '?page=1' . $param . '" role="button">1</a></li>');
+    }
+    
+    if ($page > 4) {
+        print('<li class="ellipsis" role="separator"><span>…</span></li>');
+    }
+    
+    for ($i = $page - 2; $i <= $page + 2; $i++) {
+        if ( $i < 2 || $i >= $max_page ) {
+          continue;
+        }
+        if ($page == $i) {
+          print('<li class="active"><span>'.$i.'</span></li>');
+        } else {
+          print('<li><a target="' . $target .'" href="'. $root_dir . $cur_page . '?page=' .$i. $param . '" role="button">'.$i.'</a></li>');
+        }        
+    }
+    
+    if ($max_page - $page > 3) {
+        print('<li class="ellipsis" role="separator"><span>…</span></li>');
+    }
+
+    if ($max_page > 1) {
+      if ($page == $max_page) {
+        print('<li class="active"><span>'.$page.'</span></li>');
+      } else {
+         print('<li><a target="' . $target .'" href="'. $root_dir . $cur_page . '?page=' . $max_page . $param . '" role="button">'.$max_page.'</a></li>');
+      }
+    }    
+
+    if ($page < $max_page) {
+      print('<li class="next"><a target="' . $target .'" href="'. $root_dir . $cur_page . '?page=' . ($page + 1) . $param . '" rel="next" role="button">Next</a></li>');
+    }
+
+    print("</ul></div>");
+}
+
+function print_pages_obsolete($max_page, $page, $target, $cur_page, $param = '', $br = true, $prefix = true) {
+    global $root_dir;
+    
     if ($br) print('<BR>');
     print('<span id="pages">');
     if ($prefix) {

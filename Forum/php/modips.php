@@ -59,7 +59,7 @@ require_once('html_head_inc.php');
 
 require('menu_inc.php');
 
-        $max_page = $count/20;
+        $max_page = floor($count/20);
         $max_page++;
         print_pages($max_page, $page, 'contents', $cur_page);
         if (!is_null($err) && strlen($err) > 0) {

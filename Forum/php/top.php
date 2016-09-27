@@ -32,6 +32,7 @@ function _pages_function($add_fluff=false) {
     global $max_page, $page, $cur_page;
     print('<a id="up" name="up"></a>');
     print_pages($max_page, $page, 'contents', $cur_page, '', $add_fluff, $add_fluff);
+    // print_pages(5, $page, 'contents', $cur_page, '', $add_fluff, $add_fluff);
 }
 require('menu_inc.php');
 
@@ -40,7 +41,7 @@ require('menu_inc.php');
 
     get_show_hidden_and_ignored();
 
-    _pages_function(true);  // to move to top, rename to "pages_function" and comment this call out
+    _pages_function(false);  // to move to top, rename to "pages_function" and comment this call out
     
     print("<p/>");
     

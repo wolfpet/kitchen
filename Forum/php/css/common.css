@@ -249,4 +249,110 @@ ul.tab li a:focus, .active {
 }
 /* --------------------- */
 
+/* Pagination */
+.pagination {
+	float: right;
+	/*margin-top: 3px;*/
+	text-align: right;
+	width: auto;
+  padding:0;
+  margin:0;
+}
+
+.action-bar.bottom .pagination {
+	margin-top: 0;
+}
+
+.pagination > ul {
+	display: inline-block;
+	list-style: none !important;
+	margin-left: 5px;
+  margin: 4px 0;
+}
+
+.pagination > ul > li {
+	display: inline-block !important;
+	padding: 2px;
+	font-size: 100%;
+	line-height: normal;
+	vertical-align: middle;
+}
+
+.pagination li a, .pagination li span {
+	border: 1px solid transparent;
+	border-radius: 2px;
+	display: block;
+	font-size: 0.9em;
+	font-weight: normal;
+  font: inherit;
+	line-height: 1.0em;
+	min-width: 10px;
+	padding: 3px;
+	text-align: center;
+	text-decoration: none;
+  font-family:  "Times New Roman", Georgia, Serif;
+}
+
+.pagination li.ellipsis span {
+	border: none;
+	padding: 0;
+}
+
+.pagination li.page-jump {
+	margin-right: 5px;
+}
+
+.pagination li.page-jump a, .pagination li.next a, .pagination li.previous a {
+  background-image: url(../images/icons_pagination.png);
+	background-repeat: no-repeat;
+	font-size: 0;
+	height: 13px;
+	width: 11px;
+}
+
+.pagination li.page-jump a {
+	background-position: 0 2px;
+	width: 24px;
+}
+
+.pagination li.next a {
+	background-position: -50px 2px;
+}
+
+.pagination li.previous a {
+  background-image: url(../images/icons_pagination.png);
+	background-position: -30px 2px;
+}
+
+.pagination li.page-jump a:hover, .pagination .dropdown-visible a.dropdown-trigger, .nojs .pagination .dropdown-container:hover a.dropdown-trigger { background-position: 0 -18px; }
+.pagination li.next a:hover { background-position: -50px -18px; }
+.pagination li.previous a:hover { background-position: -30px -18px; }
+
+.pagination li a {
+	background-color: transparent;/*#ECEDEE;*/
+	border-color: #B4BAC0;
+	color: #5C758C;
+}
+
+.pagination li.ellipsis span {
+	background-color: transparent;
+	color:	#000000;
+}
+
+.pagination li.active {
+	background-color: #FFFFFF;
+}
+
+.pagination li.active span {
+	background-color: #4692BF;
+	border-color: #4692BF;
+	color: #FFFFFF;
+}
+
+.pagination li a:hover, .pagination .dropdown-visible a.dropdown-trigger, .nojs .pagination .dropdown-container:hover a.dropdown-trigger {
+	background-color: #368AD2;
+	border-color: #368AD2;
+	color: #FFFFFF;
+}
+
 
