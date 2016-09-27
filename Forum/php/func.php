@@ -696,27 +696,13 @@ function get_max_pages_expanded(){
 }
 
 function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = false, $prefix = false) {
-/**
-<div class="pagination">
-				4219 тем
-					<ul>
-		<li class="active"><span>1</span></li>
-      <li class="previous"><a href="./viewforum.php?f=8&amp;start=2555" rel="prev" role="button">Пред.</a></li>
-			<li><a href="./viewforum.php?f=8&amp;start=35" role="button">2</a></li>
-			<li><a href="./viewforum.php?f=8&amp;start=70" role="button">3</a></li>
-			<li><a href="./viewforum.php?f=8&amp;start=105" role="button">4</a></li>
-			<li><a href="./viewforum.php?f=8&amp;start=140" role="button">5</a></li>
-			<li class="ellipsis" role="separator"><span>…</span></li>
-			<li><a href="./viewforum.php?f=8&amp;start=4200" role="button">121</a></li>
-			<li class="next"><a href="./viewforum.php?f=8&amp;start=35" rel="next" role="button">След.</a></li>
-	</ul>
-			</div>
-*/  
     global $root_dir, $menu_style;
     
     if ($menu_style == 1) {
       return print_pages_obsolete($max_page, $page, $target, $cur_page, $param, true, true);
     }
+
+    $max_page = floor($max_page);
     
     if ($br) print('<BR>');
     print('<div class="pagination">');
