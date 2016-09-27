@@ -86,7 +86,7 @@ else{
 
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
-	<div id="ForumTitle" class="ribbonGroup"; style="width: 100px;height: 44px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11px; border: <?=$groupBorder?>; border-style: solid; border-width: 1px;">
+	<div id="ForumTitle" class="ribbonGroup"; style="width: 100px;height: 37px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11px; border: <?=$groupBorder?>; border-style: solid; border-width: 1px;">
 <?php if (isset($banner) && !is_null($banner)) { ?>
 <img src="<?=$banner?>" alt="<?='Welcome'?>"/>
 <?php } else { print($title); }?>
