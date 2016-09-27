@@ -110,6 +110,11 @@ require_once('html_head_inc.php');
 ?>
 
 <base target="bottom">
+<link rel="stylesheet" type="text/css" href="css/spectrum.css">
+<script type="text/javascript" src="js/profinit.js"></script>
+<script type="text/javascript" src="js/spectrum.js"></script>
+<script type="text/javascript" src="js/profcolors.js"></script>
+
 </head>
 <body>
 <table width="95%"><tr>

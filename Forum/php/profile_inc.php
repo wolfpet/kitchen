@@ -1,6 +1,52 @@
 <?php
 /*$Id: profile_inc.php 942 2013-09-01 12:10:18Z dmitriy $*/
+
+  $colorquery = "SELECT color_ribbon, color_ribbon_background, color_icon_hover, color_group_border, color_topics_unread, color_topics_hover, color_topics_visited, color_titles from confa_users where id = " . $user_id;
+  //die($colorquery);
+  
+  $colorresult = mysql_query($colorquery);
+  
+  if ($colorresult) {
+    $colorrow = mysql_fetch_assoc($colorresult);
+    $ribbonColor=$colorrow['color_ribbon'];
+    $ribbonBackground=$colorrow['color_ribbon_background'];
+    $mickeyMouse = $colorrow['color_icon_hover'];
+    $groupBorder=$colorrow['color_group_border'];
+    $color_topics_unread= $colorrow['color_topics_unread'];
+    $color_topics_hover=$colorrow['color_topics_hover'];
+    $color_topics_visited=$colorrow['color_topics_visited'];
+    $color_titles=$colorrow['color_titles'];
+  }
 ?>
+<script>
+function restoreColors(){
+    $("#ribbonBackground").spectrum("set",  "#0080c0");
+    $("#ribbonColor").spectrum("set",  "#FFFFFF");
+    $("#ribbonIconBg").spectrum("set",  "#0090c0");
+    $("#ribbonGroupBorder").spectrum("set",  "#0090c0");
+    $("#ribbonGroupBorder").spectrum("set",  "#0090c0");
+    $("#textHover").spectrum("set",  "#ff0000");
+    $("#textUnread").spectrum("set",  "#0000ff");
+    $("#textRead").spectrum("set",  "#0080c0");
+    $("#textTitles").spectrum("set",  "#0080c0");
+}
+
+
+$(document).ready(function() {
+    /*Load custom colors*/
+    $("#ribbonColor").spectrum("set", "<?=$ribbonColor?>");
+    $("#ribbonBackground").spectrum("set", "<?=$ribbonBackground?>");
+    $("#ribbonColor").spectrum("set",  "<?=$ribbonColor?>");
+    $("#ribbonIconBg").spectrum("set", "<?=$mickeyMouse?>");
+    $("#ribbonGroupBorder").spectrum("set",  "<?=$groupBorder?>");
+    $("#textHover").spectrum("set", "<?=$color_topics_hover?>");
+    $("#textUnread").spectrum("set", "<?=$color_topics_unread?>");
+    $("#textRead").spectrum("set",  "<?=$color_topics_visited?>");
+    $("#textTitles").spectrum("set", "<?=$color_titles?>");
+});
+
+
+</script>
 <ul class="tab">
   <li><a class="tablinks" onclick="openTab(event, 'General')">General</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Notifications')">Notifications</a></li>
@@ -119,28 +165,26 @@
 <div id="Colors" class="tabcontent">
 <table>
 <tbody>
+
 <tr>
-<td align="right">Ribbon Color</td>
+      <td colspan="4" align="center" style="color:<?=$ribbonColor?> ;" bgcolor="<?=$ribbonBackground?>">Main Menu Ribbon colors</td>
+</tr>
+<tr>
+<td align="right">Icons</td>
 <td>
 <input type='text' id="ribbonColor"/>
 </td>
-</tr>
-
-<tr>
-<td align="right">Ribbon Backgroud</td>
+<td align="right">Background</td>
 <td>
 <input type='text' id="ribbonBackground"/>
 </td>
 </tr>
 
 <tr>
-<td align="right">Icon Hover Backgroud</td>
+<td align="right">Icon Hover Background</td>
 <td>
 <input type='text' id="ribbonIconBg"/>
 </td>
-</tr>
-
-<tr>
 <td align="right">Ribbon Group Border</td>
 <td>
 <input type='text' id="ribbonGroupBorder"/>
@@ -148,14 +192,14 @@
 </tr>
 
 <tr>
-<td align="right">Unread topics</td>
+    <td colspan="4" align="center" style="color:<?=$ribbonColor?> ;" bgcolor="<?=$ribbonBackground?>">Topics and text colors</td>
+</tr>
+<tr>
+<td align="right">Unread Topics</td>
 <td>
 <input type='text' id="textUnread"/>
 </td>
-</tr>
-
-<tr>
-<td align="right">Topics hover</td>
+<td align="right">Topics Hover</td>
 <td>
 <input type='text' id="textHover"/>
 </td>
@@ -166,9 +210,6 @@
 <td>
 <input type='text' id="textRead"/>
 </td>
-</tr>
-
-<tr>
 <td align="right">Titles</td>
 <td>
 <input type='text' id="textTitles"/>
@@ -176,12 +217,15 @@
 </tr>
 
 <tr>
-<td align="right"></td>
+<td align="right">
+</td>
 <td>
-<button id="colors_update" onclick="updateColors();">Save style</button>
 </td>
 </tr>
 
+<tr>
+    <td colspan="4" align="center">&nbsp;&nbsp;<button id="colors_restore" onclick="restoreColors();">Reset to default</button><button id="colors_update" onclick="updateColors();">Save style</button></td>
+</tr>
 
 </table>
 </div>
