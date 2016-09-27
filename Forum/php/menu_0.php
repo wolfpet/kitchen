@@ -86,18 +86,14 @@ else{
 
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
-    <div id="ForumTitle" class="ribbonGroup"; style="width: 100px;height: 44px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11px; border: <?=$groupBorder?>; border-style: solid margin-top: 2px;;">
+	<div id="ForumTitle" class="ribbonGroup"; style="width: 100px;height: 44px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11; border: <?=$groupBorder?>; border-style: solid; border-width: 1px;">
 <?php if (isset($banner) && !is_null($banner)) { ?>
 <img src="<?=$banner?>" alt="<?='Welcome'?>"/>
 <?php } else { print($title); }?>
 </div>
 <?php }?>
 
-<<<<<<< HEAD
 	<div id="SortRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";">
-=======
-	<div id="SortRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid;" class="ribbonGroupMobile">
->>>>>>> a7daae58b94106253c03da0edc37cd799d29c888
 		<div id="SortRibbonGroupTitle" class="ribbonGroupTitle">Sort</div>
 		<div id="SortRibbonGroupIconContainer">
 			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="<?=$root_dir.$page_bydate?>?mode=bydate">
