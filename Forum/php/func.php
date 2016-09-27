@@ -712,7 +712,11 @@ function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = fa
 	</ul>
 			</div>
 */  
-    global $root_dir;
+    global $root_dir, $menu_style;
+    
+    if ($menu_style == 1) {
+      return print_pages_obsolete($max_page, $page, $target, $cur_page, $param, true, true);
+    }
     
     if ($br) print('<BR>');
     print('<div class="pagination">');
