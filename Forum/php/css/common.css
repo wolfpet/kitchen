@@ -341,7 +341,7 @@ ul.tab li a:focus, .active {
 }
 
 .pagination li.active {
-	background-color: #FFFFFF;
+	background-color: transparent;
 }
 
 .pagination li.active span {
