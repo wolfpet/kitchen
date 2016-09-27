@@ -86,14 +86,14 @@ else{
 
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
-	<div id="ForumTitle" class="ribbonGroup"; style="width: 100px;height: 44px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11; border: <?=$groupBorder?>; border-style: solid;">
+	<div id="ForumTitle" class="ribbonGroup"; style="width: 100px;height: 44px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11; border: <?=$groupBorder?>; border-style: solid; border-width: 1px;">
 <?php if (isset($banner) && !is_null($banner)) { ?>
 <img src="<?=$banner?>" alt="<?='Welcome'?>"/>
 <?php } else { print($title); }?>
 </div>
 <?php }?>
 
-	<div id="SortRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid;" class="ribbonGroupMobile";">
+	<div id="SortRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";">
 		<div id="SortRibbonGroupTitle" class="ribbonGroupTitle">Sort</div>
 		<div id="SortRibbonGroupIconContainer">
 			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="<?=$root_dir.$page_bydate?>?mode=bydate">
@@ -112,7 +112,7 @@ else{
 			</span> 
 		</div>
 	</div>
-	<div id="WriteRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid;" class="ribbonGroupMobile">
+	<div id="WriteRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
 		<div id="WriteRibbonGroupTitle" class="ribbonGroupTitle">Write</div>
 		<div id="WriteRibbonGroupIconContainer">
 			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" href="<?=$root_dir.$page_new?>">
@@ -122,7 +122,7 @@ else{
 		</div>
 	</div>
 
-	<div id="FindRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid;" class="ribbonGroup">
+	<div id="FindRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup">
 		<div id="FindRibbonGroupTitle" class="ribbonGroupTitle">Find</div>
 		<div id="FindRibbonGroupIconContainer">
 			<span id="MyMessages" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_my_messages?>">
@@ -146,7 +146,7 @@ else{
 		</div>
 	</div>
 
-	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid;" class="ribbonGroup";>
+	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
 		<div id="ViewRibbonGroupIconContainer">
 			<span id="Horizontal" class="ribbonIcon tooltip"><a target="_top" href=".">
@@ -171,7 +171,7 @@ else{
 <?php if ($logged_in && !is_null($moder) && $moder > 0) {
   $regs = get_regs_count();
 ?>  
-	<div id="ModRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid;" class="ribbonGroup";>
+	<div id="ModRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Moderator</div>
 		<div id="ViewRibbonGroupIconContainer">
 <?php if ($regs > 0) { ?>
@@ -201,7 +201,7 @@ else{
 		</div>
 	</div>
 <?php } if ($logged_in == false) { ?>
-	<div id="WelcomeRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid;" class="ribbonGroup";>
+	<div id="WelcomeRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Welcome!</div>
 		<div id="ViewRibbonGroupIconContainer">
 			<span id="Login" class="ribbonIcon tooltip">
@@ -219,7 +219,7 @@ else{
 		</div>
 	</div>
 <?php } ?>
-	<div id="ProfileRibbonGroup" class="ribbonGroupMobile"; style="float: right; border: <?=$groupBorder?>; border-style: solid;">
+	<div id="ProfileRibbonGroup" class="ribbonGroupMobile"; style="float: right; border: <?=$groupBorder?>; border-style: solid; border-width: 1px;">
 		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;<?=$logged_in ? $user : "Not logged in"?>&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?></div>
 <?php if ($logged_in) { ?>
 		<div id="ProfileRibbonGroupIconContainer">

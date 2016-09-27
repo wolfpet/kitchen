@@ -16,6 +16,8 @@
 	padding-top: 4px;
 	border: #0090c0;
 	border-style: solid;
+	border-width: 1px;
+	margin-top: 2px;
 }
 /* The mobile group div remains visible and gets larger on mobile screens */
 .ribbonGroupMobile{
@@ -24,6 +26,7 @@
 	padding-top: 4px;
 	border: #0090c0;
 	border-style: solid;
+	margin-top: 2px;
 }
 .ribbonIcon { 
 	display: inline-block;
@@ -52,7 +55,7 @@
 
 /* We consider screens less than 600 px mobile */
 @media screen and (max-width: 600px) {
-	.ribbon {height: 50px;}
+	.ribbon {height: 54px;}
 	.ribbonGroup {display: none;}
 	.ribbonGroupMobile{border-style: none;}
 	.ribbonIcon{width: 47px; height: 47px;}
@@ -62,7 +65,7 @@
 
 /* Really small phone screens! */
 @media screen and (max-width: 400px) {
-	.ribbon {height: 40px;}
+	.ribbon {height: 54px;}
 	.ribbonGroup {display: none;}
 	.ribbonGroupMobile{border-style: none;}
 	.ribbonIcon{width: 37px; height: 37px;}
