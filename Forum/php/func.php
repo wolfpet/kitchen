@@ -620,7 +620,7 @@ function get_max_pages_collapsed(&$max_thread_id) {
         die('Query failed.');
     }
     $row = mysql_fetch_row($result);
-    $max_page = $row[0]/50;
+    $max_page = floor($row[0]/50);
     $max_thread_id = $row[1];
     return $max_page;
 }

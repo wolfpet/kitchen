@@ -296,6 +296,7 @@ ul.tab li a:focus, .active {
 .pagination li.ellipsis span {
 	border: none;
 	padding: 0;
+  font-family: Verdana, Arial;
 }
 
 .pagination li.page-jump {

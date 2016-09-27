@@ -4,7 +4,7 @@
 require_once('head_inc.php');
 
     $cur_page = $page_bydate;
-    $title = 'Thread contents';
+    // $title = 'Thread contents';
     $prefix = NULL;
 
     $thread_id = NULL;
