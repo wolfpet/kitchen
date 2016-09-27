@@ -69,7 +69,19 @@ else{
 .pmdropdown:hover .pmdropdown-content {
     display: block;
 }
-                                                    
+/* Pager */
+
+.pagination li.active span {
+    background-color: <?=$ribbonBackground?>;
+    border-color: <?=$ribbonBackground?> ;
+    color: <?=$ribbonColor?>;
+}
+
+.pagination li a:hover, .pagination .dropdown-visible a.dropdown-trigger, .nojs .pagination .dropdown-container:hover a.dropdown-trigger {
+    background-color: <?=$iconHover?>;
+    border-color: <?=$ribbonBackground?>;
+    color:  <?=$ribbonColor?>;
+}
 </style>
 
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
