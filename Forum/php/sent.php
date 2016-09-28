@@ -83,7 +83,7 @@ require_once('html_head_inc.php');
 ?>
 <base target="bottom">
 </head>
-<body style="background-color: #CCEEEE;">
+<body id="html_body" style="background-color: #CCEEEE;">
 <!--<table width="95%"><tr>
 <td>-->
 <!--<h3><?php print($title);?></h3>-->
