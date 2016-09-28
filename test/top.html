@@ -1,0 +1,840 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0024)http://vipvip.ca/top.php -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>"Forum Kitchen"</title>
+
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+<link rel="stylesheet" type="text/css" href="./top_files/disc2.css">
+<link rel="stylesheet" type="text/css" href="./top_files/common.css">
+<link rel="stylesheet" type="text/css" href="./top_files/ribbon.css">
+<script src="./top_files/jquery-1.10.2.min.js.download"></script>
+<script>
+var selected_id = "";
+
+function selectMsg(id) {
+  id = "sp_" + id;
+  console.log('selectMsg  id=' + id);
+  if (selected_id != "") {
+    // reset selection
+    console.log('resetting selected id=' + selected_id);
+    var selected = document.getElementById(selected_id);
+    if (selected != null) {
+      selected.className = null;
+    }  
+  }
+  var selected = document.getElementById(id);
+  if (selected != null) {
+    console.log('selected element id=' + id);
+    // select message
+    selected.className = "selected";
+    selected_id = id;
+  } else {
+    // message not found
+    selected_id = "";
+    console.log('id=' + id + "not found");
+  }
+}
+
+var bydate_timer = -1;
+var bydate_count = 0;
+
+$( document ).ready(function() {
+  var bydate = document.getElementById('bydate');
+  
+  var newPostsBadge = null;
+
+  if (bydate == null) {
+    newPostsBadge = document.getElementById('newPostsBadge');
+  }
+  
+  if (bydate !== null || newPostsBadge != null) {
+    var update_bydate_counter = function() {
+      var url1 = "./api/messages?mode=bydate&format=count_only";
+      console.log("calling bydate("+url1+")");
+      bydate_count++;
+      var start_time = new Date();
+      $.ajax({
+             type: "GET",
+             url: url1,
+             success: function(obj1) {
+                var end_time = new Date();
+                console.log("bydate object=" + obj1);
+                var count = obj1.count;
+                console.log("bydate=" + count);                
+                if (bydate != null) {
+                  bydate.innerHTML = addCounter(bydate.innerHTML, count, true, false);
+                } else if (newPostsBadge != null) {
+                  if (count > 0) {
+                    newPostsBadge.innerHTML = count;
+                    newPostsBadge.style.display = 'block';
+                  } else {
+                    newPostsBadge.style.display = 'hidden';
+                  }
+                }
+                // update answered badge or element
+                var newAnswersBadge = document.getElementById('newAnswersBadge');
+                var answered = null;
+                if (newAnswersBadge == null) {
+                  answered = document.getElementById('answered');
+                }
+                if (newAnswersBadge != null || answered != null) {
+                  $.ajax({
+                    type: "GET",
+                    url: "./api/messages?mode=answered&format=count_only",
+                    success: function(obj2) {
+                      var count = obj2.count;
+                      console.log("answered=" + count);
+                      if (newAnswersBadge != null) {
+                        if (count > 0) {
+                          newAnswersBadge.innerHTML = count;
+                          newAnswersBadge.style.display = 'block';
+                        } else {
+                          newAnswersBadge.style.display = 'hidden';
+                        }
+                      } else if (answered != null) {
+                        answered.innerHTML = addCounter(answered.innerHTML, count, true, false);                        
+                      }
+                    }
+                  });                             
+                }                
+                // update title
+                var newTitle = addCounter(window.parent.document.title, count, false, true);
+                console.log(newTitle);
+                window.parent.document.title = newTitle;
+                // call user function, if defined
+                if (typeof onNewMessageCount !== 'undefined') {
+                  console.log('calling user function');
+                  onNewMessageCount(count, end_time.getTime() - start_time.getTime());
+                }
+                // adjust frequency of calls if necessary
+                if (bydate_count == 15) {
+                  window.clearInterval(bydate_timer);
+                  bydate_timer = window.setInterval(function() {update_bydate_counter();}, 5*60000);                   
+                  console.log('Checking bydate every 5 min');
+                } else if (bydate_count == 35) {
+                  window.clearInterval(bydate_timer);
+                  bydate_timer = window.setInterval(function() {update_bydate_counter();}, 15*60000);                   
+                  console.log('Checking bydate every 15 min');
+                }                   
+             }
+           });      
+    };
+    window.setTimeout( function() {update_bydate_counter();}, 1000 );
+    bydate_timer = window.setInterval(function(){update_bydate_counter();}, 60000); 
+    console.log('Checking bydate every minute');
+  }
+});
+
+function addCounter(text, count, bold, pad) {
+    var prefix = pad ? " (" : "(";
+    var braket = text.indexOf(prefix);
+    if (braket >= 0) text = text.substring(0, braket);
+    if (count > 0) text += prefix + (bold?"<b>":"") + count + (bold?"</b>":"") +")";
+    return text;                 
+}
+
+var focused = null;
+// shift - select
+$(document).ready(function(){
+ // add click function to checkboxes
+ $(document).find(':checkbox').each(function() {
+    $(this).click(function(e) {
+      if (e.shiftKey) {
+        if (focused != null) {
+          var checked = this.checked;
+          var current = this;
+          // make all checkboxes between 'focused' and 'current' same as 'current'
+          var inside = false;
+          $(document).find(':checkbox').each(function() {
+            if (this.value == current.value || this.value == focused.value) {
+              this.checked = checked;
+              inside = !inside;
+              if (!inside) return;
+            } else if (inside) {
+              this.checked = checked;
+            }
+          });
+        }
+      } else {
+        focused = this;
+      }
+    });
+  });
+});
+</script>
+<script language="JavaScript" src="./top_files/junk.js.download"></script>
+<script language="JavaScript" src="./top_files/autoload.js.download"></script>
+<!--<base target="bottom">--><base href="." target="bottom">
+</head>
+<body id="html_body">
+
+<style>
+.ribbonIcon:hover { 
+    background-color: #4768ac;
+    cursor: pointer;
+}
+    a:link    {color:#0000ff; font-family:Verdana,Arial; text-decoration:none;}
+    a:visited {color:#334b7d; font-family:Verdana,Arial; text-decoration:none;}
+    a:active  {color:#980000; font-family:Verdana,Arial; text-decoration:none;}
+    a:hover   {color:#980000; font-family:Verdana,Arial; text-decoration:underline;}
+    a.user_link {color:black;}
+    .selected  {background:#E0F1FF; /* Yellow = #FFFF99 */}
+    h1<---->{font-family:Verdana,Arial; font-size:36pt;}
+    h2<--->{font-family:Verdana,Arial; font-size:24pt; color:#0080c0;}
+    h3<--->{font-family:Verdana,Arial; font-size:14pt; color:#0080c0;}
+
+.pmdropdown {
+    position: relative;
+    display: inline-block;
+}
+.pmdropdown-content {
+    display: none;
+    position: fixed;
+    right: 0;
+    background-color: #334b7d;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.pmdropdown-content a {
+    color: #ffffff;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+}
+.pmdropdown-content a:hover {background-color: #4768ac}
+.pmdropdown:hover .pmdropdown-content {
+    display: block;
+}
+/* Pager */
+
+.pagination li.active span {
+    background-color: #334b7d;
+    border-color: #334b7d ;
+    color: #ffffff;
+}
+
+.pagination li a:hover, .pagination .dropdown-visible a.dropdown-trigger, .nojs .pagination .dropdown-container:hover a.dropdown-trigger {
+    background-color: #4768ac;
+    border-color: #334b7d;
+    color:  #ffffff;
+}
+</style>
+
+<div id="Ribbon" class="ribbon" style="background-color: #334b7d; color:#ffffff;">
+	<div id="ForumTitle" class="ribbonGroup" ;="" style="width: 100px;height: 37px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11px; border: #4768ac; border-style: solid; border-width: 1px;">VIP</div>
+	<div id="SortRibbonGroup" style="border: #4768ac; border-style: solid; border-width: 1px;" class="ribbonGroupMobile" ;"="">
+		<div id="SortRibbonGroupTitle" class="ribbonGroupTitle">Sort</div>
+		<div id="SortRibbonGroupIconContainer">
+			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="http://vipvip.ca/bydate.php?mode=bydate">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="#ffffff" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g></svg>
+				<span class="tooltiptext">By Date</span>
+				<!-- This is a badge sample that indicates that there are 4 new posts -->
+				<span id="newPostsBadge" class="button__badge" style="display:none;">4</span></a>
+			</span> 
+			<span id="Expanded" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/top.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M6 7h2.5L5 3.5 1.5 7H4v10H1.5L5 20.5 8.5 17H6V7zm4-2v2h12V5H10zm0 14h12v-2H10v2zm0-6h12v-2H10v2z"></path></g></svg>
+				<span class="tooltiptext">Expanded</span></a>
+			</span> 
+			<span id="Collapsed" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/collapsed.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12.17c-.74 0-1.33.6-1.33 1.33s.6 1.33 1.33 1.33 1.33-.6 1.33-1.33-.59-1.33-1.33-1.33zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"></path></g></svg>
+				<span class="tooltiptext">Collapsed</span></a>
+			</span> 
+		</div>
+	</div>
+	<div id="WriteRibbonGroup" style="border: #4768ac; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
+		<div id="WriteRibbonGroupTitle" class="ribbonGroupTitle">Write</div>
+		<div id="WriteRibbonGroupIconContainer">
+			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" href="http://vipvip.ca/new.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg>
+				<span class="tooltiptext">New thread</span></a>
+			</span> 
+		</div>
+	</div>
+
+	<div id="FindRibbonGroup" style="border: #4768ac; border-style: solid; border-width: 1px;" class="ribbonGroup">
+		<div id="FindRibbonGroupTitle" class="ribbonGroupTitle">Find</div>
+		<div id="FindRibbonGroupIconContainer">
+			<span id="MyMessages" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/mymessages.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"></path></g></svg>
+				<span class="tooltiptext">My messages</span></a>
+			</span> 
+			<span id="Answered" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/answered.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g></svg>
+				<span class="tooltiptext">Answered</span></a>
+				<!-- This is a badge sample that indicates that there are 4 new answers -->
+				<span id="newAnswersBadge" class="button__badge" style="display:none;">4</span>
+			</span> 
+			<span id="Bookmark" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/mybookmarks.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"></path></g></svg>
+				<span class="tooltiptext">My bookmarks</span></a>
+			</span> 
+			<span id="Search" class="ribbonIcon tooltip"><a target="bottom" href="http://vipvip.ca/search.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></g></svg>
+				<span class="tooltiptext">Search</span></a>
+			</span> 
+		</div>
+	</div>
+
+	<div id="ViewRibbonGroup" style="border: #4768ac; border-style: solid; border-width: 1px;" class="ribbonGroup" ;="">
+		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
+		<div id="ViewRibbonGroupIconContainer">
+			<span id="Horizontal" class="ribbonIcon tooltip"><a target="_top" href="http://vipvip.ca/">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M4 18h17v-6H4v6zM4 5v6h17V5H4z"></path></g></svg>
+				<span class="tooltiptext">Horizontal</span></a>
+			</span> 
+			<span id="Vertical" class="ribbonIcon tooltip"><a target="_top" href="http://vipvip.ca/cols.html">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M6 5H3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm14 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm-7 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1z"></path></g></svg>
+				<span class="tooltiptext">Vertical</span></a>
+			</span> 
+			<span id="Phone" class="ribbonIcon tooltip"><a target="_top" href="http://vipvip.ca/mobile/index.html">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M20.1 7.7l-1 1c1.8 1.8 1.8 4.6 0 6.5l1 1c2.5-2.3 2.5-6.1 0-8.5zM18 9.8l-1 1c.5.7.5 1.6 0 2.3l1 1c1.2-1.2 1.2-3 0-4.3zM14 1H4c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 19H4V4h10v16z"></path></g></svg>
+				<span class="tooltiptext">Phone</span></a>
+			</span> 
+			<span id="Refresh" class="ribbonIcon tooltip"><a target="contents" class="menu" href="http://vipvip.ca/top.php?page=1">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></g></svg>
+				<span class="tooltiptext">Refresh</span></a>
+			</span> 
+		</div>
+	</div>
+  
+  
+	<div id="ModRibbonGroup" style="border: #4768ac; border-style: solid; border-width: 1px;" class="ribbonGroup" ;="">
+		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Moderator</div>
+		<div id="ViewRibbonGroupIconContainer">
+			<span id="Users" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/modusers.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" class="style-scope iron-icon"></path></g></svg>
+				<span class="tooltiptext">Users</span></a>
+			</span> 
+			<span id="IPs" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/modips.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z" class="style-scope iron-icon"></path></g></svg>
+				<span class="tooltiptext">IPs</span></a>
+			</span> 
+			<span id="DeletedPosts" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/moddelposts.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" class="style-scope iron-icon"></path></g></svg>
+				<span class="tooltiptext">Deleted</span></a>
+			</span> 
+			<span id="CensoredPosts" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/modcensposts.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" class="style-scope iron-icon"></path></g></svg>
+				<span class="tooltiptext">Censored</span></a>
+			</span> 
+		</div>
+	</div>
+	<div id="ProfileRibbonGroup" class="ribbonGroupMobile" ;="" style="float: right; border: #4768ac; border-style: solid; border-width: 1px;">
+		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;Peter (2)&nbsp;</div>
+		<div id="ProfileRibbonGroupIconContainer">
+			<span id="Pmail" class="pmdropdown ribbonIcon tooltip">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
+				<span class="tooltiptext">Pmail</span>
+            				<style>pmdropdown-content.a:hover {color: green;}</style>
+				<div class="pmdropdown-content" style="background-color: #334b7d">
+					<a target="contents" style="color: #ffffff" href="http://vipvip.ca/pmail.php">Inbox</a>
+					<a target="contents" href="http://vipvip.ca/sent.php">Sent</a>
+					<a target="bottom" href="http://vipvip.ca/send.php">New</a>
+				</div>
+			</span> 
+			<span id="Settings" class="ribbonIcon tooltip"><a target="bottom" href="http://vipvip.ca/profile.php">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
+				<span class="tooltiptext">Settings</span></a>
+			</span> 
+            
+			<span id="Logout" class="ribbonIcon tooltip"><a target="contents" href="http://vipvip.ca/top.php?logout=true">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" class="style-scope iron-icon"></path></g></svg></a>
+				<span class="tooltiptext">Logout</span>
+			</span> 
+		</div>
+	</div>
+</div>
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+<div class="ui-widget-content" id="topics" style="display: block; border: 0px solid;  padding: 0px;  width: 99.8vw; height: 50vh; resize: vertical; overflow: auto;">
+
+<a id="up" name="up"></a><div class="pagination"><ul><li class="active"><span>1</span></li><li><a target="contents" href="http://vipvip.ca/top.php?page=2" role="button">2</a></li><li><a target="contents" href="http://vipvip.ca/top.php?page=3" role="button">3</a></li><li class="ellipsis" role="separator"><span>…</span></li><li><a target="contents" href="http://vipvip.ca/top.php?page=43" role="button">43</a></li><li class="next"><a target="contents" href="http://vipvip.ca/top.php?page=2" rel="next" role="button">Next</a></li></ul></div><p></p><div id="threads"><dl><dd>
+<span id="sp_344080"><img border="0" src="./top_files/es.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="344080" name="344080" target="bottom" onclick="selectMsg(&#39;344080&#39;);" href="http://vipvip.ca/msg.php?id=344080">Camera :)</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [16 views] 2016-09-28 11:43:11 <b>118</b> bytes <font color="green"><b>+1</b></font> <font color="orange"><b>+1</b></font>&nbsp;</span><br>
+<span id="sp_344070"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="344070" name="344070" target="bottom" onclick="selectMsg(&#39;344070&#39;);" href="http://vipvip.ca/msg.php?id=344070">World Cup Of Hockey 2016 Final: Game #1 is tonight</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [57 views] 2016-09-27 17:52:25 <b>145</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344073"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344073" name="344073" target="bottom" onclick="selectMsg(&#39;344073&#39;);" href="http://vipvip.ca/msg.php?id=344073">Re: Team Europe</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1050" target="contents">Kl03</a></b> [41 views] 2016-09-27 19:14:24 <b>62</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_344062"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="344062" name="344062" target="bottom" onclick="selectMsg(&#39;344062&#39;);" href="http://vipvip.ca/msg.php?id=344062">Как удобнее скачать видео с Youtube, напомните пожалуйста?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [55 views] 2016-09-27 15:51:43 <b>45</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344069"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344069" name="344069" target="bottom" onclick="selectMsg(&#39;344069&#39;);" href="http://vipvip.ca/msg.php?id=344069">http://en.savefrom.net/1-how-to-download-youtube-video/</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [37 views] 2016-09-27 17:15:02 <b>0</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+<span id="sp_344065"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344065" name="344065" target="bottom" onclick="selectMsg(&#39;344065&#39;);" href="http://vipvip.ca/msg.php?id=344065">Re: Как удобнее скачать видео с Youtube, напомните пожалуйста?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1082" target="contents">MikeM</a></b> [41 views] 2016-09-27 16:09:13 <b>146</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+</dd></dl>
+<span id="sp_344050"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="344050" name="344050" target="bottom" onclick="selectMsg(&#39;344050&#39;);" href="http://vipvip.ca/msg.php?id=344050">In unrelated news...</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [83 views] 2016-09-27 13:55:36<span class="edited">*</span> <b>197</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344053"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344053" name="344053" target="bottom" onclick="selectMsg(&#39;344053&#39;);" href="http://vipvip.ca/msg.php?id=344053">Re: In unrelated news...</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [46 views] 2016-09-27 13:56:55<span class="edited">*</span> <b>117</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344055"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344055" name="344055" target="bottom" onclick="selectMsg(&#39;344055&#39;);" href="http://vipvip.ca/msg.php?id=344055">Re: Или давай я добавлю</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [33 views] 2016-09-27 13:57:14 <b>60</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344056"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344056" name="344056" target="bottom" onclick="selectMsg(&#39;344056&#39;);" href="http://vipvip.ca/msg.php?id=344056">Re: Или давай я добавлю</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [34 views] 2016-09-27 13:57:34 <b>9</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344061"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="344061" name="344061" target="bottom" onclick="selectMsg(&#39;344061&#39;);" href="http://vipvip.ca/msg.php?id=344061">Ну вы, ребята, крутые! Молодцы. Почти как Чак Норрис</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [41 views] 2016-09-27 15:50:02<span class="edited">*</span> <b>118</b> bytes <font color="orange"><b>+2</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344066"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344066" name="344066" target="bottom" onclick="selectMsg(&#39;344066&#39;);" href="http://vipvip.ca/msg.php?id=344066">Fixed :-)</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [36 views] 2016-09-27 17:00:28 <b>197</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344067"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344067" name="344067" target="bottom" onclick="selectMsg(&#39;344067&#39;);" href="http://vipvip.ca/msg.php?id=344067">я проверил, всё нормально</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [28 views] 2016-09-27 17:09:02 <b>8</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_344054"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344054" name="344054" target="bottom" onclick="selectMsg(&#39;344054&#39;);" href="http://vipvip.ca/msg.php?id=344054">Re: In unrelated news...</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [24 views] 2016-09-27 13:56:39 <b>52</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+<span id="sp_344043"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="344043" name="344043" target="bottom" onclick="selectMsg(&#39;344043&#39;);" href="http://vipvip.ca/msg.php?id=344043">Что у нас из HDD для десктопов сейчас рулит?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [59 views] 2016-09-27 12:35:50 <b>530</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344074"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344074" name="344074" target="bottom" onclick="selectMsg(&#39;344074&#39;);" href="http://vipvip.ca/msg.php?id=344074">Где ж ты 2Gb диски сейчас найдёшь? Это раритет. Лучше уже флешку купи 2Gb :)</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1029" target="contents">Карпов</a></b> [31 views] 2016-09-27 19:21:08 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344081"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344081" name="344081" target="bottom" onclick="selectMsg(&#39;344081&#39;);" href="http://vipvip.ca/msg.php?id=344081">зануда! =)</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [5 views] 2016-09-28 12:05:20 <b>242</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_344045"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344045" name="344045" target="bottom" onclick="selectMsg(&#39;344045&#39;);" href="http://vipvip.ca/msg.php?id=344045">Re: Что у нас из HDD для десктопов сейчас рулит?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [41 views] 2016-09-27 12:39:09 <b>62</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344046"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344046" name="344046" target="bottom" onclick="selectMsg(&#39;344046&#39;);" href="http://vipvip.ca/msg.php?id=344046">Re: Что у нас из HDD для десктопов сейчас рулит?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [43 views] 2016-09-27 12:48:23 <b>129</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344049"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344049" name="344049" target="bottom" onclick="selectMsg(&#39;344049&#39;);" href="http://vipvip.ca/msg.php?id=344049">Re: Что у нас из HDD для десктопов сейчас рулит?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1024" target="contents">PeterK</a></b> [33 views] 2016-09-27 13:07:41 <b>31</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344051"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344051" name="344051" target="bottom" onclick="selectMsg(&#39;344051&#39;);" href="http://vipvip.ca/msg.php?id=344051">Re: Может хбокс?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [34 views] 2016-09-27 13:40:08 <b>74</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344063"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344063" name="344063" target="bottom" onclick="selectMsg(&#39;344063&#39;);" href="http://vipvip.ca/msg.php?id=344063">Re: Может хбокс?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1024" target="contents">PeterK</a></b> [25 views] 2016-09-27 15:57:03 <b>45</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344064"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344064" name="344064" target="bottom" onclick="selectMsg(&#39;344064&#39;);" href="http://vipvip.ca/msg.php?id=344064">Re: Может хбокс?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [23 views] 2016-09-27 16:01:08 <b>107</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_344048"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344048" name="344048" target="bottom" onclick="selectMsg(&#39;344048&#39;);" href="http://vipvip.ca/msg.php?id=344048">Re: Что у нас из HDD для десктопов сейчас рулит?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [35 views] 2016-09-27 12:58:37 <b>65</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344052"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344052" name="344052" target="bottom" onclick="selectMsg(&#39;344052&#39;);" href="http://vipvip.ca/msg.php?id=344052">Дорого ©</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [33 views] 2016-09-27 13:40:31 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344058"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344058" name="344058" target="bottom" onclick="selectMsg(&#39;344058&#39;);" href="http://vipvip.ca/msg.php?id=344058">Re: Дорого ©</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [28 views] 2016-09-27 14:28:53 <b>27</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344059"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344059" name="344059" target="bottom" onclick="selectMsg(&#39;344059&#39;);" href="http://vipvip.ca/msg.php?id=344059">Re: Дорого ©</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [33 views] 2016-09-27 14:30:35 <b>61</b> bytes <font color="orange"><b>+1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344060"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344060" name="344060" target="bottom" onclick="selectMsg(&#39;344060&#39;);" href="http://vipvip.ca/msg.php?id=344060">Re: Дорого ©</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [27 views] 2016-09-27 14:31:06 <b>13</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+<span id="sp_344057"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344057" name="344057" target="bottom" onclick="selectMsg(&#39;344057&#39;);" href="http://vipvip.ca/msg.php?id=344057">:-)</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [17 views] 2016-09-27 13:59:52 <b>0</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_344041"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;">  <img border="0" src="./top_files/youtube12x12w.png"> <a id="344041" name="344041" target="bottom" onclick="selectMsg(&#39;344041&#39;);" href="http://vipvip.ca/msg.php?id=344041">Musk on Mars</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [17 views] 2016-09-27 15:27:45<span class="edited">*</span> <b>377</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344042"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344042" name="344042" target="bottom" onclick="selectMsg(&#39;344042&#39;);" href="http://vipvip.ca/msg.php?id=344042">Re: Musk on Mars</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [37 views] 2016-09-27 12:26:39<span class="edited">*</span> <b>179</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_344037"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="344037" name="344037" target="bottom" onclick="selectMsg(&#39;344037&#39;);" href="http://vipvip.ca/msg.php?id=344037">Дебаты смотрели вчера?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [60 views] 2016-09-27 10:48:26 <b>427</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344076"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344076" name="344076" target="bottom" onclick="selectMsg(&#39;344076&#39;);" href="http://vipvip.ca/msg.php?id=344076">Нет</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [10 views] 2016-09-28 10:31:41 <b>0</b> bytes&nbsp;</span><br>
+<span id="sp_344075"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344075" name="344075" target="bottom" onclick="selectMsg(&#39;344075&#39;);" href="http://vipvip.ca/msg.php?id=344075">Re: Дебаты смотрели вчера?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [16 views] 2016-09-28 09:58:47 <b>119</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344078"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344078" name="344078" target="bottom" onclick="selectMsg(&#39;344078&#39;);" href="http://vipvip.ca/msg.php?id=344078">а он мог и не приходить и все равно выиграл бы. народ пытается дать сигнал элите что дальше будет только так</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1037" target="contents">486</a></b> [10 views] 2016-09-28 11:07:53 <b>1</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_344038"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344038" name="344038" target="bottom" onclick="selectMsg(&#39;344038&#39;);" href="http://vipvip.ca/msg.php?id=344038">Re: Дебаты смотрели вчера?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [49 views] 2016-09-27 11:22:27<span class="edited">*</span> <b>347</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344077"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344077" name="344077" target="bottom" onclick="selectMsg(&#39;344077&#39;);" href="http://vipvip.ca/msg.php?id=344077">Re: Дебаты смотрели вчера?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1066" target="contents">Mike</a></b> [9 views] 2016-09-28 11:06:57 <b>824</b> bytes&nbsp;</span><br>
+<span id="sp_344039"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344039" name="344039" target="bottom" onclick="selectMsg(&#39;344039&#39;);" href="http://vipvip.ca/msg.php?id=344039">Re: как все запущено у южного соседа</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [49 views] 2016-09-27 11:13:58 <b>205</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344068"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344068" name="344068" target="bottom" onclick="selectMsg(&#39;344068&#39;);" href="http://vipvip.ca/msg.php?id=344068">Re: как все запущено у южного соседа</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [32 views] 2016-09-27 17:13:43 <b>174</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344079"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;">  <img border="0" src="./top_files/youtube12x12w.png"> <a id="344079" name="344079" target="bottom" onclick="selectMsg(&#39;344079&#39;);" href="http://vipvip.ca/msg.php?id=344079">Re: как все запущено у южного соседа</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [7 views] 2016-09-28 11:41:21 <b>67</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_344031"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="344031" name="344031" target="bottom" onclick="selectMsg(&#39;344031&#39;);" href="http://vipvip.ca/msg.php?id=344031">Новая книжка</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [61 views] 2016-09-27 10:02:48 <b>418</b> bytes <font color="blue"><b>2</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344034"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344034" name="344034" target="bottom" onclick="selectMsg(&#39;344034&#39;);" href="http://vipvip.ca/msg.php?id=344034">Re: Новая книжка</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [50 views] 2016-09-27 10:35:29 <b>127</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_344020"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="344020" name="344020" target="bottom" onclick="selectMsg(&#39;344020&#39;);" href="http://vipvip.ca/msg.php?id=344020">Раскрасить конфу!</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [83 views] 2016-09-26 21:32:28 <b>298</b> bytes <font color="green"><b>+2</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344044"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344044" name="344044" target="bottom" onclick="selectMsg(&#39;344044&#39;);" href="http://vipvip.ca/msg.php?id=344044">Re: Раскрасить конфу!</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [32 views] 2016-09-27 12:38:35 <b>113</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344047"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344047" name="344047" target="bottom" onclick="selectMsg(&#39;344047&#39;);" href="http://vipvip.ca/msg.php?id=344047">Re: Раскрасить конфу!</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [24 views] 2016-09-27 12:49:43 <b>516</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+<span id="sp_344016"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="344016" name="344016" target="bottom" onclick="selectMsg(&#39;344016&#39;);" href="http://vipvip.ca/msg.php?id=344016">Покатался на убере</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1082" target="contents">MikeM</a></b> [72 views] 2016-09-26 15:18:01 <b>325</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344021"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344021" name="344021" target="bottom" onclick="selectMsg(&#39;344021&#39;);" href="http://vipvip.ca/msg.php?id=344021">Re: Покатался на убере</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [45 views] 2016-09-26 21:40:59 <b>350</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344024"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344024" name="344024" target="bottom" onclick="selectMsg(&#39;344024&#39;);" href="http://vipvip.ca/msg.php?id=344024">Re: китайский восьмичасовой рабочий день</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [42 views] 2016-09-26 22:57:14 <b>28</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344030"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344030" name="344030" target="bottom" onclick="selectMsg(&#39;344030&#39;);" href="http://vipvip.ca/msg.php?id=344030">Re: китайский восьмичасовой рабочий день</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [26 views] 2016-09-27 09:22:55<span class="edited">*</span> <b>75</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+<span id="sp_344017"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344017" name="344017" target="bottom" onclick="selectMsg(&#39;344017&#39;);" href="http://vipvip.ca/msg.php?id=344017">Re: Покатался на убере</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [62 views] 2016-09-26 15:46:01 <b>196</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344018"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344018" name="344018" target="bottom" onclick="selectMsg(&#39;344018&#39;);" href="http://vipvip.ca/msg.php?id=344018">Re: Но можно после поездки дать водителю низкийрейтинг</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1082" target="contents">MikeM</a></b> [58 views] 2016-09-26 16:39:47 <b>156</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344019"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344019" name="344019" target="bottom" onclick="selectMsg(&#39;344019&#39;);" href="http://vipvip.ca/msg.php?id=344019">Re: Но можно после поездки дать водителю низкийрейтинг</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [48 views] 2016-09-26 16:56:59 <b>44</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343993"><img border="0" src="./top_files/es.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;"> <a id="343993" name="343993" target="bottom" onclick="selectMsg(&#39;343993&#39;);" href="http://vipvip.ca/msg.php?id=343993">SpaceX tests Raptor</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [72 views] 2016-09-26 12:35:48<span class="edited">*</span> <b>305</b> bytes&nbsp;</span><br>
+<span id="sp_343963"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343963" name="343963" target="bottom" onclick="selectMsg(&#39;343963&#39;);" href="http://vipvip.ca/msg.php?id=343963">Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [85 views] 2016-09-26 11:15:21 <b>563</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344022"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344022" name="344022" target="bottom" onclick="selectMsg(&#39;344022&#39;);" href="http://vipvip.ca/msg.php?id=344022">А почему не Камри? Она поприятнее едет, чем Корола. Кстати, Круз тоже лучше едет, чем Корола</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1073" target="contents">Yu</a></b> [37 views] 2016-09-26 22:11:23 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344032"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344032" name="344032" target="bottom" onclick="selectMsg(&#39;344032&#39;);" href="http://vipvip.ca/msg.php?id=344032">Камри, Корола..</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [27 views] 2016-09-27 10:30:41 <b>40</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344035"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344035" name="344035" target="bottom" onclick="selectMsg(&#39;344035&#39;);" href="http://vipvip.ca/msg.php?id=344035">Re: Камри, Корола..</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [24 views] 2016-09-27 10:36:01 <b>16</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344036"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344036" name="344036" target="bottom" onclick="selectMsg(&#39;344036&#39;);" href="http://vipvip.ca/msg.php?id=344036">Re: Камри, Корола..</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [23 views] 2016-09-27 10:39:02 <b>77</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344040"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344040" name="344040" target="bottom" onclick="selectMsg(&#39;344040&#39;);" href="http://vipvip.ca/msg.php?id=344040">Re: Камри, Корола..</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [26 views] 2016-09-27 11:41:58 <b>23</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_344025"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344025" name="344025" target="bottom" onclick="selectMsg(&#39;344025&#39;);" href="http://vipvip.ca/msg.php?id=344025">Дорого</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [21 views] 2016-09-27 06:37:26 <b>0</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343992"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343992" name="343992" target="bottom" onclick="selectMsg(&#39;343992&#39;);" href="http://vipvip.ca/msg.php?id=343992">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [55 views] 2016-09-26 12:30:50 <b>216</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343995"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343995" name="343995" target="bottom" onclick="selectMsg(&#39;343995&#39;);" href="http://vipvip.ca/msg.php?id=343995">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [48 views] 2016-09-26 12:39:06 <b>81</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343996"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343996" name="343996" target="bottom" onclick="selectMsg(&#39;343996&#39;);" href="http://vipvip.ca/msg.php?id=343996">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [49 views] 2016-09-26 12:42:44 <b>155</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343997"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343997" name="343997" target="bottom" onclick="selectMsg(&#39;343997&#39;);" href="http://vipvip.ca/msg.php?id=343997">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [47 views] 2016-09-26 12:51:26 <b>24</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343998"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343998" name="343998" target="bottom" onclick="selectMsg(&#39;343998&#39;);" href="http://vipvip.ca/msg.php?id=343998">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [43 views] 2016-09-26 12:53:31 <b>93</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343999"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343999" name="343999" target="bottom" onclick="selectMsg(&#39;343999&#39;);" href="http://vipvip.ca/msg.php?id=343999">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [36 views] 2016-09-26 13:55:42 <b>422</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344001"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344001" name="344001" target="bottom" onclick="selectMsg(&#39;344001&#39;);" href="http://vipvip.ca/msg.php?id=344001">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [37 views] 2016-09-26 13:58:22 <b>119</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344005"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344005" name="344005" target="bottom" onclick="selectMsg(&#39;344005&#39;);" href="http://vipvip.ca/msg.php?id=344005">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [31 views] 2016-09-26 14:09:42 <b>105</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344007"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344007" name="344007" target="bottom" onclick="selectMsg(&#39;344007&#39;);" href="http://vipvip.ca/msg.php?id=344007">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [34 views] 2016-09-26 14:14:23 <b>71</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344009"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344009" name="344009" target="bottom" onclick="selectMsg(&#39;344009&#39;);" href="http://vipvip.ca/msg.php?id=344009">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [30 views] 2016-09-26 14:20:52 <b>60</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344014"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344014" name="344014" target="bottom" onclick="selectMsg(&#39;344014&#39;);" href="http://vipvip.ca/msg.php?id=344014">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [29 views] 2016-09-26 15:01:36 <b>121</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344015"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344015" name="344015" target="bottom" onclick="selectMsg(&#39;344015&#39;);" href="http://vipvip.ca/msg.php?id=344015">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [29 views] 2016-09-26 15:14:07 <b>35</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_344004"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344004" name="344004" target="bottom" onclick="selectMsg(&#39;344004&#39;);" href="http://vipvip.ca/msg.php?id=344004">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [31 views] 2016-09-26 14:03:27 <b>43</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344006"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344006" name="344006" target="bottom" onclick="selectMsg(&#39;344006&#39;);" href="http://vipvip.ca/msg.php?id=344006">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [30 views] 2016-09-26 14:13:16 <b>41</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_344002"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344002" name="344002" target="bottom" onclick="selectMsg(&#39;344002&#39;);" href="http://vipvip.ca/msg.php?id=344002">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [35 views] 2016-09-26 14:01:15 <b>42</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344003"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344003" name="344003" target="bottom" onclick="selectMsg(&#39;344003&#39;);" href="http://vipvip.ca/msg.php?id=344003">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [33 views] 2016-09-26 14:02:19 <b>31</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344010"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344010" name="344010" target="bottom" onclick="selectMsg(&#39;344010&#39;);" href="http://vipvip.ca/msg.php?id=344010">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [39 views] 2016-09-26 14:32:49<span class="edited">*</span> <b>20</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344013"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344013" name="344013" target="bottom" onclick="selectMsg(&#39;344013&#39;);" href="http://vipvip.ca/msg.php?id=344013">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [33 views] 2016-09-26 14:58:45 <b>37</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344023"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344023" name="344023" target="bottom" onclick="selectMsg(&#39;344023&#39;);" href="http://vipvip.ca/msg.php?id=344023">25K - Last year Camry on sale</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1073" target="contents">Yu</a></b> [32 views] 2016-09-26 22:14:51 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344029"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344029" name="344029" target="bottom" onclick="selectMsg(&#39;344029&#39;);" href="http://vipvip.ca/msg.php?id=344029">Re: 25K - Last year Camry on sale</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [27 views] 2016-09-27 08:21:53 <b>89</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344071"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344071" name="344071" target="bottom" onclick="selectMsg(&#39;344071&#39;);" href="http://vipvip.ca/msg.php?id=344071">i4</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1073" target="contents">Yu</a></b> [17 views] 2016-09-27 18:39:54 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344072"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344072" name="344072" target="bottom" onclick="selectMsg(&#39;344072&#39;);" href="http://vipvip.ca/msg.php?id=344072">I4 сосёт</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [17 views] 2016-09-27 18:46:55 <b>0</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+<span id="sp_344026"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344026" name="344026" target="bottom" onclick="selectMsg(&#39;344026&#39;);" href="http://vipvip.ca/msg.php?id=344026">Re: 25K - Last year Camry on sale</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [22 views] 2016-09-27 06:37:50 <b>23</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344027"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344027" name="344027" target="bottom" onclick="selectMsg(&#39;344027&#39;);" href="http://vipvip.ca/msg.php?id=344027">Только торговаться надо получше</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1073" target="contents">Yu</a></b> [24 views] 2016-09-27 07:48:32 <b>191</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344028"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344028" name="344028" target="bottom" onclick="selectMsg(&#39;344028&#39;);" href="http://vipvip.ca/msg.php?id=344028">Re: Только торговаться надо получше</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1024" target="contents">PeterK</a></b> [22 views] 2016-09-27 08:10:19 <b>142</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344033"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344033" name="344033" target="bottom" onclick="selectMsg(&#39;344033&#39;);" href="http://vipvip.ca/msg.php?id=344033">Re: Быстрее разгоняется - быстрее в аварию без опыта попадёт</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [19 views] 2016-09-27 10:32:04 <b>8</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_344012"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344012" name="344012" target="bottom" onclick="selectMsg(&#39;344012&#39;);" href="http://vipvip.ca/msg.php?id=344012">Хе-хе... Базовый вариант RS под 50 штук стоит</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1041" target="contents">Sasha Kovalev</a></b> [28 views] 2016-09-26 14:38:25 <b>2</b> bytes&nbsp;</span><br>
+<span id="sp_344011"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;">  <img border="0" src="./top_files/youtube12x12w.png"> <a id="344011" name="344011" target="bottom" onclick="selectMsg(&#39;344011&#39;);" href="http://vipvip.ca/msg.php?id=344011">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [28 views] 2016-09-26 14:34:31 <b>43</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_344000"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344000" name="344000" target="bottom" onclick="selectMsg(&#39;344000&#39;);" href="http://vipvip.ca/msg.php?id=344000">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [27 views] 2016-09-26 13:56:40 <b>12</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343973"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343973" name="343973" target="bottom" onclick="selectMsg(&#39;343973&#39;);" href="http://vipvip.ca/msg.php?id=343973">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [49 views] 2016-09-26 11:57:25 <b>65</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343979"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343979" name="343979" target="bottom" onclick="selectMsg(&#39;343979&#39;);" href="http://vipvip.ca/msg.php?id=343979">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [37 views] 2016-09-26 12:03:53 <b>67</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343985"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343985" name="343985" target="bottom" onclick="selectMsg(&#39;343985&#39;);" href="http://vipvip.ca/msg.php?id=343985">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [31 views] 2016-09-26 12:12:03 <b>78</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343988"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343988" name="343988" target="bottom" onclick="selectMsg(&#39;343988&#39;);" href="http://vipvip.ca/msg.php?id=343988">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [27 views] 2016-09-26 12:22:11 <b>78</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343982"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343982" name="343982" target="bottom" onclick="selectMsg(&#39;343982&#39;);" href="http://vipvip.ca/msg.php?id=343982">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [30 views] 2016-09-26 12:07:29 <b>143</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343984"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343984" name="343984" target="bottom" onclick="selectMsg(&#39;343984&#39;);" href="http://vipvip.ca/msg.php?id=343984">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [29 views] 2016-09-26 12:10:43 <b>59</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343986"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343986" name="343986" target="bottom" onclick="selectMsg(&#39;343986&#39;);" href="http://vipvip.ca/msg.php?id=343986">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [32 views] 2016-09-26 12:14:04 <b>192</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343989"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343989" name="343989" target="bottom" onclick="selectMsg(&#39;343989&#39;);" href="http://vipvip.ca/msg.php?id=343989">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [27 views] 2016-09-26 12:22:33 <b>19</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343991"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343991" name="343991" target="bottom" onclick="selectMsg(&#39;343991&#39;);" href="http://vipvip.ca/msg.php?id=343991">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [32 views] 2016-09-26 12:26:47<span class="edited">*</span> <b>251</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343972"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343972" name="343972" target="bottom" onclick="selectMsg(&#39;343972&#39;);" href="http://vipvip.ca/msg.php?id=343972">Новый Круз - нормальная машина</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1041" target="contents">Sasha Kovalev</a></b> [54 views] 2016-09-26 11:54:07 <b>233</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343977"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343977" name="343977" target="bottom" onclick="selectMsg(&#39;343977&#39;);" href="http://vipvip.ca/msg.php?id=343977">Re: Новый Круз - нормальная машина</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [40 views] 2016-09-26 12:03:05 <b>29</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343987"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343987" name="343987" target="bottom" onclick="selectMsg(&#39;343987&#39;);" href="http://vipvip.ca/msg.php?id=343987">Re: Новый Круз - нормальная машина</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [38 views] 2016-09-26 12:19:50 <b>38</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343990"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343990" name="343990" target="bottom" onclick="selectMsg(&#39;343990&#39;);" href="http://vipvip.ca/msg.php?id=343990">Re: Новый Круз - нормальная машина</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [33 views] 2016-09-26 12:23:06 <b>45</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343994"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343994" name="343994" target="bottom" onclick="selectMsg(&#39;343994&#39;);" href="http://vipvip.ca/msg.php?id=343994">Re: Новый Круз - нормальная машина</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [38 views] 2016-09-26 12:37:45 <b>140</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343971"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343971" name="343971" target="bottom" onclick="selectMsg(&#39;343971&#39;);" href="http://vipvip.ca/msg.php?id=343971">Re: если хочет чтобы ехала - попробуй мазда 3</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1039" target="contents">echo_maker</a></b> [39 views] 2016-09-26 11:49:58 <b>32</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343975"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343975" name="343975" target="bottom" onclick="selectMsg(&#39;343975&#39;);" href="http://vipvip.ca/msg.php?id=343975">Re: если хочет чтобы ехала - попробуй мазда 3</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [33 views] 2016-09-26 12:00:52 <b>28</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343965"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343965" name="343965" target="bottom" onclick="selectMsg(&#39;343965&#39;);" href="http://vipvip.ca/msg.php?id=343965">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1024" target="contents">PeterK</a></b> [42 views] 2016-09-26 11:21:52 <b>233</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343967"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343967" name="343967" target="bottom" onclick="selectMsg(&#39;343967&#39;);" href="http://vipvip.ca/msg.php?id=343967">Re: Старорежимный вопрос</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [42 views] 2016-09-26 11:25:01 <b>114</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343969"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343969" name="343969" target="bottom" onclick="selectMsg(&#39;343969&#39;);" href="http://vipvip.ca/msg.php?id=343969">Re: ты мне дрянь подарил</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [34 views] 2016-09-26 11:31:29 <b>149</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343950"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343950" name="343950" target="bottom" onclick="selectMsg(&#39;343950&#39;);" href="http://vipvip.ca/msg.php?id=343950">Bug?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [68 views] 2016-09-26 09:10:46 <b>174</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_344008"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="344008" name="344008" target="bottom" onclick="selectMsg(&#39;344008&#39;);" href="http://vipvip.ca/msg.php?id=344008">Re: Bug? FIXED</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [27 views] 2016-09-26 14:20:20 <b>0</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+<span id="sp_343955"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343955" name="343955" target="bottom" onclick="selectMsg(&#39;343955&#39;);" href="http://vipvip.ca/msg.php?id=343955">Re: Bug?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [33 views] 2016-09-26 09:55:41 <b>138</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343974"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343974" name="343974" target="bottom" onclick="selectMsg(&#39;343974&#39;);" href="http://vipvip.ca/msg.php?id=343974">known issue</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [20 views] 2016-09-26 12:00:21 <b>53</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343978"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343978" name="343978" target="bottom" onclick="selectMsg(&#39;343978&#39;);" href="http://vipvip.ca/msg.php?id=343978">Я поправлю. Холд он 1 сек</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [14 views] 2016-09-26 12:03:12 <b>0</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+<span id="sp_343952"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343952" name="343952" target="bottom" onclick="selectMsg(&#39;343952&#39;);" href="http://vipvip.ca/msg.php?id=343952">Re: Bug?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [24 views] 2016-09-26 09:34:06 <b>106</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343946"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343946" name="343946" target="bottom" onclick="selectMsg(&#39;343946&#39;);" href="http://vipvip.ca/msg.php?id=343946">Что народ делает по вечерам и по выходным?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [68 views] 2016-09-26 08:12:56 <b>136</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343983"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343983" name="343983" target="bottom" onclick="selectMsg(&#39;343983&#39;);" href="http://vipvip.ca/msg.php?id=343983">Re: Что народ делает по вечерам и по выходным?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [38 views] 2016-09-26 12:10:02<span class="edited">*</span> <b>154</b> bytes&nbsp;</span><br>
+<span id="sp_343956"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343956" name="343956" target="bottom" onclick="selectMsg(&#39;343956&#39;);" href="http://vipvip.ca/msg.php?id=343956">дети, домашние проекты, баттлфилд 4 с ребенком и друзьями</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1037" target="contents">486</a></b> [47 views] 2016-09-26 09:56:47 <b>1</b> bytes&nbsp;</span><br>
+<span id="sp_343949"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343949" name="343949" target="bottom" onclick="selectMsg(&#39;343949&#39;);" href="http://vipvip.ca/msg.php?id=343949">Re: Что народ делает по вечерам и по выходным?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [56 views] 2016-09-26 09:05:46 <b>168</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343953"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343953" name="343953" target="bottom" onclick="selectMsg(&#39;343953&#39;);" href="http://vipvip.ca/msg.php?id=343953">Re: Что народ делает по вечерам и по выходным?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [40 views] 2016-09-26 09:36:13 <b>137</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343954"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343954" name="343954" target="bottom" onclick="selectMsg(&#39;343954&#39;);" href="http://vipvip.ca/msg.php?id=343954">Re: Дома же всё равно делать нечего?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [40 views] 2016-09-26 09:52:56 <b>234</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343958"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343958" name="343958" target="bottom" onclick="selectMsg(&#39;343958&#39;);" href="http://vipvip.ca/msg.php?id=343958">Re: Дома же всё равно делать нечего?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [35 views] 2016-09-26 10:48:57 <b>385</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343960"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343960" name="343960" target="bottom" onclick="selectMsg(&#39;343960&#39;);" href="http://vipvip.ca/msg.php?id=343960">Re: Дома же всё равно делать нечего?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [26 views] 2016-09-26 10:54:49 <b>68</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343962"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343962" name="343962" target="bottom" onclick="selectMsg(&#39;343962&#39;);" href="http://vipvip.ca/msg.php?id=343962">Re: Дома же всё равно делать нечего?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [24 views] 2016-09-26 11:02:08 <b>39</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343968"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343968" name="343968" target="bottom" onclick="selectMsg(&#39;343968&#39;);" href="http://vipvip.ca/msg.php?id=343968">Re: Дома же всё равно делать нечего?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [21 views] 2016-09-26 11:27:38 <b>179</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343948"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="343948" name="343948" target="bottom" onclick="selectMsg(&#39;343948&#39;);" href="http://vipvip.ca/msg.php?id=343948">Re: Что народ делает по вечерам и по выходным?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [47 views] 2016-09-26 08:50:43 <b>111</b> bytes&nbsp;</span><br>
+<span id="sp_343947"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343947" name="343947" target="bottom" onclick="selectMsg(&#39;343947&#39;);" href="http://vipvip.ca/msg.php?id=343947">Да и по утрам тоже...</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [39 views] 2016-09-26 08:20:22 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343959"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343959" name="343959" target="bottom" onclick="selectMsg(&#39;343959&#39;);" href="http://vipvip.ca/msg.php?id=343959">Gym. Breakfast. Commute</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [28 views] 2016-09-26 10:54:07 <b>12</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343961"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343961" name="343961" target="bottom" onclick="selectMsg(&#39;343961&#39;);" href="http://vipvip.ca/msg.php?id=343961">Re: Gym. Breakfast. Commute</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [30 views] 2016-09-26 11:01:12 <b>134</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343964"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343964" name="343964" target="bottom" onclick="selectMsg(&#39;343964&#39;);" href="http://vipvip.ca/msg.php?id=343964">Re: Gym. Breakfast. Commute</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [23 views] 2016-09-26 11:20:49 <b>577</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343966"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343966" name="343966" target="bottom" onclick="selectMsg(&#39;343966&#39;);" href="http://vipvip.ca/msg.php?id=343966">Re: Gym. Breakfast. Commute</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [17 views] 2016-09-26 11:23:19 <b>15</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343939"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343939" name="343939" target="bottom" onclick="selectMsg(&#39;343939&#39;);" href="http://vipvip.ca/msg.php?id=343939">Вопрос про провод, который висит на доме</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1082" target="contents">MikeM</a></b> [80 views] 2016-09-25 23:14:05 <b>355</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343945"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343945" name="343945" target="bottom" onclick="selectMsg(&#39;343945&#39;);" href="http://vipvip.ca/msg.php?id=343945">Re: Вопрос про провод, который висит на доме</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [46 views] 2016-09-26 06:19:54 <b>32</b> bytes&nbsp;</span><br>
+<span id="sp_343942"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343942" name="343942" target="bottom" onclick="selectMsg(&#39;343942&#39;);" href="http://vipvip.ca/msg.php?id=343942">У нас был провод по воздуху, а распределительный щиток бела прицелен к старой груше напротив дома</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1029" target="contents">Карпов</a></b> [44 views] 2016-09-25 23:58:51 <b>521</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343943"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343943" name="343943" target="bottom" onclick="selectMsg(&#39;343943&#39;);" href="http://vipvip.ca/msg.php?id=343943">Re: У нас был провод по воздуху, а распределительный щиток бела прицелен к старой груше напротив дома</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1082" target="contents">MikeM</a></b> [39 views] 2016-09-26 00:06:25 <b>14</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343940"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343940" name="343940" target="bottom" onclick="selectMsg(&#39;343940&#39;);" href="http://vipvip.ca/msg.php?id=343940">Re: Вопрос про провод, который висит на доме</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [44 views] 2016-09-25 23:23:23 <b>110</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343970"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343970" name="343970" target="bottom" onclick="selectMsg(&#39;343970&#39;);" href="http://vipvip.ca/msg.php?id=343970">Re: Дому 50+ лет?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1041" target="contents">Sasha Kovalev</a></b> [24 views] 2016-09-26 11:44:28<span class="edited">*</span> <b>209</b> bytes&nbsp;</span><br>
+<span id="sp_343941"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343941" name="343941" target="bottom" onclick="selectMsg(&#39;343941&#39;);" href="http://vipvip.ca/msg.php?id=343941">Re: Дому 50+ лет?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1082" target="contents">MikeM</a></b> [36 views] 2016-09-25 23:36:50 <b>16</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+<span id="sp_343935"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343935" name="343935" target="bottom" onclick="selectMsg(&#39;343935&#39;);" href="http://vipvip.ca/msg.php?id=343935">А че Меркурия забанили? Он вроде нормальный персонаж</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1071" target="contents"><font color="grey">Кастро</font></a></b> [109 views] 2016-09-25 22:22:09 <b>80</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343938"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343938" name="343938" target="bottom" onclick="selectMsg(&#39;343938&#39;);" href="http://vipvip.ca/msg.php?id=343938">Re: А че Меркурия забанили? Он вроде нормальный персонаж</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [86 views] 2016-09-25 22:30:40<span class="edited">*</span> <b>69</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343933"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343933" name="343933" target="bottom" onclick="selectMsg(&#39;343933&#39;);" href="http://vipvip.ca/msg.php?id=343933">Обсуждения стиля модерирования, качание прав, и пр</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [129 views] 2016-09-25 22:06:31 <b>790</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343957"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343957" name="343957" target="bottom" onclick="selectMsg(&#39;343957&#39;);" href="http://vipvip.ca/msg.php?id=343957">гыы, а у самодова я вел революционную деятельность против пауканов. эх молодость</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1037" target="contents">486</a></b> [46 views] 2016-09-26 09:58:58 <b>1</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343928"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="343928" name="343928" target="bottom" onclick="selectMsg(&#39;343928&#39;);" href="http://vipvip.ca/msg.php?id=343928">Новая фича (beta)</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [76 views] 2016-09-25 21:44:46<span class="edited">*</span> <b>325</b> bytes <font color="green"><b>+2</b></font> <font color="orange"><b>+1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343980"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343980" name="343980" target="bottom" onclick="selectMsg(&#39;343980&#39;);" href="http://vipvip.ca/msg.php?id=343980">Re: Новая фича (beta)</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [17 views] 2016-09-26 12:05:09 <b>186</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343981"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343981" name="343981" target="bottom" onclick="selectMsg(&#39;343981&#39;);" href="http://vipvip.ca/msg.php?id=343981">Re: Новая фича (beta)</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [17 views] 2016-09-26 12:05:57 <b>27</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343951"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343951" name="343951" target="bottom" onclick="selectMsg(&#39;343951&#39;);" href="http://vipvip.ca/msg.php?id=343951">Re: Новая фича (beta)</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [25 views] 2016-09-26 09:28:27 <b>175</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343976"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343976" name="343976" target="bottom" onclick="selectMsg(&#39;343976&#39;);" href="http://vipvip.ca/msg.php?id=343976">Re: Новая фича (beta)</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [15 views] 2016-09-26 12:01:20 <b>45</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343937"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="343937" name="343937" target="bottom" onclick="selectMsg(&#39;343937&#39;);" href="http://vipvip.ca/msg.php?id=343937">a-la Facebook hehehe</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [41 views] 2016-09-25 22:25:07<span class="edited">*</span> <b>103</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343915"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343915" name="343915" target="bottom" onclick="selectMsg(&#39;343915&#39;);" href="http://vipvip.ca/msg.php?id=343915">это не про хоккей</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1051" target="contents">Дядя Женя</a></b> [106 views] 2016-09-25 19:39:12 <b>308</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343944"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343944" name="343944" target="bottom" onclick="selectMsg(&#39;343944&#39;);" href="http://vipvip.ca/msg.php?id=343944">мешать политику а спорт низко</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1055" target="contents">elenas</a></b> [50 views] 2016-09-26 00:10:19 <b>114</b> bytes&nbsp;</span><br>
+<span id="sp_343924"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343924" name="343924" target="bottom" onclick="selectMsg(&#39;343924&#39;);" href="http://vipvip.ca/msg.php?id=343924">Там не  про тебя было. А про твоего "оппонента". Так что не бери в голову...</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1071" target="contents"><font color="grey">Кастро</font></a></b> [46 views] 2016-09-25 21:06:32 <b>0</b> bytes&nbsp;</span><br>
+<span id="sp_343921"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343921" name="343921" target="bottom" onclick="selectMsg(&#39;343921&#39;);" href="http://vipvip.ca/msg.php?id=343921">Мля, еле пароль вспомнил чтоб сюда зайти</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1071" target="contents"><font color="grey">Кастро</font></a></b> [87 views] 2016-09-25 20:48:26 <b>225</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343922"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343922" name="343922" target="bottom" onclick="selectMsg(&#39;343922&#39;);" href="http://vipvip.ca/msg.php?id=343922">Re: Мля, еле пароль вспомнил чтоб сюда зайти</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [76 views] 2016-09-25 20:59:19<span class="edited">*</span> <b>60</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343923"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343923" name="343923" target="bottom" onclick="selectMsg(&#39;343923&#39;);" href="http://vipvip.ca/msg.php?id=343923">У тебя психопаты пишут километры навоза. А ты</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1071" target="contents"><font color="grey">Кастро</font></a></b> [66 views] 2016-09-25 21:03:53 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343934"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343934" name="343934" target="bottom" onclick="selectMsg(&#39;343934&#39;);" href="http://vipvip.ca/msg.php?id=343934">Вы доктор по специальности?</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [48 views] 2016-09-25 22:19:04 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343936"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343936" name="343936" target="bottom" onclick="selectMsg(&#39;343936&#39;);" href="http://vipvip.ca/msg.php?id=343936">Уже ухожу. Thanks for having me...</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1071" target="contents"><font color="grey">Кастро</font></a></b> [40 views] 2016-09-25 22:22:43 <b>0</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343925"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343925" name="343925" target="bottom" onclick="selectMsg(&#39;343925&#39;);" href="http://vipvip.ca/msg.php?id=343925">Re: У тебя психопаты пишут километры навоза. А ты</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [61 views] 2016-09-25 21:06:56 <b>36</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343926"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343926" name="343926" target="bottom" onclick="selectMsg(&#39;343926&#39;);" href="http://vipvip.ca/msg.php?id=343926">ОК. Какое правило я нарушил?</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1071" target="contents"><font color="grey">Кастро</font></a></b> [67 views] 2016-09-25 21:07:47 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343927"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343927" name="343927" target="bottom" onclick="selectMsg(&#39;343927&#39;);" href="http://vipvip.ca/msg.php?id=343927">Re: ОК. Какое правило я нарушил?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [66 views] 2016-09-25 21:11:46 <b>8</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343929"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343929" name="343929" target="bottom" onclick="selectMsg(&#39;343929&#39;);" href="http://vipvip.ca/msg.php?id=343929">Re: Штук 10 например поставишь? Против моих 50</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1071" target="contents"><font color="grey">Кастро</font></a></b> [87 views] 2016-09-25 21:20:35 <b>201</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343930"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343930" name="343930" target="bottom" onclick="selectMsg(&#39;343930&#39;);" href="http://vipvip.ca/msg.php?id=343930">Кстати, сделал snip моего поста. Если уберешь, покажу его в других местах</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1071" target="contents"><font color="grey">Кастро</font></a></b> [97 views] 2016-09-25 21:26:04 <b>133</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343932"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <i><font color="gray"><del>This message has been deleted</del></font></i> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [8 views] 2016-09-25 21:44:08 <b>653</b> bytes&nbsp;</span><br>
+<span id="sp_343931"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343931" name="343931" target="bottom" onclick="selectMsg(&#39;343931&#39;);" href="http://vipvip.ca/msg.php?id=343931">Спасибо за совет</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [64 views] 2016-09-25 21:35:50 <b>54</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343917"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343917" name="343917" target="bottom" onclick="selectMsg(&#39;343917&#39;);" href="http://vipvip.ca/msg.php?id=343917">Re: это не про хоккей</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [59 views] 2016-09-25 19:59:58<span class="edited">*</span> <b>631</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343918"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343918" name="343918" target="bottom" onclick="selectMsg(&#39;343918&#39;);" href="http://vipvip.ca/msg.php?id=343918">Re: это не про хоккей</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1051" target="contents">Дядя Женя</a></b> [55 views] 2016-09-25 19:56:40 <b>15</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343919"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343919" name="343919" target="bottom" onclick="selectMsg(&#39;343919&#39;);" href="http://vipvip.ca/msg.php?id=343919">Re: это не про хоккей</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [51 views] 2016-09-25 19:59:25 <b>40</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343910"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343910" name="343910" target="bottom" onclick="selectMsg(&#39;343910&#39;);" href="http://vipvip.ca/msg.php?id=343910">Одним из главных потрясений вчерашнего матча для сборной России оказалось то,</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [99 views] 2016-09-25 11:20:40<span class="edited">*</span> <b>506</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343913"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343913" name="343913" target="bottom" onclick="selectMsg(&#39;343913&#39;);" href="http://vipvip.ca/msg.php?id=343913">Re: Одним из главных потрясений вчерашнего матча для сборной России оказалось то,</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [69 views] 2016-09-25 16:22:11<span class="edited">*</span> <b>1343</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343916"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343916" name="343916" target="bottom" onclick="selectMsg(&#39;343916&#39;);" href="http://vipvip.ca/msg.php?id=343916">Re: Одним из главных потрясений вчерашнего матча для сборной России оказалось то,</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [61 views] 2016-09-25 19:43:12 <b>563</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343920"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343920" name="343920" target="bottom" onclick="selectMsg(&#39;343920&#39;);" href="http://vipvip.ca/msg.php?id=343920">Мне было бы интересно, а кто мешает - в игнор их. Что ж из-за кого-то, кто плохо себя ведёт всем отдуваться?</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1029" target="contents">Карпов</a></b> [47 views] 2016-09-25 20:13:26 <b>0</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343906"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="343906" name="343906" target="bottom" onclick="selectMsg(&#39;343906&#39;);" href="http://vipvip.ca/msg.php?id=343906">Мы ИМПЕРИЯ!</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [98 views] 2016-09-25 00:23:18 <b>114</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343907"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="343907" name="343907" target="bottom" onclick="selectMsg(&#39;343907&#39;);" href="http://vipvip.ca/msg.php?id=343907">Re: Мы ИМПЕРИЯ!</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1020" target="contents">Ranger</a></b> [77 views] 2016-09-25 02:57:21 <b>89</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343899"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;"> <a id="343899" name="343899" target="bottom" onclick="selectMsg(&#39;343899&#39;);" href="http://vipvip.ca/msg.php?id=343899">Ровно 30 лет назад был расстрелян Адольф Толкачев</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1041" target="contents">Sasha Kovalev</a></b> [112 views] 2016-09-24 08:30:56 <b>121</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343903"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343903" name="343903" target="bottom" onclick="selectMsg(&#39;343903&#39;);" href="http://vipvip.ca/msg.php?id=343903">Советские собаки такие кровавые суки</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1035" target="contents">GodSaveTheQueen</a></b> [80 views] 2016-09-24 10:59:20 <b>22</b> bytes&nbsp;</span><br>
+<span id="sp_343901"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343901" name="343901" target="bottom" onclick="selectMsg(&#39;343901&#39;);" href="http://vipvip.ca/msg.php?id=343901">Re: Ровно 30 лет назад был расстрелян Адольф Толкачев</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1031" target="contents">Picasso</a></b> [77 views] 2016-09-24 10:23:53 <b>136</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343896"><img border="0" src="./top_files/es.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;"> <a id="343896" name="343896" target="bottom" onclick="selectMsg(&#39;343896&#39;);" href="http://vipvip.ca/msg.php?id=343896">Windows 10 Insider Preview Build 14931 кто-нибудь поставил?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1026" target="contents">nemiga</a></b> [71 views] 2016-09-23 13:18:48 <b>12</b> bytes&nbsp;</span><br>
+<span id="sp_343894"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="343894" name="343894" target="bottom" onclick="selectMsg(&#39;343894&#39;);" href="http://vipvip.ca/msg.php?id=343894">Образовалась лишняя пара билетов на завтра на Канада - Россия. Балкон центр. Секция 321</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [95 views] 2016-09-23 11:47:40 <b>183</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343898"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343898" name="343898" target="bottom" onclick="selectMsg(&#39;343898&#39;);" href="http://vipvip.ca/msg.php?id=343898">Re:ревоукед</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [72 views] 2016-09-23 23:20:26 <b>231</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343900"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343900" name="343900" target="bottom" onclick="selectMsg(&#39;343900&#39;);" href="http://vipvip.ca/msg.php?id=343900">Re:ревоукед</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1041" target="contents">Sasha Kovalev</a></b> [57 views] 2016-09-24 08:33:52 <b>114</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+<span id="sp_343881"><img border="0" src="./top_files/bs.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;cursor:pointer;">  <img border="0" src="./top_files/camera12x12w.png"> <a id="343881" name="343881" target="bottom" onclick="selectMsg(&#39;343881&#39;);" href="http://vipvip.ca/msg.php?id=343881">Ну наконец то я научился правильно болеть за Россию!</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [159 views] 2016-09-22 23:03:53 <b>4005</b> bytes <font color="green"><b>+2</b></font> <font color="orange"><b>+2</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343902"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343902" name="343902" target="bottom" onclick="selectMsg(&#39;343902&#39;);" href="http://vipvip.ca/msg.php?id=343902">Правда, не пи%дишь?</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1035" target="contents">GodSaveTheQueen</a></b> [83 views] 2016-09-24 10:38:16 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343904"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343904" name="343904" target="bottom" onclick="selectMsg(&#39;343904&#39;);" href="http://vipvip.ca/msg.php?id=343904">пиздит</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1051" target="contents">Дядя Женя</a></b> [88 views] 2016-09-24 18:26:27 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343914"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343914" name="343914" target="bottom" onclick="selectMsg(&#39;343914&#39;);" href="http://vipvip.ca/msg.php?id=343914">Re: пиздит</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [58 views] 2016-09-25 17:27:35 <b>98</b> bytes&nbsp;</span><br>
+<span id="sp_343912"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <i><font color="gray"><del>This message has been deleted</del></font></i> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1035" target="contents">GodSaveTheQueen</a></b> [7 views] 2016-09-25 12:33:22 <b>0</b> bytes&nbsp;</span><br>
+<span id="sp_343905"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343905" name="343905" target="bottom" onclick="selectMsg(&#39;343905&#39;);" href="http://vipvip.ca/msg.php?id=343905">Re: готов ответить за свои слова? Штук 10 например поставишь? Против моих 50?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [75 views] 2016-09-25 00:21:07 <b>279</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343909"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343909" name="343909" target="bottom" onclick="selectMsg(&#39;343909&#39;);" href="http://vipvip.ca/msg.php?id=343909">Re: готов ответить за свои слова? Штук 10 например поставишь? Против моих 50?,</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1051" target="contents">Дядя Женя</a></b> [72 views] 2016-09-25 11:12:05 <b>112</b> bytes <font color="red"><b>-1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343911"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343911" name="343911" target="bottom" onclick="selectMsg(&#39;343911&#39;);" href="http://vipvip.ca/msg.php?id=343911">Re: мда... И это вместо извинений... А я думал стыдно тебе станет...</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [63 views] 2016-09-25 11:19:22 <b>240</b> bytes&nbsp;</span><br>
+</dd></dl>
+<span id="sp_343908"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343908" name="343908" target="bottom" onclick="selectMsg(&#39;343908&#39;);" href="http://vipvip.ca/msg.php?id=343908">Re: p.s Забыл про моих новых приятелей из Финляндии!</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [50 views] 2016-09-25 11:09:50 <b>128</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343882"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343882" name="343882" target="bottom" onclick="selectMsg(&#39;343882&#39;);" href="http://vipvip.ca/msg.php?id=343882">Re: Ну наконец то я научился правильно болеть за Россию!</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [89 views] 2016-09-23 08:06:15 <b>30</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343883"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343883" name="343883" target="bottom" onclick="selectMsg(&#39;343883&#39;);" href="http://vipvip.ca/msg.php?id=343883">Re: зачем же обзываться?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [88 views] 2016-09-23 09:41:42 <b>315</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343886"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343886" name="343886" target="bottom" onclick="selectMsg(&#39;343886&#39;);" href="http://vipvip.ca/msg.php?id=343886">Кто в полуфинале?</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [55 views] 2016-09-23 10:43:11 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343888"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343888" name="343888" target="bottom" onclick="selectMsg(&#39;343888&#39;);" href="http://vipvip.ca/msg.php?id=343888">Re: КАК КТО?</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [52 views] 2016-09-23 10:56:36 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343891"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343891" name="343891" target="bottom" onclick="selectMsg(&#39;343891&#39;);" href="http://vipvip.ca/msg.php?id=343891">Ну да, кто, я не слежу за этим чемпионатом, но интересно</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [59 views] 2016-09-23 11:41:26 <b>27</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343892"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343892" name="343892" target="bottom" onclick="selectMsg(&#39;343892&#39;);" href="http://vipvip.ca/msg.php?id=343892">Re: на "еще кто" билеты по 8 баксов. Не интересно никому. Матч века который войдет в историю - Канада - Россия</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [48 views] 2016-09-23 11:42:51 <b>0</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343893"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343893" name="343893" target="bottom" onclick="selectMsg(&#39;343893&#39;);" href="http://vipvip.ca/msg.php?id=343893">Так они же в полуфинале играть будут?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1021" target="contents">via_point</a></b> [47 views] 2016-09-23 11:45:54<span class="edited">*</span> <b>56</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343895"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343895" name="343895" target="bottom" onclick="selectMsg(&#39;343895&#39;);" href="http://vipvip.ca/msg.php?id=343895">Re: зачем гуглить? В субботу Россия-Канада, в воскресенье Словакия и другие против Швеции</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [46 views] 2016-09-23 11:48:40 <b>0</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343885"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343885" name="343885" target="bottom" onclick="selectMsg(&#39;343885&#39;);" href="http://vipvip.ca/msg.php?id=343885">Re: зачем же обзываться?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [55 views] 2016-09-23 10:37:19 <b>39</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343887"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343887" name="343887" target="bottom" onclick="selectMsg(&#39;343887&#39;);" href="http://vipvip.ca/msg.php?id=343887">Re: а почему ты уверен что не наоборот?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [74 views] 2016-09-23 10:56:13 <b>1016</b> bytes <font color="green"><b>+1</b></font>&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343897"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343897" name="343897" target="bottom" onclick="selectMsg(&#39;343897&#39;);" href="http://vipvip.ca/msg.php?id=343897">Красавчик!</a> <span class="empty">(-)</span> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1029" target="contents">Карпов</a></b> [34 views] 2016-09-23 20:39:44 <b>0</b> bytes&nbsp;</span><br>
+<span id="sp_343889"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343889" name="343889" target="bottom" onclick="selectMsg(&#39;343889&#39;);" href="http://vipvip.ca/msg.php?id=343889">Re: а почему ты уверен что не наоборот?</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1036" target="contents">Vovka</a></b> [52 views] 2016-09-23 11:00:13 <b>25</b> bytes&nbsp;</span><br>
+<dl><dd>
+<span id="sp_343890"><img border="0" src="./top_files/dc.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="343890" name="343890" target="bottom" onclick="selectMsg(&#39;343890&#39;);" href="http://vipvip.ca/msg.php?id=343890">Re: так не напечатают же....</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1032" target="contents"><font color="grey">Меркури</font></a></b> [50 views] 2016-09-23 11:07:10 <b>50</b> bytes&nbsp;</span><br>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+<span id="sp_343880"><img border="0" src="./top_files/es.gif" width="16" height="16" alt="*" onclick="javascript:toggle(this);" align="top" style="padding:0px 0px 3px 0px;">  <img border="0" src="./top_files/youtube12x12w.png"> <a id="343880" name="343880" target="bottom" onclick="selectMsg(&#39;343880&#39;);" href="http://vipvip.ca/msg.php?id=343880">A+ garage parking job</a> <b><a class="user_link" href="http://vipvip.ca/byuser.php?author_id=1019" target="contents">Peter (2)</a></b> [92 views] 2016-09-22 21:59:10 <b>62</b> bytes&nbsp;</span><br>
+</dd></dl>
+</div><br><a href="http://vipvip.ca/top.php#up" target="contents">Up</a>&nbsp;&nbsp;<a href="javascript:load_threads(document.getElementById(&#39;threads&#39;), 24875,200);" target="contents">More</a><!-- 0 milliseconds -->  <script language="JavaScript">
+  
+    set_max_id(24875, "200");
+    
+  </script>
+  <div id="scroll2top"><a href="http://vipvip.ca/top.php#" target="contents" onclick="javascript:scroll2Top2(&#39;html_body&#39;);"><img border="0" src="./top_files/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;"></a></div>
+  <div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div>
+
+<table cellpadding="1" cellspacing="0" width="90%">
+  <tbody><tr>
+    <td align="left">
+      <h4></h4>
+    </td>
+    <td align="right">
+      <h4></h4>
+    </td>
+  </tr>
+</tbody></table>
+
+
+
+
+</div>
+</body></html>
