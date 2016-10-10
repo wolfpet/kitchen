@@ -17,7 +17,8 @@ function updateColors()
 		//alert(data);
 		if (status == "success" && parent.contents !== undefined) 
 		{
-		    parent.contents.location.reload();
+		    //parent.contents.location.reload();
+		    top.location.reload();
 		}
 	    });
 }

@@ -11,10 +11,13 @@ require_once('html_head_inc.php');
     $min_page = 1;
 
 ?>
+<script src="js/jquery-1.10.2.min.js"></script>
 <script language="JavaScript" src="<?=autoversion('js/autoload.js')?>"></script>
+<script language="JavaScript" src="<?=autoversion('js/junk.js')?>"></script>
+<script language="JavaScript" src="js/threads_autoload.js"></script>
 <base target="contents">
 </head>
-<body id="html_body">
+<body id="threads_body">
 <!--<table width="95%"><tr>
 <td>-->
 <!--</td>
@@ -22,7 +25,7 @@ require_once('html_head_inc.php');
 </td></tr></table> -->
 <?php
 
-require('menu_inc.php');
+//require('menu_inc.php');
 
     $show_hidden = 2;
     $ignored = array();

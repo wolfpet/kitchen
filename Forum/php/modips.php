@@ -57,7 +57,7 @@ require_once('html_head_inc.php');
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
 
-require('menu_inc.php');
+//require('menu_inc.php');
 
         $max_page = floor($count/20);
         $max_page++;

@@ -254,7 +254,7 @@ function onNewMessageCount(count, elapsed_time) {
 <body id="html_body">
 <?php
 
-require('menu_inc.php');
+//require('menu_inc.php');
 $end_timestamp = microtime(true);
     $duration = $end_timestamp - $start_timestamp;
 

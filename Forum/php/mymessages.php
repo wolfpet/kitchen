@@ -56,7 +56,7 @@ require_once('html_head_inc.php');
 <body id="html_body">
 <?php
 
-require('menu_inc.php');
+//require('menu_inc.php');
 
     $max_page = floor($count/$how_many);
     $max_page++;

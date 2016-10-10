@@ -205,7 +205,7 @@ function autoload_threads($last_thread, $limit) {?>
     set_max_id(<?=$last_thread?>, "<?=$limit?>");
     
   </script>
-  <div id="scroll2top"><a href="#" target="contents" onclick="javascript:scroll2Top2('html_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;"></a></div>
+  <div id="scroll2top"><a href="#" target="contents" onclick="javascript:scroll2Top2('threads_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;"></a></div>
   <div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div><?php 
 }
 

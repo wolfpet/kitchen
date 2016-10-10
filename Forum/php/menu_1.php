@@ -101,7 +101,7 @@ Username: <input type="text" id="user" name="user" maxlength="64" size="16" valu
 <?php if (isset($orientation) && $orientation == "cols") { ?>
 <a target="_top" class="menu" href=".">Rows</a> |
 <?php } else { ?>
-<a target="_top" class="menu" href="cols.html">Columns</a> |
+<a class="menu" onclick="setVerticaLayout();">Columns</a> |
 <?php } ?>
 
 <a target="_top" class="menu" href="m.php" title="Flat">Flat</a> |

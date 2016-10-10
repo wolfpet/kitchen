@@ -51,7 +51,9 @@ $app = new Micro();
 $app->setEventsManager($eventManager);
 
 $app->get('/', function() use ($app) {
-  echo file_get_contents('index.html');
+  //echo file_get_contents('index.html');
+    $url='top.php';
+    echo '<META HTTP-EQUIV=REFRESH CONTENT="1; '.$url.'">';
 });
 
 /**

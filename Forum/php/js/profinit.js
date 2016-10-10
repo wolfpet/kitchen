@@ -54,7 +54,8 @@ colorInit();
               $.post("api.php", {'update_safe_mode' : safe_mode}, function(data,status){
                 $("#status_text").html(data);
                 if (status == "success" && parent.contents !== undefined) {
-                  parent.contents.location.reload(); 
+                  //parent.contents.location.reload(); 
+                  top.location.reload();
                 }
               });
             });            

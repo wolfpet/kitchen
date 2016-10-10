@@ -19,7 +19,7 @@ require_once('head_inc.php');
 Thank you, <b><?php print(htmlentities($author_name, HTML_ENTITIES,'UTF-8')); ?></b>!<br/><p>
 Your article, named "<b><?php print($subj); ?></b>", has been sent to forum.</p><p>
 
-If you <a href="<?php print($root_dir . 'top.php');?>?page=<?php print($page . '&id=' . $msg_id . '#' . $msg_id); ?>" target="contents">refresh the contents</a>, you should see its name in forum's contents.<p><hr><p>
+If you <a href="<?php print($root_dir . 'threads.php');?>?page=<?php print($page . '&id=' . $msg_id . '#' . $msg_id); ?>" target="contents">refresh the contents</a>, you should see its name in forum's contents.<p><hr><p>
 </body></html>
 
 </html>

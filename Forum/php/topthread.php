@@ -4,7 +4,7 @@
 require_once('head_inc.php');
 
     $cur_page = $page_bydate;
-    // $title = 'Thread contents';
+    $title = 'Thread contents';
     $prefix = NULL;
 
     $thread_id = NULL;
@@ -55,7 +55,7 @@ require('html_head_inc.php');
 </tr></table>-->
 <?php
 
-require('menu_inc.php');
+//require('menu_inc.php');
 
    print("<p/>");
    print_msgs2($content, $msgs);

@@ -114,7 +114,7 @@ require_once('html_head_inc.php');
 </tr></table>-->
 <?php
 
-require('menu_inc.php');
+//require('menu_inc.php');
 ?>
 
 

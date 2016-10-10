@@ -75,7 +75,7 @@ function scroll2Top2(element){
 
 function load_more() {
 	var div = document.getElementById("threads");
-  var parent = document.getElementById("html_body");
+  var parent = document.getElementById("threads_body");
   if (parent == null || div == null) {
     console.log("Something is not right: threads or html body element is not found");
     return;

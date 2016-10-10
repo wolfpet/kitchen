@@ -46,7 +46,7 @@ require_once('html_head_inc.php');
 </head>
 <body id="html_body">
 <?php
-require('menu_inc.php');
+//require('menu_inc.php');
 ?>
 
 <!--<table width="100%">
