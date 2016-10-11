@@ -48,7 +48,6 @@ require_once('html_head_inc.php');
     $min_thread = $max_thread_id - $limit;
     $result = get_thread_starts($min_thread_id, $max_thread_id);
 
-    print("<P>");
     print('<div id="threads">');
     
     $content = array();

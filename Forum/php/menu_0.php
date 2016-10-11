@@ -146,28 +146,6 @@ else{
 		</div>
 	</div>
 
-	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
-		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
-		<div id="ViewRibbonGroupIconContainer">
-			<span id="Horizontal" class="ribbonIcon tooltip"><a target="_top" href=".">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M4 18h17v-6H4v6zM4 5v6h17V5H4z"></path></g></svg>
-				<span class="tooltiptext">Horizontal</span></a>
-			</span> 
-			<span id="Vertical" class="ribbonIcon tooltip"><a  onclick="setVerticaLayout();">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M6 5H3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm14 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm-7 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1z"></path></g></svg>
-				<span class="tooltiptext">Vertical</span></a>
-			</span> 
-			<span id="Phone" class="ribbonIcon tooltip"><a target="_top" href="mobile/index.html">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20.1 7.7l-1 1c1.8 1.8 1.8 4.6 0 6.5l1 1c2.5-2.3 2.5-6.1 0-8.5zM18 9.8l-1 1c.5.7.5 1.6 0 2.3l1 1c1.2-1.2 1.2-3 0-4.3zM14 1H4c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 19H4V4h10v16z"></path></g></svg>
-				<span class="tooltiptext">Phone</span></a>
-			</span> 
-			<span id="Refresh" class="ribbonIcon tooltip"><a target="_top" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></g></svg>
-				<span class="tooltiptext">Refresh</span></a>
-			</span> 
-		</div>
-	</div>
-  
 <?php if ($logged_in && !is_null($moder) && $moder > 0) {
   $regs = get_regs_count();
 ?>  
@@ -200,7 +178,31 @@ else{
 			</span> 
 		</div>
 	</div>
-<?php } if ($logged_in == false) { ?>
+<?php } ?>
+
+	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
+		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
+		<div id="ViewRibbonGroupIconContainer">
+			<span id="Horizontal" class="ribbonIcon tooltip"><a target="_top" href=".">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M4 18h17v-6H4v6zM4 5v6h17V5H4z"></path></g></svg>
+				<span class="tooltiptext">Horizontal</span></a>
+			</span> 
+			<span id="Vertical" class="ribbonIcon tooltip"><a  onclick="setVerticaLayout();">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M6 5H3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm14 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm-7 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1z"></path></g></svg>
+				<span class="tooltiptext">Vertical</span></a>
+			</span> 
+			<span id="Phone" class="ribbonIcon tooltip"><a target="_top" href="mobile/index.html">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20.1 7.7l-1 1c1.8 1.8 1.8 4.6 0 6.5l1 1c2.5-2.3 2.5-6.1 0-8.5zM18 9.8l-1 1c.5.7.5 1.6 0 2.3l1 1c1.2-1.2 1.2-3 0-4.3zM14 1H4c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 19H4V4h10v16z"></path></g></svg>
+				<span class="tooltiptext">Phone</span></a>
+			</span> 
+			<span id="Refresh" class="ribbonIcon tooltip"><a target="_top" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></g></svg>
+				<span class="tooltiptext">Refresh</span></a>
+			</span> 
+		</div>
+	</div>  
+
+<?php if ($logged_in == false) { ?>
 	<div id="WelcomeRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Welcome!</div>
 		<div id="ViewRibbonGroupIconContainer">

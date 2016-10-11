@@ -101,8 +101,6 @@ function _pages_function($add_fluff=false) {
 
     _pages_function(false);  // to move to top, rename to "pages_function" and comment this call out
     
-    print("<p/>");
-    
     print('<div id="threads">');
 
     $limit = strpos($agent, 'iPad') ? 7 : (strpos($agent, 'iPhone') || strpos($agent, 'like Mac OS') ? 5 : 200); 

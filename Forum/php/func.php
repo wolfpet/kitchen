@@ -758,7 +758,6 @@ function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = fa
 function print_pages_obsolete($max_page, $page, $target, $cur_page, $param = '', $br = true, $prefix = true) {
     global $root_dir;
     
-    if ($br) print('<BR>');
     print('<span id="pages">');
     if ($prefix) {
       print('<B>Pages</B>: ');
@@ -798,6 +797,7 @@ function print_pages_obsolete($max_page, $page, $target, $cur_page, $param = '',
         }
     }    
     print('&nbsp;&nbsp;</span>');
+    if ($br) print('<p/>');
 }
 
 function print_pages_old($max_page, $page, $target, $cur_page) {
