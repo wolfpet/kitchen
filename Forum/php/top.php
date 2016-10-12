@@ -5,7 +5,9 @@ require_once('html_head_inc.php');
 require_once('mysql_log.php');
 ?>
 <base target="bottom">
+<script type="text/javascript" src="js/threads_autoload.js"></script>
 <script>
+
 function setVerticaLayout()
 {
     document.getElementById('frame1').style.float = 'left';
@@ -18,6 +20,7 @@ function setVerticaLayout()
             
 }
 </script>
+<title><?=$title?></title>
 </head>
 <body id="html_body" style="overflow: hidden;">
 <?php
