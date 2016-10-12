@@ -83,7 +83,14 @@ else{
     color:  <?=$ribbonColor?>;
 }
 </style>
+<script>
 
+function resetBadges()
+{
+    document.getElementById('newPostsBadge').style.display = 'none';
+    document.getElementById('newAnswersBadge').style.display = 'none';
+}
+</script>
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
 	<div id="ForumTitle"  onclick="window.location='top.php'" class="ribbonGroup"; style="width: 100px;height: 37px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11px; border: <?=$groupBorder?>; border-style: solid; border-width: 1px; cursor: pointer">
@@ -96,7 +103,7 @@ else{
 	<div id="SortRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";">
 		<div id="SortRibbonGroupTitle" class="ribbonGroupTitle">Sort</div>
 		<div id="SortRibbonGroupIconContainer">
-			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="<?=$root_dir.$page_bydate?>?mode=bydate">
+			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="<?=$root_dir.$page_bydate?>?mode=bydate" onclick="resetBadges();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="<?=$ribbonColor ?>" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g></svg>
 				<span class="tooltiptext">By Date</span>
 				<!-- This is a badge sample that indicates that there are 4 new posts -->
@@ -129,7 +136,7 @@ else{
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"></path></g></svg>
 				<span class="tooltiptext">My messages</span></a>
 			</span> 
-			<span id="Answered" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_answered?>">
+			<span id="Answered" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_answered?>" onclick="resetBadges();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g></svg>
 				<span class="tooltiptext">Answered</span></a>
 				<!-- This is a badge sample that indicates that there are 4 new answers -->
