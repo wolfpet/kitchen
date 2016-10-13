@@ -12,10 +12,10 @@ function setVerticaLayout()
 {
     document.getElementById('frame1').style.float = 'left';
     document.getElementById('frame1').style.width = '50vw';
-    document.getElementById('frame1').style.height = '100vh';
+    document.getElementById('frame1').style.height = '90vh';
     document.getElementById('frame2').style.float = 'right';
     document.getElementById('frame2').style.width = '48vw';
-    document.getElementById('frame2').style.height = '100vh';
+    document.getElementById('frame2').style.height = '90vh';
     document.getElementById('hr1').style.display = 'none';
             
 }
