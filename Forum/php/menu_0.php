@@ -89,6 +89,7 @@ function resetBadges()
 {
     document.getElementById('newPostsBadge').style.display = 'none';
     document.getElementById('newAnswersBadge').style.display = 'none';
+    document.title = '<?=$title?>';
 }
 </script>
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
