@@ -125,6 +125,7 @@ blockquote.uncited {
 }
 
 div#threads {
+  margin-top : 1em;
 /*
   white-space: nowrap;
   overflow-x: hidden;
@@ -252,7 +253,6 @@ ul.tab li a:focus, .active {
 /* Pagination */
 .pagination {
 	float: right;
-	/*margin-top: 3px;*/
 	text-align: right;
 	width: auto;
   padding:0;
@@ -267,7 +267,8 @@ ul.tab li a:focus, .active {
 	display: inline-block;
 	list-style: none !important;
 	margin-left: 5px;
-  margin: 4px 0;
+  /* margin: 4px 0; */
+  margin: 0px;
 }
 
 .pagination > ul > li {
