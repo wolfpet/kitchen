@@ -1,10 +1,8 @@
 <?php
 /*$Id: html_head_inc.php 942 2013-09-01 12:10:18Z dmitriy $*/
-
 require_once('head_inc.php');
-
     if (is_null($doc_type)) {
-        print('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">');
+        print('<!DOCTYPE html>');
     } else {
         print($doc_type);
     }
@@ -20,12 +18,6 @@ if (!is_null($user_id) && $user_id != null) {
 ?>
 <html>
 <head>
-<title><?php 
-/*    if (is_null($page_title)) {
-        print($title);
-    } else {
-        print($page_title);
-    } */?>"Forum Kitchen"</title>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -189,4 +181,20 @@ $(document).ready(function(){
     });
   });
 });
+  
+// Back navigation on Backspace
+document.addEventListener("keydown", function (event) {
+  
+  if (event.keyCode == 8) {
+    var e = document.activeElement;
+    
+    if (e != null && (e.tagName == 'INPUT' || e.tagName == 'TEXTAREA')) {
+      // console.log('navigation cancelled');
+      return;
+    }
+    
+    event.preventDefault();
+    history.go(-1);
+   }
+});  
 </script>
