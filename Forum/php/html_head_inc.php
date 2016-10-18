@@ -28,3 +28,23 @@ if (!is_null($user_id) && $user_id != null) {
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/ribbon.css')?>">
 <?php } ?>
 <script src="js/jquery-1.10.2.min.js"></script>
+<script>
+
+// Back navigation on Backspace
+
+document.addEventListener("keydown", function (event) {
+  
+  if (event.keyCode == 8) {
+    var e = document.activeElement;
+    
+    if (e != null && (e.tagName == 'INPUT' || e.tagName == 'TEXTAREA')) {
+      // console.log('navigation cancelled');
+      return;
+    }
+    
+    event.preventDefault();
+    history.go(-1);
+   }
+});  
+
+</script>
