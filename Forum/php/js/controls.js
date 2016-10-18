@@ -14,10 +14,13 @@ function setVerticaLayout()
 function openGallery()
 {
     document.getElementById('gallery').style.display = 'block';
+    document.getElementById('menu_cover').style.display = 'block';
+    
 }
 
 function closeGallery()
 {
     document.getElementById('gallery').style.display = 'none';
+    document.getElementById('menu_cover').style.display = 'none';
 }
     
