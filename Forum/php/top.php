@@ -12,12 +12,12 @@ function setVerticaLayout()
 {
     document.getElementById('frame1').style.float = 'left';
     document.getElementById('frame1').style.width = '50vw';
-    document.getElementById('frame1').style.height = '90vh';
+    document.getElementById('frame1').style.height = '100vh';
     document.getElementById('frame2').style.float = 'right';
-    document.getElementById('frame2').style.width = '48vw';
-    document.getElementById('frame2').style.height = '90vh';
-    document.getElementById('hr1').style.display = 'none';
-            
+    document.getElementById('frame2').style.width = '50vw';
+    document.getElementById('frame2').style.height = '100vh';
+    document.getElementById('hr1').style.display = 'none';            
+    //document.getElementById('hr2').style.display = 'block';            
 }
 </script>
 <title><?=$title?></title>
@@ -31,9 +31,10 @@ require_once('tail_inc.php');
 <div id="frame1" style="position: static; height: 40vh; background-color: white;display: inline-block;width: 100vw;">
     <iframe style="border: none;" width="100%" height="100%" name="contents" src="threads.php"></iframe>
 </div>
-<div id="dragbar1"></div>
-<div id="frame2" style="position: relative;height: 48vh; background-color: white;display: inline-block; width: 100vw;">
+<div id="hr1"></div>
+<div id="frame2" style="position: relative;height: 54vh; background-color: white;display: inline-block; width: 100vw;">
     <iframe style="border: none;" width="100%" height="100%" name="bottom" src="welc.php"></iframe>
 </div>
+<div style="display:none;" id="hr2"></div>
 </body>
 </html>
