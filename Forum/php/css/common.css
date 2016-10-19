@@ -357,4 +357,14 @@ ul.tab li a:focus, .active {
 	color: #FFFFFF;
 }
 
-
+#dragbar1{
+   background-color: lightgray;
+   height: 4px; /*100%; */
+   width: 100%; /* 3px; */
+   /* cursor: row-resize;/*col-resize;*/
+   border-bottom: 1px solid #080808;
+   border-top: 1px solid #B0B0B0;
+   padding:0px;
+   margin:0px;
+	 margin-top: -3px;
+}
