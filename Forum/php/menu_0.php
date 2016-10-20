@@ -240,7 +240,7 @@ function resetBadges()
 				<span id="newPMBadge" class="button__badge"><?=$new_pm?></span>
         <?php } ?>
     				<style>pmdropdown-content.a:hover {color: green;}</style>
-				<div class="pmdropdown-content" style="background-color: <?=$ribbonBackground?>">
+				<div class="pmdropdown-content" style="background-color: <?=$ribbonBackground?>;z-index: 9999;">
 					<a target="contents" style="color: <?=$ribbonColor?>" href="<?=$root_dir.$page_pmail?>">Inbox</a>
 					<a target="contents" href="<?=$root_dir.$page_pmail_sent?>">Sent</a>
 					<a target="bottom" href="<?=$root_dir.$page_pmail_send?>">New</a>
