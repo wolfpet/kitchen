@@ -2067,4 +2067,64 @@ function get_tz_list() {
     
     return $result;
 }
+
+//--- Photo Gallery Fuctions ---
+function get_all_picture_urls() {
+$imageUrls[]= null;
+$query='select * from confa_assets;';
+$result = mysql_query($query);
+if ($result) {
+        while ($row = mysql_fetch_assoc($result))
+            {
+                //$row = mysql_fetch_assoc($importresult);
+                $imageUrls[] = $row['URL'];
+            }
+}
+//return "hi pictures!";
+return $imageUrls;
+}
+
+
+function add_picture_asset($url, $userID,  $msgID) {
+    $query = 'INSERT INTO confa_assets (user_id, msg_id, URL) VALUES ('. $userID .', '. $msgID .', \''. $url .'\')';
+    $result = mysql_query($query);
+    return $query;
+    die();
+    if (!$result) {
+        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+        return 'Query failed';
+    }
+
+}
+
+function detect_picture_urls($message){
+
+    //analyze the post body and detect image URLs
+    $imageUrls[]= null; //well formed image URLs after various cleanup procedures
+    preg_match_all('#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#', $message, $matches);
+    $all_urls = $matches[0];
+            //if contains JPG, GIF or PNG then..
+            if(strpos($message, '.jpg') !== false || strpos($message, '.gif') !== false || strpos($message, '.png') !== false)
+            {
+                //cut before  [img]
+		$sub1 = null;
+        	if(strpos($message, ']') !== false)
+                {
+                    $sub1 = explode(']', $message, 4);
+                }
+                //cut after [/img
+                if(strpos($sub1[1], '[') !== false)
+                {
+                    $sub2 = explode('[', $sub1[2], 3);
+                    $imageUrls[] = $sub2[0];
+                }
+                else
+                {
+                    $sub3 = str_replace('[/img', '', $all_urls[$x]);
+                    $imageUrls[] = $sub3;
+                }
+            }
+    return $imageUrls; 
+}
+
 ?>
