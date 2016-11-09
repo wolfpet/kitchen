@@ -1328,7 +1328,7 @@ function tmdb($body, $embed = true) {
   global $host, $tmdb_key;
   
   // e.g. http://www.imdb.com/title/tt2582782/?ref_=nm_flmg_act_4
-  $pattern = '(?:https?:\/\/)?(?:www\.)?imdb\.com\/title\/(tt[0-9]+)\/(?:(?:\?|&)[^\s\[<\]"]*)?';
+  $pattern = '(?:https?:\/\/)?(?:www\.)?imdb\.com\/(?:title|name)\/((?:tt|nm)[0-9]+)\/(?:(?:\?|&)[^\s\[<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
     function ($matches) use ($embed, $host, $pattern, $tmdb_key) {
@@ -1361,6 +1361,14 @@ function tmdb($body, $embed = true) {
             $release_date = date_parse($ar2->movie_results[0]->release_date)['year'];
             $title = $ar2->movie_results[0]->title;
             $thumbnail = $ar2->movie_results[0]->poster_path;
+          } else if (count($ar2->person_results) == 1) {
+            if (count($ar2->person_results[0]->known_for) > 0) {
+              $release_date = $ar2->person_results[0]->known_for[0]->title;
+            } else {
+              $release_date = "<no data>";
+            }
+            $title = $ar2->person_results[0]->name;
+            $thumbnail = $ar2->person_results[0]->profile_path;            
           }
         }
       }
