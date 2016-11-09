@@ -1363,7 +1363,11 @@ function tmdb($body, $embed = true) {
             $thumbnail = $ar2->movie_results[0]->poster_path;
           } else if (count($ar2->person_results) == 1) {
             if (count($ar2->person_results[0]->known_for) > 0) {
-              $release_date = $ar2->person_results[0]->known_for[0]->title;
+              $release_date = '';
+              foreach ($ar2->person_results[0]->known_for as $film) {
+                if ($release_date != '') $release_date .= ', ';
+                $release_date .= $film->title;
+              }
             } else {
               $release_date = "<no data>";
             }
