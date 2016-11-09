@@ -32,6 +32,8 @@ $reactions = array(
 
 // $google_key = ""; // (optional) specify your Google API key here to enable YouTube metadata
 
+// $tmdb_key = ""; // (optional) specify your The Moview Database API key here to enable IMDB metadata 
+
 // $recaptcha_site_key = ''; // (optional) specify your Google reCAPTCHA site key here to enable bot protection for registration page
 // $recaptcha_secret_key = ''; // if you specified $recaptcha_site_key, copy your reCAPTCHA secret key here 
 ?>

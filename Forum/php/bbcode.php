@@ -144,8 +144,10 @@ function before_bbcode($original_body, &$has_video=null) {
 
   // other replacements
   $body = preg_replace( array (
-    '#\s*$#s'
+    '#\s*$#s', // extra trailing spaces 
+    '#^\s#s' // extra leading spaces 
      ), array (
+    '', 
     ''
      ), $body);
   
@@ -337,7 +339,7 @@ function render_smileys_step1($body) {
     '#:o(?!\w)#i',
     '#:\?#',
     '#([;]\)|[;]\-\))#i',
-    '#(8\)|8-\))#i',
+    '#(8-\))#i',
     '#(:\||:-\|)#'
     ), array (
     // replace

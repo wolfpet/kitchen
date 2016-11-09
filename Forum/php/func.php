@@ -1119,7 +1119,7 @@ function youtube($body, $embed = true) {
 		$body
 	);
   
-	return rutube($result);
+	return rutube($result, $embed);
 }
 
 function rutube($body, $embed = true) {
@@ -1171,7 +1171,7 @@ function rutube($body, $embed = true) {
 			$body
 		);
 		
-	return dailymotion($result);
+	return dailymotion($result, $embed);
 }
 
 // Dailymotion URLs e.g. http://www.dailymotion.com/video/x3anr9r_cat-goes-nuts-chasing-light-reflection_fun
@@ -1225,7 +1225,7 @@ function dailymotion($body, $embed = true) {
 			$body
 		);
 		
-	return $result;
+	return tmdb($result, $embed);
 }
 
 function twitter($body, $embed = true) {
@@ -1296,7 +1296,7 @@ function instagram($body, $embed = true) {
   if (!$embed) return $body;
   
   // e.g. https://www.instagram.com/p/BGyE7jfF2of/
-  $pattern = '(?:https?://)(?:www\.)?(?:instagram\.com/p/)([0-9a-zA-Z]*)(?:/[^\s<\]"]*)?';
+  $pattern = '(?:https?://)(?:www\.)?(?:instagram\.com/p/)([0-9a-zA-Z\-]*)(?:/[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
     function ($matches) use ($embed, $pattern) {
@@ -1317,6 +1317,66 @@ function instagram($body, $embed = true) {
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
       return trim(preg_replace('/\s\s+/', ' ', $ar2->html));
+		},
+		$body
+	);
+  
+	return $result;
+}
+
+function tmdb($body, $embed = true) {
+  global $host, $tmdb_key;
+  
+  // e.g. http://www.imdb.com/title/tt2582782/?ref_=nm_flmg_act_4
+  $pattern = '(?:https?:\/\/)?(?:www\.)?imdb\.com\/title\/(tt[0-9]+)\/(?:(?:\?|&)[^\s\[<\]"]*)?';
+	
+  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
+    function ($matches) use ($embed, $host, $pattern, $tmdb_key) {
+      // var_dump($matches);
+      if(count($matches) < 5) return $matches[0];
+      
+      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+        return $matches[0];
+
+      $url = $matches[0];
+			$id  = $matches[1];
+
+      $new_body = $url;
+      
+      if (isset($tmdb_key)) {
+        if (strcmp($tmdb_key, "TEST") == 0) {
+            $release_date = date_parse("1996-06-25")['year'];
+            $title = "Independence Day";
+            $thumbnail = '/bqLlWZJdhrS0knfEJRkquW7L8z2.jpg';
+        } else {          
+          $obj2 = file_get_contents("https://api.themoviedb.org/3/find/" . $id . "?api_key=".$tmdb_key."&external_source=imdb_id");
+          
+          if($obj2 === FALSE) 
+            return $url;
+
+          $ar2 = json_decode($obj2);
+          // var_dump($ar2); 
+          
+          if (count($ar2->movie_results) == 1) {
+            $release_date = date_parse($ar2->movie_results[0]->release_date)['year'];
+            $title = $ar2->movie_results[0]->title;
+            $thumbnail = $ar2->movie_results[0]->poster_path;
+          }
+        }
+      }
+      if ($embed && isset($thumbnail)) {
+          $new_body = "\n\n[img=https://image.tmdb.org/t/p/w185".$thumbnail."]";
+          if (isset($title)) {
+            $new_body .= "\n[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url][/color]";
+          } else {
+            $new_body .= "\nLink: [url]".$url."[/url]";
+          }
+          $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
+      } else if (isset($title)) {
+          $new_body = "[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url][/color]";
+          $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
+      }
+      return $new_body;
 		},
 		$body
 	);
