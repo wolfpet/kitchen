@@ -1361,10 +1361,14 @@ function tmdb($body, $embed = true) {
             $release_date = date_parse($ar2->movie_results[0]->release_date)['year'];
             $title = $ar2->movie_results[0]->title;
             $thumbnail = $ar2->movie_results[0]->poster_path;
+            $tooltip = $ar2->movie_results[0]->overview;
+            $rating = $ar2->movie_results[0]->vote_average;
           } else if (count($ar2->tv_results) == 1) {
             $release_date = date_parse($ar2->tv_results[0]->first_air_date)['year'];
             $title = $ar2->tv_results[0]->name;
             $thumbnail = $ar2->tv_results[0]->poster_path;
+            $tooltip = $ar2->tv_results[0]->overview;
+            $rating = $ar2->tv_results[0]->vote_average;
           } else if (count($ar2->person_results) == 1) {
             if (count($ar2->person_results[0]->known_for) > 0) {
               $release_date = '';
@@ -1382,14 +1386,23 @@ function tmdb($body, $embed = true) {
       }
       if ($embed && isset($thumbnail)) {
           $new_body = "\n\n[img=https://image.tmdb.org/t/p/w185".$thumbnail."]";
+          if (isset($tooltip)) {
+            $new_body .= $tooltip . '[/img]';
+          }
           if (isset($title)) {
             $new_body .= "\n[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url][/color]";
+            if (isset($rating)) {
+              $new_body .= ' ' . $rating;
+            }
           } else {
             $new_body .= "\nLink: [url]".$url."[/url]";
           }
           $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
       } else if (isset($title)) {
           $new_body = "[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url][/color]";
+          if (isset($rating)) {
+            $new_body .= ' ' . $rating;
+          }
           $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
       }
       return $new_body;
