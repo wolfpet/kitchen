@@ -1361,6 +1361,10 @@ function tmdb($body, $embed = true) {
             $release_date = date_parse($ar2->movie_results[0]->release_date)['year'];
             $title = $ar2->movie_results[0]->title;
             $thumbnail = $ar2->movie_results[0]->poster_path;
+          } else if (count($ar2->tv_results) == 1) {
+            $release_date = date_parse($ar2->tv_results[0]->first_air_date)['year'];
+            $title = $ar2->tv_results[0]->name;
+            $thumbnail = $ar2->tv_results[0]->poster_path;
           } else if (count($ar2->person_results) == 1) {
             if (count($ar2->person_results[0]->known_for) > 0) {
               $release_date = '';
