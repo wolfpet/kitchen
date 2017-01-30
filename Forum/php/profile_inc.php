@@ -93,7 +93,7 @@ $(document).ready(function() {
 </tr>
 <tr>
 <td align="right">Classic forum menu: </td>
-<td><input id="menu_style" name="menu_style" type="checkbox" maxlength="80" <?=isset($menu_style) && $menu_style > 0 ? "checked" : ""?>/></td>
+<td><input id="menu_style" name="menu_style" type="checkbox" maxlength="80" <?=isset($menu_style) && $menu_style > 0 ? "checked" : ""?><?=isset($classic_menu) ? 'disabled="disabled"' : ''?>/></td>
 </tr>
 <tr>
 <td align="right">Show NSFW content:</td>
