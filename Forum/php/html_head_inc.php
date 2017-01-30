@@ -24,7 +24,7 @@ if (!is_null($user_id) && $user_id != null) {
 <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/'.$css)?>">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/common.css')?>">
-<?php if (!isset($menu_style) || $menu_style == 0) { ?>
+<?php if (!isset($classic_menu) && (!isset($menu_style) || $menu_style == 0)) { ?>
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/ribbon.css')?>">
 <?php } ?>
 <script src="js/jquery-1.10.2.min.js"></script>

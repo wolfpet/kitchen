@@ -92,8 +92,10 @@ $(document).ready(function() {
 <td><input id="reply_to_email" name="reply_to_email" type="checkbox" maxlength="80" <?=$reply_to_email ? "checked" : ""?>/></td>
 </tr>
 <tr>
+<?php if (!isset($classic_menu)) { ?>
 <td align="right">Classic forum menu: </td>
-<td><input id="menu_style" name="menu_style" type="checkbox" maxlength="80" <?=isset($menu_style) && $menu_style > 0 ? "checked" : ""?><?=isset($classic_menu) ? 'disabled="disabled"' : ''?>/></td>
+<td><input id="menu_style" name="menu_style" type="checkbox" maxlength="80" <?=isset($menu_style) && $menu_style > 0 ? "checked" : ""?>/></td>
+<?php } ?>
 </tr>
 <tr>
 <td align="right">Show NSFW content:</td>

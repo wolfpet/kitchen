@@ -758,6 +758,7 @@ function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = fa
 function print_pages_obsolete($max_page, $page, $target, $cur_page, $param = '', $br = true, $prefix = true) {
     global $root_dir;
     
+    if ($br) print('<BR>');
     print('<span id="pages">');
     if ($prefix) {
       print('<B>Pages</B>: ');
@@ -1052,7 +1053,7 @@ return '\[url='.$pattern.'|\[url\]'.$pattern.'|('.$pattern.')';
 function youtube($body, $embed = true) {
   global $host, $google_key;
   
-  $pattern = '(?:https?://)?(?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v\/|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?';
+  $pattern = '(?:https?://)?(?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
     function ($matches) use ($embed, $host, $pattern, $google_key) {
