@@ -144,7 +144,7 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
         }
         $to = $email;
         $subject = "Forum registration";
-        $message = "To activate your account, please click the following link or copy and paste it in your browser:<p><a href=\"http://" . $host . $root_dir . $page_activate . '?act_link=' . $md5 . '">http://' . $host . $root_dir . $page_activate . '?act_link=' . $md5 . "</a><p>This link will be valid for 24 hours.\n";
+        $message = "To activate your account, please click the following link or copy and paste it in your browser:<p><a href=\"".$protocol."://" . $host . $root_dir . $page_activate . '?act_link=' . $md5 . '">'.$protocol.'://' . $host . $root_dir . $page_activate . '?act_link=' . $md5 . "</a><p>This link will be valid for 24 hours.\n";
         $from = $from_email;
         $headers = "From: $from";
         if ( !isset($reg_type) || $reg_type == REG_TYPE_OPEN )

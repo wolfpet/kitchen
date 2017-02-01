@@ -696,9 +696,9 @@ function get_max_pages_expanded(){
 }
 
 function print_pages($max_page, $page, $target, $cur_page, $param = '', $br = false, $prefix = false) {
-    global $root_dir, $menu_style;
+    global $root_dir, $menu_style, $force_new_pages;
     
-    if ($menu_style == 1) {
+    if ($menu_style == 1 && !isset($force_new_pages)) {
       return print_pages_obsolete($max_page, $page, $target, $cur_page, $param, true, true);
     }
 
@@ -1051,12 +1051,12 @@ return '\[url='.$pattern.'|\[url\]'.$pattern.'|('.$pattern.')';
 }
 
 function youtube($body, $embed = true) {
-  global $host, $google_key;
+  global $host, $protocol, $google_key;
   
   $pattern = '(?:https?://)?(?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
-    function ($matches) use ($embed, $host, $pattern, $google_key) {
+    function ($matches) use ($embed, $host, $protocol, $pattern, $google_key) {
       // var_dump($matches);
       if(count($matches) < 5) return $matches[0];
       
@@ -1072,7 +1072,7 @@ function youtube($body, $embed = true) {
         if (strcmp($google_key, "TEST") == 0) {
             $duration = "11:22:33";
             $title = "Test title";
-            $thumbnail = 'http://files.softicons.com/download/system-icons/oxygen-icons-by-oxygen/png/128x128/actions/thumbnail.png';
+            $thumbnail = '//files.softicons.com/download/system-icons/oxygen-icons-by-oxygen/png/128x128/actions/thumbnail.png';
         } else {          
           $obj2 = file_get_contents(
             "https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=" . $id . "&key=".$google_key."&fields=pageInfo(totalResults),items(id,contentDetails/duration,snippet(title,thumbnails/default))");
@@ -1102,8 +1102,7 @@ function youtube($body, $embed = true) {
           if (preg_match('/(?:\?|\#)t=([0-9]+)(?:$|&)/', $url, $times)) {
             $params .= '&start='.$times[1];
           } 
-          //$new_body = '[iframe id="youtube" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?fs=1&enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen]';
-          $new_body = '[iframe id="youtube-video" type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1'.$params.'&wmode=transparent&origin=http://' . $host . '" frameborder="0" allowfullscreen]';
+          $new_body = '[iframe id="youtube-video" type="text/html" width="480" height="320" src="//www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1'.$params.'&wmode=transparent&origin='.$protocol.'://' . $host . '" frameborder="0" allowfullscreen]';
           if (isset($title)) {
             $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
           } else {
@@ -1124,12 +1123,12 @@ function youtube($body, $embed = true) {
 }
 
 function rutube($body, $embed = true) {
-  global $host;
+  global $host, $protocol;
   
   $pattern = '(?:https?://)?(?:www\.)?rutube\.ru/video/([\w-]{10,32})/(?:(?:\?|&)[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
-    function ($matches) use ($embed, $host, $pattern) {
+    function ($matches) use ($embed, $host, $protocol, $pattern) {
       // var_dump($matches);
       if(count($matches) < 5) return $matches[0];
       
@@ -1139,7 +1138,7 @@ function rutube($body, $embed = true) {
       $url = $matches[0];
 			$id  = $matches[1];
 
-			$obj2 = file_get_contents("http://www.rutube.ru/api/video/" . $id . "/");
+			$obj2 = file_get_contents("$protocol://www.rutube.ru/api/video/" . $id . "/");
 			//var_dump($obj2);
       if($obj2 === FALSE) return $url;
       
@@ -1692,7 +1691,7 @@ function validate($subj, $body, $to) {
 
 // Returns an error string, or array with an ID if successful
 function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
-  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email, $host, $user, $page_goto;
+  global $err_login, $logged_in, $ban, $ip, $agent, $user_id, $content_nsfw, $from_email, $host, $protocol, $user, $page_goto;
   
   $err = @validate($subj, $body, $to);
   
@@ -1929,11 +1928,11 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
             $message .= file_get_contents('css/disc2.css');          
             $message .= '</style><h3 id="subject">'.$subj.'</h3>';
             $message .= 'Author: <b>'.$who_replied.'</b><br/>';
-            $message .= 'In response to your post: <a href="http://'.$host.'/'.$page_goto.'?id='.$re.'&page='.$old_page.'">'.$old_subj.'</a>';
+            $message .= 'In response to your post: <a href="'.$protocol.'://'.$host.'/'.$page_goto.'?id='.$re.'&page='.$old_page.'">'.$old_subj.'</a>';
             $message .= '<hr><div id="msgbody">';
             $message .= render_for_display($body);
             $message .= '</div><hr/>';
-            $message .= '<p>Visit <a href="http://'.$host.'/'.$page_goto.'?re='.$id.'&page='.$msg_page.'">'.$host.'</a> to reply!</p>';
+            $message .= '<p>Visit <a href="'.$protocol.'://'.$host.'/'.$page_goto.'?re='.$id.'&page='.$msg_page.'">'.$host.'</a> to reply!</p>';
             $message .= '</body></html>';
             $headers = "From: $from_email\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
@@ -1980,7 +1979,7 @@ function get_answered($how_many=0, $update_ts=true) {
 }
 
 function smileys($fieldId=null) {
-  global $host, $root_dir;
+  global $host, $protocol, $root_dir;
   
   $out = "";
   
@@ -1989,7 +1988,7 @@ function smileys($fieldId=null) {
     while (false !== ($entry = readdir($handle))) {
         if ($entry != "." && $entry != "..") {
             $name = explode(".", $entry)[0];
-            $out .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$entry.'" title="'.$name.'" alt="'.$name.'"'.
+            $out .= '<img src="'.$protocol.'://'.$host.$root_dir.'images/smiles/'.$entry.'" title="'.$name.'" alt="'.$name.'"'.
               (is_null($fieldId) ? '' : (' onclick="javascript:insertSmiley(\''.$fieldId.'\',\''.$name.'\');"')).
             '/> ';
         }
@@ -2010,8 +2009,9 @@ function isonline($host) {
 }
 
 function add_postimage() {
+  global $protocol;
   if (isonline('mod.postimage.org')) {
-    return '<script type="text/javascript" src="http://mod.postimage.org/website-english-hotlink-family.js" charset="utf-8"></script>';
+    return '<script type="text/javascript" src="//mod.postimage.org/website-english-hotlink-family.js" charset="utf-8"></script>';
   } else {
     return '<!-- postimage server is down -->';
   }

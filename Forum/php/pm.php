@@ -106,7 +106,7 @@ $title = 'Private message';
           $message .= '<hr><div id="msgbody">';
           $message .= render_for_display($body);
           $message .= '</div><hr/>';
-          $message .= '<p>Visit <a href="http://'.$host.'/'.$page_goto.'?pm_id='.$msg_id.'">'.$host.'</a> to reply</p>';
+          $message .= '<p>Visit <a href="'.$protocol.':://'.$host.'/'.$page_goto.'?pm_id='.$msg_id.'">'.$host.'</a> to reply</p>';
           $message .= '</body></html>';
           $headers = "From: $from_email\r\n";
           $headers .= "MIME-Version: 1.0\r\n";

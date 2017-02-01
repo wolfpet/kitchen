@@ -107,7 +107,7 @@ function bbcode_naked_urls($str) {
  * Run this before bbcode is called to render content before bbcode() had a chance to mess it up
  */
 function before_bbcode($original_body, &$has_video=null) {
-  global $host;
+  global $host, $protocol;
   
   $body = preg_replace( array (
     // Vimeo on-the-fly e.g. https://vimeo.com/129252030
@@ -131,7 +131,7 @@ function before_bbcode($original_body, &$has_video=null) {
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/><a href="$2">Please note that this link is only temporary and will not be available in the future</a>',
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2" target="_blank">$2</a>',  
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
-    '<div class="youtube"><iframe type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>'
+    '<div class="youtube"><iframe type="text/html" width="480" height="320" src="'.$protocol.'://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin='.$protocol.'://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>'
     ), $original_body);    
     
   if (isset($has_video) && !is_null($has_video)) $has_video = strcmp($body, $original_body) != 0;
@@ -195,8 +195,8 @@ function after_bbcode($body) {
  * Replaces target for URLs that reference messages of this forum
  */
 function fix_msg_target($body) {
-  global $host;
-  return str_replace('<a target="_blank" href="http://'.$host.'/msg.php?id=', '<a target="bottom" href="http://'.$host.'/msg.php?id=', $body);
+  global $host, $protocol;
+  return str_replace('<a target="_blank" href="'.$protocol.'://'.$host.'/msg.php?id=', '<a target="bottom" href="'.$protocol.'://'.$host.'/msg.php?id=', $body);
 }
 
 /**
@@ -219,8 +219,9 @@ function initialize_highlightjs_if_required($body) {
 }
 
 function fix_postimage_tags( $str ) {
+  global $protocol;
 // [url=http://postimage.org/][img]http://s29.postimg.org/gi2p1c6pz/spasibo.jpg[/img][/url]
-  return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]#i", "[img]$1[/img]", $str);
+  return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]http:([^\[]+)\[\/img\]\[\/url\]#i", "[img]$protocol$1[/img]", $str);
 }
 
 /**
@@ -355,10 +356,10 @@ function render_smileys_step1($body) {
 }
 
 function render_smileys_step2($body) {
-  global $host, $root_dir;  
+  global $host, $root_dir, $protocol;  
   // then :<word>: e.g.  :shock: or :lol: 
   $body = preg_replace_callback('#:([a-z]+):#is',
-    function ($matches) use ($host, $root_dir) {
+    function ($matches) use ($host, $root_dir, $protocol) {
       // var_dump($matches);
 			$name = $matches[1];
       $path = "images/smiles/".$name.".gif";
@@ -367,7 +368,7 @@ function render_smileys_step2($body) {
       if(!$exists) 
         return $matches[0];
 
-      return '<img src="http://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
+      return '<img src="'.$protocol.'://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
 		},
 		$body
 	);

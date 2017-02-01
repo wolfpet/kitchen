@@ -26,7 +26,7 @@ require_once('head_inc.php');
             $enc_mail = htmlentities($row['email'], HTML_ENTITIES,'UTF-8');
             $md5 = $row['actkey'];
             $line = '<tr><td align="center">'. $enc_user . '</td><td align="center">'. $enc_mail . '</td><td align="center">' . $created . '</td><td width="25%" align="center" nowrap>'
-              .'<form method="get" action="http://'. $host . $root_dir . $page_activate .'" target="bottom">'
+              .'<form method="get" action="'.$protocol.'://'. $host . $root_dir . $page_activate .'" target="bottom">'
               .'<input type="hidden" name="act_link" value="'. $md5.'"/><input name="action" type="submit" value="Confirm"/><input name="action" type="submit" value="Decline"/></form>'
               .'</td></tr>';
             $out .= $line;

@@ -145,10 +145,20 @@ $page_my_bookmarhs='mybookmarks.php';
 $page_registrations='modregs.php';
 $page_goto='navigate.php';
 
-// Redirect if URL is not correct
+if (!isset($protocol)) {
+  $isSecure = false;
+  if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+      $isSecure = true;
+  }
+  elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
+      $isSecure = true;
+  }
+  $protocol = $isSecure ? 'https' : 'http';
+}
 
+// Redirect if URL is not correct
 if ( isset( $_SERVER['HTTP_HOST'] ) && strcmp( $_SERVER['HTTP_HOST'], $host ) ) {
-    print( "<HTML><BODY><A target=\"_blank\" href=\"http://" . $host . $root_dir . "\">Wrong URL" . $_SERVER['HTTP_HOST'] . ". Please, click here.</A></BODY></HTML>" );
+    print( "<HTML><BODY><A target=\"_top\" href=\"".$protocol."://" . $host . $root_dir . "\">Wrong URL <b>" . $_SERVER['HTTP_HOST'] . "</b>. Please click here.</A></BODY></HTML>" );
     die();
 }
 

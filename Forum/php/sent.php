@@ -4,7 +4,7 @@
 require_once('head_inc.php');
 
     if ($logout === true) {
-        header( "Location: http://$host$root_dir$page_expanded" ) ;
+        header( "Location: $protocol://$host$root_dir$page_expanded" ) ;
         die();
     }
 

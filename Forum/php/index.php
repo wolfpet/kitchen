@@ -545,7 +545,7 @@ $app->get('/api/profile', function() use ($app) {
  * Returns reactions configured on the server
  */
 $app->get('/api/reactions', function() use ($app) {
-  global $host, $root_dir;
+  global $host, $protocol, $root_dir;
 
   global $reactions;
   
@@ -556,7 +556,7 @@ $app->get('/api/reactions', function() use ($app) {
     foreach (array_keys($reactions) as $reaction) {
       $result[] = array(
         'label' => $reaction,
-        'url' => 'http://'.$host.$root_dir.'images/smiles/'.$reaction.'.gif'
+        'url' => $protocol.'://'.$host.$root_dir.'images/smiles/'.$reaction.'.gif'
       );
     }
     $response->setContentType('application/json');
@@ -613,7 +613,7 @@ $app->put('/api/messages/{id:[0-9]+}/like', function($msg_id) {
 });
 
 function api_get_ratings($msg_id) {
-  global $reactions, $host, $root_dir;
+  global $reactions, $host, $protocol, $root_dir;
   $likes = 0;
   $dislikes = 0;
   $ratings = array();
@@ -638,7 +638,7 @@ function api_get_ratings($msg_id) {
         if (array_key_exists($reaction, $reactions1)) {
           $reactions1[$reaction]['names'][] = $row['userlike'];
         } else {
-          $reactions1[$reaction] = array("names" => array($row['userlike']), "url" => 'http://'.$host.$root_dir.'images/smiles/'.$row['reaction'].'.gif');
+          $reactions1[$reaction] = array("names" => array($row['userlike']), "url" => $protocol.'://'.$host.$root_dir.'images/smiles/'.$row['reaction'].'.gif');
         }
       }
       if (!is_null($row['valuelike']))

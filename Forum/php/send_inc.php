@@ -110,7 +110,7 @@
 <tr><td>[color=#FF0000]<font color="gray">Red Text</font>[/color]</td><td><span style="color: rgb(255, 0, 0);">Red Text</span></td></tr>
 <tr><td>[color=FF0000]<font color="gray">Red Text</font>[/color]</td><td><span style="color: rgb(255, 0, 0);">Red Text</span></td></tr>
 <tr><td>[size=15]<font color="gray">Large Text</font>[/size]</td><td><span style="font-size: 15pt;">Large Text</span></td></tr>
-<tr><td>[img=<font color="gray">http://<?php print( $host); ?>/images/Tip-Hat.gif</font>]</td><td><img src="http://<?php print( $host); ?>/images/Tip-Hat.gif"></td></tr>
+<tr><td>[img=<font color="gray"><?=$protocol?>://<?=$host?>/images/Tip-Hat.gif</font>]</td><td><img src="<?=$protocol?>://<?=$host?>/images/Tip-Hat.gif"></td></tr>
 </tbody></table>
 </div>
 
