@@ -1937,7 +1937,17 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
       return 'Query failed';
     }
-    
+    //add picture to Assets table if exists
+    $pics = detect_picture_urls($body);
+    $pics_detected = count($pics);
+    if($pics_detected > 1)
+    {
+        for($picsCounter=1; $picsCounter<$pics_detected; $picsCounter++)
+        {
+          add_picture_asset($pics[$picsCounter], $user_id,  $id);
+        }
+    }
+
     return array("id" => $id, "thread_id" => $thread_id);
     
   } else {
@@ -1994,7 +2004,17 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
       return 'Query failed';
     }
-    
+    //add picture to Assets table if exists
+    $pics = detect_picture_urls($body);
+    $pics_detected = count($pics);
+    if($pics_detected > 1)
+    {
+        for($picsCounter=1; $picsCounter<$pics_detected; $picsCounter++)
+        {
+          add_picture_asset($pics[$picsCounter], $user_id,  $id);
+        }
+    }
+
     // Send notificaton e-mail (if needed)
     if ($author_id != $user_id) {
       // Find e-mail of the author of the post being replied to
@@ -2187,33 +2207,32 @@ function add_picture_asset($url, $userID,  $msgID) {
 }
 
 function detect_picture_urls($message){
-
     //analyze the post body and detect image URLs
-    $imageUrls[]= null; //well formed image URLs after various cleanup procedures
+    //print("Detect picture urls called<br>");
+    $imageUrls[]= null;
     preg_match_all('#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#', $message, $matches);
-    $all_urls = $matches[0];
-            //if contains JPG, GIF or PNG then..
-            if(strpos($message, '.jpg') !== false || strpos($message, '.gif') !== false || strpos($message, '.png') !== false)
+    for($i=0; $i<sizeof($matches[0]); $i++)
+    {
+        //image URL?
+        if(strpos($matches[0][$i], '.jpg') !== false || strpos($matches[0][$i], '.gif') !== false || strpos($matches[0][$i], '.png') !== false)
+        {
+            //seems to be an Image URL. Cleanup!
+            //cut everything after "[/img"
+            if(strpos($matches[0][$i], '[/img')!=false)
             {
-                //cut before  [img]
-		$sub1 = null;
-        	if(strpos($message, ']') !== false)
-                {
-                    $sub1 = explode(']', $message, 4);
-                }
-                //cut after [/img
-                if(strpos($sub1[1], '[') !== false)
-                {
-                    $sub2 = explode('[', $sub1[2], 3);
-                    $imageUrls[] = $sub2[0];
-                }
-                else
-                {
-                    $sub3 = str_replace('[/img', '', $all_urls[$x]);
-                    $imageUrls[] = $sub3;
-                }
+                $matches[0][$i]=substr($matches[0][$i], 0, strpos($matches[0][$i], '[/img'));
             }
-    return $imageUrls; 
+            //cut everything before "[img]"
+            if(strpos($matches[0][$i], '[img]')!=false)
+            {
+                $matches[0][$i]=strstr($matches[0][$i], '[img]');
+                $matches[0][$i]=str_replace("[img]","",$matches[0][$i]);
+            }
+            //add the URL to the output array
+            if(sizeof($matches[0][$i])>0){array_push($imageUrls, $matches[0][$i]);}
+        }
+    }
+    return $imageUrls;
 }
 
 ?>
