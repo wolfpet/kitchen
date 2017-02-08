@@ -147,6 +147,10 @@ function resetBadges()
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"></path></g></svg>
 				<span class="tooltiptext">My bookmarks</span></a>
 			</span> 
+			<span id="Gallery" class="ribbonIcon tooltip"><a onclick="openGallery();">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" class="style-scope iron-icon"></path>	</g></svg>
+				<span class="tooltiptext">Photo Gallery</span></a>
+			</span> 
 			<span id="Search" class="ribbonIcon tooltip"><a target="bottom" href="<?=$root_dir.$page_search . (strcmp($cur_page, $page_my_bookmarks) == 0 ? "?mode=bookmarks" : "")?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></g></svg>
 				<span class="tooltiptext">Search</span></a>
@@ -240,7 +244,7 @@ function resetBadges()
 				<span id="newPMBadge" class="button__badge"><?=$new_pm?></span>
         <?php } ?>
     				<style>pmdropdown-content.a:hover {color: green;}</style>
-				<div class="pmdropdown-content" style="background-color: <?=$ribbonBackground?>;z-index: 9999;">
+				<div class="pmdropdown-content" style="background-color: <?=$ribbonBackground?>">
 					<a target="contents" style="color: <?=$ribbonColor?>" href="<?=$root_dir.$page_pmail?>">Inbox</a>
 					<a target="contents" href="<?=$root_dir.$page_pmail_sent?>">Sent</a>
 					<a target="bottom" href="<?=$root_dir.$page_pmail_send?>">New</a>
