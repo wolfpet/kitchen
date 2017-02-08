@@ -13,6 +13,10 @@ function setVerticaLayout()
 
 function openGallery()
 {
+
+    //initiate the gallery
+    initGalleryImages();
+    //display the Gallery UI.
     document.getElementById('gallery').style.display = 'block';
     document.getElementById('menu_cover').style.display = 'block';
     
