@@ -58,89 +58,13 @@ img {
 }
 </style>
 
-<script>
-var currentPhotoIndex=0;
-var currentAuthor=0;
-var currentMsg=0;
-var galleryImages = [];
-
-function initGalleryImages()
-{
-    currentPhotoIndex=0;
-    document.getElementById("gallery_title").text = "Photo Gallery: images from all users";
-    $.post("gallery_api.php", {'get_imgUrls_and_Posts' : 'all'}, function(data,status)
-    {
-        galleryImages = $.map(data, function(value, index) {
-	return [value];
-    });
-	document.getElementById("currentPhoto").src = galleryImages[currentPhotoIndex][0];
-	document.getElementById("gallery_author_name").text = galleryImages[currentPhotoIndex][1]; 
-	document.getElementById("gallery_msg_title").text = galleryImages[currentPhotoIndex][2]; 
-	currentMsg = galleryImages[currentPhotoIndex][3];
-	currentAuthor = galleryImages[currentPhotoIndex][4];
-    });
-    
-        
-}
-
-function nextPhoto()
-{
-    if((currentPhotoIndex + 2) < galleryImages.length)
-    {
-        currentPhotoIndex++;
-	document.getElementById("currentPhoto").src = galleryImages[currentPhotoIndex][0];
-	document.getElementById("gallery_author_name").text = galleryImages[currentPhotoIndex][1]; 
-	document.getElementById("gallery_msg_title").text = galleryImages[currentPhotoIndex][2]; 
-	currentMsg = galleryImages[currentPhotoIndex][3];
-	currentAuthor = galleryImages[currentPhotoIndex][4];
-
-    }
-}
-
-function prevPhoto()
-{
-    if((currentPhotoIndex - 1) < 0)return;
-        currentPhotoIndex--;
-        document.getElementById("currentPhoto").src = galleryImages[currentPhotoIndex][0];
-	document.getElementById("gallery_author_name").text = galleryImages[currentPhotoIndex][1]; 
-	document.getElementById("gallery_msg_title").text = galleryImages[currentPhotoIndex][2]; 
-	currentMsg = galleryImages[currentPhotoIndex][3];
-	currentAuthor = galleryImages[currentPhotoIndex][4];
-
-}
-
-function filterByName(userId)
-{
-    document.getElementById("gallery_title").text = galleryImages[currentPhotoIndex][1] + "'s Photo Gallery. ";
-    $.post("gallery_api.php", {'get_imgUrls_and_Posts' : userId}, function(data,status)
-    {
-        galleryImages = $.map(data, function(value, index) {
-	return [value];
-    });
-    currentPhotoIndex=0;
-    document.getElementById("currentPhoto").src = galleryImages[currentPhotoIndex][0];
-    });
-}
-
-function openMsg(msgId)
-{
-    closeGallery();
-    document.getElementById("bottom").src="msg.php?id=" + currentMsg;
-}
-
-</script>
-
 <div id="menu_cover" style="width: 100vw;position: absolute;top: 0px;color: white; background-color: black; opacity: 0.6;height: 53px;color: white; display: none"></div>
 <div class="gallery_container" id="gallery">
      <header><a id="gallery_title">Photo Gallery: images from all users</a></header>
      <div>
-	<div class="column-center">
-	    <img id="currentPhoto" src=""
-		style="
-		margin: auto;
-		display: block;
-	    ">
-	</div>
+     <div class="column-center">
+        <img id="currentPhoto" src="" style="margin: auto; display: block;">
+     </div>
 	<div class="column-left" onclick="prevPhoto();"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="gallery_nav_left" fill="#444" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></g></svg></div>
 	<div class="column-right" onclick="nextPhoto();";><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="gallery_nav_right" fill="#444" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></g></svg></div>
 	</div>
