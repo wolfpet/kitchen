@@ -26,13 +26,35 @@ function openGallery()
     //display the Gallery UI.
     document.getElementById('gallery').style.display = 'block';
     document.getElementById('menu_cover').style.display = 'block';
-    
+
 }
 
 function openPicInGallery(url, userId, messageId)
 {
-    //This function is called on click on an image
-    alert(url + '-' + userId + '-' + messageId);
+    //This function is called on click on an image. It opens the gallery and displace the pic
+        //alert(url + '-' + userId + '-' + messageId);
+    var fixedUrl= url.replace("----", "://");
+    var currentPic = [fixedUrl, userId, messageId];
+    $.post("gallery_api.php", {'get_imgUrls_and_Posts' : userId}, function(data,status)
+    {
+                    galleryImages = $.map(data, function(value, index) {
+                    return [value];
+		    });
+		    currentPhotoIndex=0;
+        	    document.getElementById("currentPhoto").src = fixedUrl;
+                                                
+    });
+    currentAuthor = userId;
+    currentMsg = messageId;
+    //display
+    document.getElementById("gallery_title").text = "Photo Gallery: Selected image";
+    document.getElementById("gallery_author_name").text ="";
+    document.getElementById("gallery_msg_title").text = "Return to the post";
+                        
+    //display the UI
+    document.getElementById('gallery').style.display = 'block';
+    document.getElementById('menu_cover').style.display = 'block';
+            
 }
 
 function closeGallery()

@@ -1,6 +1,6 @@
 <?php
 
-function do_bbcode($str) {
+function do_bbcode($str, $auth_id, $msg_id) {
   // The array of regex patterns to look for
   $format_search = array(
       '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
@@ -71,7 +71,7 @@ function do_bbcode($str) {
   // print('before naked called:-->'.$str.'<--');
   
   // Uncoded images & URLs   
-  return bbcode_naked_urls(bbcode_naked_images($str));
+  return bbcode_naked_urls(bbcode_naked_images($str, $auth_id, $msg_id));
 }
 
 // ================ Handling of URLs and Images outside of bb code ==========================
@@ -81,29 +81,44 @@ return '>'.$pattern.'<\/a>|="'.$pattern.'"|('.$pattern.')';
 }
 
 function bbcode_naked_images($str) {
+ global $auth_id;
+ global $msg_id; 
   // Deal with untagged images
   $str = preg_replace_callback('#'.unless_in_quotes('(?:ftp|https?):\/\/[^\s>"]+\.(?:jpg|jpeg|gif|png|bmp)(?:[^\s<"]*)?').'#is', // unprocessed images (i.e. without quotes around them)
     function ($m) {
+      global $auth_id;
+      global $msg_id;
+      //die($m[0]);
       if(empty($m[1])) return $m[0];
-					else return '<img src="' . $m[1] . '" alt=""/>';
+	else 
+	{
+	    //delete the :// to prevent post processing
+    	    //TODO find a better way, this is stupid.
+    	    $uncut_pic_url =  $m[1];
+    	    $cut_pic_url = str_replace ('://', '----', $uncut_pic_url);
+	    return '<img style="max-width: 99%;max-height: 99%;" onclick="parent.openPicInGallery(\'' . $cut_pic_url . '\', '. $auth_id .', '.$msg_id.');"  src="' . $m[1] . '" alt=""/>';
+	}
     }, $str);
-  // print("--->".$str."<---");
+    //die($str);
   
   // Google pic URLs are also images
   $str = preg_replace_callback('#'.unless_in_quotes('https:\/\/[a-z0-9]+\.googleusercontent.com\/[^\s<]+').'#is', // unprocessed images (i.e. without quotes around them)
     function ($m) {
       if(empty($m[1])) return $m[0];
-					else return '<img src="' . $m[1] . '" alt=""/>';
+	else return '<img src="' . $m[1] . '" alt=""/>';
     }, $str);
   return $str;
 }
 
 function bbcode_naked_urls($str) {
+
   // '[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]'
   return preg_replace_callback('#'.unless_in_quotes('[[:alpha:]]+://[^<>[:space:]\"]+').'#is', // unprocessed URLs(i.e. without quotes around them)
     function ($m) {
       if(empty($m[1])) return $m[0];
-					else return '<a target="_blank" href="' . $m[1] . '">' . $m[1] . '</a>';
+					else {
+						return '<a target="_blank" href="' . $m[1] . '">' . $m[1] . '</a>';
+					     }
     }, $str);
 }
 
@@ -237,13 +252,14 @@ function fix_postimage_tags( $str ) {
 /**
  * Renderers
  */
-function render_for_display($msgbody, $render_smiles=true) {
+function render_for_display($msgbody, $auth_id, $msg_id, $render_smiles=true) {
 
   $msgbody = preg_replace("#\[render=([^\]]*?)\]\s*(.*?)\[\/render\]#is", "[div]$2[/div]", $msgbody);
 
   $msgbody = render_but_exclude_tags($msgbody, function($body) use ($render_smiles) {
     global $smileys;
-
+    global $auth_id;
+    global $msg_id;
     if ($smileys) {
       // do nothing
     } else 
@@ -260,7 +276,7 @@ function render_for_display($msgbody, $render_smiles=true) {
     }
 
 	  $body = before_bbcode($body);
-	  $body = do_bbcode( $body );
+	  $body = do_bbcode($body, $auth_id, $msg_id);
 	  $body = nl2br($body);
 	  $body = after_bbcode($body);
 
