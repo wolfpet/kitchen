@@ -83,7 +83,7 @@ require_once('head_inc.php');
       .'(select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.content_flags, t.author as t_author,'
       .'(select count(*) from confa_versions v where v.parent=p.id) as revisions,'
       .'t.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
-      
+
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query 2 failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -151,7 +151,8 @@ require_once('head_inc.php');
             if (!is_null($msgbody) && strlen($msgbody) > 0 && !is_null($prefix) && strlen($prefix) > 0){
                 $msgbody = $prefix . ' ' . str_replace("\n", "\n" . $prefix . ' ', $msgbody);
             }
-            $msgbody = render_for_display($msgbody);
+            //die($auth_id . "-" . $msg_id);
+            $msgbody = render_for_display($msgbody, $auth_id, $msg_id);
         }
 
         #Translit - start

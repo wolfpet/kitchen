@@ -1938,7 +1938,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       return 'Query failed';
     }
     //add picture to Assets table if exists
-    $pics = detect_picture_urls($body);
+    $pics = detect_picture_urls($ibody);
     $pics_detected = count($pics);
     if($pics_detected > 1)
     {
@@ -2005,7 +2005,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       return 'Query failed';
     }
     //add picture to Assets table if exists
-    $pics = detect_picture_urls($body);
+    $pics = detect_picture_urls($ibody);
     $pics_detected = count($pics);
     if($pics_detected > 1)
     {
@@ -2228,6 +2228,10 @@ function detect_picture_urls($message){
                 $matches[0][$i]=strstr($matches[0][$i], '[img]');
                 $matches[0][$i]=str_replace("[img]","",$matches[0][$i]);
             }
+            //cleanup after TMDB
+            $parts = explode("]", $matches[0][$i]);
+            $matches[0][$i] = $parts[0];
+            
             //add the URL to the output array
             if(sizeof($matches[0][$i])>0){array_push($imageUrls, $matches[0][$i]);}
         }

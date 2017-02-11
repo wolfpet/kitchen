@@ -27,9 +27,15 @@ if (is_null($msgbody) || strlen($msgbody) == 0) {
   // print('<span style="color:gray; display: table-cell; vertical-align: middle; text-align:center;"><i>Content is blocked for your safety</i></span>');
   print('<H3 style="color:lightgray; display: table-cell; vertical-align: middle; text-align:center;">NSFW</H3>');
 } else {
+  //print("hello<br>");
+  //make the images clickable
+  //image URLs detect_picture_urls($message);
+  
   print($trans_body); 
 }
-?></div><hr>
+?>
+
+</div><hr>
 
 
 
