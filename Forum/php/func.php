@@ -1075,7 +1075,7 @@ function youtube($body, $embed = true) {
             $thumbnail = '//files.softicons.com/download/system-icons/oxygen-icons-by-oxygen/png/128x128/actions/thumbnail.png';
         } else {          
           $obj2 = file_get_contents(
-            "https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=" . $id . "&key=".$google_key."&fields=pageInfo(totalResults),items(id,contentDetails/duration,snippet(title,thumbnails/default))");
+            "https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics,snippet&id=" . $id . "&key=".$google_key."&fields=pageInfo(totalResults),items(id,contentDetails/duration,statistics/viewCount,snippet(title,thumbnails/default))");
           
           if($obj2 === FALSE) 
             return $url;
@@ -1091,6 +1091,7 @@ function youtube($body, $embed = true) {
             $duration .= $di->i . ':' . $di->s;
             $title = $ar2->items[0]->snippet->title;
             $thumbnail = $ar2->items[0]->snippet->thumbnails->{'default'}->url;
+            $views = number_format($ar2->items[0]->statistics->viewCount);
           }
         }
       }
@@ -1104,7 +1105,7 @@ function youtube($body, $embed = true) {
           } 
           $new_body = '[iframe id="youtube-video" type="text/html" width="480" height="320" src="//www.youtube-nocookie.com/embed/' . $id . '?enablejsapi=1'.$params.'&wmode=transparent&origin='.$protocol.'://' . $host . '" frameborder="0" allowfullscreen]';
           if (isset($title)) {
-            $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "[/url][/color][/i] ";
+            $new_body .= "\n[i][color=lightslategrey][url=".$url. "][b]" . $title . "[/b]; " . $duration . "  [" .$views. " views][/url][/color][/i] ";
           } else {
             $new_body .= "\nLink: [url]".$url."[/url]";
           }
