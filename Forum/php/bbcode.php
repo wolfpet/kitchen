@@ -1,6 +1,7 @@
 <?php
 
 function do_bbcode($str, $auth_id, $msg_id) {
+
   // The array of regex patterns to look for
   $format_search = array(
       '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
@@ -68,7 +69,7 @@ function do_bbcode($str, $auth_id, $msg_id) {
   while ($count > 0) {
     $str = preg_replace($format_search, $format_replace, $str, -1, $count);
   }
-  // print('before naked called:-->'.$str.'<--');
+   //print('before naked called:-->'.$str.'<--');
   
   // Uncoded images & URLs   
   return bbcode_naked_urls(bbcode_naked_images($str, $auth_id, $msg_id));
@@ -88,24 +89,18 @@ function bbcode_naked_images($str) {
     function ($m) {
       global $auth_id;
       global $msg_id;
-      //die($m[0]);
       if(empty($m[1])) return $m[0];
 	else 
 	{
-	    //delete the :// to prevent post processing
-    	    //TODO find a better way, this is stupid.
-    	    $uncut_pic_url =  $m[1];
-    	    $cut_pic_url = str_replace ('://', '----', $uncut_pic_url);
-	    return '<img style="max-width: 99%;max-height: 99%;" onclick="parent.openPicInGallery(\'' . $cut_pic_url . '\', '. $auth_id .', '.$msg_id.');"  src="' . $m[1] . '" alt=""/>';
+	    return '<img style="max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
 	}
     }, $str);
-    //die($str);
   
   // Google pic URLs are also images
   $str = preg_replace_callback('#'.unless_in_quotes('https:\/\/[a-z0-9]+\.googleusercontent.com\/[^\s<]+').'#is', // unprocessed images (i.e. without quotes around them)
     function ($m) {
       if(empty($m[1])) return $m[0];
-	else return '<img src="' . $m[1] . '" alt=""/>';
+	else {return '<img src="' . $m[1] . '" alt=""/>';}
     }, $str);
   return $str;
 }
@@ -252,7 +247,7 @@ function fix_postimage_tags( $str ) {
 /**
  * Renderers
  */
-function render_for_display($msgbody, $auth_id, $msg_id, $render_smiles=true) {
+function render_for_display($msgbody, $render_smiles=true, $auth_name, $auth_id, $msg_id) {
 
   $msgbody = preg_replace("#\[render=([^\]]*?)\]\s*(.*?)\[\/render\]#is", "[div]$2[/div]", $msgbody);
 
@@ -274,19 +269,36 @@ function render_for_display($msgbody, $auth_id, $msg_id, $render_smiles=true) {
     if ($render_smiles) {
       $body = render_smileys_step2($body); 
     }
-
 	  $body = before_bbcode($body);
 	  $body = do_bbcode($body, $auth_id, $msg_id);
 	  $body = nl2br($body);
 	  $body = after_bbcode($body);
-
-    $body = grammar_nazi($body);
-    
+	  $body = grammar_nazi($body);
+	  $body = gallery_cleanup($body);
 	  return $body;
   }, '[code]','<code>');
   
   return $msgbody;
 }
+
+function gallery_cleanup($body)
+{
+    global $auth_id;
+    global $msg_id;
+        
+   $galleryJSCallStrEnd = '\', '. $auth_id .', '.$msg_id.');"';
+   
+    $newimgstr = '<img onclick="parent.openPicInGallery(this, ' . $auth_id .', ' . $msg_id . ');"';
+    $processedBody = str_replace ('<img' , $newimgstr , $body);
+
+
+
+
+
+
+    return $processedBody; 
+}
+
 
 function render_for_db($msgbody) {
 

@@ -29,19 +29,18 @@ function openGallery()
 
 }
 
-function openPicInGallery(url, userId, messageId)
+function openPicInGallery(img, userId, messageId)
 {
     //This function is called on click on an image. It opens the gallery and displace the pic
-        //alert(url + '-' + userId + '-' + messageId);
-    var fixedUrl= url.replace("----", "://");
-    var currentPic = [fixedUrl, userId, messageId];
+    //alert(img.currentSrc + '-' + userId + '-' + messageId);
+    var currentPic = [img.currentSrc, userId, messageId];
     $.post("gallery_api.php", {'get_imgUrls_and_Posts' : userId}, function(data,status)
     {
                     galleryImages = $.map(data, function(value, index) {
                     return [value];
 		    });
 		    currentPhotoIndex=0;
-        	    document.getElementById("currentPhoto").src = fixedUrl;
+        	    document.getElementById("currentPhoto").src = img.currentSrc;
                                                 
     });
     currentAuthor = userId;
