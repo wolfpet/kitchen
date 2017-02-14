@@ -242,7 +242,7 @@ function initialize_highlightjs_if_required($body) {
 function fix_postimage_tags( $str ) {
  //[url=http://postimage.org/][img]http://s29.postimg.org/gi2p1c6pz/spasibo.jpg[/img][/url]
  //return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]#i", "[img]$1[/img]", $str);
- $tmpstr= str_replace('[url=https://postimg.org/image/', '<div style="color:#FFFFFF">', $str);
+ $tmpstr= str_replace('[url=https://postimg.org/image/', '<div style="font-size: 0;color:#FFFFFF">', $str);
  $tmpstr =  str_replace('[/url]','</div>', $tmpstr);
  return $tmpstr;
 }
@@ -297,7 +297,7 @@ function gallery_cleanup($body)
 function render_for_db($msgbody) {
 
   $msgbody = youtube( $msgbody );
-  $msgbody = fix_postimage_tags( $msgbody );
+  //$msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
   return $msgbody;
 }
