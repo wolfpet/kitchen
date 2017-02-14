@@ -240,8 +240,11 @@ function initialize_highlightjs_if_required($body) {
 }
 
 function fix_postimage_tags( $str ) {
-// [url=http://postimage.org/][img]http://s29.postimg.org/gi2p1c6pz/spasibo.jpg[/img][/url]
-  return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]#i", "[img]$1[/img]", $str);
+ //[url=http://postimage.org/][img]http://s29.postimg.org/gi2p1c6pz/spasibo.jpg[/img][/url]
+ //return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]#i", "[img]$1[/img]", $str);
+ $tmpstr= str_replace('[url=https://postimg.org/image/', '<div style="color:#FFFFFF">', $str);
+ $tmpstr =  str_replace('[/url]','</div>', $tmpstr);
+ return $tmpstr;
 }
 
 /**
@@ -285,17 +288,8 @@ function gallery_cleanup($body)
 {
     global $auth_id;
     global $msg_id;
-        
-   $galleryJSCallStrEnd = '\', '. $auth_id .', '.$msg_id.');"';
-   
     $newimgstr = '<img onclick="parent.openPicInGallery(this, ' . $auth_id .', ' . $msg_id . ');"';
     $processedBody = str_replace ('<img' , $newimgstr , $body);
-
-
-
-
-
-
     return $processedBody; 
 }
 
@@ -305,14 +299,12 @@ function render_for_db($msgbody) {
   $msgbody = youtube( $msgbody );
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
-  
   return $msgbody;
 }
 
 function render_for_editing($msgbody) {
   // process [render] tags 
   $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$1", $msgbody);
-  
   return $msgbody;
 }
 
