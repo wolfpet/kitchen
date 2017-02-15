@@ -242,9 +242,27 @@ function initialize_highlightjs_if_required($body) {
 function fix_postimage_tags( $str ) {
  //[url=http://postimage.org/][img]http://s29.postimg.org/gi2p1c6pz/spasibo.jpg[/img][/url]
  //return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]#i", "[img]$1[/img]", $str);
- $tmpstr= str_replace('[url=https://postimg.org/image/', '<div style="font-size: 0;color:#FFFFFF">', $str);
- $tmpstr =  str_replace('[/url]','</div>', $tmpstr);
- return $tmpstr;
+
+ $temp_str =  preg_replace("/\[url=https:\/\/postimg\.org\/image\/([^\[]+)\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]/", "[img]$2[/img]", $str);
+ //die($temp_str);
+ return $temp_str;
+}
+
+function getPicTags($str, $startDelimiter, $endDelimiter) {
+  $contents = array();
+  $startDelimiterLength = strlen($startDelimiter);
+  $endDelimiterLength = strlen($endDelimiter);
+  $startFrom = $contentStart = $contentEnd = 0;
+  while (false !== ($contentStart = strpos($str, $startDelimiter, $startFrom))) {
+  $contentStart += $startDelimiterLength;
+  $contentEnd = strpos($str, $endDelimiter, $contentStart);
+  if (false === $contentEnd) {
+        break;
+  }
+  $contents[] = substr($str, $contentStart, $contentEnd - $contentStart);
+  $startFrom = $contentEnd + $endDelimiterLength;
+  }
+  return $contents;
 }
 
 /**
@@ -288,7 +306,7 @@ function gallery_cleanup($body)
 {
     global $auth_id;
     global $msg_id;
-    $newimgstr = '<img onclick="parent.openPicInGallery(this, ' . $auth_id .', ' . $msg_id . ');"';
+    $newimgstr = '<img onclick="parent.openPicInGallery(this, ' . $auth_id .', ' . $msg_id . ');"';    
     $processedBody = str_replace ('<img' , $newimgstr , $body);
     return $processedBody; 
 }
