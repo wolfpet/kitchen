@@ -58,13 +58,18 @@ img {
 }
 </style>
 
+
 <div id="menu_cover" style="width: 100vw;position: absolute;top: 0px;color: white; background-color: black; opacity: 0.6;height: 53px;color: white; display: none"></div>
 <div class="gallery_container" id="gallery">
      <header><a id="gallery_title">Photo Gallery: images from all users</a></header>
      <div>
-     <div class="column-center">
-        <img id="currentPhoto" src="" style="margin: auto; display: block;">
-     </div>
+	<div class="column-center">
+	    <img id="currentPhoto" src=""
+		style="
+		margin: auto;
+		display: block;
+	    ">
+	</div>
 	<div class="column-left" onclick="prevPhoto();"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="gallery_nav_left" fill="#444" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></g></svg></div>
 	<div class="column-right" onclick="nextPhoto();";><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="gallery_nav_right" fill="#444" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></g></svg></div>
 	</div>

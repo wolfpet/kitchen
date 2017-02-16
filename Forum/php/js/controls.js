@@ -64,7 +64,7 @@ function closeGallery()
 
 function nextPhoto()
 {
-    if((currentPhotoIndex + 2) < galleryImages.length)
+    if((currentPhotoIndex + 1) < galleryImages.length)
         {
                 currentPhotoIndex++;
                 document.getElementById("currentPhoto").src = galleryImages[currentPhotoIndex][0];
