@@ -1,5 +1,14 @@
+<style>
+.greyHover {
+    //background-color: #FFFFFF;
+}
+.greyHover:hover {
+    background-color: #ebebeb;
+    cursor: pointer;
+}
+</style>
+
 <?php
-/*$Id: new_inc.php 818 2012-10-22 20:02:52Z dmitriy $*/
 
     if (strlen($err) != 0) {
         print('<B><font color="red">' . $err . '</font></B><BR>');
@@ -8,38 +17,22 @@
 <script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
 <script language="JavaScript" src="<?=autoversion('js/func.js')?>"></script>
 
-<form action="<?php print($root_dir . $page_post); ?>" method="post" id="msgform" name="msgform">
-<?php
-    if (isset($msg_id) && !is_null($msg_id)) {
-?>
-<input type="hidden" name="id" id="id" value="<?php print($msg_id); ?>"/>
-<?php
-	}
-?>		
-<input type="hidden" name="re" id="re" value="<?php print($re); ?>"/>
-<input type="hidden" name="ticket" id="ticket" value="<?php print($ticket); ?>"/>
+<!-- <h3><?php print($title);?></h3> -->
+<div id="Msg_ribbon" class="ribbon" style="padding: 0px; color: #000000;background-color: #ffffff; display: block; width: 95vw; height: 200vh;">
 
-<table width="100%">
-<tr><td width="60%" valign="top">
-<table>
-<?php
- if (!$logged_in) {
-?>
-<tr>
-<td>From:</td><td><input onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" type="text" id="user" name="user" value="<?php print($user); ?>" size="32" maxlength="64"/></td>
-<td/>
-</tr>
-<tr>
-<td nowrap>Password:</td><td><input type="password" id="password" name="password" size="16" maxlength="16" autocomplete="off"/></td>
-<td/>
-</tr>
-<?php
- } else {
-?>
-<tr>
-<td nowrap>From:</td><td><B><?php print($user); ?></B></td>
-<td colspan="2" />
-</tr>
+<form action="<?php print($root_dir . $page_post); ?>" method="post" id="msgform" name="msgform">
+    <?php if (isset($msg_id) && !is_null($msg_id)) { ?> <input type="hidden" name="id" id="id" value="<?php print($msg_id); ?>"/> <?php } ?>
+    <input type="hidden" name="re" id="re" value="<?php print($re); ?>"/>
+    <input type="hidden" name="ticket" id="ticket" value="<?php print($ticket); ?>"/>
+    <?php  if (!$logged_in) { ?>
+
+From: <input onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" type="text" id="user" name="user" value="<?php print($user); ?>" size="32" maxlength="64"/>
+<br>
+Password:<input type="password" id="password" name="password" size="16" maxlength="16" autocomplete="off"/>
+
+<?php } else {?>
+
+<div>From: &nbsp;&nbsp;&nbsp;<B><?php print($user); ?></B></div>
 <?php
 }
 if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER_AGENT'], 'Opera Mini' ) ) {
@@ -48,66 +41,118 @@ if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER
   $keyboard = false;
 }
 ?>
-<tr>
-<td>Subject:</td>
-<td colspan="2"><input type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' maxlength="128" size="54"/></td>
-</tr>
-<!--<tr>
-<td colspan="3" align="right">
-  <a href="#" onclick="javascript:insertTag('body', 1);return false;">[url=]<font color="gray">Title</font>[/url]</a>&nbsp;
-  <a href="#" onclick="javascript:insertTag('body', 2);return false;">[img=]</a>
-</td>
-</tr>
--->
-<tr>
-<td colspan="2" nowrap>
-<!--<input type="checkbox" name="chkRussian" id="chkRussian" ><label for="chkRussian" id="lang">Press [ESC] for Russian</label>-->
+<div style="padding-top: 5px; padding-bottom: 5px">
+Subject: <input style="width: 60%;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
+</div>
+
+  
+  <!-- EDITING TOOLS -->
+  <div id="StyleRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroupMobile" ;"="">
+  <div id="StyleRibbonGroupTitle" class="ribbonGroupTitle">Style</div>
+    <div id="StyleRibbonGroupIconContainer">
+
+
+	<span class="ribbonIcon tooltip greyHover" id="langIcon">
+	 <a onclick="javascript:toggleCharset();" >
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"></path>
+	    </g></svg>
+	    <span style="padding-left: 20px; " class="tooltiptext">Language</span>
+	    <!-- This is a badge sample that indicates that there are 4 new posts -->
+    	    <span id="ruschars" class="button__badge" style="background-color: green;display: none;">Ru</span>
+    	    <span id="latchars" class="button__badge" style="background-color: green;display: block;">En</span>
+    	    
+    	 </a> 
+	</span> 
+
+	<span class="ribbonIcon tooltip" id="BoldIcon">
+	 <a onclick="javascript:insertBBCode('body', 'b');return false;" >
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z" ></path>
+	    </g></svg>
+	    <span class="tooltiptext">Bold</span>
+	    <!-- This is a badge sample that indicates that there are 4 new posts -->
+    	    <!-- <span id="newPostsBadge" class="button__badge" style="display: block;">1</span> -->
+    	 </a> 
+	</span> 
+	    <span id="ItalicIcon" class="ribbonIcon tooltip"><a onclick="javascript:insertBBCode('body', 'i');return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Italic</span>
+	</a>
+	</span> 
+	<span id="UnderlinedIcon" class="ribbonIcon tooltip"><a onclick="javascript:insertBBCode('body', 'u');return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Underlined</span></a>
+	</span> 
+	<span id="Strikethrough" class="ribbonIcon tooltip"><a onclick="javascript:insertBBCode('body', 's');return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M7.24 8.75c-.26-.48-.39-1.03-.39-1.67 0-.61.13-1.16.4-1.67.26-.5.63-.93 1.11-1.29.48-.35 1.05-.63 1.7-.83.66-.19 1.39-.29 2.18-.29.81 0 1.54.11 2.21.34.66.22 1.23.54 1.69.94.47.4.83.88 1.08 1.43.25.55.38 1.15.38 1.81h-3.01c0-.31-.05-.59-.15-.85-.09-.27-.24-.49-.44-.68-.2-.19-.45-.33-.75-.44-.3-.1-.66-.16-1.06-.16-.39 0-.74.04-1.03.13-.29.09-.53.21-.72.36-.19.16-.34.34-.44.55-.1.21-.15.43-.15.66 0 .48.25.88.74 1.21.38.25.77.48 1.41.7H7.39c-.05-.08-.11-.17-.15-.25zM21 12v-2H3v2h9.62c.18.07.4.14.55.2.37.17.66.34.87.51.21.17.35.36.43.57.07.2.11.43.11.69 0 .23-.05.45-.14.66-.09.2-.23.38-.42.53-.19.15-.42.26-.71.35-.29.08-.63.13-1.01.13-.43 0-.83-.04-1.18-.13s-.66-.23-.91-.42c-.25-.19-.45-.44-.59-.75-.14-.31-.25-.76-.25-1.21H6.4c0 .55.08 1.13.24 1.58.16.45.37.85.65 1.21.28.35.6.66.98.92.37.26.78.48 1.22.65.44.17.9.3 1.38.39.48.08.96.13 1.44.13.8 0 1.53-.09 2.18-.28s1.21-.45 1.67-.79c.46-.34.82-.77 1.07-1.27s.38-1.07.38-1.71c0-.6-.1-1.14-.31-1.61-.05-.11-.11-.23-.17-.33H21z"></path>	    
+	    </g></svg>
+	    <span class="tooltiptext">Strikethrough</span></a>
+	</span> 
+
+	
+
+    </div>
+  </div>
+  
+    <div id="InsertRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroup" ;"="">
+    <div id="InsertRibbonGroupTitle" class="ribbonGroupTitle">Insert</div>
+    <div id="InsertRibbonGroupIconContainer">
+
+	    <span id="ImageIcon" class="ribbonIcon tooltip"><a onclick="javascript:insertTag('body', 2);return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Image URL</span>
+	</a>
+	</span> 
+	<span class="ribbonIcon tooltip" id="LinkIcon"><a onclick="javascript:insertTag('body', 1);return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Link URL</span>
+    	 </a> 
+	</span> 
+	<span id="QuoteIcon" class="ribbonIcon tooltip"><a onclick="javascript:insertBBCode('body', 'quote');return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Quote</span></a>
+	</span> 
+	<span id="CodeIcon" class="ribbonIcon tooltip"><a onclick="javascript:insertBBCode('body', 'code');return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Code</span></a>
+	</span> 
+    </div>
+  </div>
+  
+	<span style="width: 110px;height: 49px;/* border: black; */border-style: hidden;border-width: 1px;position: absolute;padding-top: 7px;padding-left: 10px;">
+	    <input name="preview" id="preview" type="checkbox" readonly value="off"/>Preview First
+	    <input name="nsfw" id="nsfw" type="checkbox" value="true" <?=isset($nsfw) && $nsfw?"checked":""?>/>NSFW
+	</span>
+  
+
+  <!-- END OF EDITING TOOLS -->
+ <div style="padding-top: 5px"><textarea style="width: 90%; height: 100px; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8">  <?php  if (is_null($body) && $user == '486') { $body = '1';}      print($body); ?></textarea></div>
 <?php
 if ($keyboard) {
 ?>
-<div id="ruschars" style="display:none;"><a href="javascript:toggleCharset();">Russian keyboard</a></div>
-<div id="latchars" style="display:block;"><a href="javascript:toggleCharset();">Latin keyboard</a></div>
 <?php
 }
 ?>
-</td>
-<td align="right" nowrap>
-  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'b');return false;">[<b>b</b>]</a>
-  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'i');return false;">[<i>i</i>]</a>
-  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'u');return false;">[<u>u</u>]</a>
-  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 's');return false;">[<del>s</del>]</a>&nbsp;&nbsp;&nbsp;&nbsp;
- <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'quote');return false;">[quote]</a>
- <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'code');return false;">[code]</a>
- <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'sarcasm');return false;">[<em>sarcasm</em>]</a>&nbsp;
-</td>
-<td align="right">
-<!--  <a href="#" onclick="javascript:insertTag('body', 1);return false;">[url=]<font color="gray">Title</font>[/url]</a>&nbsp;
-  <a href="#" onclick="javascript:insertTag('body', 2);return false;">[img=]</a>
--->
-<a href="#" title="Чтобы вставить из буфера обмена ссылку в тело вашего сообщения, достаточно просто выделить фрагмент текста в сообщении и нажать Ctrl-V. Скрипт за вас добавит тэг [url=], а выделенный фрагмент станет заголовком ссылки" onclick="javascript:insertTag('body', 1);return false;">[url=]<font color="gray">Title</font>[/url]</a>&nbsp;
-  <a href="#" title="Чтобы вставить URL картинки из буфера обмена в тело вашего сообщения, теперь достаточно просто нажать Ctrl-V. В теле сообщения при этом не должен быть выделен текст, так как в противном случае будет вставлен тэг [url=]" onclick="javascript:insertTag('body', 2);return false;">[img=]</a>
-</td>
-</tr>
-<tr>
-<td colspan="4" width="100%">
-<textarea id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php
- if (is_null($body) && $user == '486') {  // специально для Проца!
-   $body = '1';
- }
- print($body);
- //print(nl2br(htmlentities($body, HTML_ENTITIES,'UTF-8')));
-?></textarea>
-</td>
-</tr>
-<tr>
-<td colspan="3"><input name="preview" id="preview" type="checkbox" readonly value="off"/> Preview first  <input name="nsfw" id="nsfw" type="checkbox" value="true" <?=isset($nsfw) && $nsfw?"checked":""?>/> NSFW</td></td>
-</td></tr>
-<tr>
-<td colspan="3"><input tabindex="3" value="Send!" type="submit"></td>
-</tr>
-</tbody></table>
-</td><td width="40%" valign="top">
 
+<input tabindex="3" value="Send!" type="submit" style="width: 180px; height: 45px; cursor: pointer;">
+</form>
+
+<!-- old tables -->
+<br><br>
 <table width="100%">
 <tbody>
 <tr>
@@ -152,7 +197,20 @@ if ($keyboard) {
 </td>
 </tr>
 </table>
-</form>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+</div>
+
+<!----  OLD STUFFS --------------->
+
+
+
+
+
+
 </body></html>
 
-</html>

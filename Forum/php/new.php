@@ -60,10 +60,14 @@ $thread_owner = false;
 <body onload="javascript:var subj = document.getElementById('subj'); addEvent(subj,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); subj.focus();">
 <?php 
     if (is_null($re) || strlen($re)== 0) {
-?><table width="95%"><tr>
+?>
+<!--
+<table width="95%"><tr>
 <td>
 <h3><?php print($title);?></h3>
-</td></tr></table><?php
+</td></tr></table>
+-->
+<?php
     }
 
     if (!is_null($re) && strlen($re) > 0) {
