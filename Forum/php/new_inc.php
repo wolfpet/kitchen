@@ -20,7 +20,8 @@
 <!-- <h3><?php print($title);?></h3> -->
 <div id="Msg_ribbon" class="ribbon" style="padding: 0px; color: #000000;background-color: #ffffff; display: block; width: 95vw; height: 200vh;">
 
-<form action="<?php print($root_dir . $page_post); ?>" method="post" id="msgform" name="msgform">
+<form autocomplete="off" action="<?php print($root_dir . $page_post); ?>" method="post" id="msgform" name="msgform">
+    <input autocomplete="false" name="hidden" type="text" style="display:none;">
     <?php if (isset($msg_id) && !is_null($msg_id)) { ?> <input type="hidden" name="id" id="id" value="<?php print($msg_id); ?>"/> <?php } ?>
     <input type="hidden" name="re" id="re" value="<?php print($re); ?>"/>
     <input type="hidden" name="ticket" id="ticket" value="<?php print($ticket); ?>"/>
@@ -150,6 +151,8 @@ if ($keyboard) {
 
 <input tabindex="3" value="Send!" type="submit" style="width: 180px; height: 45px; cursor: pointer;">
 </form>
+<!-- overlay test -->
+<!-- <a href="javascript:parent.openOverlay(name);"><U>Smileys Temp</U></a><br> -->
 
 <!-- old tables -->
 <br><br>
