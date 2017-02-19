@@ -24,27 +24,29 @@ if (!is_null($user_id) && $user_id != null) {
 <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/'.$css)?>">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/common.css')?>">
-<?php if (!isset($menu_style) || $menu_style == 0) { ?>
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/ribbon.css')?>">
-<?php } ?>
 <script src="js/jquery-1.10.2.min.js"></script>
 <script>
-
 // Back navigation on Backspace
+document.addEventListener("keydown", KeyCheck);  
 
-document.addEventListener("keydown", function (event) {
-  
-  if (event.keyCode == 8) {
-    var e = document.activeElement;
-    
-    if (e != null && (e.tagName == 'INPUT' || e.tagName == 'TEXTAREA')) {
-      // console.log('navigation cancelled');
-      return;
-    }
-    
-    event.preventDefault();
-    history.go(-1);
+function KeyCheck(event)
+{
+   var KeyID = event.keyCode;
+   switch(KeyID)
+   {
+      case 8:
+        var e = document.activeElement;
+        // console.log("backspace when active element is " + e.tagName);
+        if (e != null && (e.tagName == 'INPUT' || e.tagName == 'TEXTAREA')) {
+          // console.log('navigation cancelled');
+          return;
+        }
+        event.preventDefault();
+        history.go(-1);
+      break; 
+      default:
+      break;
    }
-});  
-
+}
 </script>
