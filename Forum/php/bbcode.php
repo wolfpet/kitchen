@@ -92,7 +92,7 @@ function bbcode_naked_images($str) {
       if(empty($m[1])) return $m[0];
 	else 
 	{
-	    return '<img style="max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
+	    return '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
 	}
     }, $str);
   
