@@ -33,7 +33,7 @@ Password:<input type="password" id="password" name="password" size="16" maxlengt
 
 <?php } else {?>
 
-<div>From: &nbsp;&nbsp;&nbsp;<B><?php print($user); ?></B></div>
+<div>From: &nbsp;&nbsp;&nbsp;&nbsp;<B><?php print($user); ?></B></div>
 <?php
 }
 if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER_AGENT'], 'Opera Mini' ) ) {
@@ -43,7 +43,7 @@ if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER
 }
 ?>
 <div style="padding-top: 5px; padding-bottom: 5px">
-Subject: <input style="width: 60%;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
+Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-width: 1px;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
 </div>
 
   
@@ -131,6 +131,14 @@ Subject: <input style="width: 60%;" type="text" <?php if ($keyboard) { ?> onfocu
 	    </g></svg>
 	    <span class="tooltiptext">Code</span></a>
 	</span> 
+	<span id="EmojiIcon" class="ribbonIcon tooltip"><a onclick="javascript:smileys_on();">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Emoji</span></a>
+	</span> 
+	
+
     </div>
   </div>
   
@@ -141,7 +149,10 @@ Subject: <input style="width: 60%;" type="text" <?php if ($keyboard) { ?> onfocu
   
 
   <!-- END OF EDITING TOOLS -->
- <div style="padding-top: 5px"><textarea style="width: 90%; height: 100px; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8">  <?php  if (is_null($body) && $user == '486') { $body = '1';}      print($body); ?></textarea></div>
+    <div style="padding-top: 5px">
+        <textarea style="width: 90%; height: 100px; border: #4c1130; border-style: solid; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php  if (is_null($body) && $user == '486') { $body = '1';} print($body);?></textarea>
+        <div id="smileys_help" style="overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 70px; display:none;border: #4c1130; border-style: solid; border-width: 1px;"><?=smileys('body')?></div> <!-- make display style depend on user settings-->    
+   </div>
 <?php
 if ($keyboard) {
 ?>
@@ -151,6 +162,8 @@ if ($keyboard) {
 
 <input tabindex="3" value="Send!" type="submit" style="width: 180px; height: 45px; cursor: pointer;">
 </form>
+
+
 <!-- overlay test -->
 <!-- <a href="javascript:parent.openOverlay(name);"><U>Smileys Temp</U></a><br> -->
 
@@ -159,7 +172,7 @@ if ($keyboard) {
 <table width="100%">
 <tbody>
 <tr>
-<td align="left" valign="top" width="100%" nowrap><a href="javascript:smileys_on();"><U>Smileys</U></a>&nbsp;&nbsp;<a href="javascript:bbcode_on();"><U>BBCode help</U></a>&nbsp;&nbsp;<a href="javascript:translit_on()"><U>Translit help</U><a></td></tr>
+<td align="left" valign="top" width="100%" nowrap><a href="javascript:bbcode_on();"><U>BBCode help</U></a>&nbsp;&nbsp;<a href="javascript:translit_on()"><U>Translit help</U><a></td></tr>
 <tr><td align="left" valign="top" width="100%">
 <div id="bbcode_help"><table border="1">
 <tbody><tr><td>[b]<font color="gray">bolded text</font>[/b]</td><td><strong>bolded text</strong></td></tr>
