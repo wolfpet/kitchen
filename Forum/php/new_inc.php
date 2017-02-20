@@ -155,7 +155,7 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
 	    <span class="tooltiptext">Link URL</span>
     	 </a> 
 	</span> 
-	<span id="QuoteIcon" class="ribbonIcon tooltip"><a onclick="javascript:insertBBCode('body', 'quote');return false;">
+	<span id="QuoteIcon" class="ribbonIcon tooltip"><a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'quote');return false;">
 	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
 	    <path class="ribbonIcon" fill="#000000" d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"></path>
 	    </g></svg>
@@ -213,6 +213,7 @@ if ($keyboard) {
 <?php
 }
 ?>
+
 
 <input tabindex="3" value="Send!" type="submit" style="width: 180px; height: 45px; cursor: pointer;">
 </form>
