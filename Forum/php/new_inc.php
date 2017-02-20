@@ -16,6 +16,42 @@
 ?>
 <script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
 <script language="JavaScript" src="<?=autoversion('js/func.js')?>"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) { 
+        nsfw  = document.getElementById("nsfw").checked;
+        if(nsfw)document.getElementById("nsfwPath").style.fill="red";
+    });
+    function toggleNsfw()
+    {
+      nsfw = document.getElementById("nsfw").checked;
+
+      if(nsfw==false)
+      {
+        document.getElementById("nsfw").checked = true; 
+        document.getElementById("nsfwPath").style.fill="red"; 
+      }
+      else
+      {
+        document.getElementById("nsfw").checked = false; 
+        document.getElementById("nsfwPath").style.fill="black"; 
+      }
+    }
+    function togglePreview()
+    {
+      preview = document.getElementById("preview").checked;
+
+      if(preview==false)
+      {
+        document.getElementById("preview").checked = true; 
+        document.getElementById("previewPath").style.fill="red"; 
+      }
+      else
+      {
+        document.getElementById("preview").checked = false; 
+        document.getElementById("previewPath").style.fill="black"; 
+      }
+    }
+</script>
 
 <!-- <h3><?php print($title);?></h3> -->
 <div id="Msg_ribbon" class="ribbon" style="padding: 0px; color: #000000;background-color: #ffffff; display: block; width: 95vw; height: 200vh;">
@@ -101,7 +137,7 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
     </div>
   </div>
   
-    <div id="InsertRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroup" ;"="">
+  <div id="InsertRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroup" ;"="">
     <div id="InsertRibbonGroupTitle" class="ribbonGroupTitle">Insert</div>
     <div id="InsertRibbonGroupIconContainer">
 
@@ -137,13 +173,31 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
 	    </g></svg>
 	    <span class="tooltiptext">Emoji</span></a>
 	</span> 
-	
-
     </div>
   </div>
-  
-	<span style="width: 110px;height: 49px;/* border: black; */border-style: hidden;border-width: 1px;position: absolute;padding-top: 7px;padding-left: 10px;">
-	    <input name="preview" id="preview" type="checkbox" readonly value="off"/>Preview First
+  <div id="RibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroupMobile" ;"="">
+    <div id="PostRibbonGroupTitle" class="ribbonGroupTitle">Post</div>
+    <div id="PostRibbonGroupIconContainer">
+
+	    <span id="NsfwIcon" class="ribbonIcon tooltip"><a onclick="javascript:toggleNsfw();">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path id="nsfwPath" class="ribbonIcon" fill="#000000" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">NSFW</span>
+	</a>
+	</span> 
+	<span class="ribbonIcon tooltip" id="PreviewIcon"><a onclick="javascript:togglePreview();">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path id="previewPath" class="ribbonIcon" fill="#000000" d="M11.5 9C10.12 9 9 10.12 9 11.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5S12.88 9 11.5 9zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-3.21 14.21l-2.91-2.91c-.69.44-1.51.7-2.39.7C9.01 16 7 13.99 7 11.5S9.01 7 11.5 7 16 9.01 16 11.5c0 .88-.26 1.69-.7 2.39l2.91 2.9-1.42 1.42z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Preview first</span>
+    	 </a> 
+	</span> 
+    </div>
+  </div>
+
+	<span style="display: none;width: 110px;height: 49px;/* border: black; */border-style: hidden;border-width: 1px;position: absolute;padding-top: 7px;padding-left: 10px;">
+	    <input  name="preview" id="preview" type="checkbox" readonly value="off"/>Preview First
 	    <input name="nsfw" id="nsfw" type="checkbox" value="true" <?=isset($nsfw) && $nsfw?"checked":""?>/>NSFW
 	</span>
   
@@ -213,6 +267,9 @@ if ($keyboard) {
 </td>
 </tr>
 </table>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
