@@ -204,7 +204,7 @@ function after_bbcode($body) {
     '<em>$1</em>',
     '<span style="text-decoration: underline;">$1</span>',
     '<span style="text-decoration: line-through;">$1</span>',
-    '<img style="max-width: 99%;max-height: 99%;" src=',
+    '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src=',
     '©',
     '<div>$1</div>'
     ), $body);    
@@ -315,7 +315,7 @@ function gallery_cleanup($body)
 function render_for_db($msgbody) {
 
   $msgbody = youtube( $msgbody );
-  //$msgbody = fix_postimage_tags( $msgbody );
+  $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
   return $msgbody;
 }
