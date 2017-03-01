@@ -58,6 +58,8 @@ if($imageGallery == 'amazon')
  ));
 
 
+ //delete the temp file
+ unlink($filepath);
 
  if($_POST['fileBrowser'] == 'yes')
  {
