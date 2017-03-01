@@ -1,0 +1,9 @@
+To support uploads create writable /uploads directory in the root of the forum 
+and specify amazon keys in the gallery_s3config.php. Then 'amazon' and the s3 bucket in settings.php
+
+To install AWS support navigate to /s3 subfolder and run
+php composer.phar install
+
+
+for more info read here:
+http://docs.aws.amazon.com/aws-sdk-php/v2/guide/installation.html
