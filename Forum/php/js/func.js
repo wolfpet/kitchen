@@ -141,6 +141,32 @@ function insertBBCode(fieldId, tag) {
   element.focus();
 }
 
+  function insertBodyText(fieldId, returnedText)
+  {
+    var myField = document.getElementById(fieldId);
+    if (myField != null)
+    {    
+      //Mozilla/Firefox/Netscape 7+/Opera/Chrome support
+      if (myField.selectionStart || myField.selectionStart == '0')
+      {
+        var startPos = myField.selectionStart;
+        var endPos = myField.selectionEnd;
+        myField.value = myField.value.substring(0, startPos)
+          + returnedText  +  myField.value.substring(endPos, myField.value.length);
+      } 
+      //IE support
+      else if (document.selection)
+      {
+        myField.focus();
+        sel = document.selection.createRange();
+        sel.text = returnedText;
+      }
+      else 
+      {
+        myField.value = myField.value + returnedText;
+      }
+    }
+  }
   function insertSmiley(fieldId, smileyName)
   {
     var myField = document.getElementById(fieldId);

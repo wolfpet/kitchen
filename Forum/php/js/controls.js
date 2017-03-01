@@ -124,4 +124,13 @@ function openMsg(msgId)
 }
 
 
-// - - - - - - - - - -
+// - - - - Overlay - - - - - 
+
+function openOverlay(name)
+{
+
+    //display the Gallery UI.
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('overlay_menu_cover').style.display = 'block';
+
+}
