@@ -8,8 +8,13 @@ require_once('html_head_inc.php');
     $title = 'Private message';
     $ticket = '' . ip2long(substr($ip, 1, strlen($ip) - 2)) . '-' . time();
 $thread_owner = false;
+
+//only add postimage script if specified in settings
+if($imageGallery == 'postimage')
+{
+    print(add_postimage());
+        }
 ?>
-<?=add_postimage()?>
 <base target="bottom">
 </head>
 <body style="background-color: #CCEEEE;" onload="javascript:var field = document.getElementById('<?=is_null($pm_id) ? "to" : "subj"?>'); addEvent(field,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); field.focus();">

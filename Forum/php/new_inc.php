@@ -17,6 +17,10 @@
 <script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
 <script language="JavaScript" src="<?=autoversion('js/func.js')?>"></script>
 <script>
+
+    var imageGallery='<?=$imageGallery?>';
+    var imageGalleryUploadOn=false;
+
     document.addEventListener("DOMContentLoaded", function(event) { 
         nsfw  = document.getElementById("nsfw").checked;
         if(nsfw)document.getElementById("nsfwPath").style.fill="red";
@@ -49,6 +53,35 @@
       {
         document.getElementById("preview").checked = false; 
         document.getElementById("previewPath").style.fill="black"; 
+      }
+    }
+    function toggleImageUpload()
+    {
+      if(imageGallery == 'amazon' || imageGallery == 'local')
+      {
+        if(imageGalleryUploadOn==false)
+        {
+           //turn on the upload form
+           imageGalleryUploadOn=true;
+           document.getElementById("imagePath").style.fill="red";
+           document.getElementById("body").style.display="none";
+           document.getElementById("galleryUploadFrame").style.display="block";
+           //load gallery_upload_form.php
+           $("#galleryUploadFrame").attr("src", "gallery_upload_form.php");
+        }
+        else
+        {
+           //turn off the upload form
+           imageGalleryUploadOn=false;
+           document.getElementById("imagePath").style.fill="black";
+           document.getElementById("body").style.display="block";
+           document.getElementById("galleryUploadFrame").style.display="none";
+        }
+      }
+      else
+      {
+        //add the image url BB tag
+        insertTag('body', 2);
       }
     }
 </script>
@@ -141,11 +174,12 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
     <div id="InsertRibbonGroupTitle" class="ribbonGroupTitle">Insert</div>
     <div id="InsertRibbonGroupIconContainer">
 
-	    <span id="ImageIcon" class="ribbonIcon tooltip"><a onclick="javascript:insertTag('body', 2);return false;">
+	    <span id="ImageIcon" class="ribbonIcon tooltip">
+	    <a href="#" onclick="javascript:toggleImageUpload();">
 	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
-	    <path class="ribbonIcon" fill="#000000" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path>
+	    <path id="imagePath" class="ribbonIcon" fill="#000000" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path>
 	    </g></svg>
-	    <span class="tooltiptext">Image URL</span>
+	    <span class="tooltiptext">Image</span>
 	</a>
 	</span> 
 	<span class="ribbonIcon tooltip" id="LinkIcon"><a onclick="javascript:insertTag('body', 1);return false;">
@@ -203,8 +237,9 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
   
 
   <!-- END OF EDITING TOOLS -->
-    <div style="padding-top: 5px">
-        <textarea style="width: 90%; height: 100px; border: #4c1130; border-style: solid; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php  if (is_null($body) && $user == '486') { $body = '1';} print($body);?></textarea>
+    <div style="padding-top: 0px">
+        <textarea style="margin-top: 6px;margin-bottom: 10px;width: 90%; height: 100px; border: #4c1130; border-style: solid; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php  if (is_null($body) && $user == '486') { $body = '1';} print($body);?></textarea>
+        <iframe id="galleryUploadFrame" style="margin-top: 6px;margin-bottom: 10px;display: none; width: 91%; height: 100px; border: #4c1130; border-style: solid; border-width: 1px;"></iframe>
         <div id="smileys_help" style="overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 70px; display:none;border: #4c1130; border-style: solid; border-width: 1px;"><?=smileys('body')?></div> <!-- make display style depend on user settings-->    
    </div>
 <?php

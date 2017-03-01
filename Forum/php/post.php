@@ -36,7 +36,15 @@ require_once('dump.php');
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<?=add_postimage()?>
+<?php
+
+//only add postimage script if specified in settings
+if($imageGallery == 'postimage')
+{
+    print(add_postimage());
+    }
+    
+?>
 </head>
 <body>
 <?php
