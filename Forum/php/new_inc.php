@@ -117,7 +117,7 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
 
   
   <!-- EDITING TOOLS -->
-  <div id="StyleRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroupMobile" ;"="">
+  <div id="StyleRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroup";>
   <div id="StyleRibbonGroupTitle" class="ribbonGroupTitle">Style</div>
     <div id="StyleRibbonGroupIconContainer">
 
@@ -170,7 +170,7 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
     </div>
   </div>
   
-  <div id="InsertRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroup" ;"="">
+  <div id="InsertRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
     <div id="InsertRibbonGroupTitle" class="ribbonGroupTitle">Insert</div>
     <div id="InsertRibbonGroupIconContainer">
 
