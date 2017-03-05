@@ -91,6 +91,19 @@ function resetBadges()
     document.getElementById('newAnswersBadge').style.display = 'none';
     document.title = '<?=$title?>';
 }
+function openLoginForm()
+{
+    if(document.getElementById("loginForm").style.display=='none')
+    {
+	document.getElementById("loginForm").style.display='block';
+	document.getElementById("loginIcon").style.fill='red';
+    }
+    else
+    {
+	document.getElementById("loginForm").style.display='none';
+	document.getElementById("loginIcon").style.fill='white';    
+    }
+}
 </script>
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
@@ -120,6 +133,7 @@ function resetBadges()
 			</span> 
 		</div>
 	</div>
+<?php if ($logged_in) { ?>
 	<div id="WriteRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
 		<div id="WriteRibbonGroupTitle" class="ribbonGroupTitle">Write</div>
 		<div id="WriteRibbonGroupIconContainer">
@@ -157,7 +171,7 @@ function resetBadges()
 			</span> 
 		</div>
 	</div>
-
+<?php } ?>
 <?php if ($logged_in && !is_null($moder) && $moder > 0) {
   $regs = get_regs_count();
 ?>  
@@ -215,12 +229,14 @@ function resetBadges()
 	</div>  
 
 <?php if ($logged_in == false) { ?>
-	<div id="WelcomeRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
+	<div id="WelcomeRibbonGroup" style="float: right;border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Welcome!</div>
 		<div id="ViewRibbonGroupIconContainer">
 			<span id="Login" class="ribbonIcon tooltip">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>"d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"></path></g></svg>
+			    <a onclick="openLoginForm();">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path id="loginIcon" fill="<?=$ribbonColor ?>"d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"></path></g></svg>
 				<span class="tooltiptext">Login</span>
+			    </a>
 			</span> 
 			<span id="Register" class="ribbonIcon tooltip"><a target="bottom" href="<?=$root_dir . $page_new_user?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" class="style-scope iron-icon"></path></g></svg>
@@ -233,9 +249,10 @@ function resetBadges()
 		</div>
 	</div>
 <?php } ?>
+
+<?php if ($logged_in) { ?>
 	<div id="ProfileRibbonGroup" class="ribbonGroupMobile"; style="float: right; border: <?=$groupBorder?>; border-style: solid; border-width: 1px;">
 		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;<?=$logged_in ? $user : "Not logged in"?>&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?></div>
-<?php if ($logged_in) { ?>
 		<div id="ProfileRibbonGroupIconContainer">
 			<span id="Pmail" class="pmdropdown ribbonIcon tooltip">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
@@ -265,8 +282,8 @@ function resetBadges()
 				<span class="tooltiptext">Logout</span>
 			</span> 
 		</div>
-<?php } ?>
 	</div>
+<?php } ?>	
 <?php if (function_exists('pages_function')) { ?>
 	<div id="PagesRibbonGroup" class="ribbonGroupMobile"; style="float: right;">
 		<div id="PagesRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;</div>
@@ -281,20 +298,20 @@ function resetBadges()
 
 <?php if ($logged_in == false) { ?>
 
-<table width="100%"><tr>
-<td align="right" nowrap>
-<form method="post" target="_top" action="<?php print($root_dir . $page_login); ?>">
-<input type="hidden" name="lastpage" id="lastpage" value="<?php print( $cur_page );?>"/>
-<?php if (!is_null($err_login) && strlen($err_login) > 0) { ?>
-<font color="red"><b><?php print($err_login); ?></b> </font>
-<?php }      
+<div id="loginForm" style="display: none;     margin: 10px;">
+ <form method="post" target="_top" action="<?php print($root_dir . $page_login); ?>">
+ <input type="hidden" name="lastpage" id="lastpage" value="<?php print( $cur_page );?>"/>
+ <?php if (!is_null($err_login) && strlen($err_login) > 0) { ?>
+ <font color="red"><b><?php print($err_login); ?></b> </font>
+ <?php }      
     if (!is_null($author_id)) {
         print('<input type="hidden" name="author_id" id="author_id" value="' . $author_id . '"/>');
     }
-?>
-Username: <input type="text" id="user" name="user" maxlength="64" size="16" value="<?php htmlentities($user, HTML_ENTITIES,'UTF-8');?>"/> Password: <input type="password" id="password" name="password" size="8" maxlength="16" autocomplete="off"/> <input type="Submit" value="Login"/>
-</form></td>
-</tr></table>
+ ?>
+ Username: <input type="text" id="user" name="user" maxlength="64" size="16" value="<?php htmlentities($user, HTML_ENTITIES,'UTF-8');?>"/> 
+ Password: <input type="password" id="password" name="password" size="8" maxlength="16" autocomplete="off"/> <input type="Submit" value="Login"/>
+ </form>
+</div>
 <?php 
 } 
 ?>
