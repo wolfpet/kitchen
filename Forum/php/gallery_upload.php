@@ -20,8 +20,13 @@ if(isset($_FILES["file"]))
  }
  else
  {
-  move_uploaded_file($_FILES["file"]["tmp_name"],$output_dir. $randPicName . $_FILES["file"]["name"]);
-  //echo "Uploaded File :".$_FILES["file"]["name"];
+  $dumpFile = $output_dir. $randPicName . $_FILES["file"]["name"];
+  move_uploaded_file($_FILES["file"]["tmp_name"], $dumpFile);
+  //resize to 1200px max
+  $img = resize_image($dumpFile, 1200, 1200);
+  $ext = pathinfo($dumpFile, PATHINFO_EXTENSION);
+  if($ext == 'jpg'){ imagejpeg($img, $dumpFile);}
+  //if($ext == 'png'){ imagepng($img, $dumpFile);} //commented for now. the library seems to be corrupting the PNG
   $result = "http://" . $host . $root_dir . $imageGalleryDumpFolder . $randPicName. $_FILES["file"]["name"];
  }
 }
@@ -100,4 +105,29 @@ function generateRandomString($length = 10) {
 return $randomString;
 }
 
+function resize_image($file, $w, $h, $crop=FALSE) {
+    list($width, $height) = getimagesize($file);
+    $r = $width / $height;
+    if ($crop) {
+        if ($width > $height) {
+            $width = ceil($width-($width*abs($r-$w/$h)));
+        } else {
+            $height = ceil($height-($height*abs($r-$w/$h)));
+        }
+        $newwidth = $w;
+        $newheight = $h;
+    } else {
+        if ($w/$h > $r) {
+            $newwidth = $h*$r;
+            $newheight = $h;
+        } else {
+            $newheight = $w/$r;
+            $newwidth = $w;
+        }
+    }
+    $src = imagecreatefromjpeg($file);
+    $dst = imagecreatetruecolor($newwidth, $newheight);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+    return $dst;
+}
 ?>
