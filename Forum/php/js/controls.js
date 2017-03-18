@@ -129,8 +129,29 @@ function openMsg(msgId)
 function openOverlay(name)
 {
 
-    //display the Gallery UI.
-    document.getElementById('overlay').style.display = 'block';
-    document.getElementById('overlay_menu_cover').style.display = 'block';
+    //display the Overlay UI.
+    if(name=='preview')
+    {
+	//check if subject is specified
+	if(bottom.document.getElementById('subj').value=='')
+	{
+	    bottom.document.getElementById("subj_div").style.color='red';
+	    return;
+	}
+	
+	document.getElementById('overlay').style.display = 'block';
+	document.getElementById('overlay_menu_cover').style.display = 'block';
+	//submit the message form and display the result in the overley iframe
+	//bottom.togglePreview();
+	//bottom.document.getElementById("msgform").target = document.getElementById("overley_iframe");
+	//bottom.document.getElementById("msgform").submit();
+	document.getElementById("overlay_title").text="Message Preview";
+	document.getElementById("overley_iframe").src="overlay_post_form_clone.php";
+    }
 
+}
+function closeOverlay()
+{
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('overlay_menu_cover').style.display = 'none';
 }

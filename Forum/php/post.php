@@ -68,10 +68,10 @@ if($imageGallery == 'postimage')
       if ($translit_done === true) {
         $trans_body .= '<BR><BR>[Message was transliterated]';
       }
-require_once('msg_form_inc.php');
+    require_once('msg_form_inc.php');
     }
   }
 
-require('new_inc.php');
+//require('new_inc.php');
 require_once('tail_inc.php');
 ?>

@@ -84,6 +84,17 @@
         insertTag('body', 2);
       }
     }
+function sendMessage()
+{
+    //validate the subj
+    if(document.getElementById("subj").value=='')
+    {
+	document.getElementById("subj_div").style.color='red';
+	return;
+    }
+    document.getElementById("msgform").submit();
+}
+
 </script>
 
 <!-- <h3><?php print($title);?></h3> -->
@@ -111,7 +122,7 @@ if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER
   $keyboard = false;
 }
 ?>
-<div style="padding-top: 5px; padding-bottom: 5px">
+<div id="subj_div" style="padding-top: 5px; padding-bottom: 5px">
 Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-width: 1px;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
 </div>
 
@@ -220,7 +231,7 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
 	    <span class="tooltiptext">NSFW</span>
 	</a>
 	</span> 
-	<span class="ribbonIcon tooltip" id="PreviewIcon"><a onclick="javascript:togglePreview();">
+	<span class="ribbonIcon tooltip" id="PreviewIcon"><a onclick="javascript:parent.openOverlay('preview');">
 	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
 	    <path id="previewPath" class="ribbonIcon" fill="#000000" d="M11.5 9C10.12 9 9 10.12 9 11.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5S12.88 9 11.5 9zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-3.21 14.21l-2.91-2.91c-.69.44-1.51.7-2.39.7C9.01 16 7 13.99 7 11.5S9.01 7 11.5 7 16 9.01 16 11.5c0 .88-.26 1.69-.7 2.39l2.91 2.9-1.42 1.42z"></path>
 	    </g></svg>
@@ -250,7 +261,7 @@ if ($keyboard) {
 ?>
 
 
-<input tabindex="3" value="Send!" type="submit" style="width: 180px; height: 45px; cursor: pointer;">
+<input onclick="sendMessage();" tabindex="3" value="Send!" type="button" style="width: 180px; height: 45px; cursor: pointer;">
 </form>
 
 
