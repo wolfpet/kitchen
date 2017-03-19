@@ -425,7 +425,7 @@ function render_smileys_step2($body) {
 }
 
 function has_images($body) {
-  return stristr(render_for_display($body, false), "<img style");
+  return stristr(render_for_display($body, false), "<img onclick");
 }
 
 function grammar_nazi($body) {
