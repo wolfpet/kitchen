@@ -43,7 +43,7 @@ require_once('html_head_inc.php');
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
 
-require('menu_inc.php');
+//require('menu_inc.php');
 
         if (!is_null($err) && strlen($err) > 0) {
             print('<BR><font color="red"><b>' . $err . '</b></font>');

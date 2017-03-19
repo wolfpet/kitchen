@@ -104,6 +104,18 @@ function openLoginForm()
 	document.getElementById("loginIcon").style.fill='white';    
     }
 }
+
+function expandModeratorMenu()
+{
+    document.getElementById("ModRibbonGroup").style.display='inline-block';
+    document.getElementById("OpenModRibbonGroup").style.display='none';
+}
+
+function collapseModeratorMenu()
+{
+    document.getElementById("ModRibbonGroup").style.display='none';
+    document.getElementById("OpenModRibbonGroup").style.display='inline-block';
+}
 </script>
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
@@ -175,14 +187,35 @@ function openLoginForm()
 <?php if ($logged_in && !is_null($moder) && $moder > 0) {
   $regs = get_regs_count();
 ?>  
-	<div id="ModRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
-		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Moderator</div>
-		<div id="ViewRibbonGroupIconContainer">
+
+	<div id="OpenModRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup">
+		<div id="OpenModRibbonGroupTitle" class="ribbonGroupTitle">Mod</div>
+		<div id="OpenModRibbonGroupIconContainer">
+			<span id="OpenModIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="expandModeratorMenu();">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M1 21h12v2H1zM5.245 8.07l2.83-2.827 14.14 14.142-2.828 2.828zM12.317 1l5.657 5.656-2.83 2.83-5.654-5.66zM3.825 9.485l5.657 5.657-2.828 2.828-5.657-5.657z" class="style-scope iron-icon"></path></g></svg>
+				<span class="tooltiptext">Moderator</span></a>
+<?php if ($regs > 0) { ?>
+				<span id="newPMBadge" class="button__badge"><?=$regs ?></span></a>
+<?php } ?>
+			</span> 
+		</div>
+	</div>
+
+	<div id="ModRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;display: none" class="ribbonGroup";>
+		<div id="ModRibbonGroupTitle1" class="ribbonGroupTitle">Moderator</div>
+		<div id="ModRibbonGroupIconContainer">
+			<span id="ModCollapse" class="ribbonIcon tooltip"><a onclick="collapseModeratorMenu();">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+				<path fill="<?=$ribbonColor ?>" d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" class="style-scope iron-icon"></path>
+				</g></svg>
+				<span class="tooltiptext">Hide</span></a>
+			</span> 
+
 <?php if ($regs > 0) { ?>
 			<span id="Registrations" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_registrations?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
 				<span class="tooltiptext">Registrations</span>
-				<span id="newPMBadge" class="button__badge">6</span></a>
+				<span id="newPMBadge" class="button__badge"><?=$regs ?></span></a>
         
 			</span> 
 <?php } ?>
