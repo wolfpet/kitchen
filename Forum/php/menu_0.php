@@ -85,11 +85,22 @@ else{
 </style>
 <script>
 
+$(document).keyup(function(e) {
+     if (e.keyCode == 27) { // escape key maps to keycode `27`
+         //close various overlays
+         if(document.getElementById("NotificationsContainer").style.display=='block')
+         {
+                document.getElementById("NotificationsContainer").style.display='none';
+         }
+     }
+ });
+
 function resetBadges()
 {
+    document.getElementById('newNotificationsBadge').style.display = 'none';
     document.getElementById('newPostsBadge').style.display = 'none';
     document.getElementById('newAnswersBadge').style.display = 'none';
-    document.title = '<?=$title?>';
+    document.title = "<?=$title?>";
 }
 function openLoginForm()
 {
@@ -116,6 +127,40 @@ function collapseModeratorMenu()
     document.getElementById("ModRibbonGroup").style.display='none';
     document.getElementById("OpenModRibbonGroup").style.display='inline-block';
 }
+function openNotifications()
+{
+    if(document.getElementById("NotificationsContainer").style.display=='none')
+    {
+	document.getElementById("NotificationsContainer").style.display='block';
+    }
+    else
+    {
+	document.getElementById("NotificationsContainer").style.display='none';    
+    }
+}
+
+function openNewMessages()
+{
+    //open by date
+    window.frames["contents"].location = "bydate.php";
+    //open answered as well, since it's a subset. There must be a better way to reset the badge, TODO!
+    document.getElementById("overley_iframe").src= "answered.php";
+    openNotifications();
+    resetBadges();
+}
+function openAnswered()
+{
+    window.frames["contents"].location = "answered.php";
+    openNotifications();
+    resetBadges();
+}
+
+function openInbox()
+{
+    window.frames["contents"].location = "pmail.php";
+    openNotifications();
+    resetBadges();
+}
 </script>
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
@@ -126,15 +171,34 @@ function collapseModeratorMenu()
 </div>
 <?php }?>
 
+<?php if ($logged_in) { ?>
+
+
+	<div id="NotificationsRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
+		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">News</div>
+		<div id="NotificationsRibbonGroupIconContainer">
+			<span id="NotificationsIcon" class="ribbonIcon tooltip"><a onclick="openNotifications();">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+				<path fill="<?=$ribbonColor ?>" d="M7.58 4.08L6.15 2.65C3.75 4.48 2.17 7.3 2.03 10.5h2c.15-2.65 1.51-4.97 3.55-6.42zm12.39 6.42h2c-.15-3.2-1.73-6.02-4.12-7.85l-1.42 1.43c2.02 1.45 3.39 3.77 3.54 6.42zM18 11c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2v-5zm-6 11c.14 0 .27-.01.4-.04.65-.14 1.18-.58 1.44-1.18.1-.24.15-.5.15-.78h-4c.01 1.1.9 2 2.01 2z" class="style-scope iron-icon"></path>
+				</g></svg>
+				<span class="tooltiptext">Notifications</span></a>
+				<!-- This is a badge sample that indicates that there are new notifications -->
+				<span id="newNotificationsBadge" class="button__badge" style="display:none;">4</span></a>
+			</span> 
+		</div>
+	</div>
+
+<?php }?>
+
 	<div id="SortRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";">
 		<div id="SortRibbonGroupTitle" class="ribbonGroupTitle">Sort</div>
 		<div id="SortRibbonGroupIconContainer">
+<!--
 			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="<?=$root_dir.$page_bydate?>?mode=bydate" onclick="resetBadges();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="<?=$ribbonColor ?>" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g></svg>
-				<span class="tooltiptext">By Date</span>
-				<!-- This is a badge sample that indicates that there are 4 new posts -->
-				<span id="newPostsBadge" class="button__badge" style="display:none;">4</span></a>
+				<span class="tooltiptext">By Date</span></a>
 			</span> 
+-->
 			<span id="Expanded" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_expanded?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M6 7h2.5L5 3.5 1.5 7H4v10H1.5L5 20.5 8.5 17H6V7zm4-2v2h12V5H10zm0 14h12v-2H10v2zm0-6h12v-2H10v2z"></path></g></svg>
 				<span class="tooltiptext">Expanded</span></a>
@@ -146,6 +210,7 @@ function collapseModeratorMenu()
 		</div>
 	</div>
 <?php if ($logged_in) { ?>
+
 	<div id="WriteRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
 		<div id="WriteRibbonGroupTitle" class="ribbonGroupTitle">Write</div>
 		<div id="WriteRibbonGroupIconContainer">
@@ -162,13 +227,13 @@ function collapseModeratorMenu()
 			<span id="MyMessages" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_my_messages?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"></path></g></svg>
 				<span class="tooltiptext">My messages</span></a>
-			</span> 
+			</span>
+<!--
 			<span id="Answered" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_answered?>" onclick="resetBadges();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g></svg>
 				<span class="tooltiptext">Answered</span></a>
-				<!-- This is a badge sample that indicates that there are 4 new answers -->
-				<span id="newAnswersBadge" class="button__badge" style="display:none;">4</span></a>
-			</span> 
+			</span>
+-->
 			<span id="Bookmark" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_my_bookmarks?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"></path></g></svg>
 				<span class="tooltiptext">My bookmarks</span></a>
@@ -194,9 +259,10 @@ function collapseModeratorMenu()
 			<span id="OpenModIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="expandModeratorMenu();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M1 21h12v2H1zM5.245 8.07l2.83-2.827 14.14 14.142-2.828 2.828zM12.317 1l5.657 5.656-2.83 2.83-5.654-5.66zM3.825 9.485l5.657 5.657-2.828 2.828-5.657-5.657z" class="style-scope iron-icon"></path></g></svg>
 				<span class="tooltiptext">Moderator</span></a>
-<?php if ($regs > 0) { ?>
+				<?php if ($regs > 0) { ?>
 				<span id="newPMBadge" class="button__badge"><?=$regs ?></span></a>
-<?php } ?>
+				<?php } ?>
+				
 			</span> 
 		</div>
 	</div>
@@ -216,8 +282,7 @@ function collapseModeratorMenu()
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
 				<span class="tooltiptext">Registrations</span>
 				<span id="newPMBadge" class="button__badge"><?=$regs ?></span></a>
-        
-			</span> 
+			</span>
 <?php } ?>
 			<span id="Users" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir . $page_m_users?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" class="style-scope iron-icon"></path></g></svg>
@@ -250,10 +315,12 @@ function collapseModeratorMenu()
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M6 5H3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm14 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm-7 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1z"></path></g></svg>
 				<span class="tooltiptext">Vertical</span></a>
 			</span> 
+<!--
 			<span id="Phone" class="ribbonIcon tooltip"><a target="_top" href="mobile/index.html">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20.1 7.7l-1 1c1.8 1.8 1.8 4.6 0 6.5l1 1c2.5-2.3 2.5-6.1 0-8.5zM18 9.8l-1 1c.5.7.5 1.6 0 2.3l1 1c1.2-1.2 1.2-3 0-4.3zM14 1H4c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 19H4V4h10v16z"></path></g></svg>
 				<span class="tooltiptext">Phone</span></a>
 			</span> 
+-->
 			<span id="Refresh" class="ribbonIcon tooltip"><a target="_top" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></g></svg>
 				<span class="tooltiptext">Refresh</span></a>
@@ -290,9 +357,6 @@ function collapseModeratorMenu()
 			<span id="Pmail" class="pmdropdown ribbonIcon tooltip">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
 				<span class="tooltiptext">Pmail</span>
-        <?php if (!is_null($new_pm) && $new_pm > 0) { ?>
-				<span id="newPMBadge" class="button__badge"><?=$new_pm?></span>
-        <?php } ?>
     				<style>pmdropdown-content.a:hover {color: green;}</style>
 				<div class="pmdropdown-content" style="background-color: <?=$ribbonBackground?>">
 					<a target="contents" style="color: <?=$ribbonColor?>" href="<?=$root_dir.$page_pmail?>">Inbox</a>
@@ -347,4 +411,48 @@ function collapseModeratorMenu()
 </div>
 <?php 
 } 
+
+
 ?>
+
+<!-- NOTIFICATIONS LISTBOX -->
+
+<div id="NotificationsContainer" style="display: none;" class="notificationContainer">
+    <li class="notificationLi" onclick="openNewMessages();">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="grey" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g></svg>
+		<span id="newPostsBadge" class="button__badge" style="display:none;">4</span></a>
+	    </div>
+	    <div class="notificationMessage">There have been <span id="newPostsBadge2">0</span> new messages sent to the  the forum since you checked last time.</div>
+	    <div class="notificationTime">2  minutes ago</div>
+	</div>
+    </li>
+    <li class="notificationLi" onclick="openAnswered();">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g></svg>
+		<span id="newAnswersBadge" class="button__badge" style="display:none;">4</span></a>
+	    </div>
+	    <div class="notificationMessage">You have received <span id="newAnswersBadge2">0</span>  public replies since you last checked.</div>
+	    <div class="notificationTime">10 minutes ago</div>
+	</div>
+    </li>
+    <li class="notificationLi"  onclick="openInbox();">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
+            <?php if (!is_null($new_pm) && $new_pm > 0) { ?>
+		<span id="newPMBadge" class="button__badge"><?=$new_pm?></span>
+    	    <?php } ?>
+
+	    </div>
+	    <div class="notificationMessage">You have received <?=$new_pm?>  new private messages since you last checked. 
+	    <?php if($new_pm >0){ ?>
+	    Check your pmail!
+	    <?php } ?>
+	    </div>
+	    <div class="notificationTime">11 minutes ago</div>
+	</div>
+    </li>
+
+</div>
+
+<!-- --------------------- -->

@@ -9,7 +9,7 @@ function selectMsg(id) {
     var selected = document.getElementById(selected_id);
     if (selected != null) {
       selected.className = null;
-    }  
+    }
   }
   var selected = document.getElementById(id);
   if (selected != null) {
@@ -26,18 +26,20 @@ function selectMsg(id) {
 
 var bydate_timer = -1;
 var bydate_count = 0;
+var total_count = 0;
 
 $( document ).ready(function() {
   var bydate = document.getElementById('bydate');
-  
+
   var newPostsBadge = null;
 
   if (bydate == null) {
     newPostsBadge = document.getElementById('newPostsBadge');
   }
-  
+
   if (bydate !== null || newPostsBadge != null) {
     var update_bydate_counter = function() {
+      total_count=0;
       var url1 = "./api/messages?mode=bydate&format=count_only";
       console.log("calling bydate("+url1+")");
       bydate_count++;
@@ -52,12 +54,22 @@ $( document ).ready(function() {
                 console.log("bydate=" + count);                
                 if (bydate != null) {
                   bydate.innerHTML = addCounter(bydate.innerHTML, count, true, false);
+                  newPostsBadge2
                 } else if (newPostsBadge != null) {
                   if (count > 0) {
+                    
                     newPostsBadge.innerHTML = count;
                     newPostsBadge.style.display = 'block';
+                    document.getElementById('newPostsBadge2').innerHTML= count;
+                    //update total conunt
+                    total_count++;
+                    var totalCountBadge = document.getElementById('newNotificationsBadge');
+                    totalCountBadge.style.display = 'block';
+                    totalCountBadge.innerHTML = total_count;
                   } else {
                     newPostsBadge.style.display = 'hidden';
+                    document.getElementById('newPostsBadge2').innerHTML= 'no';
+                    
                   }
                 }
                 // update answered badge or element
@@ -77,11 +89,18 @@ $( document ).ready(function() {
                         if (count > 0) {
                           newAnswersBadge.innerHTML = count;
                           newAnswersBadge.style.display = 'block';
+                          document.getElementById('newAnswersBadge2').innerHTML = count;
+                	  //update total conunt
+                	  total_count++;
+                	  var totalCountBadge = document.getElementById('newNotificationsBadge');
+                	  totalCountBadge.style.display = 'block';
+                	  totalCountBadge.innerHTML = total_count;
                         } else {
                           newAnswersBadge.style.display = 'hidden';
+                          document.getElementById('newAnswersBadge2').innerHTML= 'no';
                         }
                       } else if (answered != null) {
-                        answered.innerHTML = addCounter(answered.innerHTML, count, true, false);                        
+                        answered.innerHTML = addCounter(answered.innerHTML, count, true, false);
                       }
                     }
                   });                             
@@ -90,6 +109,19 @@ $( document ).ready(function() {
                 var newTitle = addCounter(window.parent.document.title, count, false, true);
                 console.log(newTitle);
                 window.parent.document.title = newTitle;
+                //update total counter if PM badge is present
+                if(document.getElementById('newPMBadge')!==null)
+                {
+        	    //PMs!
+        	    if(Number(document.getElementById('newPMBadge').innerHTML)>0)
+        	    {
+        		total_count++;
+                	var totalCountBadge = document.getElementById('newNotificationsBadge');
+                	totalCountBadge.style.display = 'block';
+                	totalCountBadge.innerHTML = total_count;
+        		
+        	    }
+                }
                 // call user function, if defined
                 if (typeof onNewMessageCount !== 'undefined') {
                   console.log('calling user function');
@@ -105,6 +137,9 @@ $( document ).ready(function() {
                   bydate_timer = window.setInterval(function() {update_bydate_counter();}, 15*60000);                   
                   console.log('Checking bydate every 15 min');
                 }                   
+
+                
+                
              }
            });      
     };
