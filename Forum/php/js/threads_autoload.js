@@ -1,4 +1,7 @@
 var selected_id = "";
+var check_time = 0; //time the script checked the DB
+var render_time = 0; //time the user opened the notification center
+var update_bydate_counter = null;
 
 function selectMsg(id) {
   id = "sp_" + id;
@@ -29,16 +32,15 @@ var bydate_count = 0;
 var total_count = 0;
 
 $( document ).ready(function() {
+
   var bydate = document.getElementById('bydate');
-
   var newPostsBadge = null;
-
   if (bydate == null) {
     newPostsBadge = document.getElementById('newPostsBadge');
   }
 
   if (bydate !== null || newPostsBadge != null) {
-    var update_bydate_counter = function() {
+      update_bydate_counter = function() {
       total_count=0;
       var url1 = "./api/messages?mode=bydate&format=count_only";
       console.log("calling bydate("+url1+")");
@@ -54,14 +56,13 @@ $( document ).ready(function() {
                 console.log("bydate=" + count);                
                 if (bydate != null) {
                   bydate.innerHTML = addCounter(bydate.innerHTML, count, true, false);
-                  newPostsBadge2
                 } else if (newPostsBadge != null) {
                   if (count > 0) {
                     
                     newPostsBadge.innerHTML = count;
                     newPostsBadge.style.display = 'block';
                     document.getElementById('newPostsBadge2').innerHTML= count;
-                    //update total conunt
+                    //update total count
                     total_count++;
                     var totalCountBadge = document.getElementById('newNotificationsBadge');
                     totalCountBadge.style.display = 'block';
@@ -119,8 +120,22 @@ $( document ).ready(function() {
                 	var totalCountBadge = document.getElementById('newNotificationsBadge');
                 	totalCountBadge.style.display = 'block';
                 	totalCountBadge.innerHTML = total_count;
-        		
         	    }
+                }
+                //update timestamps
+                if(document.getElementById('newPostsTime')!==null)
+                {
+                  var d = new Date();
+		  check_time = d.getTime(); //the notification center will use this time when rendering. Check menu_0.php  openNotifications() for details
+		  //reset the timers if the div is visible _next_ time this runs.
+		  var timeDiff = check_time - render_time;
+		  var diffSeconds =  ((timeDiff % 60000) / 1000).toFixed(0);
+		  if(diffSeconds>5)
+		  {
+		    document.getElementById('newPostsTime').innerHTML = 'Just now';
+		    document.getElementById('newAnswersTime').innerHTML = 'Just now';
+		  }
+		  
                 }
                 // call user function, if defined
                 if (typeof onNewMessageCount !== 'undefined') {
@@ -136,12 +151,9 @@ $( document ).ready(function() {
                   window.clearInterval(bydate_timer);
                   bydate_timer = window.setInterval(function() {update_bydate_counter();}, 15*60000);                   
                   console.log('Checking bydate every 15 min');
-                }                   
-
-                
-                
+                }
              }
-           });      
+           });
     };
     window.setTimeout( function() {update_bydate_counter();}, 1000 );
     bydate_timer = window.setInterval(function(){update_bydate_counter();}, 60000); 

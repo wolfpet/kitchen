@@ -92,6 +92,11 @@ $(document).keyup(function(e) {
          {
                 document.getElementById("NotificationsContainer").style.display='none';
          }
+         if(document.getElementById("gallery").style.display=='block')
+         {
+                document.getElementById("gallery").style.display='none';
+                document.getElementById("menu_cover").style.display='none';
+         }
      }
  });
 
@@ -131,11 +136,40 @@ function openNotifications()
 {
     if(document.getElementById("NotificationsContainer").style.display=='none')
     {
+	//restart the timer:
+	update_bydate_counter();
 	document.getElementById("NotificationsContainer").style.display='block';
+	//render timestamps
+	var rd = new Date();
+	render_time = rd.getTime();
+	if(render_time>check_time)
+	{
+	    //opened after the refresh
+	    diffTime=render_time-check_time;
+	    
+	    var minutes = Math.floor(diffTime / 60000);
+	    var seconds = ((diffTime % 60000) / 1000).toFixed(0);
+	    if(minutes==0)minutes='';
+	    else minutes= minutes + ' minutes ';
+	    seconds = seconds + ' seconds ago.';
+	    document.getElementById('newPostsTime').innerHTML = minutes + seconds;
+	    document.getElementById('newAnswersTime').innerHTML = minutes + seconds;
+
+	    //pmail is different, don't ask me why...
+	    var pmailTime = <?php print(time()); ?> * 1000;
+	    diffTime = render_time - pmailTime;
+	    minutes = Math.floor(diffTime / 60000);
+	    seconds = ((diffTime % 60000) / 1000).toFixed(0);
+	    if(minutes==0)minutes='';
+	    else minutes= minutes + ' minutes ';
+	    seconds = seconds + ' seconds ago.';
+	    document.getElementById('newPMTime').innerHTML = minutes + seconds;
+
+	}
     }
     else
     {
-	document.getElementById("NotificationsContainer").style.display='none';    
+	document.getElementById("NotificationsContainer").style.display='none';
     }
 }
 
@@ -175,7 +209,7 @@ function openInbox()
 
 
 	<div id="NotificationsRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
-		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">News</div>
+		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">!</div>
 		<div id="NotificationsRibbonGroupIconContainer">
 			<span id="NotificationsIcon" class="ribbonIcon tooltip"><a onclick="openNotifications();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
@@ -424,7 +458,7 @@ function openInbox()
 		<span id="newPostsBadge" class="button__badge" style="display:none;">4</span></a>
 	    </div>
 	    <div class="notificationMessage">There have been <span id="newPostsBadge2">0</span> new messages sent to the  the forum since you checked last time.</div>
-	    <div class="notificationTime">2  minutes ago</div>
+	    <div id="newPostsTime" class="notificationTime">just now</div>
 	</div>
     </li>
     <li class="notificationLi" onclick="openAnswered();">
@@ -433,7 +467,7 @@ function openInbox()
 		<span id="newAnswersBadge" class="button__badge" style="display:none;">4</span></a>
 	    </div>
 	    <div class="notificationMessage">You have received <span id="newAnswersBadge2">0</span>  public replies since you last checked.</div>
-	    <div class="notificationTime">10 minutes ago</div>
+	    <div id="newAnswersTime" class="notificationTime">just now</div>
 	</div>
     </li>
     <li class="notificationLi"  onclick="openInbox();">
@@ -449,7 +483,7 @@ function openInbox()
 	    Check your pmail!
 	    <?php } ?>
 	    </div>
-	    <div class="notificationTime">11 minutes ago</div>
+	    <div id="newPMTime" class="notificationTime">long  ago eh</div>
 	</div>
     </li>
 
