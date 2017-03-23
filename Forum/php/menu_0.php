@@ -137,7 +137,10 @@ function openNotifications()
     if(document.getElementById("NotificationsContainer").style.display=='none')
     {
 	//restart the timer:
-	update_bydate_counter();
+	try{
+	    update_bydate_counter();
+	}catch(err){}
+	
 	document.getElementById("NotificationsContainer").style.display='block';
 	//render timestamps
 	var rd = new Date();
@@ -209,7 +212,7 @@ function openInbox()
 
 
 	<div id="NotificationsRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
-		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">!</div>
+		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">Recent</div>
 		<div id="NotificationsRibbonGroupIconContainer">
 			<span id="NotificationsIcon" class="ribbonIcon tooltip"><a onclick="openNotifications();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>

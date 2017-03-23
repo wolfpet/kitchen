@@ -195,23 +195,12 @@ Closed |
 } else {
 ?>
 
-<a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>">Reply</a> |
-<span style="background-color: rgb(224, 224, 224);"><a href="<?php print( $root_dir . $page_pmail_send . '?to=' . $author . '&re=' .  $msg_id); ?>"); ?>Reply to sender (private)</a></span> |
-<?php
-}
-?>
+<!--  Interactive options - react, reply, etc -->
 
-<a target="contents" name="<?php print($msg_id); ?>" href="<?php print($root_dir . $page_expanded); ?>?page=<?php print($msg_page . '#' .$msg_id);?>">Synchronize</a> |
-<a target="bottom" href="<?php print($root_dir . $page_thread); ?>?id=<?php print($msg_id); ?>">Thread</a>
-<?php
-  if (!is_null($user_id)) {
-?>
-|
-<a target="bottom" href="javascript:like(<?=$msg_id?>,1);"><font color="green">+</FONT></a>
 <?php
 if (isset($reactions)) {
 ?>
-<div class="reactions-dropdown"><span><a target="bottom" href="javascript:;">Reaction</a></span><div class="reactions-dropdown-content">
+<div class="reactions-dropdown"><span><a target="bottom" href="javascript:;">React</a></span><div class="reactions-dropdown-content">
 <?php
   $icons = '';
   foreach (array_keys($reactions) as $key) {
@@ -228,8 +217,21 @@ if (isset($reactions)) {
 <?php 
 }
 ?>
-<a target="bottom" href="javascript:like(<?=$msg_id?>,-1);"><font color="red">-</font></a>
+<!-- <a target="bottom" href="javascript:like(<?=$msg_id?>,-1);"><font color="red">-</font></a> -->
 |
+<a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>">Reply</a> |
+<span style="background-color: rgb(224, 224, 224);"><a href="<?php print( $root_dir . $page_pmail_send . '?to=' . $author . '&re=' .  $msg_id); ?>"); ?>Reply to sender (private)</a></span> |
+<?php
+}
+?>
+
+<a target="contents" name="<?php print($msg_id); ?>" href="<?php print($root_dir . $page_expanded); ?>?page=<?php print($msg_page . '#' .$msg_id);?>">Synchronize</a> |
+<a target="bottom" href="<?php print($root_dir . $page_thread); ?>?id=<?php print($msg_id); ?>">Thread</a>
+|
+<?php
+  if (!is_null($user_id)) {
+?>
+
 <?php
    if (is_null($msg_bookmark)) {
        print('<a target="bottom" href="' . $root_dir . $page_msg . '?id=' . $msg_id . '&action=bookmark">Bookmark</a>');
@@ -253,7 +255,7 @@ if (isset($reactions)) {
      print('<a target="bottom" href="javascript:report_on();">Report</a><span id="report" style="display:none;"> as <a target="bottom" href="' 
       . $root_dir . $page_msg . '?id=' . $msg_id . '&action=report&mode=nsfw">NSFW</a> or <a target="bottom" href="' 
       . $root_dir . $page_msg . '?id=' . $msg_id . '&action=report&mode=boyan">Repetitive</a></span>');
-   }   
+   }
    if (!$reply_closed && can_edit_post($auth_id, $created_ts, $user_id, $msg_id)) {
      print(" | ");
      if (!is_null($parent) && $parent != 0) {
@@ -289,7 +291,7 @@ if (isset($reactions)) {
         print( ']</SPAN>' );
     }
 ?>
-<BR>
+<BR><hr>
 <?php
 $footer = '<div class="footer">';
 // Ratings

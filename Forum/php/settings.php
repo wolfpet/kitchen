@@ -20,14 +20,12 @@ $from_email = '<supportemailaddress>';
 $reg_type = REG_TYPE_CLOSED; // REG_TYPE_OPEN, REG_TYPE_CONFIRM;
 
 $reactions = array(
-  'clap' => 0,
-  'lol' => 0,
-  'rofl' => 0,
-  'confused' => 0,
-  'shock' => 0,
-  'weep' => 0,
-  'facepalm' => 0,
-  'mad' => 0,
+  'reactlike' => 0,
+  'reactdislike' => 0,
+  'reacthaha' => 0,
+  'reactwow' => 0,
+  'reactsad' => 0,
+  'reactmad' => 0,
 );
 
 // $google_key = ""; // (optional) specify your Google API key here to enable YouTube metadata
