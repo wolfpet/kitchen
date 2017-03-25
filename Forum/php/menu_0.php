@@ -137,10 +137,11 @@ function openNotifications()
     if(document.getElementById("NotificationsContainer").style.display=='none')
     {
 	//restart the timer:
-	try{
-	    update_bydate_counter();
-	}catch(err){}
-	
+	try{update_bydate_counter();}catch(err){}
+
+	//events API
+	checkForEvents();
+
 	document.getElementById("NotificationsContainer").style.display='block';
 	//render timestamps
 	var rd = new Date();
@@ -176,6 +177,50 @@ function openNotifications()
     }
 }
 
+function checkForEvents()
+{
+    //this function checks the notifications api periodically
+    document.getElementById('events').innerHTML="";
+    var url1 = "./notifications_api.php?userid=<?=$user_id?>&number=20";
+    console.log("calling events api: ("+url1+")");    
+    $.ajax({
+             type: "GET",
+             url: url1,
+             success: function(events) {
+             var eventsArray = $.map(events, function(value, index) {
+                 return [value];
+                 });
+             var count = eventsArray.length;
+             //alert (count);
+             //add the last 20 events to the notifications div
+             if(count < 1)return; //no events
+             for(i=0; i<count; i++)
+             {
+                 var templateLi = document.getElementById('eventTemplateLi');
+                 var newEventLi = templateLi.cloneNode(true); // true means clone all childNodes and all event handlers
+                 newEventLi.id = "event_" + i;
+                 if(eventsArray[i][0]=='0')
+                 {
+                    //reaction event
+                    var title =  eventsArray[i][2];
+                    if(title.length >40)title=title.substring(0, 45) + "...";
+                    var msg = "<b>" + eventsArray[i][3] + "</b> reacted to your post <i>" + title + "</i>";
+                    newEventLi.querySelector("#notificationMessage").innerHTML = msg;
+                    newEventLi.querySelector("#eventTime").innerHTML = eventsArray[i][1];
+                    newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
+                 }
+                 
+                 newEventLi.style.display = "block";
+                 document.getElementById('events').appendChild(newEventLi);
+             }
+            }
+    });
+}
+function openMessage(id)
+{
+ window.frames["bottom"].location = "msg.php?id=" + id;
+ openNotifications();
+}
 function openNewMessages()
 {
     //open by date
@@ -198,10 +243,15 @@ function openInbox()
     openNotifications();
     resetBadges();
 }
+function closeNotifications()
+{
+    if(document.getElementById("NotificationsContainer").style.display!='none')document.getElementById("NotificationsContainer").style.display='none';
+    
+}
 </script>
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
-	<div id="ForumTitle"  onclick="window.location='top.php'" class="ribbonGroup"; style="width: 100px;height: 37px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11px; border: <?=$groupBorder?>; border-style: solid; border-width: 1px; cursor: pointer">
+	<div id="ForumTitle"  onclick="window.location='top.php';" class="ribbonGroup"; style="width: 100px;height: 37px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11px; border: <?=$groupBorder?>; border-style: solid; border-width: 1px; cursor: pointer">
 <?php if (isset($banner) && !is_null($banner)) { ?>
 <img src="<?=$banner?>" alt="<?='Welcome'?>"/>
 <?php } else { print($title); }?>
@@ -231,16 +281,16 @@ function openInbox()
 		<div id="SortRibbonGroupTitle" class="ribbonGroupTitle">Sort</div>
 		<div id="SortRibbonGroupIconContainer">
 <!--
-			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="<?=$root_dir.$page_bydate?>?mode=bydate" onclick="resetBadges();">
+			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="<?=$root_dir.$page_bydate?>?mode=bydate" onclick="closeNotifications();resetBadges();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="<?=$ribbonColor ?>" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g></svg>
 				<span class="tooltiptext">By Date</span></a>
 			</span> 
 -->
-			<span id="Expanded" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_expanded?>">
+			<span id="Expanded" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_expanded?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M6 7h2.5L5 3.5 1.5 7H4v10H1.5L5 20.5 8.5 17H6V7zm4-2v2h12V5H10zm0 14h12v-2H10v2zm0-6h12v-2H10v2z"></path></g></svg>
 				<span class="tooltiptext">Expanded</span></a>
 			</span> 
-			<span id="Collapsed" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_collapsed?>">
+			<span id="Collapsed" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_collapsed?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12.17c-.74 0-1.33.6-1.33 1.33s.6 1.33 1.33 1.33 1.33-.6 1.33-1.33-.59-1.33-1.33-1.33zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"></path></g></svg>
 				<span class="tooltiptext">Collapsed</span></a>
 			</span> 
@@ -251,7 +301,7 @@ function openInbox()
 	<div id="WriteRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
 		<div id="WriteRibbonGroupTitle" class="ribbonGroupTitle">Write</div>
 		<div id="WriteRibbonGroupIconContainer">
-			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" href="<?=$root_dir.$page_new?>">
+			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="closeNotifications();" href="<?=$root_dir.$page_new?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg>
 				<span class="tooltiptext">New thread</span></a>
 			</span> 
@@ -261,25 +311,25 @@ function openInbox()
 	<div id="FindRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup">
 		<div id="FindRibbonGroupTitle" class="ribbonGroupTitle">Find</div>
 		<div id="FindRibbonGroupIconContainer">
-			<span id="MyMessages" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_my_messages?>">
+			<span id="MyMessages" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_my_messages?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"></path></g></svg>
 				<span class="tooltiptext">My messages</span></a>
 			</span>
 <!--
-			<span id="Answered" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_answered?>" onclick="resetBadges();">
+			<span id="Answered" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_answered?>" onclick="closeNotifications();resetBadges();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g></svg>
 				<span class="tooltiptext">Answered</span></a>
 			</span>
 -->
-			<span id="Bookmark" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_my_bookmarks?>">
+			<span id="Bookmark" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_my_bookmarks?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"></path></g></svg>
 				<span class="tooltiptext">My bookmarks</span></a>
 			</span> 
-			<span id="Gallery" class="ribbonIcon tooltip"><a onclick="openGallery();">
+			<span id="Gallery" class="ribbonIcon tooltip"><a onclick="closeNotifications();openGallery();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" class="style-scope iron-icon"></path>	</g></svg>
 				<span class="tooltiptext">Photo Gallery</span></a>
 			</span> 
-			<span id="Search" class="ribbonIcon tooltip"><a target="bottom" href="<?=$root_dir.$page_search . (strcmp($cur_page, $page_my_bookmarks) == 0 ? "?mode=bookmarks" : "")?>">
+			<span id="Search" class="ribbonIcon tooltip"><a target="bottom" onclick="closeNotifications();" href="<?=$root_dir.$page_search . (strcmp($cur_page, $page_my_bookmarks) == 0 ? "?mode=bookmarks" : "")?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></g></svg>
 				<span class="tooltiptext">Search</span></a>
 			</span> 
@@ -344,11 +394,11 @@ function openInbox()
 	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
 		<div id="ViewRibbonGroupIconContainer">
-			<span id="Horizontal" class="ribbonIcon tooltip"><a target="_top" href=".">
+			<span id="Horizontal" class="ribbonIcon tooltip"><a onclick="closeNotifications();" target="_top" href=".">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M4 18h17v-6H4v6zM4 5v6h17V5H4z"></path></g></svg>
 				<span class="tooltiptext">Horizontal</span></a>
 			</span> 
-			<span id="Vertical" class="ribbonIcon tooltip"><a  onclick="setVerticaLayout();">
+			<span id="Vertical" class="ribbonIcon tooltip"><a  onclick="closeNotifications();setVerticaLayout();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M6 5H3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm14 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm-7 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1z"></path></g></svg>
 				<span class="tooltiptext">Vertical</span></a>
 			</span> 
@@ -396,12 +446,12 @@ function openInbox()
 				<span class="tooltiptext">Pmail</span>
     				<style>pmdropdown-content.a:hover {color: green;}</style>
 				<div class="pmdropdown-content" style="background-color: <?=$ribbonBackground?>">
-					<a target="contents" style="color: <?=$ribbonColor?>" href="<?=$root_dir.$page_pmail?>">Inbox</a>
-					<a target="contents" href="<?=$root_dir.$page_pmail_sent?>">Sent</a>
-					<a target="bottom" href="<?=$root_dir.$page_pmail_send?>">New</a>
+					<a onclick="closeNotifications();" target="contents" style="color: <?=$ribbonColor?>" href="<?=$root_dir.$page_pmail?>">Inbox</a>
+					<a onclick="closeNotifications();" target="contents" href="<?=$root_dir.$page_pmail_sent?>">Sent</a>
+					<a onclick="closeNotifications();" target="bottom" href="<?=$root_dir.$page_pmail_send?>">New</a>
 				</div>
 			</span> 
-			<span id="Settings" class="ribbonIcon tooltip"><a target="bottom" href="<?=$root_dir.$page_profile?>">
+			<span id="Settings" class="ribbonIcon tooltip"><a onclick="closeNotifications();" target="bottom" href="<?=$root_dir.$page_profile?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
 				<span class="tooltiptext">Settings</span></a>
 			</span> 
@@ -446,15 +496,20 @@ function openInbox()
  Password: <input type="password" id="password" name="password" size="8" maxlength="16" autocomplete="off"/> <input type="Submit" value="Login"/>
  </form>
 </div>
-<?php 
-} 
-
-
+<?php
+}
 ?>
 
 <!-- NOTIFICATIONS LISTBOX -->
 
 <div id="NotificationsContainer" style="display: none;" class="notificationContainer">
+    <li class="notificationLi" style="display: none;" id="eventTemplateLi">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="grey" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g></svg></div>
+	    <div id="notificationMessage" class="notificationMessage"></div>
+	    <div id="eventTime" class="notificationTime">Just now</div>
+	</div>
+    </li>
     <li class="notificationLi" onclick="openNewMessages();">
 	<div style="padding: 6px 30px 5px 12px;">
 	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="grey" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g></svg>
@@ -490,6 +545,8 @@ function openInbox()
 	</div>
     </li>
 
+    <div id="events">
+    </div>
 </div>
 
 <!-- --------------------- -->
