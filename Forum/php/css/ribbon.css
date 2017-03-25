@@ -191,6 +191,8 @@ body#html_body {
     border: 1px solid grey; 
     box-shadow: 0 3px 8px grey;
     z-index: 1000;
+    max-height: 85vh;
+    overflow-y: scroll;
 }
 
 @media screen and (max-width: 600px) {
