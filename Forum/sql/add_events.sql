@@ -1,3 +1,6 @@
+-- this table will register events such as likes, replies, etc
+-- event_type: 0 - reaction, 1-new thread, 2 - reply,  3-bookmark
+
 use confa;
 DROP TABLE IF EXISTS `confa_events`;
 SET character_set_client = utf8;

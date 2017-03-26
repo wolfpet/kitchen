@@ -42,7 +42,7 @@ require_once('dump.php');
 if($imageGallery == 'postimage')
 {
     print(add_postimage());
-    }
+}
     
 ?>
 </head>

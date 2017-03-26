@@ -1966,7 +1966,11 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
           add_picture_asset($pics[$picsCounter], $user_id,  $id);
         }
     }
-
+    //add new thread event
+    $query = 'INSERT INTO confa_events(item_owner_id,  item_id, event_owner_id, event_type) values(0, ' . $id . ', ' . $user_id . ', 1)';
+    $result = mysql_query($query);
+              
+              
     return array("id" => $id, "thread_id" => $thread_id);
     
   } else {
@@ -2033,6 +2037,10 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
           add_picture_asset($pics[$picsCounter], $user_id,  $id);
         }
     }
+    //add new thread event
+    $query = 'INSERT INTO confa_events(item_owner_id,  item_id, event_owner_id, event_type) values('.$author_id.', ' . $id . ', ' . $user_id . ', 2)';
+    //die($query);
+    $result = mysql_query($query);
 
     // Send notificaton e-mail (if needed)
     if ($author_id != $user_id) {
@@ -2255,7 +2263,7 @@ function detect_picture_urls($message){
 
 function recentEvents($user, $numberOfEvents){
     $events[]= null;
-    $query = 'SELECT confa_events.event_id, confa_events.item_owner_id, confa_events.event_type, confa_events.added, confa_posts.subject, confa_users.username, confa_events.item_id from confa_events, confa_posts, confa_users  where confa_events.item_owner_id='.$user.' AND confa_events.item_id=confa_posts.ID AND confa_users.id=confa_events.event_owner_id ORDER BY added DESC;';
+    $query = 'SELECT confa_events.event_id, confa_events.item_owner_id, confa_events.event_type, confa_events.added, confa_posts.subject, confa_users.username, confa_events.item_id from confa_events, confa_posts, confa_users  where (confa_events.item_owner_id='.$user.' OR confa_events.item_owner_id=0) AND confa_events.item_id=confa_posts.ID AND confa_users.id=confa_events.event_owner_id ORDER BY added DESC;';
     $result = mysql_query($query);
         while ($row = mysql_fetch_assoc($result)) {
 		$numberOfEvents--;
@@ -2269,8 +2277,8 @@ function recentEvents($user, $numberOfEvents){
                 array_push($events,$event_data);
                 if($numberOfEvents==0)break;
                 }
+
     return $events;
 }
-
 
 ?>
