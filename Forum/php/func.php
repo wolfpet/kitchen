@@ -1688,7 +1688,18 @@ function like($user_id, $msg_id, $val=1, $reaction=null) {
 
 function bookmark($user_id, $msg_id, $add=true) {
   if ($add) {
+  //1. whose message?
+  //$query = 'INSERT INTO confa_likes(user, post, reaction) values(' .
+  $query = 'SELECT author FROM confa_posts WHERE id = ' . $msg_id;
+  $result = mysql_query($query);
+  $row = mysql_fetch_assoc($result);
+  $msgAuthor = $row["author"];
+  //2. Register the reaction event
+  $eventquery = 'INSERT INTO confa_events(item_owner_id,  item_id, event_owner_id, event_type) values(' .
+    $msgAuthor . ', ' . $msg_id . ', ' . $user_id . ', 3)';
+    $result = mysql_query($eventquery);
     $query = 'insert into confa_bookmarks(user, post) values(' . $user_id. ', ' . $msg_id . ');';
+
   } else {
     $query = 'delete from confa_bookmarks where user=' . $user_id. ' and post=' . $msg_id . ';';
   }
@@ -2039,7 +2050,6 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     }
     //add new thread event
     $query = 'INSERT INTO confa_events(item_owner_id,  item_id, event_owner_id, event_type) values('.$author_id.', ' . $id . ', ' . $user_id . ', 2)';
-    //die($query);
     $result = mysql_query($query);
 
     // Send notificaton e-mail (if needed)

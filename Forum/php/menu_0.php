@@ -156,10 +156,10 @@ function openNotifications()
 	    if(minutes==0)minutes='';
 	    else minutes= minutes + ' minutes ';
 	    seconds = seconds + ' seconds ago.';
-	    document.getElementById('newPostsTime').innerHTML = minutes + seconds;
-	    document.getElementById('newAnswersTime').innerHTML = minutes + seconds;
+	    document.getElementById('newPostsTime').innerHTML =  "Checked "  + minutes + seconds;
+	    document.getElementById('newAnswersTime').innerHTML = "Checked "  + minutes + seconds;
 
-	    //pmail is different, don't ask me why...
+	    //pmail is different, don't ask why...
 	    var pmailTime = <?php print(time()); ?> * 1000;
 	    diffTime = render_time - pmailTime;
 	    minutes = Math.floor(diffTime / 60000);
@@ -167,7 +167,7 @@ function openNotifications()
 	    if(minutes==0)minutes='';
 	    else minutes= minutes + ' minutes ';
 	    seconds = seconds + ' seconds ago.';
-	    document.getElementById('newPMTime').innerHTML = minutes + seconds;
+	    document.getElementById('newPMTime').innerHTML = "Checked " + minutes + seconds;
 
 	}
     }
@@ -182,6 +182,7 @@ function checkForEvents()
     //this function checks the notifications api periodically
     document.getElementById('events').innerHTML="";
     var url1 = "./notifications_api.php?userid=<?=$user_id?>&number=20";
+    var me = "<?=$user?>";
     console.log("calling events api: ("+url1+")");    
     $.ajax({
              type: "GET",
@@ -194,30 +195,44 @@ function checkForEvents()
              //alert (count);
              //add the last 20 events to the notifications div
              if(count < 1)return; //no events
+
              for(i=0; i<count; i++)
              {
+               //check if this was me. no need to nofify myself lol
+               if(eventsArray[i][3] != me)
+               {
                  var templateLi = document.getElementById('eventTemplateLi');
                  var newEventLi = templateLi.cloneNode(true); // true means clone all childNodes and all event handlers
                  newEventLi.id = "event_" + i;
-                 if(eventsArray[i][0]=='0')
+                 //calculate time diff
+                 var eventDate = new Date(eventsArray[i][1]);
+                 var now = new Date();
+                 var nowOffsetMs = now.getTimezoneOffset();
+                 nowOffsetMs = nowOffsetMs * 60 * 1000;
+                 var eventDateMs = eventDate.getTime();
+                 //correcting the time zone
+                 eventDateMs = eventDateMs - nowOffsetMs;
+                 var nowMs = now.getTime();
+                 diff= msToTime(nowMs - eventDateMs);
+
+                  if(eventsArray[i][0]=='0')
                  {
                     //reaction event
-                    var templateLi = document.getElementById('eventTemplateLi');
-                    var newEventLi = templateLi.cloneNode(true); // true means clone all childNodes and all event handlers
-                    newEventLi.id = "event_" + i;
+                     var templateLi = document.getElementById('eventTemplateLi');
+                     var newEventLi = templateLi.cloneNode(true); // true means clone all childNodes and all event handlers
+                     newEventLi.id = "event_" + i;
 
-                    var title =  eventsArray[i][2];
-                    if(title.length >40)title=title.substring(0, 45) + "...";
-                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> reacted to your post <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
-                    newEventLi.querySelector("#notificationMessage").innerHTML = msg;
-                    newEventLi.querySelector("#eventTime").innerHTML = eventsArray[i][1];
-                    newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
+                     var title =  eventsArray[i][2];
+                     if(title.length >40)title=title.substring(0, 45) + "...";
+                     var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> reacted to your post <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
+                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
+                     newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
+                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
 
-                    newEventLi.style.display = "block";
-                    document.getElementById('events').appendChild(newEventLi);
-
+                     newEventLi.style.display = "block";
+                     document.getElementById('events').appendChild(newEventLi);
                  }
-                 if(eventsArray[i][0]=='1')
+                  if(eventsArray[i][0]=='1')
                  {
                     //new thread event
                     var templateLi = document.getElementById('newThreadEventTemplateLi');
@@ -228,13 +243,13 @@ function checkForEvents()
                     if(title.length >40)title=title.substring(0, 50) + "...";
                     var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> Started a new thread <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
-                    newEventLi.querySelector("#eventTime").innerHTML = eventsArray[i][1];
+                    newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
 
                     newEventLi.style.display = "block";
                     document.getElementById('events').appendChild(newEventLi);
                  }
-                 if(eventsArray[i][0]=='2')
+                  if(eventsArray[i][0]=='2')
                  {
                     //new public Reply event
                     var templateLi = document.getElementById('newReplyEventTemplateLi');
@@ -245,16 +260,44 @@ function checkForEvents()
                     if(title.length >40)title=title.substring(0, 50) + "...";
                     var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> replied to your post  <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
-                    newEventLi.querySelector("#eventTime").innerHTML = eventsArray[i][1];
+                    newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
 
                     newEventLi.style.display = "block";
                     document.getElementById('events').appendChild(newEventLi);
                  }
+                  if(eventsArray[i][0]=='3')
+                 {
+                    //new public Bookmark event
+                    var templateLi = document.getElementById('newBookmarkEventTemplateLi');
+                    var newEventLi = templateLi.cloneNode(true); // true means clone all childNodes and all event handlers
+                    newEventLi.id = "event_" + i;
 
+                    var title =  eventsArray[i][2];
+                    if(title.length >40)title=title.substring(0, 50) + "...";
+                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> bookmarked your post  <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
+                    newEventLi.querySelector("#notificationMessage").innerHTML = msg;
+                    newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
+                    newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
+
+                    newEventLi.style.display = "block";
+                    document.getElementById('events').appendChild(newEventLi);
+                 }
+               }
              }
-            }
+           }
     });
+}
+
+function msToTime(duration) {
+    var milliseconds = parseInt((duration%1000)/100)
+    , seconds = parseInt((duration/1000)%60)
+    , minutes = parseInt((duration/(1000*60))%60)
+    , hours = parseInt((duration/(1000*60*60))%24);
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+    return hours + " hours " + minutes + " minutes " + seconds + " seconds";
 }
 function openMessage(id)
 {
@@ -286,9 +329,9 @@ function openInbox()
 function closeNotifications()
 {
     if(document.getElementById("NotificationsContainer").style.display!='none')document.getElementById("NotificationsContainer").style.display='none';
-    
 }
 </script>
+
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
 <?php if (isset($title) && $title != null) { ?>
 	<div id="ForumTitle"  onclick="window.location='top.php';" class="ribbonGroup"; style="width: 100px;height: 37px;padding-top: 4px;text-align: center;vertical-align: top; font-size: x-large;padding-top: 11px; border: <?=$groupBorder?>; border-style: solid; border-width: 1px; cursor: pointer">
@@ -543,28 +586,36 @@ function closeNotifications()
 <!-- NOTIFICATIONS LISTBOX -->
 
 <div id="NotificationsContainer" style="display: none;" class="notificationContainer">
+    <!-- templates. These tags are not displayed. Instead they are cloned by the notifications script and populated dynamically  -->
     <li class="notificationLi" style="display: none;" id="eventTemplateLi">
 	<div style="padding: 6px 30px 5px 12px;">
-	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="grey" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g></svg></div>
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g></svg></div>
 	    <div id="notificationMessage" class="notificationMessage"></div>
 	    <div id="eventTime" class="notificationTime">Just now</div>
 	</div>
     </li>
     <li class="notificationLi" style="display: none;" id="newThreadEventTemplateLi">
 	<div style="padding: 6px 30px 5px 12px;">
-	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="grey"  d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg></div>
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey"  d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg></div>
 	    <div id="notificationMessage" class="notificationMessage"></div>
 	    <div id="eventTime" class="notificationTime">Just now</div>
 	</div>
     </li>
     <li class="notificationLi" style="display: none;" id="newReplyEventTemplateLi">
 	<div style="padding: 6px 30px 5px 12px;">
-	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g> 
-	    <path fill="grey" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g></svg></div>
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g></svg></div>
 	    <div id="notificationMessage" class="notificationMessage"></div>
 	    <div id="eventTime" class="notificationTime">Just now</div>
 	</div>
     </li>
+    <li class="notificationLi" style="display: none;" id="newBookmarkEventTemplateLi">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"></path></g></svg></div>
+	    <div id="notificationMessage" class="notificationMessage"></div>
+	    <div id="eventTime" class="notificationTime">Just now</div>
+	</div>
+    </li>
+    <!-- end of templates -->
 
     <li class="notificationLi" onclick="openNewMessages();">
 	<div style="padding: 6px 30px 5px 12px;">
@@ -590,17 +641,15 @@ function closeNotifications()
             <?php if (!is_null($new_pm) && $new_pm > 0) { ?>
 		<span id="newPMBadge" class="button__badge"><?=$new_pm?></span>
     	    <?php } ?>
-
 	    </div>
 	    <div class="notificationMessage">You have received <?=$new_pm?>  new private messages since you last checked. 
 	    <?php if($new_pm >0){ ?>
 	    Check your pmail!
 	    <?php } ?>
 	    </div>
-	    <div id="newPMTime" class="notificationTime">long  ago eh</div>
+	    <div id="newPMTime" class="notificationTime">long ago eh</div>
 	</div>
     </li>
-
     <div id="events">
     </div>
 </div>
