@@ -295,9 +295,13 @@ function msToTime(duration) {
     , minutes = parseInt((duration/(1000*60))%60)
     , hours = parseInt((duration/(1000*60*60))%24);
     hours = (hours < 10) ? "0" + hours : hours;
+
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
-    return hours + " hours " + minutes + " minutes " + seconds + " seconds";
+    if(hours=='00'){hours=''}else{hours= hours + ' hours ';}
+    if(minutes=='00'){minutes='';}else{minutes= minutes + ' minutes ';}
+    if(hours!=''){seconds='';}else{seconds=seconds + ' seconds';}
+    return hours +  minutes + seconds;
 }
 function openMessage(id)
 {
