@@ -111,10 +111,34 @@ function react(msg_id, reaction) {
   });
 }
 
+function toggleExpand()
+{
+    if(document.getElementById("expandMsg").style.display=='none')
+    {
+	//enable expanding
+	document.getElementById("expandMsg").style.display='block';
+	document.getElementById("restoreMsg").style.display='none';
+    }
+    else
+    {
+	document.getElementById("expandMsg").style.display='none';
+	document.getElementById("restoreMsg").style.display='block';
+    }
+}
+
 </script>
 <base target="bottom">
 </head>
 <body>
+
+<!-- EXPAND Button triggers full screen mode -->
+<div id="expandMsg" onclick="toggleExpand();parent.expand();" style="float: right;position: relative;width: 40px;top: -20px;right: -5px;cursor: pointer;">
+	<svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></g></svg>
+</div>
+<div id="restoreMsg" onclick="toggleExpand();parent.restore();" style="display: none; float: right;position: relative;width: 40px;top: -20px;right: -5px;cursor: pointer;">
+	<svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="red" d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"></path></g></svg>
+</div>
+<!--  --- -->
 <?php
     if (is_null($action)) {
     	$query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id;

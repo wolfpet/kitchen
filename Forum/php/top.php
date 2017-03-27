@@ -7,6 +7,18 @@ require_once('mysql_log.php');
 <base target="bottom">
 <script type="text/javascript" src="js/threads_autoload.js"></script>
 <script type="text/javascript" src="js/controls.js"></script>
+<script>
+function expand()
+{
+document.getElementById("frame1").style.height='0vh';
+document.getElementById("frame2").style.height='88vh';
+}
+function restore()
+{
+document.getElementById("frame1").style.height='40vh';
+document.getElementById("frame2").style.height='48vh';
+}
+</script>
 <title><?=$title?></title>
 </head>
 <body id="html_body" style="overflow: hidden;">
@@ -22,6 +34,7 @@ require('menu_inc.php');
 </div>
 <?php
 require('gallery_inc.php');
+require('overlay_inc.php');
 require_once('tail_inc.php');
 ?>
 </body>
