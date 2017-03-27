@@ -44,7 +44,7 @@ require_once('head_inc.php');
           }
           $reads .= $row['userlike'];
         }
-        if (!is_null($row['reaction']) && isset($reactions) && array_key_exists($row['reaction'], $reactions)) {
+        if (!is_null($row['reaction']) && isset($reactions) ) {
           if (array_key_exists($row['reaction'], $reaction)) {
             $reaction[$row['reaction']] .= ", ".$row['userlike'];
           } else {
@@ -196,6 +196,3 @@ require_once('head_inc.php');
 require_once('msg_form_inc.php');
 
 ?>
-
-
-

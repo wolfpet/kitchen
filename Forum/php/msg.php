@@ -313,12 +313,12 @@ $footer .= '</span> ';
 $footer .= '<span id="reaction">';
 if (sizeof($reaction) > 0) {
   $index = 0;
-  foreach (array_keys($reactions) as $key) {
+  foreach (array_keys($reaction) as $key) {
     if (array_key_exists($key, $reaction)) {
       if ($index > 0) {
         $footer .= '&nbsp;';
       }
-      $footer .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;'.$reaction[$key].'';
+      $footer .= '<img width="25px" src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;'.$reaction[$key].'';
       $index++;
     }
   }
