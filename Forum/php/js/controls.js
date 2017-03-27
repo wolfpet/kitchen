@@ -154,4 +154,5 @@ function closeOverlay()
 {
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('overlay_menu_cover').style.display = 'none';
+    document.getElementById("overley_iframe").src="welc.php";
 }
