@@ -224,7 +224,7 @@ function checkForEvents()
 
                      var title =  eventsArray[i][2];
                      if(title.length >40)title=title.substring(0, 45) + "...";
-                     var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> reacted to your post <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
+                     var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> reacted to your post </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                      newEventLi.querySelector("#notificationMessage").innerHTML = msg;
                      newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
                      newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
@@ -241,7 +241,7 @@ function checkForEvents()
 
                     var title =  eventsArray[i][2];
                     if(title.length >40)title=title.substring(0, 50) + "...";
-                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> Started a new thread <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
+                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> Started a new thread </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
                     newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
@@ -258,7 +258,7 @@ function checkForEvents()
 
                     var title =  eventsArray[i][2];
                     if(title.length >40)title=title.substring(0, 50) + "...";
-                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> replied to your post  <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
+                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> replied to your post </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
                     newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
@@ -275,7 +275,7 @@ function checkForEvents()
 
                     var title =  eventsArray[i][2];
                     if(title.length >40)title=title.substring(0, 50) + "...";
-                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span> bookmarked your post  <span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
+                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> bookmarked your post </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
                     newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
