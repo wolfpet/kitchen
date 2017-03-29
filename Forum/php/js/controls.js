@@ -28,7 +28,8 @@ function openGallery()
     //display the Gallery UI.
     document.getElementById('gallery').style.display = 'block';
     document.getElementById('menu_cover').style.display = 'block';
-
+    document.getElementById('slider').style.display = 'none';
+    document.getElementById('slider-area').style.display = 'none';
 }
 
 function openPicInGallery(img, userId, messageId)
@@ -62,6 +63,9 @@ function closeGallery()
 {
     document.getElementById('gallery').style.display = 'none';
     document.getElementById('menu_cover').style.display = 'none';
+    document.getElementById('slider').style.display = 'block';
+    document.getElementById('slider-area').style.display = 'block';
+            
 }
 
 function nextPhoto()
@@ -141,8 +145,11 @@ function openOverlay(name)
 	    return;
 	}
 	
-	document.getElementById('overlay').style.display = 'block';
-	document.getElementById('overlay_menu_cover').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay_menu_cover').style.display = 'block';
+        document.getElementById('slider').style.display = 'none';
+        document.getElementById('slider-area').style.display = 'none';
+        
 	//submit the message form and display the result in the overley iframe
 	//bottom.togglePreview();
 	//bottom.document.getElementById("msgform").target = document.getElementById("overley_iframe");
@@ -157,4 +164,6 @@ function closeOverlay()
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('overlay_menu_cover').style.display = 'none';
     document.getElementById("overley_iframe").src="welc.php";
+    document.getElementById('slider').style.display = 'block';
+    document.getElementById('slider-area').style.display = 'block';
 }
