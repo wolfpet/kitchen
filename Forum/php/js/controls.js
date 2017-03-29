@@ -16,6 +16,8 @@ function setVerticaLayout()
     document.getElementById('frame2').style.width = '48vw';
     document.getElementById('frame2').style.height = '90vh';
     document.getElementById('hr1').style.display = 'none';
+    document.getElementById('slider').style.display = 'none';    
+    document.getElementById('slider-area').style.display = 'none';
 }
 
 function openGallery()

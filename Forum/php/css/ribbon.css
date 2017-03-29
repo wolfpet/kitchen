@@ -198,6 +198,9 @@ body#html_body {
 @media screen and (max-width: 600px) {
 .notificationContainer {left: 10px; width: 90vw;}
 
+#slider-area {display:none;}
+#slider {display:none;}
+
 }
 @media screen and (max-width: 400px) {
 .notificationMessage {font-size: xx-small;}
@@ -233,3 +236,7 @@ body#html_body {
     position: relative;
     color: grey;
 }
+
+.draggable { width: 50px; height: 30px;}
+#slider { cursor: n-resize;   top:35vh; right: 0px; background: white;}
+#slider-area { width: 50px; height:86vh; position: absolute; right: 13px;  z-index: 1001;   top: 88px;}
