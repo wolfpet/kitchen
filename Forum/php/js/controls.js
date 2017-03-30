@@ -56,6 +56,10 @@ function openPicInGallery(img, userId, messageId)
     //display the UI
     document.getElementById('gallery').style.display = 'block';
     document.getElementById('menu_cover').style.display = 'block';
+
+    //turn off the resizer
+    document.getElementById('slider').style.display = 'none';    
+    document.getElementById('slider-area').style.display = 'none';
             
 }
 
