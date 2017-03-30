@@ -111,13 +111,13 @@ function openLoginForm()
 {
     if(document.getElementById("loginForm").style.display=='none')
     {
-	document.getElementById("loginForm").style.display='block';
-	document.getElementById("loginIcon").style.fill='red';
+        document.getElementById("loginForm").style.display='block';
+        document.getElementById("loginIcon").style.fill='red';
     }
     else
     {
-	document.getElementById("loginForm").style.display='none';
-	document.getElementById("loginIcon").style.fill='white';    
+        document.getElementById("loginForm").style.display='none';
+        document.getElementById("loginIcon").style.fill='white';    
     }
 }
 
@@ -136,8 +136,8 @@ function openNotifications()
 {
     if(document.getElementById("NotificationsContainer").style.display=='none')
     {
-	//restart the timer:
-	try{update_bydate_counter();}catch(err){}
+        //restart the timer:
+        try{update_bydate_counter();}catch(err){}
 
 	//events API
 	checkForEvents();
@@ -150,7 +150,7 @@ function openNotifications()
 	{
 	    //opened after the refresh
 	    diffTime=render_time-check_time;
-	    
+	
 	    var minutes = Math.floor(diffTime / 60000);
 	    var seconds = ((diffTime % 60000) / 1000).toFixed(0);
 	    if(minutes==0)minutes='';
@@ -241,7 +241,7 @@ function checkForEvents()
 
                     var title =  eventsArray[i][2];
                     if(title.length >40)title=title.substring(0, 50) + "...";
-                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> Started a new thread </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
+                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> started a new thread </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
                     newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
@@ -293,15 +293,18 @@ function msToTime(duration) {
     var milliseconds = parseInt((duration%1000)/100)
     , seconds = parseInt((duration/1000)%60)
     , minutes = parseInt((duration/(1000*60))%60)
-    , hours = parseInt((duration/(1000*60*60))%24);
-    hours = (hours < 10) ? "0" + hours : hours;
+    , hours = parseInt((duration/(1000*60*60))%24)
+    , days = parseInt((duration/(1000*60*60*24))%365);
 
+    hours = (hours < 10) ? "0" + hours : hours;
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
     if(hours=='00'){hours=''}else{hours= hours + ' hours ';}
     if(minutes=='00'){minutes='';}else{minutes= minutes + ' minutes ';}
     if(hours!=''){seconds='';}else{seconds=seconds + ' seconds';}
-    return hours +  minutes + seconds;
+    if(days == 0){days='';}else{ days= days + ' days '; minutes=''; seconds='';}
+
+    return days + hours +  minutes + seconds;
 }
 function openMessage(id)
 {
