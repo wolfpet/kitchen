@@ -177,7 +177,7 @@ body#html_body {
   padding:0;
   border:0;
 }
-#content {
+.content {
   padding: 1em;
 }
 

@@ -3,6 +3,8 @@
 $duration = 0;
 
 require_once('head_inc.php');
+
+
 $start_timestamp = microtime(true);
 
 // 2 means show in standard mode - for users which are not logged in
@@ -58,6 +60,7 @@ $show_hidden = 2;
         }
     }
     $limit_id = $last_id;
+    //die($limit_id . '-' . $max_id );
     if (is_null($how_many) || $how_many == 0) {
        $how_many = 100;
     } else {
@@ -67,9 +70,16 @@ $show_hidden = 2;
       $max_id = 0;
 
     if ($show_hidden == 2 || $show_hidden == 1) {
-    $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 order by id desc limit 100';
+    $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 order by id desc limit 500';
     } else if ($show_hidden == 0) {
-    $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 and u.id not in (select ignored from confa_ignor where ignored_by=' . $test_user_id . ') order by id desc limit 100';
+    $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 and u.id not in (select ignored from confa_ignor where ignored_by=' . $test_user_id . ') order by id desc limit 500';
+
+}
+    if ($show_hidden == 2 || $show_hidden == 1) {
+    $oldquery = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id < ' . $limit_id . ' and p.status != 2 order by id desc limit 500';
+    } else if ($show_hidden == 0) {
+    $oldquery = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id < ' . $limit_id . ' and p.status != 2 and u.id not in (select ignored from confa_ignor where ignored_by=' . $test_user_id . ') order by id desc limit 500';
+
 }
 
     $result = mysql_query($query);
@@ -78,9 +88,15 @@ $show_hidden = 2;
         die('Query failed ' );
     }
 
+    $oldresult = mysql_query($oldquery);
+    if (!$oldresult) {
+        mysql_log(__FILE__ . ':' . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query . '<--END_OF_QUERY, last_id="' . $last_id . '"');
+        die('Query failed ' );
+    }
+
+
     $_SESSION['last_bydate_id'] = $max_id;
     $num = 1;
-
     $out = '';
     $ignored = array();
     if ($show_hidden == 1) {
@@ -94,6 +110,7 @@ $show_hidden = 2;
         array_push($ignored, $row['ignored']);
       }
     }
+
     while ($row = mysql_fetch_assoc($result)) {
         $id = $row['id'];
         $ban_ends = $row['ban_ends'];
@@ -158,9 +175,75 @@ $show_hidden = 2;
         $num++;
     }
 
+
+    while ($row = mysql_fetch_assoc($oldresult)) {
+        $id = $row['id'];
+        $ban_ends = $row['ban_ends'];
+        $banned = false;
+        if ( !is_null( $ban_ends ) && strcmp( $ban_ends, '0000-00-00 00:00:00' ) ) {
+            $banned = true;
+        }
+        $auth_moder = $row['moder'];
+
+        $subj = $row['subject'];
+        $subj = encode_subject( $subj );
+
+        $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
+        $post_author = $enc_user;
+        if ( $banned === true ) {
+            $enc_user = '<font color="grey">' . $enc_user . '</font>';
+
+        }
+        $enc_user = '<a class="user_link" href="' . $root_dir . $page_byuser . '?author_id=' . $row['author'] . '" target="contents">' . $enc_user . '</a>';
+        if ($num == 1) {
+            setcookie('last_id2', $id, 1800000000, $root_dir, $host, false, true);
+            $max_id = $id;
+        }
+        $icons = '';
+        if ($row['content_flags'] & 0x02) {
+          $icons = ' <img border=0 src="' . $root_dir . $image_img . '"/> ';
+        }
+        if ($row['content_flags'] & 0x04) {
+          $icons .= ' <img border=0 src="' . $root_dir . $youtube_img . '"/> ';
+        }
+        $nsfw = '';
+        global $content_nsfw;
+        if ($row['content_flags'] & $content_nsfw) {
+          $nsfw .= ' <span class="nsfw">NSFW</span>';
+        }                  
+        $line = "";
+        if ($show_hidden == 1 && in_array($row['author'], $ignored)) {
+          $line= "<li><div style=\"visibility:visible\" id=\"hidden_msg_" . $id . "\"><font color=\"lightgrey\">Hidden message by " . $post_author . " <A href=\"#\" onclick=\"show_hidden_msg(" . $id . ");return false;\"><font color=\"lightgrey\"><b>show</b></font></A></font></div><div style=\"visibility:hidden; height:0;\" id=\"shown_msg_" . $id . "\">";
+          $line .= "<A href=\"#\" onclick=\"hide_shown_msg(" .$id ."); return false;\" ><font color=\"lightgrey\"><b>hide</b></font></A> &nbsp;";
+        } else {
+          $line="<li>";
+        }
+          $line .=  $icons . '<a target="bottom" name="' . $id . '" href="' . $root_dir . $page_msg . '?id=' . $id . '"> ' . print_subject($subj) . '</a> '.$nsfw.' <b>' . $enc_user . '</b>' . ' ' . '[' . $row['views'] . ' views] ' . $row['created'] . ' <b>' . $row['chars'] . '</b> bytes';
+          if (!is_null($row['likes'])) {
+            $likes = $row['likes'];
+            if ($likes > 0) {
+              $line .= ' <font color="green"><b>+' . $likes . '</b></font>';
+            }
+          }
+          if (!is_null($row['dislikes'])) {
+            $dislikes = $row['dislikes'];
+            if ($dislikes > 0) {
+              $line .= ' <font color="red"><b>-' . $dislikes . '</b></font>';
+            }
+          }
+          if ($show_hidden == 1 && in_array($row['author'], $ignored)) {
+             $line .= "</div>";
+          }
+          $line .= "</li>";
+        //}
+        $oldout .= $line;
+        $num++;
+    }
+
 require_once('html_head_inc.php');
 
 ?>
+
 <script>
 function show_hidden_msg(msg_id) {
   var to_hide = document.getElementById("hidden_msg_" + msg_id);
@@ -250,43 +333,36 @@ function onNewMessageCount(count, elapsed_time) {
 
 </script>
 <base target="bottom">
+<?php  require_once('custom_colors_inc.php'); ?>
 </head>
 <body id="html_body">
 <?php
-
 //require('menu_inc.php');
 $end_timestamp = microtime(true);
-    $duration = $end_timestamp - $start_timestamp;
+$duration = $end_timestamp - $start_timestamp;
+
+$newcount = $max_id - $last_id;
+if($newcount <0)$newcount = 0;
 
 ?>
-<div id="content">
-<b id="msg_count"><?php print($max_id - $last_id); ?></b> new message(s) since you came here last time
-&nbsp;&nbsp;&nbsp;&nbsp;Queried: <span id="query_ts"><?php printf(' (in ' . round($duration, 5) . ' seconds) <b>');  
-//print(date('Y F d H:i:s', time())); 
-print(local_time(time(), 'Y F d H:i:s'));
-?></b></span><br>
-<ol id="msg_list">
-<?php print($out); ?>
-</ol>
-<form target="contents" method=POST action="<?php print($root_dir . $page_bydate); ?>">
-<?php 
-    if (strlen($err) > 0) {
-        print('<br><font color="red"><b>' . $err . '</b></font></br>');
-    }
-    print("<b>Want to see more? Say how many:</b> ");
-    print('<input type="text" size="5" id="how_many" name="how_many" value="' . $how_many . '">');
-?>
-<!--
-<b>Want to see more? Say how many:</b>
-<input type="text" size="5" id="how_many" name="how_many" value="<? print($how_many); ?>">
--->
-<input type="submit" value="Get them!">
+<div id="content" class="content">
+<h3 style="margin: auto">New Messages:</h3><br>
+<b id="msg_count"><?php print($newcount); ?></b> new message(s) since you checked last time<br>Queried: <span id="query_ts"><?php printf(' (in ' . round($duration, 5) . ' seconds) <b>'); print(local_time(time(), 'Y F d H:i:s')); ?></b></span><br>
+    <div id="newMessages">
+	<ol id="msg_list">
+	    <?php print($out); ?>
+	</ol>
+    </div>
 </div>
+<hr>
+<div class="content" id="old_messages">
+<h3 style="margin: auto">Older Messages:</h3>
+    <div id="oldMessages">
+	<ol id="old_msg_list">
+	    <?php print($oldout); ?>
+	</ol>
+    </div>
 </body>
 </html>
-<?php
 
-require('tail_inc.php');
-
-?>
-
+<?php require('tail_inc.php'); ?>

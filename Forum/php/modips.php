@@ -49,7 +49,7 @@ require_once('head_inc.php');
     }
 
 require_once('html_head_inc.php');
-
+require_once('custom_colors_inc.php'); 
 ?>
 <base target="bottom">
 </head>

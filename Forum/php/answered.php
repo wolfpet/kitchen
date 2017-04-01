@@ -40,11 +40,12 @@ require_once('head_inc.php');
     }
 
 require_once('html_head_inc.php');
-
+require_once('custom_colors_inc.php'); 
 ?>
 <base target="bottom">
 </head>
 <body id="html_body">
+<div class="content">
 <?php
 //require('menu_inc.php');
 ?>
@@ -77,6 +78,7 @@ require_once('html_head_inc.php');
 <input type="text" size="5" id="how_many" name="how_many" value="<? print($how_many); ?>">
 -->
 <input type="submit" value="Get them!">
+</div>
 </body>
 </html>
 <?php

@@ -63,6 +63,8 @@ if($imageGallery == 'postimage')
 }
 
 ?>
+<?php  require_once('custom_colors_inc.php'); ?>
+
 <base target="bottom">
 </head>
 <body onload="javascript:var subj = document.getElementById('subj'); addEvent(subj,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); subj.focus();">

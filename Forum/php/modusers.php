@@ -87,11 +87,12 @@ require_once('head_inc.php');
     }
 
 require_once('html_head_inc.php');
-
+require_once('custom_colors_inc.php'); 
 ?>
 <base target="bottom">
 </head>
 <body id="html_body">
+<div class="content">
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
 
@@ -116,6 +117,7 @@ require_once('html_head_inc.php');
         print( "You have no access to this page." );
     }
 ?>
+</div>
 </body>
 </html>
 <?php

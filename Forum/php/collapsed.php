@@ -3,6 +3,7 @@
 
 require_once('head_inc.php');
 require_once('html_head_inc.php');
+require_once('custom_colors_inc.php');
 
     $cur_page = $page_collapsed;
 

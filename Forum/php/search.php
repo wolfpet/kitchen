@@ -4,7 +4,7 @@
 require_once('head_inc.php');
     $title = 'Search';
 require_once('html_head_inc.php');
-
+require_once('custom_colors_inc.php'); 
 ?>
 
 <base target="contents">

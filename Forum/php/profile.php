@@ -2,6 +2,7 @@
 require_once('dump.php');
 require_once('head_inc.php');
 require_once('html_head_inc.php');
+require_once('custom_colors_inc.php'); 
 
     $title= 'Profile Settings';
 
