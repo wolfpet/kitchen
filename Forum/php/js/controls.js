@@ -139,7 +139,7 @@ function openMsg(msgId)
 function openOverlay(name)
 {
 
-    //display the Overlay UI.
+    //message preview
     if(name=='preview')
     {
 	//check if subject is specified
@@ -161,13 +161,23 @@ function openOverlay(name)
 	document.getElementById("overlay_title").text="Message Preview";
 	document.getElementById("overley_iframe").src="overlay_post_form_clone.php";
     }
-
+    //Private Mail 2.0
+    if(name=='pm')
+    {
+	closeNotifications();
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay_menu_cover').style.display = 'block';
+        document.getElementById('slider').style.display = 'none';
+        document.getElementById('slider-area').style.display = 'none';
+	document.getElementById("overlay_title").text="Private Messages";
+	document.getElementById("overley_iframe").src="pm2.php";
+    }
 }
 function closeOverlay()
 {
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('overlay_menu_cover').style.display = 'none';
-    document.getElementById("overley_iframe").src="welc.php";
+    document.getElementById("overley_iframe").src="blank.php";
     document.getElementById('slider').style.display = 'block';
     document.getElementById('slider-area').style.display = 'block';
 }

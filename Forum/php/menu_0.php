@@ -243,15 +243,14 @@ function openAnswered()
     resetBadges();
 }
 
-function openInbox()
-{
-    window.frames["contents"].location = "pmail.php";
-    openNotifications();
-    resetBadges();
-}
 function closeNotifications()
 {
     if(document.getElementById("NotificationsContainer").style.display!='none')document.getElementById("NotificationsContainer").style.display='none';
+}
+
+function openPM()
+{
+ openOverlay('pm');
 }
 </script>
 
@@ -447,15 +446,11 @@ function closeNotifications()
 	<div id="ProfileRibbonGroup" class="ribbonGroupMobile"; style="float: right; border: <?=$groupBorder?>; border-style: solid; border-width: 1px;">
 		<div id="ProfileRibbonGroupTitle1" class="ribbonGroupTitle">&nbsp;<?=$logged_in ? $user : "Not logged in"?>&nbsp;<?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px;' title='Safe Mode'/>" : ""?></div>
 		<div id="ProfileRibbonGroupIconContainer">
-			<span id="Pmail" class="pmdropdown ribbonIcon tooltip">
+			<span id="Pmail" class="ribbonIcon tooltip">
+			    <a onclick="openPM();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
-				<span class="tooltiptext">Pmail</span>
-    				<style>pmdropdown-content.a:hover {color: green;}</style>
-				<div class="pmdropdown-content" style="background-color: <?=$ribbonBackground?>">
-					<a onclick="closeNotifications();" target="contents" style="color: <?=$ribbonColor?>" href="<?=$root_dir.$page_pmail?>">Inbox</a>
-					<a onclick="closeNotifications();" target="contents" href="<?=$root_dir.$page_pmail_sent?>">Sent</a>
-					<a onclick="closeNotifications();" target="bottom" href="<?=$root_dir.$page_pmail_send?>">New</a>
-				</div>
+				<span class="tooltiptext">PMail</span>
+			    </a>
 			</span> 
 			<span id="Settings" class="ribbonIcon tooltip"><a onclick="closeNotifications();" target="bottom" href="<?=$root_dir.$page_profile?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
@@ -558,7 +553,7 @@ function closeNotifications()
 	    <div id="newAnswersTime" class="notificationTime">just now</div>
 	</div>
     </li>
-    <li class="notificationLi"  onclick="openInbox();">
+    <li class="notificationLi"  onclick="openPM();">
 	<div style="padding: 6px 30px 5px 12px;">
 	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
             <?php if (!is_null($new_pm) && $new_pm > 0) { ?>

@@ -354,7 +354,6 @@ if($newcount <0)$newcount = 0;
 	</ol>
     </div>
 </div>
-<hr>
 <div class="content" id="old_messages">
 <h3 style="margin: auto">Older Messages:</h3>
     <div id="oldMessages">

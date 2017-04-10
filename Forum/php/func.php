@@ -109,15 +109,28 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
         location.hash = "#openModal";
         console.log("openModal ended");
       }
+      function openPmail()
+      {
+        //to support old inbox for some conservative users who do want to live in the past
+        try{
+        openPM();
+        }
+        catch(err)
+        {
+        //must be classic menu eh
+        //alert("fail");
+        window.open("pmail.php", "contents");
+        }
+      }
       </script><div id="close"/><div id="openModal" class="modalDialog"><div><a href="#close" target="<?=$target?>" title="Close" class="close">X</a>
         <table cellpadding="5"><tr><td><img src="images/ygm.png" style="width:80%;height:auto;"/></td><td width="75%">
-          <h3>You've got mail!</h3><?php
+          <h3>You've got PM!</h3><?php
           if ($pm_count == 1) {?>
             <p><b><?=$pm_author?></b> has sent you a private message.</p><?php
           } else { ?>
-            <p>You have <b style="color: red;"><?=$pm_count?></b> new private messages.</p><?php
+            <p>You have <?=$pm_count ?> new private messages.</p><?php
           } ?>
-          <p>Click <a target="contents" href="<?=$page_pmail?>" onclick="javascript:location.hash='#close'; return true;">here</a> to go to your Inbox.</p>
+          <p>Click <a style="cursor: pointer; color: red;" target="contents" onclick="javascript:location.hash='#close'; openPmail();return true;">here</a> to open</p>
         </td></tr></table>
       </div>
     </div><?php
