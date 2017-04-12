@@ -76,7 +76,7 @@ $show_hidden = 2;
 
 }
     if ($show_hidden == 2 || $show_hidden == 1) {
-    $oldquery = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id < ' . $limit_id . ' and p.status != 2 order by id desc limit 500';
+    $oldquery = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id <= ' . $limit_id . ' and p.status != 2 order by id desc limit 500';
     } else if ($show_hidden == 0) {
     $oldquery = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id < ' . $limit_id . ' and p.status != 2 and u.id not in (select ignored from confa_ignor where ignored_by=' . $test_user_id . ') order by id desc limit 500';
 
