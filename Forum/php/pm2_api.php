@@ -80,6 +80,31 @@ function getLatestPMs($senderid, $user_id, $lastMsgId)
           $pm = array($id, $senderid, $receiverid, $subj, $body, $pmTime, $status);
           array_push($PMs, $pm);
         }
+        //set new status as delivered
+        if($status == 1)
+        {
+            //brand new message
+            if($senderid == $me)
+            {
+              //my new message - set 17
+              setStatus($id, 17);update_new_pm_count($receiver);
+            }
+            else
+            {
+               //I received it - set 20
+               setStatus($id, 20);
+            }
+        }
+        if($status == 17)
+        {
+            //sender already saw
+            if($receiverid == $me)
+            {
+               //I received it - set 20
+               setStatus($id, 20);
+            }
+        }
+
     }
 
     header('Content-type:application/json;charset=utf-8');
@@ -194,24 +219,42 @@ function getConvo($sender, $receiver)
         if($status == 30)$add=false; //both sides deleted the msg
         if($senderid == $me && $status == 22)$add=false; //my message, I deleted. do not add.
         if($receiverid == $me && $status == 28)$add=false; //message for me, I deleted. do not show either.
-        
-        
-        //if($receiver==$senderid && $status ==28)$add=false;
-        //if($sender==$receiverid && $status ==22)$add=false;
-        
-        //die($status);
-	if($add==true)        
+        if($add==true)
         {
           $pm = array($id, $senderid, $receiverid, $subj, $body, $pmTime, $status);
-	  array_push($PMs, $pm);
-	}
-	if($status == 1 || $status == 12){setReadStatus($id);update_new_pm_count($receiver);}
-	}
+          array_push($PMs, $pm);
+        }
+        //set new status as delivered
+        if($status == 1)
+        {
+            //brand new message
+            if($senderid == $me)
+            {
+              //my new message - set 17
+              setStatus($id, 17);update_new_pm_count($receiver);
+            }
+            else
+            {
+               //I received it - set 20
+               setStatus($id, 20);
+            }
+        }
+        if($status == 17)
+        {
+            //sender already saw
+            if($receiverid == $me)
+            {
+               //I received it - set 20
+               setStatus($id, 20);
+            }
+        }
 
-header('Content-type:application/json;charset=utf-8');
-//unset($PMs[0]);//removing the null
-echo json_encode($PMs);
-$status = 201;
+    }
+
+    header('Content-type:application/json;charset=utf-8');
+    //unset($PMs[0]);//removing the null
+    echo json_encode($PMs);
+    $status = 201;
 }
 
 function postPM($receiver, $sender, $body)
@@ -233,9 +276,9 @@ function postPM($receiver, $sender, $body)
  
 }
 
-function setReadStatus($id)
+function setStatus($id, $status)
 {
-    $query = 'UPDATE confa_pm set status = 20 where id =' . $id;
+    $query = 'UPDATE confa_pm set status = '. $status .' where id =' . $id;
     $result = mysql_query($query);
 }
 

@@ -168,13 +168,18 @@ function openPMConvo(senderId, senderName)
               if(pmBody==null)pmBody='';
 
               var myMsgClass = '';
+              var statusStr  = '';
               if(msgArray[i][1]==me)
               {
                 //my message
+                //set style
                 myMsgClass =' mymsg';
+                //add delivery status
+                if(msgArray[i][6] == 1 || msgArray[i][6] == 17)statusStr='<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; height: 12px;"><g class="style-scope iron-icon"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></g></svg>';
+                if(msgArray[i][6] == 20 || msgArray[i][6] == 4)statusStr='<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; height: 12px;"><g class="style-scope iron-icon"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"></path></g></svg>';               
               }
-               var delStr = '&nbps; &nbsp;<a style="color: red;font-size: xx-small; cursor: pointer" onclick="deletePM('+msgArray[i][0]+')">Delete</a>';
-               var msgHTML = '<p id="'+ msgArray[i][0] +'" class="pmmsg'+myMsgClass+'">'+ pmTitle + pmBody + '<br><span style="font-size: xx-small; color: blue;">'+pmTime + delStr+'</span></p><br>';
+               var delStr = '&nbsp; &nbsp;<a style="color: red;font-size: xx-small; cursor: pointer" onclick="deletePM('+msgArray[i][0]+')">Delete</a>';
+               var msgHTML = '<p id="'+ msgArray[i][0] +'" class="pmmsg'+myMsgClass+'">'+ pmTitle + pmBody + '<br><span style="font-size: xx-small; color: blue;">'+pmTime + delStr+'</span>'+statusStr+'</p><br>';
               //add timing
               document.getElementById('Messages').innerHTML += msgHTML;
               currentConvoLastMsgID = msgArray[i][0]; //update the msg ID in the current convo to enable the auto load if the ping returns higher id
@@ -340,7 +345,7 @@ function ping()
                 //my message
                 myMsgClass =' mymsg';
               }
-               var delStr = '&nbps; &nbsp;<a style="color: red;font-size: xx-small; cursor: pointer" onclick="deletePM('+msgArray[i][0]+')">Delete</a>';
+               var delStr = '&nbsp; &nbsp;<a style="color: red;font-size: xx-small; cursor: pointer" onclick="deletePM('+msgArray[i][0]+')">Delete</a>';
                var msgHTML = '<p id="'+ msgArray[i][0] +'" class="pmmsg'+myMsgClass+'">'+ pmTitle + pmBody + '<br><span style="font-size: xx-small; color: blue;">'+pmTime + delStr+'</span></p><br>';
               //add timing
               document.getElementById('Messages').innerHTML += msgHTML;
