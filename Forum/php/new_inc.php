@@ -84,13 +84,20 @@
         insertTag('body', 2);
       }
     }
+
+function insertPoll()
+{
+       //open poll creation overlay
+       parent.openOverlay('newPoll');
+}
+
 function sendMessage()
 {
     //validate the subj
     if(document.getElementById("subj").value=='')
     {
-	document.getElementById("subj_div").style.color='red';
-	return;
+        document.getElementById("subj_div").style.color='red';
+        return;
     }
     document.getElementById("msgform").submit();
 }
@@ -193,6 +200,15 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
 	    <span class="tooltiptext">Image</span>
 	</a>
 	</span> 
+
+	<span class="ribbonIcon tooltip" id="PollIcon"><a onclick="javascript:insertPoll();return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path id="pollPath" class="ribbonIcon" style="fill: black;" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Poll</span>
+    	 </a> 
+	</span> 
+<!--
 	<span class="ribbonIcon tooltip" id="LinkIcon"><a onclick="javascript:insertTag('body', 1);return false;">
 	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
 	    <path class="ribbonIcon" fill="#000000" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path>
@@ -200,6 +216,7 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
 	    <span class="tooltiptext">Link URL</span>
     	 </a> 
 	</span> 
+-->
 	<span id="QuoteIcon" class="ribbonIcon tooltip"><a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'quote');return false;">
 	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
 	    <path class="ribbonIcon" fill="#000000" d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"></path>

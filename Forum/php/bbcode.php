@@ -24,6 +24,8 @@ function do_bbcode($str, $auth_id, $msg_id) {
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
       '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
+      '#\[POLL\](.*?)\[/POLL\]#is', // Bold ([b]text[/b]
+      
   );
    
   // The matching array of strings to replace matches with
@@ -46,7 +48,9 @@ function do_bbcode($str, $auth_id, $msg_id) {
       '<img src="//$1" alt="" title="$2"/>',
       '<img src="$1" alt=""/>',
       '<img src="//$1" alt=""/>',
-      '<img src="$1" alt=""/>'
+      '<img src="$1" alt=""/>',
+      '<iframe style="border-style: none; width: 100%; max-width: 460px;" id="poll$1" class="poll" src="polls_display.php?poll=$1" onload="resizeMe(this);"></iframe>'
+       
   );
   
   // Perform the actual conversion
@@ -416,7 +420,7 @@ function render_smileys_step2($body) {
       if(!$exists) 
         return $matches[0];
 
-      return '<img src="http://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
+      return '<img width="25px" src="http://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
 		},
 		$body
 	);

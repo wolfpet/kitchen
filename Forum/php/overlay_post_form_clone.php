@@ -16,10 +16,13 @@ document.getElementById("preview").checked = true;
 document.getElementById("previewPath").style.fill="red";
 cln.submit();
 
-
-
 });
 
+function resizeMe(iframe)
+{
+    iframe.width  = iframe.contentWindow.document.body.scrollWidth;
+        iframe.height = iframe.contentWindow.document.body.scrollHeight;
+}
 </script>
 
 <div id="form_clone" style="display: none">

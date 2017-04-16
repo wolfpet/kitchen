@@ -172,6 +172,16 @@ function openOverlay(name)
 	document.getElementById("overlay_title").text="Private Messages";
 	document.getElementById("overley_iframe").src="pm2.php";
     }
+    //Poll
+    if(name=='newPoll')
+    {
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay_menu_cover').style.display = 'block';
+        document.getElementById('slider').style.display = 'none';
+        document.getElementById('slider-area').style.display = 'none';
+	document.getElementById("overlay_title").text="Add New Poll";
+	document.getElementById("overley_iframe").src="polls_new_form.php";
+    }
 }
 function closeOverlay()
 {
