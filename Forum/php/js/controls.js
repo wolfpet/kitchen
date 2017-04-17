@@ -153,11 +153,6 @@ function openOverlay(name)
         document.getElementById('overlay_menu_cover').style.display = 'block';
         document.getElementById('slider').style.display = 'none';
         document.getElementById('slider-area').style.display = 'none';
-        
-	//submit the message form and display the result in the overley iframe
-	//bottom.togglePreview();
-	//bottom.document.getElementById("msgform").target = document.getElementById("overley_iframe");
-	//bottom.document.getElementById("msgform").submit();
 	document.getElementById("overlay_title").text="Message Preview";
 	document.getElementById("overley_iframe").src="overlay_post_form_clone.php";
     }
@@ -182,6 +177,18 @@ function openOverlay(name)
 	document.getElementById("overlay_title").text="Add New Poll";
 	document.getElementById("overley_iframe").src="polls_new_form.php";
     }
+    //Profile settings
+    if(name=='profile')
+    {
+	closeNotifications();
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay_menu_cover').style.display = 'block';
+        document.getElementById('slider').style.display = 'none';
+        document.getElementById('slider-area').style.display = 'none';
+	document.getElementById("overlay_title").text="Profile Settings";
+	document.getElementById("overley_iframe").src="profile.php";
+    }
+    
 }
 function closeOverlay()
 {

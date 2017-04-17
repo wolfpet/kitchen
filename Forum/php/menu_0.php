@@ -252,6 +252,11 @@ function openPM()
 {
  openOverlay('pm');
 }
+
+function openProfile()
+{
+ openOverlay('profile');
+}
 </script>
 
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
@@ -452,7 +457,7 @@ function openPM()
 				<span class="tooltiptext">PMail</span>
 			    </a>
 			</span> 
-			<span id="Settings" class="ribbonIcon tooltip"><a onclick="closeNotifications();" target="bottom" href="<?=$root_dir.$page_profile?>">
+			<span id="Settings" class="ribbonIcon tooltip"><a onclick="closeNotifications(); openProfile();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
 				<span class="tooltiptext">Settings</span></a>
 			</span> 

@@ -17,7 +17,6 @@ require_once('custom_colors_inc.php');
 <script type="text/javascript" src="js/spectrum.js"></script>
 <script type="text/javascript" src="js/profcolors.js"></script>
 
-<base target="bottom">
 </head>
 <body>
 <h3 id="status_text"><?php print($title);?></h3>

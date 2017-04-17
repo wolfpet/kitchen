@@ -49,7 +49,6 @@ $(document).ready(function() {
 </script>
 <ul class="tab">
   <li><a class="tablinks" onclick="openTab(event, 'General')">General</a></li>
-  <li><a class="tablinks" onclick="openTab(event, 'Notifications')">Notifications</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Colors')">Colors</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Ignore')">Ignore</a></li>
 </ul>
@@ -128,39 +127,6 @@ $(document).ready(function() {
 </table>
 </div>
 
-<div id="Notifications" class="tabcontent">
-<h3>COMING SOON!</h3>
-<table>
-<tbody>
-
-<tr> <td align="right"></td>
-<td></td><td align="center">Forum</td> <td></td> <td align="center">Email</td> </tr>
-
-<tr> <td align="right">Someone replied to my message</td>
-<td></td><td align="center"> <input id="replied" name="replied" type="checkbox" checked="1"> </td> 
-<td></td><td align="center"> <input id="replied_email" name="replied_email" type="checkbox" checked="1"> </td> 
-</tr>
-
-<tr> <td align="right">Someone posted in my thread</td>
-<td></td><td align="center"> <input id="posted" name="posted" type="checkbox" checked="1"> </td> 
-<td></td><td align="center"> <input id="posted_email" name="posted_email" type="checkbox"> </td> 
-</tr>
-
-<tr> <td align="right">Someone reacted to my message</td>
-<td></td><td align="center"> <input id="reacted" name="reacted" type="checkbox" checked="1"> </td> 
-<td></td><td align="center"> <input id="reacted_email" name="reacted_email" type="checkbox"> </td> 
-</tr>
-
-<tr> <td align="right">Someone bookmarked my message</td>
-<td></td><td align="center"> <input id="bookmarked" name="bookmarked" type="checkbox" checked=""> </td> 
-<td></td><td align="center"> <input id="bookmarked_email" name="bookmarked_email" type="checkbox"> </td> 
-</tr>
-<tr>
-<td colspan="2"><br> <input type="submit" value="Update"></td>
-</tr>
-
-</table>
-</div>
 
 <div id="Colors" class="tabcontent">
 <table>
@@ -224,7 +190,7 @@ $(document).ready(function() {
 </tr>
 
 <tr>
-    <td colspan="4" align="center">&nbsp;&nbsp;<button id="colors_restore" onclick="restoreColors();">Reset to default</button><button id="colors_update" onclick="updateColors();">Save style</button></td>
+    <td colspan="4" align="center">&nbsp;&nbsp;<button id="colors_restore" onclick="restoreColors();">Reset to default</button><button id="colors_update" onclick="updateColors();">Save and refresh</button></td>
 </tr>
 
 </table>

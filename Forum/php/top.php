@@ -5,8 +5,9 @@ require_once('html_head_inc.php');
 require_once('mysql_log.php');
 ?>
 <base target="bottom">
-<script type="text/javascript" src="js/threads_autoload.js"></script>
-<script type="text/javascript" src="js/controls.js"></script>
+
+<script type="text/javascript" src="<?=autoversion('js/threads_autoload.js')?>"></script>
+<script type="text/javascript" src="<?=autoversion('js/controls.js')?>"></script>
 <script type="text/javascript" src="js/jquery-ui.js"></script>
 <script>
 function expand()

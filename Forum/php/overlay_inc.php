@@ -66,7 +66,7 @@ img {
  <div>
 	<div class="overlay_column_center">
 	<!-- overlay content goes here -->
-	<iframe id="overley_iframe" style="margin: auto;display: block;src=;width: 98%;height: 84vh;background-color: white;border: 1px;" src=""></iframe>
+	<iframe name="overley_iframe" id="overley_iframe" style="margin: auto;display: block;src=;width: 98%;height: 84vh;background-color: white;border: 1px;" src=""></iframe>
 	</div>
  </div>
  <footer id="overlay_footer"></footer>
