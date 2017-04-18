@@ -2,22 +2,65 @@
 
 // - - - - - PHOTO GALLERY - - - - - -
 
+var verticalLayout=false;
 var currentPhotoIndex=0;
 var currentAuthor=0;
 var currentMsg=0;
 var galleryImages = [];
 
+//control the layout
+window.onload = function(e){
+//check the layout cookie
+verticalLayout = getCookie("verticalLayout");
+if(verticalLayout=='true')setVerticaLayout();
+}
+
+function getCookie(cname) 
+{
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) 
+    {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') 
+        {
+                    c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) 
+        {
+           return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 function setVerticaLayout()
 {
+    verticalLayout=true;
     document.getElementById('frame1').style.float = 'left';
     document.getElementById('frame1').style.width = '50vw';
     document.getElementById('frame1').style.height = '90vh';
+    document.getElementById('frame1').style.position = 'static';
     document.getElementById('frame2').style.float = 'right';
     document.getElementById('frame2').style.width = '48vw';
     document.getElementById('frame2').style.height = '90vh';
     document.getElementById('hr1').style.display = 'none';
     document.getElementById('slider').style.display = 'none';    
     document.getElementById('slider-area').style.display = 'none';
+    //save a cookie
+    document.cookie = "verticalLayout=true; expires=01 Jan 2040 12:00:00 UTC; path=/";
+}
+function setHorizontalLayout()
+{
+    document.getElementById('frame1').style.float = null;
+    document.getElementById('frame1').style.width  = '100vw';
+    document.getElementById('frame1').style.height = '40vh';
+    document.getElementById('frame2').style.float = null;
+    document.getElementById('frame2').style.width = '100vw';
+    document.getElementById('frame2').style.height = '48vh';
+    document.getElementById('hr1').style.display = 'block';
+    document.getElementById('slider').style.display = 'block';    
+    document.getElementById('slider-area').style.display = 'block';
+    document.cookie = "verticalLayout=false; expires=01 Jan 2040 12:00:00 UTC; path=/";
 }
 
 function openGallery()

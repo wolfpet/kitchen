@@ -404,7 +404,7 @@ function openProfile()
 	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
 		<div id="ViewRibbonGroupIconContainer">
-			<span id="Horizontal" class="ribbonIcon tooltip"><a onclick="closeNotifications();" target="_top" href=".">
+			<span id="Horizontal" class="ribbonIcon tooltip"><a onclick="closeNotifications();setHorizontalLayout();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M4 18h17v-6H4v6zM4 5v6h17V5H4z"></path></g></svg>
 				<span class="tooltiptext">Horizontal</span></a>
 			</span> 

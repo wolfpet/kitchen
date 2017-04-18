@@ -12,11 +12,15 @@ require_once('mysql_log.php');
 <script>
 function expand()
 {
+verticalLayout = getCookie("verticalLayout");
+if(verticalLayout=='true')return;
 document.getElementById("frame1").style.height='0vh';
 document.getElementById("frame2").style.height='88vh';
 }
 function restore()
 {
+verticalLayout = getCookie("verticalLayout");
+if(verticalLayout=='true')return;
 document.getElementById("frame1").style.height='40vh';
 document.getElementById("frame2").style.height='48vh';
 }
