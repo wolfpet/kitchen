@@ -46,6 +46,9 @@ function setVerticaLayout()
     document.getElementById('hr1').style.display = 'none';
     document.getElementById('slider').style.display = 'none';    
     document.getElementById('slider-area').style.display = 'none';
+    //disable vertical layout button. It's already vertical.
+    document.getElementById('Vertical').style.display = 'none';
+    document.getElementById('Horizontal').style.display = 'inline-block';
     //save a cookie
     document.cookie = "verticalLayout=true; expires=01 Jan 2040 12:00:00 UTC; path=/";
 }
@@ -60,6 +63,10 @@ function setHorizontalLayout()
     document.getElementById('hr1').style.display = 'block';
     document.getElementById('slider').style.display = 'block';    
     document.getElementById('slider-area').style.display = 'block';
+    //disable horizontal  layout button. It's already vertical.
+    document.getElementById('Vertical').style.display = 'inline-block';
+    document.getElementById('Horizontal').style.display = 'none';
+    //save a cookie
     document.cookie = "verticalLayout=false; expires=01 Jan 2040 12:00:00 UTC; path=/";
 }
 
