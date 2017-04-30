@@ -1,6 +1,7 @@
 <?php
 /*$Id: menu_inc.php 875 2013-01-30 17:10:57Z dmitriy $*/
 ?>
+<script type="text/javascript" src="<?=autoversion('js/threads_autoload.js')?>"></script>
 <table width="100%">
 <?php
     if (!is_null($err_login) && strlen($err_login) > 0) {

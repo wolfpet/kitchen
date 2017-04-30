@@ -130,12 +130,12 @@ if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER
 }
 ?>
 <div id="subj_div" style="padding-top: 5px; padding-bottom: 5px">
-Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-width: 1px;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
+Subject: <input style="width: 60%; border: lightgrey; border-style: solid; border-width: 1px;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
 </div>
 
   
   <!-- EDITING TOOLS -->
-  <div id="StyleRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroup";>
+  <div id="StyleRibbonGroup" style="border: lightgrey; border-style: solid; border-width: 1px;" class="ribbonGroup";>
   <div id="StyleRibbonGroupTitle" class="ribbonGroupTitle">Style</div>
     <div id="StyleRibbonGroupIconContainer">
 
@@ -188,7 +188,7 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
     </div>
   </div>
   
-  <div id="InsertRibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
+  <div id="InsertRibbonGroup" style="border: lightgrey; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
     <div id="InsertRibbonGroupTitle" class="ribbonGroupTitle">Insert</div>
     <div id="InsertRibbonGroupIconContainer">
 
@@ -237,7 +237,7 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
 	</span> 
     </div>
   </div>
-  <div id="RibbonGroup" style="border: #4c1130; border-style: solid; border-width: 1px;" class="ribbonGroupMobile" ;"="">
+  <div id="RibbonGroup" style="border: lightgrey; border-style: solid; border-width: 1px;" class="ribbonGroupMobile" ;"="">
     <div id="PostRibbonGroupTitle" class="ribbonGroupTitle">Post</div>
     <div id="PostRibbonGroupIconContainer">
 
@@ -266,9 +266,9 @@ Subject: <input style="width: 60%; border: #4c1130; border-style: solid; border-
 
   <!-- END OF EDITING TOOLS -->
     <div style="padding-top: 0px">
-        <textarea style="margin-top: 6px;margin-bottom: 10px;width: 90%; height: 100px; border: #4c1130; border-style: solid; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php  if (is_null($body) && $user == '486') { $body = '1';} print($body);?></textarea>
-        <iframe id="galleryUploadFrame" style="margin-top: 6px;margin-bottom: 10px;display: none; width: 91%; height: 100px; border: #4c1130; border-style: solid; border-width: 1px;"></iframe>
-        <div id="smileys_help" style="margin-bottom: 10px; overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 70px; display:none;border: #4c1130; border-style: solid; border-width: 1px;"><?=smileys('body')?></div> <!-- make display style depend on user settings-->    
+        <textarea style="margin-top: 6px;margin-bottom: 10px;width: 90%; height: 100px; border: lightgrey; border-style: solid; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php  if (is_null($body) && $user == '486') { $body = '1';} print($body);?></textarea>
+        <iframe id="galleryUploadFrame" style="margin-top: 6px;margin-bottom: 10px;display: none; width: 91%; height: 100px; border: lightgrey; border-style: solid; border-width: 1px;"></iframe>
+        <div id="smileys_help" style="margin-bottom: 10px; overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 70px; display:none;border: lightgrey; border-style: solid; border-width: 1px;"><?=smileys('body')?></div> <!-- make display style depend on user settings-->    
    </div>
 <?php
 if ($keyboard) {

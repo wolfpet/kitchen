@@ -1,6 +1,7 @@
 <?php require_once('custom_colors_inc.php'); ?>
+<script type="text/javascript" src="<?=autoversion('js/threads_autoload2.js')?>"></script>
 <script>
-
+//"
 $(document).keyup(function(e) {
      if (e.keyCode == 27) { // escape key maps to keycode `27`
          //close various overlays
@@ -21,7 +22,7 @@ function resetBadges()
     document.getElementById('newNotificationsBadge').style.display = 'none';
     document.getElementById('newPostsBadge').style.display = 'none';
     document.getElementById('newAnswersBadge').style.display = 'none';
-    document.title = "<?=$title?>";
+    document.title = '<?=$title?>';
 }
 function openLoginForm()
 {
@@ -74,7 +75,9 @@ function openNotifications()
 	    seconds = seconds + ' seconds ago.';
 	    document.getElementById('newPostsTime').innerHTML =  "Checked "  + minutes + seconds;
 	    document.getElementById('newAnswersTime').innerHTML = "Checked "  + minutes + seconds;
-
+	    document.getElementById('newPMTime').innerHTML = "Checked "  + minutes + seconds; 
+	    
+	    /*
 	    //pmail is different, don't ask why...
 	    var pmailTime = <?php print(time()); ?> * 1000;
 	    diffTime = render_time - pmailTime;
@@ -84,12 +87,13 @@ function openNotifications()
 	    else minutes= minutes + ' minutes ';
 	    seconds = seconds + ' seconds ago.';
 	    document.getElementById('newPMTime').innerHTML = "Checked " + minutes + seconds;
+	    */
 
 	}
     }
     else
     {
-	document.getElementById("NotificationsContainer").style.display='none';
+	closeNotifications();
     }
 }
 
@@ -99,7 +103,8 @@ function checkForEvents()
     document.getElementById('events').innerHTML="";
     var url1 = "./notifications_api.php?userid=<?=$user_id?>&number=20";
     var me = "<?=$user?>";
-    console.log("calling events api: ("+url1+")");    
+
+    //console.log("calling events api: ("+url1+")");    
     $.ajax({
              type: "GET",
              url: url1,
@@ -245,12 +250,39 @@ function openAnswered()
 
 function closeNotifications()
 {
-    if(document.getElementById("NotificationsContainer").style.display!='none')document.getElementById("NotificationsContainer").style.display='none';
+    if(document.getElementById('NotificationsContainer').style.display!='none')document.getElementById("NotificationsContainer").style.display='none';
+    //clear badges
+    document.getElementById('newAnswersBadge').style.display = 'none';
+    document.getElementById('newNotificationsBadge').style.display = 'none';
+    document.getElementById('newPostsBadge2').innerHTML= 'no';
+    document.getElementById('newAnswersBadge2').innerHTML ='no';
+
+    //clear notifications TODO:
+    if(document.getElementById('newPostsBadge').style.display != 'none')
+    {
+     window.setTimeout( function() 
+     {
+        console.log("calling clearBydate api");
+        $.ajax({
+             type: 'GET',
+             url: './api/clearBydate',
+             success: function(events) {}
+       });
+
+     }, 1000 );
+    document.getElementById('newPostsBadge').style.display = 'none';
+    }
 }
 
 function openPM()
 {
+ pmCounter=0; //thread autoload won't highlight the pm badge again when the time comes (unless there are new pm between now and the next clock tic)
  openOverlay('pm');
+ document.getElementById('newPMBadge').innerHTML = 0;
+ document.getElementById('pmNotificationMessage').innerHTML =  'No new PMs since you last checked';
+ document.getElementById('newNotificationsBadge').style.display = 'none';          
+ document.getElementById('newPMBadge').style.display = 'none';
+ document.getElementById('newPMBadge').innerHTML='0';
 }
 
 function openProfile()
@@ -562,11 +594,10 @@ function openProfile()
     <li class="notificationLi"  onclick="openPM();">
 	<div style="padding: 6px 30px 5px 12px;">
 	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g></svg>
-            <?php if (!is_null($new_pm) && $new_pm > 0) { ?>
-		<span id="newPMBadge" class="button__badge"><?=$new_pm?></span>
-    	    <?php } ?>
+        	    <?php if (!is_null($new_pm) && $new_pm > 0) { $styleStr = 'display:block;';} else {$styleStr = 'display:none;';} ?>
+        	    <span id="newPMBadge" class="button__badge" style="<?=$styleStr?>"><?=$new_pm?></span>
 	    </div>
-	    <div class="notificationMessage">You have received <?=$new_pm?>  new private messages since you last checked. 
+	    <div class="notificationMessage" id="pmNotificationMessage">You have received <?=$new_pm?>  new private messages since you last checked. 
 	    <?php if($new_pm >0){ ?>
 	    Check your pmail!
 	    <?php } ?>

@@ -6,7 +6,6 @@ require_once('mysql_log.php');
 ?>
 <base target="bottom">
 
-<script type="text/javascript" src="<?=autoversion('js/threads_autoload.js')?>"></script>
 <script type="text/javascript" src="<?=autoversion('js/controls.js')?>"></script>
 <script type="text/javascript" src="js/jquery-ui.js"></script>
 <script>

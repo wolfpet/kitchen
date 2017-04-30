@@ -25,7 +25,34 @@ require_once('mysql_log.php');
 <script src="js/jquery-1.10.2.min.js"></script>
 <script language="JavaScript" src="<?=autoversion('js/junk.js')?>"></script>
 <script language="JavaScript" src="<?=autoversion('js/autoload.js')?>"></script>
-<script language="JavaScript" src="js/threads_autoload.js"></script>
+<!-- <script language="JavaScript" src="js/threads_autoload.js"></script> -->
+<script>
+var selected_id = "";
+
+function selectMsg(id) {
+  id = "sp_" + id;
+  //console.log('selectMsg  id=' + id);
+  if (selected_id != "") {
+  // reset selection
+  //console.log('resetting selected id=' + selected_id);
+  var selected = document.getElementById(selected_id);
+  if (selected != null) {
+  selected.className = null;
+  }
+ }
+ var selected = document.getElementById(id);
+ if (selected != null) {
+  //console.log('selected element id=' + id);
+  // select message
+  selected.className = "selected";
+  selected_id = id;
+ } else {
+    // message not found
+    selected_id = "";
+    //console.log('id=' + id + "not found");
+ }
+}
+</script>
 <base target="bottom">
 <?php
 

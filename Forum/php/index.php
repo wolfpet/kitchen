@@ -379,8 +379,16 @@ $app->get('/api/messages', function() use ($app) {
     $max_id = intval($max_id);
   }
   
+  $min_id =  $app->request->getQuery('minid');
+   if (is_null($min_id)) {
+     $min_id = -1;
+   } else {
+     $min_id = intval($min_id);
+   }
+
+
   switch ($mode) {
-    
+
     case 'bydate':
       $default_count = 30;
       $query = null;
@@ -402,7 +410,11 @@ $app->get('/api/messages', function() use ($app) {
             $count = $default_count;
         }
       }
-      
+      //if min_id is provided then return the subset of msgs
+      //between min_id and the latest, but not more than max count
+      if($min_id >0) {
+        $query = 'SELECT  p.subject, p.author from confa_posts p where p.id > '. $min_id . ' order by p.id desc limit 500';
+      }
       if (is_null($query)) {
         $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
           . ':00\') as created, p.subject, p.author as author, p.status, p.id as msg_id, p.chars, p.content_flags, p.parent, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
@@ -414,9 +426,25 @@ $app->get('/api/messages', function() use ($app) {
       break;
         
     case 'answered':
-      $result = get_answered(is_null($count) ? 0 : $count, $format != "count_only" /* do not update timestamp if count_only */);  
+      $result = get_answered(is_null($count) ? 0 : $count, $format != "count_only" /* do not update timestamp if count_only */);
       break;
+      //&min_bydate_id
       
+    case 'answeredmin':
+          $min_bydate_id = $app->request->getQuery('min_bydate_id');
+          if(is_null($min_bydate_id)){$min_bydate_id=0;}
+          $query = 'SELECT b.id as my_id, b.author as me_author, u.username, u.moder, u.ban_ends,
+          u.id as user_id, u.moder, p.closed as post_closed, p.level, p.page, CONVERT_TZ(p.modified, \''
+          . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.parent, p.auth, p.views, p.content_flags,
+          p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created,
+          p.subject, p.author, p.status, p.id as id, p.id as msg_id, p.chars, (select count(*) from confa_posts
+          where parent = p.id) as counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks,
+          (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p,
+          confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 and p.id >= '.$min_bydate_id.' order by id desc limit 100';
+          //die($query);
+      $result = mysql_query($query);
+
+      break;
     case 'mymessages':
       if (is_null($count)) {
         $count = 50;
@@ -467,7 +495,7 @@ $app->get('/api/messages', function() use ($app) {
       'id' => intval($row['msg_id']),
       'status' => intval($row['status']),
       'subject' => api_get_subject($row['subject'], $row['status']),
-      'author' => array('id'  => intval($row['auth']), 'name' => $row['username']),
+      'author' => array('id'  => intval($row['user_id']), 'name' => $row['username']),
       'created' => $row['created'],
       'views' => intval($row['views']),
       'likes' => intval($row['likes']),
@@ -493,11 +521,26 @@ $app->get('/api/messages', function() use ($app) {
   if ($format=="count_only") {
     $response->setJsonContent(array('count' => $count));        
   } else {
-    $response->setJsonContent(array('count' => $count,'messages' => $messages));    
+    $response->setJsonContent(array('count' => $count, 'user_id' => $user_id, 'messages' => $messages));    
   }
   
   return $response;  
 });
+
+/**
+ * GET /api/clearBydate
+ *
+ * Returns user profile and session ID (in headers)
+ */
+$app->get('/api/clearBydate', function() use ($app) {
+  global $logged_in;
+  global $err_login;
+  global $user_id;
+  if(is_null($user_id))die('unauthorized');
+  //clear answered
+  $result = mysql_query('CALL get_last_ids(' . $user_id . ', @max_id, @last_id);');
+});
+
 
 /**
  * GET /api/profile
@@ -888,6 +931,19 @@ $app->get('/api/inbox', function() use ($app) {
   return api_pmail_list($app);
 });
 
+$app->get('/api/inboxlastid', function() use ($app) {
+ global $user_id;
+ $query = 'select max(id) as maxid from confa_pm where receiver ='. $user_id;
+ $result = mysql_query($query);
+ $row = mysql_fetch_assoc($result);
+ $id = intval($row['maxid']);
+ $response = new Response();
+ 
+ $response->setContentType('application/json');
+ $response->setJsonContent(array('id' => $id));
+ return $response;
+});
+
 $app->get('/api/inbox/{id:[0-9]+}', function($msg_id) use ($app) {
   $format = $app->request->getQuery('format');  
   if (is_null($format)) 
@@ -1021,7 +1077,7 @@ function api_pmail($app, $msg_id, $format) {
 $app->notFound(
     function () use ($app) {
         // echo 'Not found!';
-        $app->response->redirect("index.html")->sendHeaders();
+        $app->response->redirect("top.php")->sendHeaders();
         //$app->response->setStatusCode(404, "Not Found")->sendHeaders();
         //echo 'This page was not found!. Please, use for now http://kirdyk.radier.ca/bydate.php?page=1';        
     }
