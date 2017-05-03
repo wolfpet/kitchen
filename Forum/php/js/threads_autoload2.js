@@ -14,6 +14,8 @@ var render_time = 0; //time the user opened the notification center
 
 $( document ).ready(function() 
 {
+    //check if logged in. exit if not.
+    if(document.getElementById('newNotificationsBadge') == null)return;
     //call byDate API periodically
     window.setTimeout( function() {byDateCaller();}, 1000 );
     bydate_timer = window.setInterval(function(){byDateCaller();}, 60000);
@@ -80,6 +82,8 @@ function byDate(data)
       answeredCaller();
     }
     updateBadges();
+    //render the new titles inline 
+    if(data.count>0)updateThreads(data);
 }
 
 function answered(data)
@@ -208,6 +212,39 @@ function addCounter(text, count, bold, pad)
     if (braket >= 0) text = text.substring(0, braket);
     if (count > 0) text += prefix + (bold?"<b>":"") + count + (bold?"</b>":"") +")";
     return text;
+}
+
+function updateThreads(data)
+{
+for(i=data.count-1; i>=0; i--)
+    {
+      var id = data.messages[i].id;
+      //check if such title has already been rendered
+      if(contents.document.getElementById(id)!=null)continue;
+      //doesn't exist. Render!
+      var parentId = data.messages[i].parent;
+      var thread = contents.document.getElementById('sp_' + parentId);
+      var authorName = data.messages[i].author.name;
+      var authorId= data.messages[i].author.id;
+      var subj = data.messages[i].subject;
+      var views = data.messages[i].views;
+      var created = data.messages[i].created;
+      //let's try to add a neighbour  node to this thread
+      var dl = document.createElement('dl');
+      dl.innerHTML='<dd><span id="sp_'+id+'"><img border="0" src="images/dn.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="'+id+'" name="'+id+'" target="bottom" onclick="selectMsg(\''+id+'\');" href="/msg.php?id='+id+'">'+subj+'</a> <b><a class="user_link" href="/byuser.php?author_id='+authorId+'" target="contents">'+authorName+'</a></b> ['+views+' views] '+created+'</span><br></dd>';
+      if(parentId==0)
+      {
+        //new thread
+        var threadsDiv = contents.document.getElementById('threads');
+        threadsDiv.insertBefore(dl, threadsDiv.firstChild);
+        
+      }
+      else
+      {
+        //thread.insertBefore(dd, thread.firstChild);
+        thread.parentElement.appendChild(dl);
+      }
+    }
 }
 
 //legacy code: not sure what it does. TODO: investigate!

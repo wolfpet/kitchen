@@ -250,6 +250,7 @@ function openAnswered()
 
 function closeNotifications()
 {
+    if(document.getElementById('newNotificationsBadge')==null)return; //not logged in
     if(document.getElementById('NotificationsContainer').style.display!='none')document.getElementById("NotificationsContainer").style.display='none';
     //clear badges
     document.getElementById('newAnswersBadge').style.display = 'none';

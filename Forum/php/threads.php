@@ -1,5 +1,4 @@
 <?php
-/*$Id: top.php 378 2009-11-02 19:36:24Z dmitriy $*/
 require_once('head_inc.php');
     // do orientation
     if ( isset($_GET) && is_array($_GET) && count($_GET) > 0 ) {
@@ -7,13 +6,13 @@ require_once('head_inc.php');
             $dummy = intval(trim($_GET['dummy']));
             if ($dummy) {
               $orientation = "rows";
-              setcookie('orientation', '', time() - 100000, $root_dir, $host, false, true);              
+              setcookie('orientation', '', time() - 100000, $root_dir, $host, false, true);
             } else {
               $orientation = "cols";
-              setcookie('orientation', $orientation, 1800000000, $root_dir, $host, false, true);              
+              setcookie('orientation', $orientation, 1800000000, $root_dir, $host, false, true);
             }
         }
-    }    
+    }
 require_once('html_head_inc.php');
 require_once('mysql_log.php');
 
@@ -27,6 +26,7 @@ require_once('mysql_log.php');
 <script language="JavaScript" src="<?=autoversion('js/autoload.js')?>"></script>
 <!-- <script language="JavaScript" src="js/threads_autoload.js"></script> -->
 <script>
+//"
 var selected_id = "";
 
 function selectMsg(id) {
@@ -52,12 +52,14 @@ function selectMsg(id) {
     //console.log('id=' + id + "not found");
  }
 }
+
+function renderNewPosts(data)
+{
+
+}
 </script>
 <base target="bottom">
 <?php
-
-//print($user_id);
-
 
 if (!is_null($user_id) && $user_id != null) {
 
