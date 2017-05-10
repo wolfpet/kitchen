@@ -224,6 +224,7 @@ for(i=data.count-1; i>=0; i--)
       //doesn't exist. Render!
       var parentId = data.messages[i].parent;
       var thread = contents.document.getElementById('sp_' + parentId);
+      if(thread == null)continue; //parent is outside the loaded threads, Skip.
       var authorName = data.messages[i].author.name;
       var authorId= data.messages[i].author.id;
       var subj = data.messages[i].subject;
