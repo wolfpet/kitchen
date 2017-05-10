@@ -18,7 +18,7 @@ $( document ).ready(function()
     if(document.getElementById('newNotificationsBadge') == null)return;
     //call byDate API periodically
     window.setTimeout( function() {byDateCaller();}, 1000 );
-    bydate_timer = window.setInterval(function(){byDateCaller();}, 6000);
+    bydate_timer = window.setInterval(function(){byDateCaller();}, 60000);
     pm_timer = window.setInterval(function(){pmCaller();}, 60000);
 });
 
