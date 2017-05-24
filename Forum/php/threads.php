@@ -28,6 +28,7 @@ require_once('mysql_log.php');
 <script>
 //"
 var selected_id = "";
+var previewInProgress=false; 
 
 function selectMsg(id) {
   id = "sp_" + id;
@@ -53,10 +54,38 @@ function selectMsg(id) {
  }
 }
 
-function renderNewPosts(data)
+function previewMsg(msgId)
+{
+ if(parent.bottom.document.getElementById("postPreview")==null)return; //nowhere to preview
+ parent.bottom.document.getElementById("postPreview").innerHTML='';
+ parent.bottom.document.getElementById("postPreview").style.display = "block";
+ if(previewInProgress)return;//something else is being queried. Don't compete.
+ //retreive from api/messages/xxxxxx
+ previewInProgress=true;
+ total_count=0;
+ $.ajax({
+         type: "GET",
+         url: "./api/messages/"+ msgId,
+         success: function(data)
+       {
+        renderPreview(data);
+       }
+    });
+}
+
+function renderPreview(data)
 {
 
+    var html  = data.body.html;
+    parent.bottom.document.getElementById("postPreview").innerHTML= html;
+    previewInProgress=false;
 }
+function clearPreview()
+{
+  if(parent.bottom.document.getElementById("postPreview")==null)return; //nowhere to preview
+  parent.bottom.document.getElementById("postPreview").style.display = "none";
+}
+
 </script>
 <base target="bottom">
 <?php

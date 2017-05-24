@@ -1,4 +1,4 @@
-﻿<Html>
+<Html>
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -6,6 +6,7 @@
 <title>Welcome Frame - Kitchen</title>
 </head>
 <body>
+<div id="postPreview" style="display: none; height: 90vh; width: 95vw; position: absolute; background-color: white;"></div>
 <H3> VIP forum</H3>
 Hi and welcome! There are only 3 rules in this forum: <br><br>
 1. Nothing illegal is allowed. <br>

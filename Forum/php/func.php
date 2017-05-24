@@ -255,6 +255,7 @@ function get_show_hidden_and_ignored() {
   }
 }
 
+//"
 function get_threads_ex($limit = 200, $thread_id = null) {
 
   global $prop_tz;
@@ -433,7 +434,7 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
       if ($add_icon) {
         $line .= $icon;
       }
-      $line .= $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>'.$nsfw.$suffix.' ';
+      $line .= $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" onmouseover="previewMsg(\''.$row['msg_id'].'\');" onmouseout="clearPreview();" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>'.$nsfw.$suffix.' ';
   }
   
   $line .= '<b>' . $enc_user . '</b>' .  ' [' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
