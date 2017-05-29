@@ -76,7 +76,8 @@ function previewMsg(msgId)
 function renderPreview(data)
 {
 
-    var html  = data.body.html;
+    //var html  = data.body.html;
+    var html = '<h3>' + data.subject + '</h3> Author: <b>' + data.author.name  +'</b> [' + data.views + '] ' + data.created + '<br><hr>' + data.body.html;
     parent.bottom.document.getElementById("postPreview").innerHTML= html;
     previewInProgress=false;
 }

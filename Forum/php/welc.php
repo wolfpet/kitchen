@@ -3,6 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <link rel="stylesheet" type="text/css" href="css/disc2.css?<?=filemtime('css/disc2.css')?>">
+<link rel="stylesheet" type="text/css" href="css/common.css?1476981264">
 <title>Welcome Frame - Kitchen</title>
 </head>
 <body>
