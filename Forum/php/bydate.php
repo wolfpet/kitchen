@@ -22,6 +22,7 @@ $show_hidden = 2;
 
     if (!is_null($user_id)) {
       $query = "SELECT show_hidden from confa_users where id=" . $user_id;
+
       if (!($resulti = mysqli_query($linki, $query))) {
         mysql_log(__FILE__ . ':' . __LINE__, 'Multiquery failed: ' . mysqli_error($linki));
         die('multiquery failed');
@@ -36,13 +37,14 @@ $show_hidden = 2;
     }
     if (!mysqli_query($linki, 'call get_last_ids(' . $test_user_id . ', @max_id, @last_id);')) {
       mysql_log(__FILE__ . ':' . __LINE__, 'Multiquery failed: ' . mysqli_error($linki));
+      die(mysqli_error($linki));
       die('multiquery failed(1)');
     }
 
     if (!($resulti = mysqli_query($linki, 'select @max_id as max_id, @last_id as last_id'))) {
       mysql_log(__FILE__ . ':' . __LINE__, 'Multiquery failed: ' . mysqli_error($linki));
       die('multiquery failed(2)');
-
+      
     }
 
    $row = mysqli_fetch_assoc($resulti);

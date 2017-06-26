@@ -173,7 +173,7 @@ function _pages_function($add_fluff=false) {
     print('</div>');  
     
     // print_pages($max_page, $page, 'contents', $cur_page);
-    print('<BR><a href="#up" target="_top">Up</a>');
+    print('<BR><a href="#up">Up</a>');
     print('&nbsp;&nbsp;<a href="javascript:load_threads(document.getElementById(\'threads\'), '.$last_thread.','.$limit.');" target="_top">More</a>');
 
     $end_timestamp = time();

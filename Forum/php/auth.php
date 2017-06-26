@@ -1,10 +1,10 @@
 <?php
-/*$Id: auth.php 803 2012-10-14 19:35:33Z dmitriy $*/
 
     $logged_in = false;
     $ban = false;
     $new_pm = 0;
 
+require_once('settings.php');
 require_once('get_params_inc.php');
 
     if (!is_null($ip)) {
@@ -23,12 +23,13 @@ require_once('get_params_inc.php');
     if (!is_null($auth_cookie) && !is_null($user)) {
         $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.moder, s.safe_mode, u.menu_style, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated, u.last_pm_check_time, u.show_smileys, u.reply_to_email from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_real_escape_string($user) . '\'';
         $result = mysql_query($query);
+	//die($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
             die('Query failed');
         }
-
         if (mysql_num_rows($result) > 0) {
+
             $row = mysql_fetch_assoc($result);
             $ban_ends = $row['ban_ends'];
             $user_id = $row['id'];
@@ -79,7 +80,7 @@ require_once('get_params_inc.php');
             } else {
                 $logged_in = false;
                 $query = 'DELETE from confa_sessions where hash=\'' . $auth_cookie . '\' and id=' . $user_id;
-                setcookie('auth_cookie2', '', time() - 100000, $root_dir, $host, false, true);
+                setcookie('auth_'.$dbname, '', time() - 100000, $root_dir, $host, false, true);
             }
             $result = mysql_query($query);
             if (!$result) {
@@ -99,6 +100,7 @@ require_once('get_params_inc.php');
 
         } else {
           mysql_log( __FILE__, 'login via cookie failed for user ' . $user .' cookie=' . $auth_cookie);
+          
         }
     } else {
           mysql_log( __FILE__, 'no cookie or user name: ' . $user .' cookie=' . $auth_cookie);      

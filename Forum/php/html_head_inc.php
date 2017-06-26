@@ -21,7 +21,7 @@ if (!is_null($user_id) && $user_id != null) {
 <html>
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no, shrink-to-fit=no">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/'.$css)?>">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/common.css')?>">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/ribbon.css')?>">

@@ -1,6 +1,6 @@
 <?php
 /*$Id: new_user_inc.php 381 2009-11-02 20:25:46Z dmitriy $*/
-if ( !isset($reg_type) || 
+if ( isset($reg_type) && 
    ( $reg_type == REG_TYPE_OPEN ||
      $reg_type == REG_TYPE_EMAIL ||
      $reg_type == REG_TYPE_CONFIRM)) { 
@@ -52,17 +52,9 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
   else{
     // Closed registration message is not defined, print the default one
 ?>
-Due to abuse of free, impersonated automatic registration system, a new way of registration was introduced.
-Goal is to make sure a person, trying to be registered is a real person, is not trying to register multiple accounts
-and planning to be a good member of our community. In a very rare, unlikely case, as a result of long and multiple 
-conflicts with the community, account may be suspended.
-<br>To register, simply send email with request and desired nick to <B><?=$from_email?></B><!--<img src="/images/myemail.png"/>-->,
+This forum isn't open to the public.
+<br>To register, simply send email with request and desired username to <B>XXX@VVV.COM</B>
 you will get response with the password shortly.
-However, in some cases, identification through some of the acceptable ways may be requested, such as request
-to send email through linkedin or other methods.
-<B>Please, send 2 times due to spam filter</B>
-
-We are welcome everyone with a good spirit and peacefull intentions.
 Thank you.
 <?php
   }

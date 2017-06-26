@@ -5,8 +5,8 @@
     if (strlen($debug) > 0) {
       $ip = getenv("IP");
       $agent = getenv("agent");
-      $auth_cookie = getenv("auth_cookie2");
-      $user = getenv("user2");
+      $auth_cookie = getenv("auth_".$dbname);
+      $user = getenv("user_".$dbname);
       $last_id = getenv("last_id2");
       $last_answered_id = getenv("last_answered_id2");
       $action = getenv("action");
@@ -39,11 +39,11 @@
     }
 
     if ( isset($_COOKIE) && is_array($_COOKIE) && count($_COOKIE) > 0 ) {
-        if (array_key_exists('auth_cookie2', $_COOKIE)) {
-            $auth_cookie = $_COOKIE['auth_cookie2'];
+        if (array_key_exists('auth_'.$dbname, $_COOKIE)) {
+            $auth_cookie = $_COOKIE['auth_'.$dbname];
         }
-        if (array_key_exists('user2', $_COOKIE)) {
-            $user = $_COOKIE['user2'];
+        if (array_key_exists('user_' .$dbname, $_COOKIE)) {
+            $user = $_COOKIE['user_'.$dbname];
         }
         if (array_key_exists('last_id2', $_COOKIE)) {
             $last_id = $_COOKIE['last_id2'];

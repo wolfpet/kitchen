@@ -6,7 +6,8 @@ $dbuser     = '<user>';
 $dbpassword = '<password>';
 $dbname     = 'confa';
 
-$host   = '<hostname>'; // 127.0.0.1 for running locally
+//$host   = '<hostname>'; // 127.0.0.1 for running locally
+$host   = $_SERVER['SERVER_NAME']; //subdomain by default. comment this and uncomment one above for a single db setup
 $root_dir   = '/';
 $server_tz = '-5:00';
 
@@ -16,6 +17,14 @@ date_default_timezone_set($prop_tz_name);
 $title='<forum title>';
 $from_email = '<supportemailaddress>';
 
+if($host != $base)
+{
+    //subforum? Assign an alternative DB. dbname must be a diff between $host and $base
+    //for example, if the base is vipvip.ca and the host is dev.vipvip.va then $dbname is 'dev'
+    $dbname = str_replace('.'.$base, '', $host);
+    $title = ucfirst ($dbname); //in multitenant environment subdomain, db name and forum title are the same thing
+}
+                
 // Registration mode (by default, closed)
 $reg_type = REG_TYPE_CLOSED; // REG_TYPE_OPEN, REG_TYPE_CONFIRM;
 
