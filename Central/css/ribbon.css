@@ -1,0 +1,245 @@
+/* This style defines the entire ribbon bar */
+.ribbon {
+ 	display: block;
+	width:100%;
+	height: 54px;
+	background-color:#0080c0;
+	font-family:Verdana,Arial;
+	font-size:8pt;
+	color: #ffffff;
+	overflow: hidden;	
+}
+/* The group div contains the title and a set of icons. It gets invisible on mobile screens */
+.ribbonGroup{
+	height: 44px;
+	display: inline-block;
+	padding-top: 4px;
+	border: #0090c0;
+	border-style: solid;
+	border-width: 1px;
+	margin-top: 2px;
+}
+/* The mobile group div remains visible and gets larger on mobile screens */
+.ribbonGroupMobile{
+	height: 44px;
+	display: inline-block;
+	padding-top: 4px;
+	border: #0090c0;
+	border-style: solid;
+	margin-top: 2px;
+}
+.ribbonIcon { 
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+}
+
+.ribbonGroupTitle{
+	padding-bottom: 4px; 
+	text-align: center;
+	font-size: 8pt;
+}
+/* Badges to indicate the number of new items (new pmail, new posts, etc */
+.button__badge {
+  background-color: #fa3e3e;
+  border-radius: 2px;
+  color: white;
+ 
+  padding: 1px 3px;
+  font-size: 8px;
+  
+  position: absolute; /* Position the badge within the relatively positioned button */
+  top: 0;
+  right: 0;
+}
+
+/* We consider screens less than 600 px mobile */
+@media screen and (max-width: 600px) {
+	.ribbon {height: 54px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 47px; height: 47px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 12px;}
+
+}
+
+/* Really small phone screens! */
+@media screen and (max-width: 400px) {
+	.ribbon {height: 50px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 37px; height: 37px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 10px;}
+}
+
+/* Ridiculously tiny phone screens! */
+@media screen and (max-width: 300px) {
+	.ribbon {height: 42px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 27px; height: 27px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 8px;}
+}
+
+/* A watch or something?  */
+@media screen and (max-width: 250px) {
+	.ribbon {height: 35px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 20px; height: 20px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 6px;}
+}
+
+
+.ribbonIcon:hover { 
+	background-color: #0090c0;
+	cursor: pointer;
+}
+
+svg.ribbonIcon {
+	color: #ffffff;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 2px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 1.2s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Dropdown menu for PMAIL:  incox, sent and new */
+.pmdropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.pmdropdown-content {
+    display: none;
+    position: fixed;
+    right: 0;
+    background-color: #0080c0;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.pmdropdown-content a {
+    color: white;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+}
+
+.pmdropdown-content a:hover {background-color: #0090c0;}
+
+.pmdropdown:hover .pmdropdown-content {
+    display: block;
+}
+
+body#html_body {
+  margin:0;
+  padding:0;
+  border:0;
+}
+.content {
+  padding: 1em;
+}
+
+/* Notification center*/
+.notificationContainer {
+    display: block; 
+    position: absolute; 
+    top: 54px; 
+    left: 100px; 
+    width: 430px;
+    border: 1px solid grey; 
+    box-shadow: 0 3px 8px grey;
+    z-index: 1000;
+    max-height: 85vh;
+    overflow-y: scroll;
+}
+
+@media screen and (max-width: 600px) {
+.notificationContainer {left: 10px; width: 90vw;}
+.hideOnMobile {display: none;}
+
+#slider-area {display:none;}
+#slider {display:none;}
+
+}
+@media screen and (max-width: 400px) {
+.notificationMessage {font-size: xx-small;}
+.notificationContainer{top:44px;}
+}
+.notificationLi {
+    height: 60px; 
+    position: relative; 
+    border-bottom: 1px solid; 
+    background-color: #fff;
+    list-style-type: none; 
+    overflow: hidden;
+}
+.notificationLi:hover {
+    cursor: pointer;
+    background: #f0f0f0; 
+}
+.notificationIcon {
+    top: 4px; 
+    left: -6px; 
+    float: left;
+    height: 40px; 
+    width: 50px; 
+    position: relative;
+}
+.notificationMessage {
+    position: relative; 
+    top: 1px;
+}
+.notificationTime {
+    font-size: xx-small;
+    top: 4px;
+    position: relative;
+    color: grey;
+}
+
+.draggable { width: 50px; height: 30px;}
+#slider { cursor: n-resize;   top:35vh; right: 0px; background: white;}
+#slider-area { width: 50px; height:86vh; position: absolute; right: 13px;  z-index: 1001;   top: 88px;}
+
