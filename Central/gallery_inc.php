@@ -5,10 +5,13 @@
 currentPhotoIndex=0;
 
 var galleryImages = ["./images/forum.png", 
+"https://s3.amazonaws.com/vipvip.ca/7rsgBEfBNo66LIVofWNsScreenshot_20170628-123922.png",
 "https://s3.amazonaws.com/vipvip.ca/ffTtgW5yV4Gallery.png", 
 "https://s3.amazonaws.com/vipvip.ca/DMkHp1hdFwpm.png", 
 "https://s3.amazonaws.com/vipvip.ca/HZndZAtSp7noti.png",
-"https://s3.amazonaws.com/vipvip.ca/Jb7xmjnm16colors.png"
+"https://s3.amazonaws.com/vipvip.ca/Jb7xmjnm16colors.png",
+"https://s3.amazonaws.com/vipvip.ca/b7e6S5V8tUimage.png",
+"https://s3.amazonaws.com/vipvip.ca/FUzO5EclWGpolls.png"
 
 ];
 function nextPhoto()
