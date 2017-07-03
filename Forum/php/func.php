@@ -343,9 +343,9 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
   }
 
   if ($ignored != null) {
-    if ($show_hidden == 1 && in_array($row['user_id'], $ignored)) {
-      return ($indent ? '&nbsp;' : '') . "<font color=\"lightgrey\"/>Hidden msg by " . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . "</font>";
-    }
+    //if ($show_hidden == 1 && in_array($row['user_id'], $ignored)) {
+    //  return ($indent ? '&nbsp;' : '') . "<font color=\"lightgrey\"/>Hidden msg by " . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . "</font>";
+    //}
     if ($show_hidden == 0 && in_array($row['user_id'], $ignored)) {
       return "";
     }
@@ -400,7 +400,18 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
             $line .= '<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> ';
         }
       }
-      $line .= '<I><font color="gray"><del>This message has been deleted</del></font></I> ';
+      $line .= '<I><font color="gray"><del>This message has been deleted</del></font></I>';
+  } else if ($ignored != null && $show_hidden == 1 && in_array($row['user_id'], $ignored)) {
+      $line = ($indent ? '&nbsp;' : '') . '<span id="sp_'.$row['msg_id'].'">';
+      if ($add_icon) {
+        if ($row['level'] == 0) {
+            $line .= '<img border=0 src="images/bs.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> ';
+        } else {
+            $line .= '<img border=0 src="images/dc.gif" width=16 height=16 alt="*" align="top" style="'.$style.'"> ';
+        }
+      }
+      $line .= '<font color="lightgrey"/>Hidden message by <b>' . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . '</b></font>';
+      return $line;
   } else {
       $subj = print_subject($subj);
       if ($row['level'] == 0) {
@@ -819,10 +830,10 @@ function print_msgs($ar, $msgs) {
     $keys = array_keys($ar);
     print("<dl><dd>\n");
     foreach ($keys as $key) {
-        //if ($msgs[$key] != "") {
-        print($msgs[$key]);
-        print("<BR>\n");
-        //}
+        if ($msgs[$key] != "") {
+          print($msgs[$key]);
+          print("<BR>\n");
+        }
         if (sizeof($ar[$key]) > 0) {
             print_msgs($ar[$key], $msgs);
         }
