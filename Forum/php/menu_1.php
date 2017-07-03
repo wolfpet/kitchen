@@ -16,9 +16,10 @@
 <tr>
 <td align="left">
 <?php if (isset($banner) && !is_null($banner)) { ?>
-<img src="<?=$banner?>" alt="<?=$title?>"/>
-<?php } 
-if (isset($title) && $title != null) { ?>
+<a target="_top" href="m.php" title="Mobile version"><img src="<?=$banner?>" alt="<?=$title?>"/></a>
+<a rel="nofollow" href="//www.twitter.com/mykirdyk" title="Twitter" target="_blank"><img src="/images/twitter24x24.png"/></a>
+<?php }
+if (!isset($banner) && isset($title) && $title != null) { ?>
 <h3 style="padding:0px;margin:0px;" class="emboss"><?php print($title);?></h3>
 <?php 
 }
@@ -104,8 +105,7 @@ Username: <input type="text" id="user" name="user" maxlength="64" size="16" valu
 <a target="_top" class="menu" href="cols.html">Columns</a> |
 <?php } ?>
 
-<a target="_top" class="menu" href="m.php" title="Flat">Flat</a> |
-<a target="_top" class="menu" href="mobile/index.html">Phone</a> |
+<a target="_top" class="menu" href="mobile/index.html">Mobile</a> |
 
 <?php
   if ($logged_in == false) {
@@ -131,35 +131,27 @@ Forgot password? |
   }
 ?>
 
-<a target="_blank" class="menu" href="https://github.com/wolfpet/kitchen">Code</a> <!--|
-
 <a target="contents" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">Refresh</a> 
--->
-]&nbsp;&nbsp&nbsp;[ <?php if (strcmp($cur_page, $page_search) == 0) {?>Search |<?php } else { ?><a href="<?php print($root_dir . $page_search); 
-  if (strcmp($cur_page, $page_my_bookmarks) == 0) print("?mode=bookmarks");
-?>" class="menu"  target="bottom">Search</A> |<?php } ?>  <a href="<?php print($root_dir . $page_new); ?>" class="menu" target="bottom">New thread</a> |
-<a target="contents" class="menu" href="<?php print($root_dir . $cur_page); if (!strcmp($cur_page, $page_byuser)) {print('?author_id=' . $author_id); }else {if (/*!strcmp($cur_page, $page_expanded) && */!is_null($page)){ print('?page=' . $page); } } ?>">Refresh</a>  ]
-</td><td align="right" nowrap><!--
+
+]
+</td><td align="right" nowrap>
 [ <?php if (strcmp($cur_page, $page_search) == 0) {?>Search |<?php } else { ?><a href="<?php print($root_dir . $page_search); 
   if (strcmp($cur_page, $page_my_bookmarks) == 0) print("?mode=bookmarks");
 ?>" class="menu"  target="bottom">Search</A> |<?php } ?>  <a href="<?php print($root_dir . $page_new); ?>" class="menu" target="bottom">New thread</a>
- ]
- -->
-</td></tr>
+ ]</td></tr>
 <?php
     if ($logged_in) {
 ?>
 <tr><td align="left">
  <SPAN STYLE="background-color: #E0E0E0">
-[ Pmail<?php if (!is_null($new_pm) && $new_pm > 0){ print('(<font color="red"><b>' . $new_pm . '</b></font>)');}?> | 
-
+[ 
 <?php
 if (strcmp($cur_page, $page_pmail) == 0) {?>
-  <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>"><i>Inbox</i></a> |
+  <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>"><i>Inbox</i></a>
 <?php } else { ?>
-  <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>">Inbox</a> |
+  <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail); ?>">Inbox</a>
 <?php } ?>
-
+<?php if (!is_null($new_pm) && $new_pm > 0){ print('(<font color="red"><b>' . $new_pm . '</b></font>)');}?> | 
 <?php
 if (strcmp($cur_page, $page_pmail_sent) == 0) {?>
 <a target="contents" class="menu" href="<?php print($root_dir . $page_pmail_sent); ?>"><i>Sent</i></a> |
@@ -183,11 +175,11 @@ New ]<?php
 <?php
     if (strcmp($cur_page, $page_my_messages) == 0) {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_my_messages); ?>"><I>My messages</I></a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_my_messages); ?>"><I>My&nbsp;messages</I></a> |
 <?php
     } else {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_my_messages); ?>">My messages</a> |
+<a target="contents" class="menu" href="<?php print($root_dir . $page_my_messages); ?>">My&nbsp;messages</a> |
 <?php
     }
 ?>
