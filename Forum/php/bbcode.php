@@ -181,7 +181,7 @@ function after_bbcode($body) {
     '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
     '#(<img src=)#is',
     '#\((?:c|C|с|С)\)#is',
-    '#(\#\w+)#is'
+    '#(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
     ), array (
     // replace
     '<strong>$1</strong>',
