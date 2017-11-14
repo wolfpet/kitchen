@@ -212,7 +212,7 @@ function after_bbcode($body) {
     '#(<img src=)#is',
     '#\((?:c|C|с|С)\)#is',
     '#\[div\](.*?)\[/div\]#is', // div ([div]anything[/div]
-    '#(?:^|\s)(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
+    '#(^|\s)(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
     ), array (
     // replace
     '<strong>$1</strong>',
@@ -222,7 +222,7 @@ function after_bbcode($body) {
     '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src=',
     '©',
     '<div>$1</div>',
-    '<a href="javascript:hashtag(\'$1\')">$1</a>'
+    '$1<a href="javascript:hashtag(\'$2\')">$2</a>'
     ), $body);    
        
   return fix_msg_target($body);
