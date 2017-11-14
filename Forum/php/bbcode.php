@@ -19,8 +19,8 @@ function do_bbcode($str, $auth_id, $msg_id) {
       '#\[url=([^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
       '#\[url\]((?:ftp|https?)://[^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]),
       '#\[url\]([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]) 
-      '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#i', // Image ([img=http://url_to_image]tooltip[/img])
-      '#\[img=(\S*?)\s*\](.*)\[/img\]#i', // Image ([img=url_to_image]tooltip[/img])
+      '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#is', // Image ([img=http://url_to_image]tooltip[/img])
+      '#\[img=(\S*?)\s*\](.*)\[/img\]#is', // Image ([img=url_to_image]tooltip[/img])
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
       '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
@@ -194,7 +194,14 @@ function after_bbcode($body) {
     foreach($matches[1] as $a) {
       $body = str_replace($a, str_replace("<br />", '', $a), $body);
     }
-  }  
+  }
+  
+  // remove <br /> from title="
+  if (preg_match_all('/title="(.*?)"/s', $body, $matches)) {
+    foreach($matches[1] as $a) {
+      $body = str_replace($a, str_replace("<br />", '&#013;', $a), $body);
+    }
+  }   
 
   $body = preg_replace( array (
     // search
@@ -205,7 +212,7 @@ function after_bbcode($body) {
     '#(<img src=)#is',
     '#\((?:c|C|с|С)\)#is',
     '#\[div\](.*?)\[/div\]#is', // div ([div]anything[/div]
-    '#(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
+    '#(?:^|\s)(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
     ), array (
     // replace
     '<strong>$1</strong>',
