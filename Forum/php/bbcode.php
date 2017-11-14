@@ -18,8 +18,8 @@ function do_bbcode($str) {
       '#\[url=([^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
       '#\[url\]((?:ftp|https?)://[^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]),
       '#\[url\]([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]) 
-      '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#i', // Image ([img=http://url_to_image]tooltip[/img])
-      '#\[img=(\S*?)\s*\](.*)\[/img\]#i', // Image ([img=url_to_image]tooltip[/img])
+      '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#is', // Image ([img=http://url_to_image]tooltip[/img])
+      '#\[img=(\S*?)\s*\](.*)\[/img\]#is', // Image ([img=url_to_image]tooltip[/img])
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
       '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
@@ -185,7 +185,7 @@ function after_bbcode($body) {
     '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
     '#(<img src=)#is',
     '#\((?:c|C|с|С)\)#is',
-    '#(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
+    '#(?:^|\s)(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
     ), array (
     // replace
     '<strong>$1</strong>',
