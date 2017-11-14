@@ -177,6 +177,13 @@ function after_bbcode($body) {
     }
   }  
 
+  // remove <br /> from title="
+  if (preg_match_all('/title="(.*?)"/s', $body, $matches)) {
+    foreach($matches[1] as $a) {
+      $body = str_replace($a, str_replace("<br />", '&#013;', $a), $body);
+    }
+  }  
+
   $body = preg_replace( array (
     // search
     '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
