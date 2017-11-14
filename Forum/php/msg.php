@@ -111,11 +111,22 @@ function react(msg_id, reaction) {
   });
 }
 
+function hashtag(text) {
+  console.log("hashtag " + text);
+  $('input[name="text"]').val(text);
+  $('input[name="searchin"]').val(1);
+  document.querySelector('form[name="hashtag"]').submit();
+}
+
 </script>
 <base target="bottom">
 </head>
-<body>
-<?php
+<body><form name="hashtag" id="hashtag" action="dosearch.php" method="post" target="contents">
+  <input type="hidden" id="text" name="text"/>
+  <input type="hidden" id="searchin" name="searchin"/>
+  <input type="hidden" id="fromyear" name="fromyear" value="0"/>
+  <input type="hidden" id="toyear" name="toyear" value="0"/>
+</form><?php
     if (is_null($action)) {
     	$query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id;
     	$result = mysql_query($query);

@@ -180,7 +180,8 @@ function after_bbcode($body) {
     '#\[u\](.*?)\[/u\]#is', // Underline ([u]text[/u])
     '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
     '#(<img src=)#is',
-    '#\((?:c|C|с|С)\)#is'
+    '#\((?:c|C|с|С)\)#is',
+    '#(\#\w+)#is'
     ), array (
     // replace
     '<strong>$1</strong>',
@@ -188,7 +189,8 @@ function after_bbcode($body) {
     '<span style="text-decoration: underline;">$1</span>',
     '<span style="text-decoration: line-through;">$1</span>',
     '<img style="max-width: 99%;max-height: 99%;" src=',
-    '©'
+    '©',
+    '<a href="javascript:hashtag(\'$1\')">$1</a>'
     ), $body);    
        
   return fix_msg_target($body);
