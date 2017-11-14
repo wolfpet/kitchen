@@ -18,8 +18,10 @@ function do_bbcode($str) {
       '#\[url=([^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
       '#\[url\]((?:ftp|https?)://[^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]),
       '#\[url\]([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]) 
-      '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image[/img])
-      '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image[/img])
+      '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#i', // Image ([img=http://url_to_image]tooltip[/img])
+      '#\[img=(\S*?)\s*\](.*)\[/img\]#i', // Image ([img=url_to_image]tooltip[/img])
+      '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
+      '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
   );
    
@@ -39,6 +41,8 @@ function do_bbcode($str) {
       '<a target="_blank" href="//$1">$2</a>',
       '<a target="_blank" href="$1">$1</a>',
       '<a target="_blank" href="//$1">$1</a>',
+      '<img src="$1" alt="" title="$2"/>',
+      '<img src="//$1" alt="" title="$2"/>', 
       '<img src="$1" alt=""/>',
       '<img src="//$1" alt=""/>',
       '<img src="$1" alt=""/>'

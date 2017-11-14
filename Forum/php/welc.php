@@ -9,5 +9,8 @@
 <body>
 <div id="github" style="color:lightgray;float:right;position:absolute;left: 0px;top:5px;width:100%;height:100%;z-index: 9999;text-align: right"><a target="_blank" href="https://github.com/wolfpet/kitchen">GitHub</a>&nbsp;&nbsp;</div> 
 <H3> Free forum</H3>
+<?php if (isset($tmdb_key)) {?>
+<span id="tmdb-attribution" style="color:gray;height:10%;position:absolute;bottom:0;">This product uses the TMDb API but is not endorsed or certified by TMDb.&nbsp;<a target="_blank" href="https://www.themoviedb.org/"><img src="images/powered-by-rectangle-green.png" valign="middle" height="50%"></a></span>
+<?php } ?>
 </body>
 </html>

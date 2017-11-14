@@ -1131,7 +1131,7 @@ function youtube($body, $embed = true) {
 		$body
 	);
   
-	return rutube($result);
+	return rutube($result, $embed);
 }
 
 function rutube($body, $embed = true) {
@@ -1183,7 +1183,7 @@ function rutube($body, $embed = true) {
 			$body
 		);
 		
-	return dailymotion($result);
+	return dailymotion($result, $embed);
 }
 
 // Dailymotion URLs e.g. http://www.dailymotion.com/video/x3anr9r_cat-goes-nuts-chasing-light-reflection_fun
@@ -1237,7 +1237,7 @@ function dailymotion($body, $embed = true) {
 			$body
 		);
 		
-	return $result;
+	return tmdb($result, $embed);
 }
 
 function twitter($body, $embed = true) {
@@ -1272,6 +1272,95 @@ function twitter($body, $embed = true) {
 	return $result;
 }
 
+function tmdb($body, $embed = true) {
+   global $host, $tmdb_key;
+   
+   // e.g. http://www.imdb.com/title/tt2582782/?ref_=nm_flmg_act_4
+   $pattern = '(?:https?:\/\/)?(?:www\.)?imdb\.com\/(?:title|name)\/((?:tt|nm)[0-9]+)\/(?:(?:\?|&)[^\s\[<\]"]*)?';
+ 	
+   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
+     function ($matches) use ($embed, $host, $pattern, $tmdb_key) {
+       // var_dump($matches);
+       if(count($matches) < 5) return $matches[0];
+       
+       if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+         return $matches[0];
+ 
+       $url = $matches[0];
+ 			$id  = $matches[1];
+ 
+       $new_body = $url;
+       
+       if (isset($tmdb_key)) {
+         if (strcmp($tmdb_key, "TEST") == 0) {
+             $release_date = date_parse("1996-06-25")['year'];
+             $title = "Independence Day";
+             $thumbnail = '/bqLlWZJdhrS0knfEJRkquW7L8z2.jpg';
+         } else {          
+           $obj2 = file_get_contents("https://api.themoviedb.org/3/find/" . $id . "?api_key=".$tmdb_key."&external_source=imdb_id");
+           
+           if($obj2 === FALSE) 
+             return $url;
+ 
+           $ar2 = json_decode($obj2);
+           // var_dump($ar2); 
+           
+           if (count($ar2->movie_results) == 1) {
+             $release_date = date_parse($ar2->movie_results[0]->release_date)['year'];
+             $title = $ar2->movie_results[0]->title;
+             $thumbnail = $ar2->movie_results[0]->poster_path;
+             $tooltip = $ar2->movie_results[0]->overview;
+             $rating = $ar2->movie_results[0]->vote_average;
+           } else if (count($ar2->tv_results) == 1) {
+             $release_date = date_parse($ar2->tv_results[0]->first_air_date)['year'];
+             $title = $ar2->tv_results[0]->name;
+             $thumbnail = $ar2->tv_results[0]->poster_path;
+             $tooltip = $ar2->tv_results[0]->overview;
+             $rating = $ar2->tv_results[0]->vote_average;
+           } else if (count($ar2->person_results) == 1) {
+             if (count($ar2->person_results[0]->known_for) > 0) {
+               $release_date = '';
+               foreach ($ar2->person_results[0]->known_for as $film) {
+                 if ($release_date != '') $release_date .= ', ';
+                 $release_date .= $film->title;
+               }             
+             } else {
+               $release_date = "<no data>";
+             }
+             $title = $ar2->person_results[0]->name;
+             $thumbnail = $ar2->person_results[0]->profile_path;   
+          }
+        }
+       }
+       if ($embed && isset($thumbnail)) {
+           $new_body = "\n[img=https://image.tmdb.org/t/p/w185".$thumbnail."]";
+           if (isset($tooltip)) {
+             $new_body .= $tooltip . '[/img]';
+           }           
+           if (isset($title)) {
+             $new_body .= "\n[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url][/color]";
+             if (isset($rating)) {
+               $new_body .= ' [color=black][b]' . $rating . '[/b][/color][size=8]/10[/size]';
+             }             
+           } else {
+             $new_body .= "\nLink: [url]".$url."[/url]";
+           }
+           $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
+       } else if (isset($title)) {
+           $new_body = "[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url][/color]";
+           if (isset($rating)) {
+             $new_body .= ' ' . $rating;
+           }           
+           $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
+       }
+       return $new_body;
+ 		},
+ 		$body
+ 	);
+   
+ 	return $result;
+ }
+ 
 function gfycat($body, $embed = true) {
   if (!$embed) return $body;
   
