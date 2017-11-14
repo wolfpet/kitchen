@@ -134,11 +134,22 @@ function resizeMe(iframe)
     iframe.width  = iframe.contentWindow.document.body.scrollWidth;
     iframe.height = iframe.contentWindow.document.body.scrollHeight;
 }
+
+function hashtag(text) {
+  console.log("hashtag " + text);
+  $('input[name="text"]').val(text);
+  $('input[name="searchin"]').val(1);
+  document.querySelector('form[name="hashtag"]').submit();
+}
 </script>
 <base target="bottom">
 </head>
-<body>
-
+<body><form name="hashtag" id="hashtag" action="dosearch.php" method="post" target="contents">
+  <input type="hidden" id="text" name="text"/>
+  <input type="hidden" id="searchin" name="searchin"/>
+  <input type="hidden" id="fromyear" name="fromyear" value="0"/>
+  <input type="hidden" id="toyear" name="toyear" value="0"/>
+</form>
 <div id="expandMsg" onclick="toggleExpand();parent.expand();" style="float: right;position: relative;width: 0px;top: -20px;right: -5px;cursor: pointer;">
 	<svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></g></svg>
 </div>
