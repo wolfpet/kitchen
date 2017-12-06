@@ -232,6 +232,7 @@ function openMessage(id)
  window.frames["bottom"].location = "msg.php?id=" + id;
  openNotifications();
 }
+
 function openNewMessages()
 {
     //open by date
@@ -247,6 +248,14 @@ function openAnswered()
     openNotifications();
     resetBadges();
 }
+
+function openPolls()
+{
+    window.frames["contents"].location = "polls.php";
+    closeNotifications();
+    resetBadges();
+}
+
 
 function closeNotifications()
 {
@@ -397,6 +406,11 @@ function openProfile()
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" class="style-scope iron-icon"></path>	</g></svg>
 				<span class="tooltiptext">Photo Gallery</span></a>
 			</span> 
+			<span id="Polls" class="ribbonIcon tooltip"><a onclick="closeNotifications();openPolls();">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g> <path fill="<?=$ribbonColor ?>" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></g></svg>
+				<span class="tooltiptext">Polls</span></a>
+			</span> 
+
 			<span id="Search" class="ribbonIcon tooltip"><a target="bottom" onclick="closeNotifications();" href="<?=$root_dir.$page_search . (strcmp($cur_page, $page_my_bookmarks) == 0 ? "?mode=bookmarks" : "")?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></g></svg>
 				<span class="tooltiptext">Search</span></a>
