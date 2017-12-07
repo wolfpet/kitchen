@@ -1,6 +1,7 @@
 <?php
 
-function do_bbcode($str) {
+function do_bbcode($str, $auth_id, $msg_id) {
+
   // The array of regex patterns to look for
   $format_search = array(
       '#\[b\](.*?)\[/b\]#is', // Bold ([b]text[/b]
@@ -23,6 +24,8 @@ function do_bbcode($str) {
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
       '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
+      '#\[POLL\](.*?)\[/POLL\]#is', // Bold ([b]text[/b]
+      
   );
    
   // The matching array of strings to replace matches with
@@ -42,10 +45,12 @@ function do_bbcode($str) {
       '<a target="_blank" href="$1">$1</a>',
       '<a target="_blank" href="//$1">$1</a>',
       '<img src="$1" alt="" title="$2"/>',
-      '<img src="//$1" alt="" title="$2"/>', 
+      '<img src="//$1" alt="" title="$2"/>',
       '<img src="$1" alt=""/>',
       '<img src="//$1" alt=""/>',
-      '<img src="$1" alt=""/>'
+      '<img src="$1" alt=""/>',
+      '<iframe style="border-style: none; width: 100%; max-width: 460px;" id="poll$1" class="poll" src="polls_display.php?poll=$1" onload="resizeMe(this);"></iframe>'
+       
   );
   
   // Perform the actual conversion
@@ -68,10 +73,10 @@ function do_bbcode($str) {
   while ($count > 0) {
     $str = preg_replace($format_search, $format_replace, $str, -1, $count);
   }
-  // print('before naked called:-->'.$str.'<--');
+   //print('before naked called:-->'.$str.'<--');
   
   // Uncoded images & URLs   
-  return bbcode_naked_urls(bbcode_naked_images($str));
+  return bbcode_naked_urls(bbcode_naked_images($str, $auth_id, $msg_id));
 }
 
 // ================ Handling of URLs and Images outside of bb code ==========================
@@ -81,29 +86,38 @@ return '>'.$pattern.'<\/a>|="'.$pattern.'"|('.$pattern.')';
 }
 
 function bbcode_naked_images($str) {
+ global $auth_id;
+ global $msg_id; 
   // Deal with untagged images
   $str = preg_replace_callback('#'.unless_in_quotes('(?:ftp|https?):\/\/[^\s>"]+\.(?:jpg|jpeg|gif|png|bmp)(?:[^\s<"]*)?').'#is', // unprocessed images (i.e. without quotes around them)
     function ($m) {
+      global $auth_id;
+      global $msg_id;
       if(empty($m[1])) return $m[0];
-					else return '<img src="' . $m[1] . '" alt=""/>';
+	else 
+	{
+	    return '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
+	}
     }, $str);
-  // print("--->".$str."<---");
   
   // Google pic URLs are also images
   $str = preg_replace_callback('#'.unless_in_quotes('https:\/\/[a-z0-9]+\.googleusercontent.com\/[^\s<]+').'#is', // unprocessed images (i.e. without quotes around them)
     function ($m) {
       if(empty($m[1])) return $m[0];
-					else return '<img src="' . $m[1] . '" alt=""/>';
+	else {return '<img src="' . $m[1] . '" alt=""/>';}
     }, $str);
   return $str;
 }
 
 function bbcode_naked_urls($str) {
+
   // '[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]'
   return preg_replace_callback('#'.unless_in_quotes('[[:alpha:]]+://[^<>[:space:]\"]+').'#is', // unprocessed URLs(i.e. without quotes around them)
     function ($m) {
       if(empty($m[1])) return $m[0];
-					else return '<a target="_blank" href="' . $m[1] . '">' . $m[1] . '</a>';
+					else {
+						return '<a target="_blank" href="' . $m[1] . '">' . $m[1] . '</a>';
+					     }
     }, $str);
 }
 
@@ -111,7 +125,7 @@ function bbcode_naked_urls($str) {
  * Run this before bbcode is called to render content before bbcode() had a chance to mess it up
  */
 function before_bbcode($original_body, &$has_video=null) {
-  global $host, $protocol;
+  global $host;
   
   $body = preg_replace( array (
     // Vimeo on-the-fly e.g. https://vimeo.com/129252030
@@ -124,8 +138,11 @@ function before_bbcode($original_body, &$has_video=null) {
     '#(?<!\[url(=|\]))((?:https?://)?video-[^\s<\]"]+\.mp4(?:(?:\?)[^\s<\]"]*)?)#is',
     // FB video clip (yet another) e.g. https://www.facebook.com/video.php?v=911326538908142
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/video\.php\?v=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    // FB post e.g. https://www.facebook.com/pablitomoiseevich/posts/10154405819774010
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/posts/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',    
     // imgur
-    '#(?<!(\[url(=|]))|\[img=)((?:https?://)(?:www\.)?i\.imgur\.com/([^\s\.]*)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?i\.imgur\.com\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // youtube with no http(s) prefix
     '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // s3 vipvip videos e.g. https://s3.amazonaws.com/vipvip.ca/mLxY9XSZWRVIDEO0296.mp4
@@ -135,10 +152,12 @@ function before_bbcode($original_body, &$has_video=null) {
     '<div class="coub"><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',  
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2" target="_blank">$2</a>',  
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/><a href="$2">Please note that this link is only temporary and will not be available in the future</a>',
-    '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2" target="_blank">$2</a>',
+    '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2" target="_blank">$2</a>',  
+    '<div class="fb-post" data-href="$2" data-width="500" data-show-text="true"></div><br/>Link: <a href="$2" target="_blank">$2</a>',  
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
-    '<div class="youtube"><iframe type="text/html" width="480" height="320" src="'.$protocol.'://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin='.$protocol.'://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
-    '<div class="s3"><video width=480" height="320" controls><source src="$2" type="video/mp4"></video><br/>Link: <a href="$2" target="_blank">$2</a></div>'
+    '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="a/$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
+    '<div class="youtube"><iframe type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
+    '<div class="s3"><video width=480" height="320" controls><source src="$2" type="video/mp4"></video><br/>Link: <a href="$2" target="_blank">$2</a></div>'    
     ), $original_body);    
     
   if (isset($has_video) && !is_null($has_video)) $has_video = strcmp($body, $original_body) != 0;
@@ -151,8 +170,10 @@ function before_bbcode($original_body, &$has_video=null) {
 
   // other replacements
   $body = preg_replace( array (
-    '#\s*$#s'
+    '#\s*$#s', // extra trailing spaces 
+    '#^\s#s' // extra leading spaces 
      ), array (
+    '', 
     ''
      ), $body);
   
@@ -175,14 +196,14 @@ function after_bbcode($body) {
     foreach($matches[1] as $a) {
       $body = str_replace($a, str_replace("<br />", '', $a), $body);
     }
-  }  
-
+  }
+  
   // remove <br /> from title="
   if (preg_match_all('/title="(.*?)"/s', $body, $matches)) {
     foreach($matches[1] as $a) {
       $body = str_replace($a, str_replace("<br />", '&#013;', $a), $body);
     }
-  }  
+  }   
 
   $body = preg_replace( array (
     // search
@@ -192,6 +213,7 @@ function after_bbcode($body) {
     '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
     '#(<img src=)#is',
     '#\((?:c|C|с|С)\)#is',
+    '#\[div\](.*?)\[/div\]#is', // div ([div]anything[/div]
     '#(^|\s)(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
     ), array (
     // replace
@@ -199,8 +221,9 @@ function after_bbcode($body) {
     '<em>$1</em>',
     '<span style="text-decoration: underline;">$1</span>',
     '<span style="text-decoration: line-through;">$1</span>',
-    '<img style="max-width: 99%;max-height: 99%;" src=',
+    '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src=',
     '©',
+    '<div>$1</div>',
     '$1<a href="javascript:hashtag(\'$2\')">$2</a>'
     ), $body);    
        
@@ -211,15 +234,15 @@ function after_bbcode($body) {
  * Replaces target for URLs that reference messages of this forum
  */
 function fix_msg_target($body) {
-  global $host, $protocol;
-  return str_replace('<a target="_blank" href="'.$protocol.'://'.$host.'/msg.php?id=', '<a target="bottom" href="'.$protocol.'://'.$host.'/msg.php?id=', $body);
+  global $host;
+  return str_replace('<a target="_blank" href="http://'.$host.'/msg.php?id=', '<a target="bottom" href="http://'.$host.'/msg.php?id=', $body);
 }
 
 /**
  * FaceBook API support
  */
 function include_facebook_api_if_required($body) {
-  if (!is_null($body) && strpos($body, 'class="fb-video"') !== false) { ?><div id="fb-root"></div><script>(function(d, s, id) {
+  if (!is_null($body) && (strpos($body, 'class="fb-video"') !== false || strpos($body, 'class="fb-post"') !== false)) { ?><div id="fb-root"></div><script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s); js.id = id;
@@ -235,21 +258,42 @@ function initialize_highlightjs_if_required($body) {
 }
 
 function fix_postimage_tags( $str ) {
-  global $protocol;
-// [url=http://postimage.org/][img]http://s29.postimg.org/gi2p1c6pz/spasibo.jpg[/img][/url]
-  return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]http:([^\[]+)\[\/img\]\[\/url\]#i", "[img]$protocol$1[/img]", $str);
+ //[url=http://postimage.org/][img]http://s29.postimg.org/gi2p1c6pz/spasibo.jpg[/img][/url]
+ //return preg_replace("#\[url=http:\/\/postimage\.org\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]#i", "[img]$1[/img]", $str);
+
+ $temp_str =  preg_replace("/\[url=https:\/\/postimg\.org\/image\/([^\[]+)\/\]\[img\]([^\[]+)\[\/img\]\[\/url\]/", "[img]$2[/img]", $str);
+ //die($temp_str);
+ return $temp_str;
+}
+
+function getPicTags($str, $startDelimiter, $endDelimiter) {
+  $contents = array();
+  $startDelimiterLength = strlen($startDelimiter);
+  $endDelimiterLength = strlen($endDelimiter);
+  $startFrom = $contentStart = $contentEnd = 0;
+  while (false !== ($contentStart = strpos($str, $startDelimiter, $startFrom))) {
+  $contentStart += $startDelimiterLength;
+  $contentEnd = strpos($str, $endDelimiter, $contentStart);
+  if (false === $contentEnd) {
+        break;
+  }
+  $contents[] = substr($str, $contentStart, $contentEnd - $contentStart);
+  $startFrom = $contentEnd + $endDelimiterLength;
+  }
+  return $contents;
 }
 
 /**
  * Renderers
  */
-function render_for_display($msgbody, $render_smiles=true) {
+function render_for_display($msgbody, $render_smiles=true, $auth_name, $auth_id, $msg_id) {
 
-  $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$2", $msgbody);
+  $msgbody = preg_replace("#\[render=([^\]]*?)\]\s*(.*?)\[\/render\]#is", "[div]$2[/div]", $msgbody);
 
   $msgbody = render_but_exclude_tags($msgbody, function($body) use ($render_smiles) {
     global $smileys;
-
+    global $auth_id;
+    global $msg_id;
     if ($smileys) {
       // do nothing
     } else 
@@ -264,33 +308,39 @@ function render_for_display($msgbody, $render_smiles=true) {
     if ($render_smiles) {
       $body = render_smileys_step2($body); 
     }
-
 	  $body = before_bbcode($body);
-	  $body = do_bbcode( $body );
+	  $body = do_bbcode($body, $auth_id, $msg_id);
 	  $body = nl2br($body);
 	  $body = after_bbcode($body);
-
-    $body = grammar_nazi($body);
-    
+	  $body = grammar_nazi($body);
+	  $body = gallery_cleanup($body);
 	  return $body;
   }, '[code]','<code>');
   
   return $msgbody;
 }
 
+function gallery_cleanup($body)
+{
+    global $auth_id;
+    global $msg_id;
+    $newimgstr = '<img onclick="parent.openPicInGallery(this, ' . $auth_id .', ' . $msg_id . ');"';    
+    $processedBody = str_replace ('<img' , $newimgstr , $body);
+    return $processedBody; 
+}
+
+
 function render_for_db($msgbody) {
 
   $msgbody = youtube( $msgbody );
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
-  
   return $msgbody;
 }
 
 function render_for_editing($msgbody) {
   // process [render] tags 
   $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$1", $msgbody);
-  
   return $msgbody;
 }
 
@@ -354,7 +404,7 @@ function render_smileys_step1($body) {
     '#:o(?!\w)#i',
     '#:\?#',
     '#([;]\)|[;]\-\))#i',
-    '#(8\)|8-\))#i',
+    '#(8-\))#i',
     '#(:\||:-\|)#'
     ), array (
     // replace
@@ -372,10 +422,10 @@ function render_smileys_step1($body) {
 }
 
 function render_smileys_step2($body) {
-  global $host, $root_dir, $protocol;  
+  global $host, $root_dir;  
   // then :<word>: e.g.  :shock: or :lol: 
   $body = preg_replace_callback('#:([a-z]+):#is',
-    function ($matches) use ($host, $root_dir, $protocol) {
+    function ($matches) use ($host, $root_dir) {
       // var_dump($matches);
 			$name = $matches[1];
       $path = "images/smiles/".$name.".gif";
@@ -384,7 +434,7 @@ function render_smileys_step2($body) {
       if(!$exists) 
         return $matches[0];
 
-      return '<img src="'.$protocol.'://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
+      return '<img width="25px" src="http://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
 		},
 		$body
 	);
@@ -393,14 +443,14 @@ function render_smileys_step2($body) {
 }
 
 function has_images($body) {
-  return stristr(render_for_display($body, false), "<img style");
+  return stristr(render_for_display($body, false), "<img onclick");
 }
 
 function grammar_nazi($body) {
   return preg_replace( array (
     // search
     '#оффис#', 
-    '#рассо#', 
+    '#рассов#', 
     '#расса#',
     '#рассе#',
     '#расси#',
@@ -413,7 +463,7 @@ function grammar_nazi($body) {
     ), array (
     // replace
     'офис',
-    'расо',
+    'расов',
     'раса',
     'расе',
     'раси',
