@@ -146,7 +146,7 @@ function before_bbcode($original_body, &$has_video=null) {
     // youtube with no http(s) prefix
     '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // s3 vipvip videos e.g. https://s3.amazonaws.com/vipvip.ca/mLxY9XSZWRVIDEO0296.mp4
-    '#(?<!\[url(=|\]))((?:https?://)(?:s3\.)?amazonaws\.com/vipvip.ca/([\w]*\.mp4)(?:(?:\?|&)[^\s<\]"]*)?)#is'
+    '#(?<!\[url(=|\]))((?:https?://)(?:s3\.)?amazonaws\.com/vipvip.ca/([\w_-]*\.mp4)(?:(?:\?|&)[^\s<\]"]*)?)#is'
      ), array (
     '<div class="vimeo"><iframe src="https://player.vimeo.com/video/$3" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
     '<div class="coub"><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',  
