@@ -124,8 +124,11 @@ function before_bbcode($original_body, &$has_video=null) {
     '#(?<!\[url(=|\]))((?:https?://)?video-[^\s<\]"]+\.mp4(?:(?:\?)[^\s<\]"]*)?)#is',
     // FB video clip (yet another) e.g. https://www.facebook.com/video.php?v=911326538908142
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/video\.php\?v=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    // FB post e.g. https://www.facebook.com/pablitomoiseevich/posts/10154405819774010
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/posts/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is', 
     // imgur
     '#(?<!(\[url(=|]))|\[img=)((?:https?://)(?:www\.)?i\.imgur\.com/([^\s\.]*)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // youtube with no http(s) prefix
     '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // s3 vipvip videos e.g. https://s3.amazonaws.com/vipvip.ca/mLxY9XSZWRVIDEO0296.mp4
@@ -136,7 +139,9 @@ function before_bbcode($original_body, &$has_video=null) {
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2" target="_blank">$2</a>',  
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/><a href="$2">Please note that this link is only temporary and will not be available in the future</a>',
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2" target="_blank">$2</a>',
+    '<div class="fb-post" data-href="$2" data-width="500" data-show-text="true"></div><br/>Link: <a href="$2" target="_blank">$2</a>',  
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
+    '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="a/$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="'.$protocol.'://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin='.$protocol.'://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
     '<div class="s3"><video width=480" height="320" controls><source src="$2" type="video/mp4"></video><br/>Link: <a href="$2" target="_blank">$2</a></div>'
     ), $original_body);    
@@ -151,8 +156,10 @@ function before_bbcode($original_body, &$has_video=null) {
 
   // other replacements
   $body = preg_replace( array (
-    '#\s*$#s'
+    '#\s*$#s',
+    '#^\s#s' // extra leading spaces 
      ), array (
+    '',
     ''
      ), $body);
   
@@ -199,7 +206,7 @@ function after_bbcode($body) {
     '<em>$1</em>',
     '<span style="text-decoration: underline;">$1</span>',
     '<span style="text-decoration: line-through;">$1</span>',
-    '<img style="max-width: 99%;max-height: 99%;" src=',
+    '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src=',
     '©',
     '$1<a href="javascript:hashtag(\'$2\')">$2</a>'
     ), $body);    
@@ -219,7 +226,7 @@ function fix_msg_target($body) {
  * FaceBook API support
  */
 function include_facebook_api_if_required($body) {
-  if (!is_null($body) && strpos($body, 'class="fb-video"') !== false) { ?><div id="fb-root"></div><script>(function(d, s, id) {
+  if (!is_null($body) && (strpos($body, 'class="fb-video"') !== false || strpos($body, 'class="fb-post"') !== false)) { ?><div id="fb-root"></div><script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s); js.id = id;
@@ -289,11 +296,12 @@ function render_for_db($msgbody) {
 
 function render_for_editing($msgbody) {
   // process [render] tags 
-  $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$1", $msgbody);
-  
+  $msgbody = preg_replace_callback("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", function($matches) {
+    return str_replace("`5D", "]", $matches[1]);
+  }, $msgbody);
+    
   return $msgbody;
 }
-
 function render_smileys_but_exclude_pre_tags($body) {
 	return render_but_exclude_tags($body, 'render_smileys');
 }
@@ -354,7 +362,7 @@ function render_smileys_step1($body) {
     '#:o(?!\w)#i',
     '#:\?#',
     '#([;]\)|[;]\-\))#i',
-    '#(8\)|8-\))#i',
+    '#(8-\))#i',
     '#(:\||:-\|)#'
     ), array (
     // replace
