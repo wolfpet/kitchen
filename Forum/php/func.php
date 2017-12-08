@@ -1358,6 +1358,102 @@ function tmdb($body, $embed = true) {
  		$body
  	);
    
+ 	return tmdb_tag($result);
+ }
+
+function tmdb_tag($body, $embed = true) {
+   global $host, $tmdb_key;
+   
+   $tag = "tmdb";
+   // [tv=lang]query[/tv]
+   $pattern = '\['.$tag.'(?:\=([^\]]+))?\]\s*([^\[]+)\[\/'.$tag.'\]';
+ 	
+   $result = preg_replace_callback('#'.$pattern.'#i',
+     function ($matches) use ($embed, $host, $pattern, $tmdb_key) {
+       // var_dump($matches);
+ 
+       $url  = $matches[0];
+       $lang = $matches[1];
+  		 $query= $matches[2];
+ 
+       $new_body = $url;
+       
+       if (isset($tmdb_key)) {
+         if (strcmp($tmdb_key, "TEST") == 0) {
+             $release_date = date_parse("1996-06-25")['year'];
+             $title = "Independence Day";
+             $thumbnail = '/bqLlWZJdhrS0knfEJRkquW7L8z2.jpg';
+         } else {          
+           $request = "https://api.themoviedb.org/3/search/multi?api_key=".$tmdb_key."&query=".urlencode($query)."&include_adult=false";
+           if ($lang != '') $request .= "&language=".$lang;
+           // var_dump($request);
+           
+           $obj2 = file_get_contents($request);
+           
+           if($obj2 === FALSE) 
+             return $url;
+ 
+           $ar2 = json_decode($obj2);
+           // var_dump($ar2); 
+           
+           if ($ar2->total_results == 0) {
+             $new_body = "[color=lightslategrey][i][b]: ".trim($query)."[/b][/i][/color]";
+             $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
+           } else {
+             $result=$ar2->results[0];
+             if ($result->media_type == 'movie') {
+               $release_date = date_parse($result->release_date)['year'];
+               $title = $result->title;
+               $thumbnail = $result->poster_path;
+               $tooltip = $result->overview;
+               $rating = $result->vote_average;
+             } else if ($result->media_type == 'tv') {
+               $release_date = date_parse($result->first_air_date)['year'];
+               $title = $result->name;
+               $thumbnail = $result->poster_path;
+               $tooltip = $result->overview;
+               $rating = $result->vote_average;
+             } else if ($result->media_type == 'person') {
+               if (count($result->known_for) > 0) {
+                 $release_date = '';
+                 foreach ($result->known_for as $film) {
+                   if ($release_date != '') $release_date .= ', ';
+                   $release_date .= $film->title;
+                 }             
+               } else {
+                 $release_date = "<no data>";
+               }
+              $title = $result->name;
+              $thumbnail = $result->profile_path;   
+            }
+           }
+        }
+       }
+       if ($embed && isset($thumbnail)) {
+           $new_body = "[img=https://image.tmdb.org/t/p/w185".$thumbnail."]";
+           if (isset($tooltip)) {
+             $new_body .= $tooltip . '[/img]';
+           }           
+           if (isset($title)) {
+             $new_body .= "\n[color=grey][i][b]" . $title . "[/b][/i] (".$release_date.")[/color]";
+             if (isset($rating)) {
+               $new_body .= ' [color=black][b]' . $rating . '[/b][/color][size=8]/10[/size]';
+             }
+           }
+       } else if (isset($title)) {
+           $new_body = "[color=lightslategrey][i][b]" . $title . "[/b][/i] (".$release_date.")[/color]";
+           if (isset($rating)) {
+             $new_body .= ' ' . $rating;
+           }
+       }
+       
+       $new_body = '[render=' . str_replace(']','`5D',$url) . ']' . $new_body . '[/render]';
+
+       return $new_body;
+ 		},
+ 		$body
+ 	);
+   
  	return $result;
  }
  

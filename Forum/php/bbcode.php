@@ -207,7 +207,7 @@ function after_bbcode($body) {
     '<em>$1</em>',
     '<span style="text-decoration: underline;">$1</span>',
     '<span style="text-decoration: line-through;">$1</span>',
-    '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src=',
+    '<img style="max-width: 99%;max-height: 99%;" src=',
     '©',
     '<div>$1</div>',    
     '$1<a href="javascript:hashtag(\'$2\')">$2</a>'

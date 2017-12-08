@@ -78,6 +78,7 @@ if ($keyboard) {
   <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 's');return false;">[<del>s</del>]</a>&nbsp;&nbsp;&nbsp;&nbsp;
  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'quote');return false;">[quote]</a>
  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'code');return false;">[code]</a>
+ <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'tmdb');return false;" title="Insert movie, TV show or actor">[tmdb]</a>
  <a href="#" style="text-decoration: none" onclick="javascript:insertBBCode('body', 'sarcasm');return false;">[<em>sarcasm</em>]</a>&nbsp;
 </td>
 <td align="right">
