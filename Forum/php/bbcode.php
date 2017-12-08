@@ -18,8 +18,8 @@ function do_bbcode($str) {
       '#\[url=([^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
       '#\[url\]((?:ftp|https?)://[^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]),
       '#\[url\]([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]) 
-      '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#is', // Image ([img=http://url_to_image]tooltip[/img])
-      '#\[img=(\S*?)\s*\](.*)\[/img\]#is', // Image ([img=url_to_image]tooltip[/img])
+      '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#i', // Image ([img=http://url_to_image]tooltip[/img])
+      '#\[img=(\S*?)\s*\](.*)\[/img\]#i', // Image ([img=url_to_image]tooltip[/img])
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
       '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
@@ -199,6 +199,7 @@ function after_bbcode($body) {
     '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
     '#(<img src=)#is',
     '#\((?:c|C|с|С)\)#is',
+    '#\[div\](.*?)\[/div\]#is', // div ([div]anything[/div]
     '#(^|\s)(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
     ), array (
     // replace
@@ -208,6 +209,7 @@ function after_bbcode($body) {
     '<span style="text-decoration: line-through;">$1</span>',
     '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src=',
     '©',
+    '<div>$1</div>',    
     '$1<a href="javascript:hashtag(\'$2\')">$2</a>'
     ), $body);    
        
@@ -252,7 +254,7 @@ function fix_postimage_tags( $str ) {
  */
 function render_for_display($msgbody, $render_smiles=true) {
 
-  $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$2", $msgbody);
+  $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "[div]$2[/div]", $msgbody);
 
   $msgbody = render_but_exclude_tags($msgbody, function($body) use ($render_smiles) {
     global $smileys;
