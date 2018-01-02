@@ -1825,7 +1825,7 @@ function report($user_id, $msg_id, $mode) {
        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
        return false;
   }
-  if (mysql_result($result, 0) >= 2) {
+  if (mysql_result($result, 0) >= 1) {
     $content_flags |= $content_nsfw;
   }
   
