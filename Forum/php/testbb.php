@@ -23,14 +23,17 @@ require_once('html_head_inc.php');
   while ($row = mysql_fetch_assoc($result)) {
     $body = $row['body'];
     print("Original:<br/>".$body);
+    
+    $body = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "[div]$2[/div]", $body);
+    print("<br/><br/><b>after_divs:</b><br/>".$body);
     $body = before_bbcode($body);
-    print("<br/><b>before_bbcode:</b><br/>".$body);
+    print("<br/><br/><b>before_bbcode:</b><br/>".$body);
     $body = do_bbcode ( $body );
-    print("<br/><b>do_bbcode:</b><br/>".$body);
+    print("<br/><br/><b>do_bbcode:</b><br/>".$body);
     $body = nl2br($body);
-    print("<br/><b>nl2br:</b><br/>".$body);
+    print("<br/><br/><b>nl2br:</b><br/>".$body);
     $body = after_bbcode($body);
-    print("<br/><b>after_bbcode:</b><br/>".$body);
+    print("<br/><br/><b>after_bbcode:</b><br/>".$body);
   
   // bbcode, print
   // after bbcode, print
