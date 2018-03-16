@@ -49,6 +49,19 @@ function collapseModeratorMenu()
     document.getElementById("ModRibbonGroup").style.display='none';
     document.getElementById("OpenModRibbonGroup").style.display='inline-block';
 }
+
+function expandFindMenu()
+{
+    document.getElementById("FindRibbonGroup").style.display='inline-block';
+    document.getElementById("OpenFindRibbonGroup").style.display='none';
+}
+
+function collapseFindMenu()
+{
+    document.getElementById("FindRibbonGroup").style.display='none';
+    document.getElementById("OpenFindRibbonGroup").style.display='inline-block';
+}
+
 function openNotifications()
 {
     if(document.getElementById("NotificationsContainer").style.display=='none')
@@ -232,7 +245,6 @@ function openMessage(id)
  window.frames["bottom"].location = "msg.php?id=" + id;
  openNotifications();
 }
-
 function openNewMessages()
 {
     //open by date
@@ -385,9 +397,26 @@ function openProfile()
 		</div>
 	</div>
 
-	<div id="FindRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup">
-		<div id="FindRibbonGroupTitle" class="ribbonGroupTitle">Find</div>
+
+	<div id="OpenFindRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup">
+		<div id="OpenFindRibbonGroupTitle" class="ribbonGroupTitle">Stuff</div>
+		<div id="OpenFindRibbonGroupIconContainer">
+			<span id="OpenFindIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="expandFindMenu();">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet">
+				<g><path fill="<?=$ribbonColor ?>" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></g>
+				</svg>
+				<span class="tooltiptext">Stuff</span></a>
+			</span>
+		</div>
+	</div>
+
+	<div id="FindRibbonGroup" style="display: none; border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup">
+		<div id="FindRibbonGroupTitle" class="ribbonGroupTitle">Stuff</div>
 		<div id="FindRibbonGroupIconContainer">
+			<span id="ModCollapse" class="ribbonIcon tooltip"><a onclick="collapseFindMenu();">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="#ffffff" d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" class="style-scope iron-icon"></path></g></svg>
+				<span class="tooltiptext">Hide</span></a>
+			</span>
 			<span id="MyMessages" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_my_messages?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"></path></g></svg>
 				<span class="tooltiptext">My messages</span></a>
