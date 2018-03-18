@@ -268,6 +268,19 @@ function openPolls()
     resetBadges();
 }
 
+function openBooks()
+{
+    window.frames["contents"].location = "books.php";
+    closeNotifications();
+    resetBadges();
+}
+
+function openMovies()
+{
+    window.frames["contents"].location = "movies.php";
+    closeNotifications();
+    resetBadges();
+}
 
 function closeNotifications()
 {
@@ -434,6 +447,17 @@ function openProfile()
 			<span id="Gallery" class="ribbonIcon tooltip"><a onclick="closeNotifications();openGallery();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" class="style-scope iron-icon"></path>	</g></svg>
 				<span class="tooltiptext">Photo Gallery</span></a>
+			</span> 
+			<span id="Books" class="ribbonIcon tooltip"><a onclick="closeNotifications();openBooks();">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g> 
+				<path fill="<?=$ribbonColor ?>" d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"></path></g></svg>
+				<span class="tooltiptext">Books</span></a>
+			</span> 
+			<span id="Movies" class="ribbonIcon tooltip"><a onclick="closeNotifications();openMovies();">
+				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet">
+				<g><path fill="<?=$ribbonColor ?>" d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"></path></g>
+				</svg>
+				<span class="tooltiptext">Movies</span></a>
 			</span> 
 			<span id="Polls" class="ribbonIcon tooltip"><a onclick="closeNotifications();openPolls();">
 				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g> <path fill="<?=$ribbonColor ?>" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></g></svg>
