@@ -11,7 +11,7 @@ require_once('custom_colors_inc.php');
 <dl>
 <?php
 
-$query = 'SELECT confa_movies.msg_id as msgid, confa_posts.subject, confa_users.username from confa_movies, confa_posts, confa_users where confa_posts.id=confa_movies.msg_id and confa_users.id=confa_posts.author;';
+$query = 'SELECT confa_movies.msg_id as msgid, confa_posts.subject, confa_users.username from confa_movies, confa_posts, confa_users where confa_posts.id=confa_movies.msg_id and confa_users.id=confa_posts.author order by confa_movies.msg_id desc;';
 $result = mysql_query($query);
 if (!$result) {die('Query failed ');}
 while ($row = mysql_fetch_assoc($result))
