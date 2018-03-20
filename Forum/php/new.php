@@ -54,6 +54,7 @@ $thread_owner = false;
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="js/tenorgif.js"></script>
 <?php
 
 //only add postimage script if specified in settings

@@ -206,6 +206,7 @@ function addEvent(elem, event, fn) {
 function bbcode_on() {
     document.getElementById('translit_help').style.display='none';
     document.getElementById('smileys_help').style.display='none';
+    document.getElementById('tenor_gifs').style.display='none';
     if (document.getElementById('bbcode_help').style.display != 'block') {
         document.getElementById('bbcode_help').style.display='block';
     } else {
@@ -216,6 +217,7 @@ function bbcode_on() {
 function smileys_on() {
     document.getElementById('translit_help').style.display='none';
     document.getElementById('bbcode_help').style.display='none';
+    document.getElementById('tenor_gifs').style.display='none';
     if (document.getElementById('smileys_help').style.display != 'block') {
         document.getElementById('smileys_help').style.display='block';
     } else {
@@ -223,9 +225,22 @@ function smileys_on() {
     }
 }
 
+
+function gifs_on() {
+    document.getElementById('translit_help').style.display='none';
+    document.getElementById('bbcode_help').style.display='none';
+    document.getElementById('smileys_help').style.display='none';
+    if (document.getElementById('tenor_gifs').style.display != 'block') {
+        document.getElementById('tenor_gifs').style.display='block';
+    } else {
+        document.getElementById('tenor_gifs').style.display='none';
+    }
+}
+
 function translit_on() {
     document.getElementById('bbcode_help').style.display='none';
     document.getElementById('smileys_help').style.display='none';
+    document.getElementById('tenor_gifs').style.display='none';
     if (document.getElementById('translit_help').style.display != 'block') {
         document.getElementById('translit_help').style.display='block';
     } else {

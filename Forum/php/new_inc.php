@@ -235,6 +235,14 @@ Subject: <input style="width: 60%; border: lightgrey; border-style: solid; borde
 	    </g></svg>
 	    <span class="tooltiptext">Emoji</span></a>
 	</span> 
+	
+	<span id="GifiIcon" class="ribbonIcon tooltip"><a onclick="javascript:gifs_on();">
+	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path class="ribbonIcon" fill="#000000" d="M11.5 9H13v6h-1.5zM9 9H6c-.6 0-1 .5-1 1v4c0 .5.4 1 1 1h3c.6 0 1-.5 1-1v-2H8.5v1.5h-2v-3H10V10c0-.5-.4-1-1-1zm10 1.5V9h-4.5v6H16v-2h2v-1.5h-2v-1z"></path>
+	    </g></svg>
+	    <span class="tooltiptext">Add GIF</span></a>
+	</span> 
+
     </div>
   </div>
   <div id="RibbonGroup" style="border: lightgrey; border-style: solid; border-width: 1px;" class="ribbonGroupMobile" ;"="">
@@ -268,8 +276,43 @@ Subject: <input style="width: 60%; border: lightgrey; border-style: solid; borde
     <div style="padding-top: 0px">
         <textarea style="margin-top: 6px;margin-bottom: 10px;width: 90%; height: 100px; border: lightgrey; border-style: solid; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php  if (is_null($body) && $user == '486') { $body = '1';} print($body);?></textarea>
         <iframe id="galleryUploadFrame" style="margin-top: 6px;margin-bottom: 10px;display: none; width: 91%; height: 100px; border: lightgrey; border-style: solid; border-width: 1px;"></iframe>
+
+        <div id="tenor_gifs" style="margin-bottom: 10px; overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 200px; display:none;border: lightgrey; border-style: solid; border-width: 1px;">
+		<input type="search" id="gifSearchText" onchange=gifSearch();><input type="button" value="Search"></input>
+<hr>
+		<img id="preview_gif0" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif1" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif2" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif3" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif4" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif5" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif6" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif7" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif8" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+		<img id="preview_gif9" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+        </div>
+        
         <div id="smileys_help" style="margin-bottom: 10px; overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 70px; display:none;border: lightgrey; border-style: solid; border-width: 1px;"><?=smileys('body')?></div> <!-- make display style depend on user settings-->    
    </div>
+
+<script>
+function gifSearch()
+{
+    var url = "https://api.tenor.com/v1/anonid?key=" + "LSVB2NY57LBO";
+    httpGetAsync(url,tenorCallback_anonid);
+}
+
+function addGif(img)
+{
+    insertBodyText('body',img);
+    document.getElementById('tenor_gifs').style.display='none';
+
+}
+</script>
+
+
+
+
 <?php
 if ($keyboard) {
 ?>

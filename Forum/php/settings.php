@@ -55,6 +55,9 @@ $imageGalleryBucket='';
 
 //UPDATE gallery_s3config.php WITH YOUR AWS KEY AND SECRET
 
+//Tenor GIF service key
+$tenorGifKey='LIVDSRZULELA';
+
 
 ?>
 
