@@ -278,27 +278,28 @@ Subject: <input style="width: 60%; border: lightgrey; border-style: solid; borde
         <iframe id="galleryUploadFrame" style="margin-top: 6px;margin-bottom: 10px;display: none; width: 91%; height: 100px; border: lightgrey; border-style: solid; border-width: 1px;"></iframe>
 
         <div id="tenor_gifs" style="margin-bottom: 10px; overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 200px; display:none;border: lightgrey; border-style: solid; border-width: 1px;">
-		<input type="search" id="gifSearchText" onchange=gifSearch();><input type="button" value="Search"></input>
+		Search gif: <input type="search" value="type here" id="gifSearchText" onclick="if(this.value=='type here')this.value='';" onload="gifsearch();" onkeypress="gifSearch();" style="width: 60%; border: lightgrey; border-style: solid; border-width: 1px;">
 <hr>
-		<img id="preview_gif0" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif1" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif2" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif3" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif4" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif5" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif6" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif7" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif8" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
-		<img id="preview_gif9" src="" alt="" style="width:110px;height:82px;" onclick="addGif(this.src);">
+	<img id="preview_gif0" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif1" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif2" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif3" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif4" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif5" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif6" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif7" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif8" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
+	<img id="preview_gif9" src="" alt="" style="width:110px;height:82px; cursor: pointer;" onclick="addGif(this.src);">
         </div>
         
         <div id="smileys_help" style="margin-bottom: 10px; overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 70px; display:none;border: lightgrey; border-style: solid; border-width: 1px;"><?=smileys('body')?></div> <!-- make display style depend on user settings-->    
    </div>
 
 <script>
+
 function gifSearch()
 {
-    var url = "https://api.tenor.com/v1/anonid?key=" + "LSVB2NY57LBO";
+    var url = "https://api.tenor.com/v1/anonid?key=" + "<?php print($tenorGifKey); ?>";
     httpGetAsync(url,tenorCallback_anonid);
 }
 

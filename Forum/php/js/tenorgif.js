@@ -53,6 +53,7 @@ function grab_data(anon_id)
 
     // test search term
     var search_term = document.getElementById("gifSearchText").value;
+    if(search_term == "type here")search_term="";
     // using default locale of en_US
     var search_url = "https://api.tenor.com/v1/search?tag=" + search_term + "&key=" +
             apikey + "&limit=" + lmt + "&anon_id=" + anon_id;

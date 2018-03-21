@@ -232,6 +232,7 @@ function gifs_on() {
     document.getElementById('smileys_help').style.display='none';
     if (document.getElementById('tenor_gifs').style.display != 'block') {
         document.getElementById('tenor_gifs').style.display='block';
+        gifSearch();
     } else {
         document.getElementById('tenor_gifs').style.display='none';
     }
