@@ -36,6 +36,7 @@
 ?>
 <tr>
 <td>Subject:</td>
+<td colspan="2"><input type="text" tabindex=2 <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" maxlength="254" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print($subj); ?>' maxlength="128" size="54"/></td>
 </tr>
 <!--<tr>
 <td colspan="3" align="right">
