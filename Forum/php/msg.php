@@ -603,7 +603,7 @@ if (isset($reports) && $reports['boyan'] != '') {
   $footer .= ' <img border=0 src="' . $root_dir . $boyan_img . '" valign="middle"/>&nbsp;<span style="color:gray">' . $reports['boyan'].'</span>';
 }
 if (isset($reports) && $reports['nsfw'] != '') {
-  $footer .= ' <span class="nsfw">nsfw</span>&nbsp;<span style="color:gray">'.$reports['nsfw'].'</span>';
+  $footer .= ' <span class="nsfw">NSFW</span>&nbsp;<span style="color:gray">'.$reports['nsfw'].'</span>';
 }
 $footer .= '</div>';
 print($footer);
