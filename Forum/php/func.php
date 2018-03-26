@@ -1857,6 +1857,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
     $content_flags |= $content_nsfw;
   }
   
+  $subj = substr($subj,0,255);
   $subj = grammar_nazi($subj);
 
   if (isset($to)) {
