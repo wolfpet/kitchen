@@ -28,6 +28,9 @@ if($host != $base)
 // Registration mode (by default, closed)
 $reg_type = REG_TYPE_CLOSED; // REG_TYPE_OPEN, REG_TYPE_CONFIRM;
 
+//Show content to anonymous viewers?
+$show_content = true;
+
 $reactions = array(
   'reactlike' => 0,
   'reactdislike' => 0,

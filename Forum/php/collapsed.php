@@ -26,7 +26,7 @@ require_once('custom_colors_inc.php');
 </td></tr></table> -->
 <?php
 
-//require('menu_inc.php');
+//require('menu_inc.php');"
 
     $show_hidden = 2;
     $ignored = array();
@@ -54,7 +54,19 @@ require_once('custom_colors_inc.php');
     $content = array();
     $last_thread = -1;
     $msgs = print_threads_ex($result, $content, $last_thread, $limit);
-    print_msgs($content, $msgs);
+    
+    //display the threads if set to display to anonymous viewers and
+    if($show_content)
+    {
+        print_msgs($content, $msgs);
+    }
+    else
+    {
+        if(!is_null($user_id) && $user_id != null){print_msgs($content, $msgs);}
+        else {print('Please <a target="bottom" href="new_user.php">register</a> or <a style="cursor: pointer; color: blue"  onclick="top.openLoginForm();">login</a> for full experience.');die();}
+    }
+                                                  
+    //print_msgs($content, $msgs);
     print('</div>');  
 
     print_pages($max_page, $page, 'contents', $cur_page);
