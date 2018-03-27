@@ -60,7 +60,7 @@ if($imageGallery == 'postimage')
     if (!is_null($preview)) {
       
       $author = $user;
-      $subject = $subj;
+      $subject = substr($subj,0,255);
       $created = $time = local_time(time(), 'Y-m-d H:i:s'); 
       $translit_done = false;
       $new_body = render_for_db($body);
