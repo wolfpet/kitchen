@@ -198,45 +198,32 @@ function openOverlay(name)
 	    bottom.document.getElementById("subj_div").style.color='red';
 	    return;
 	}
-	
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('overlay_menu_cover').style.display = 'block';
-        document.getElementById('slider').style.display = 'none';
-        document.getElementById('slider-area').style.display = 'none';
-	document.getElementById("overlay_title").text="Message Preview";
+	renderOverlayPanels("Message Preview")
 	document.getElementById("overley_iframe").src="overlay_post_form_clone.php";
     }
     //Private Mail 2.0
     if(name=='pm')
     {
-	closeNotifications();
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('overlay_menu_cover').style.display = 'block';
-        document.getElementById('slider').style.display = 'none';
-        document.getElementById('slider-area').style.display = 'none';
-	document.getElementById("overlay_title").text="Private Messages";
+        renderOverlayPanels("Private Chat")
 	document.getElementById("overley_iframe").src="pm2.php";
     }
     //Poll
     if(name=='newPoll')
     {
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('overlay_menu_cover').style.display = 'block';
-        document.getElementById('slider').style.display = 'none';
-        document.getElementById('slider-area').style.display = 'none';
-	document.getElementById("overlay_title").text="Add New Poll";
+	renderOverlayPanels("Add New Poll")
 	document.getElementById("overley_iframe").src="polls_new_form.php";
     }
     //Profile settings
     if(name=='profile')
     {
-	closeNotifications();
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('overlay_menu_cover').style.display = 'block';
-        document.getElementById('slider').style.display = 'none';
-        document.getElementById('slider-area').style.display = 'none';
-	document.getElementById("overlay_title").text="Profile Settings";
+	renderOverlayPanels("Profile Settings")
 	document.getElementById("overley_iframe").src="profile.php";
+    }
+    //Login Form
+    if(name=='loginForm')
+    {
+        renderOverlayPanels("Forum Login")
+        document.getElementById("overley_iframe").src="login_form.php";
     }
     
 }
@@ -247,4 +234,14 @@ function closeOverlay()
     document.getElementById("overley_iframe").src="blank.php";
     document.getElementById('slider').style.display = 'block';
     document.getElementById('slider-area').style.display = 'block';
+}
+function renderOverlayPanels(title)
+{
+
+        closeNotifications();
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay_menu_cover').style.display = 'block';
+        document.getElementById('slider').style.display = 'none';
+        document.getElementById('slider-area').style.display = 'none';
+        document.getElementById("overlay_title").text=title;
 }

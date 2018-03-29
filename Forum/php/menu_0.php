@@ -26,6 +26,9 @@ function resetBadges()
 }
 function openLoginForm()
 {
+
+     openOverlay("loginForm");
+    /*
     if(document.getElementById("loginForm").style.display=='none')
     {
         document.getElementById("loginForm").style.display='block';
@@ -36,6 +39,7 @@ function openLoginForm()
         document.getElementById("loginForm").style.display='none';
         document.getElementById("loginIcon").style.fill='white';    
     }
+    */
 }
 
 function expandModeratorMenu()
