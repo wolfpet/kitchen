@@ -78,6 +78,26 @@ function recall_state() {
   } 
 };
 
+
+function toggleAll() {
+    // iterate through message topics 
+    var array = document.getElementsByTagName("A");
+    for (var i = 0; i < array.length; ++i) {
+      var item = array[i];
+      if (item.target != "bottom") continue;
+        var target = getDL(item);
+        if (target != null) {  // sanity check
+          decorate(target, item, 'none');
+        }
+      }
+}
+
+
+
+
+
+
+
 var windowonloadbeforejunk = window.onload;
 
 window.onload = function (e) {

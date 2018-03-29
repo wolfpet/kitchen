@@ -361,13 +361,15 @@ function openProfile()
 	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
 		<div id="ViewRibbonGroupIconContainer">
-			<span id="Expanded" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_expanded?>">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M6 7h2.5L5 3.5 1.5 7H4v10H1.5L5 20.5 8.5 17H6V7zm4-2v2h12V5H10zm0 14h12v-2H10v2zm0-6h12v-2H10v2z"></path></g></svg>
-				<span class="tooltiptext">Expanded</span></a>
+			<span id="Refresh" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_expanded?>">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+				<path fill="<?=$ribbonColor ?>" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path>
+				</g></svg>
+				<span class="tooltiptext">Refresh</span></a>
 			</span> 
-			<span id="Collapsed" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_collapsed?>">
+			<span id="Collapse" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();contents.toggleAll();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12.17c-.74 0-1.33.6-1.33 1.33s.6 1.33 1.33 1.33 1.33-.6 1.33-1.33-.59-1.33-1.33-1.33zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"></path></g></svg>
-				<span class="tooltiptext">Collapsed</span></a>
+				<span class="tooltiptext">Collapse</span></a>
 			</span> 
 
 			<span id="Horizontal" class="ribbonIcon tooltip hideOnMobile" style="display: none"><a onclick="closeNotifications();setHorizontalLayout();">
