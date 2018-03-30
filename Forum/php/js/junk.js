@@ -79,6 +79,8 @@ function recall_state() {
 };
 
 
+var toggled = 'none';
+
 function toggleAll() {
     // iterate through message topics 
     var array = document.getElementsByTagName("A");
@@ -87,9 +89,11 @@ function toggleAll() {
       if (item.target != "bottom") continue;
         var target = getDL(item);
         if (target != null) {  // sanity check
-          decorate(target, item, 'none');
+          decorate(target, item, toggled);
         }
       }
+      if(toggled=='none'){toggled='block'; parent.document.getElementById("toggle").innerHTML = "Expand";}
+      else {toggled='none'; parent.document.getElementById("toggle").innerHTML = "Collapse";}
 }
 
 
