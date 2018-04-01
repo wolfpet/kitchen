@@ -48,7 +48,8 @@ $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: 
 </script>
 <title><?=$title?></title>
 </head>
-<body id="html_body" style="overflow: hidden;">
+<body id="html_body" style="height:100%;">
+<div id="confaFrameContainer" style="position: absolute; height:100%; overflow-y:hidden;">
 <?php
 require('menu_inc.php');
 ?>
@@ -67,5 +68,6 @@ require('gallery_inc.php');
 require('overlay_inc.php');
 require_once('tail_inc.php');
 ?>
+</div>
 </body>
 </html>
