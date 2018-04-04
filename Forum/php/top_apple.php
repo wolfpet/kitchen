@@ -48,21 +48,18 @@ $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: 
 </script>
 <title><?=$title?></title>
 </head>
-<body id="html_body" style="height:100%">
-<!--
-<div id="confaFrameContainer" style="position: absolute; height:100%; overflow-y:hidden;">
--->
+<body id="html_body" style="overflow: hidden;">
 <?php
 require('menu_inc.php');
 ?>
-<div id="frame1" style="-webkit-overflow-scrolling: touch;  overflow-y: scroll; position: static; height: 200px; background-color: white;display: inline-block;width: 100vw;">
-    <iframe scrolling="no" style="border: none;" width="100%" height="100%" name="contents" src="threads.php"></iframe>
+<div id="frame1" style="position: static; height: calc(50vh - 54px); background-color: white;display: inline-block;width: 100vw;">
+    <iframe style="border: none;" width="100%" height="100%" name="contents" src="threads.php"></iframe>
 </div>
 <hr id="hr1">
 <div id="slider-area">
-    <div id="slider" class="draggable ui-widget-content"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="resizer" fill="grey" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9L10 5.5 13.5 9H11v4H9V9H6.5zm11 6L14 18.5 10.5 15H13v-4h2v4h2.5z"></path></g></svg></div>
+    <div id="slider" class="draggable ui-widget-content"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="resizer" fill="grey" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9L10 5.5 13.5 9H11v4H9V9H6.5zm11 6L14 18.5 10.5 15H13v-4h2v4h2.5z"></path></g></svg></div>
 </div>
-<div id="frame2"  style="-webkit-overflow-scrolling: touch;  overflow-y: scroll;position: relative;height: 250px; background-color: white;display: inline-block; width: 100vw;">
+<div id="frame2" style="position: relative;height: 48vh; background-color: white;display: inline-block; width: 100vw;">
     <iframe style="border: none;" width="100%" height="100%" name="bottom" id="bottom" src="welc.php"></iframe>
 </div>
 <?php
@@ -70,8 +67,5 @@ require('gallery_inc.php');
 require('overlay_inc.php');
 require_once('tail_inc.php');
 ?>
-<!--
-</div>
--->
 </body>
 </html>

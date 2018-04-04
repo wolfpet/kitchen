@@ -62,7 +62,7 @@ $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: 
 <title><?=$title?></title>
 </head>
 <body id="html_body" style="height:100%;">
-<div id="confaFrameContainer" style="position: absolute; height:100%; overflow-y:hidden;">
+<div id="confaFrameContainer" style="position: absolute; height:100%; overflow-y:hidden; width: 100%">
 <?php
 require('menu_inc.php');
 ?>
