@@ -64,7 +64,7 @@ require_once('html_head_inc.php');
             $ips .= '<a target="contents" href="' . $root_dir . $page_m_users . '?byip=' . $row[0] . '">'. $row[0] . '</a> ';
         }
 
-        $query = 'SELECT u.username,  u.pban, CONVERT_TZ(u.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, u.status, u.moder, u.ban, u.email, CONVERT_TZ(u.ban_ends, \'' 
+        $query = 'SELECT u.username,  u.pban, u.moder, CONVERT_TZ(u.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, u.status, u.moder, u.ban, u.email, CONVERT_TZ(u.ban_ends, \'' 
           . $server_tz . '\', \'' . $prop_tz . ':00\') as ban_ends, u2.username as banned_by, h.ban_reason from confa_users u '
           . 'left join confa_ban_history h on h.victim=u.id and h.expires=u.ban_ends left join confa_users u2 on h.moder=u2.id where u.id=' . $moduserid;
         $result = mysql_query($query);
@@ -74,6 +74,8 @@ require_once('html_head_inc.php');
         }
 
         $row = mysql_fetch_assoc($result);
+        $mod_user = $row['moder'];
+        if($mod_user!=null)$mod_user = ' - Moderator';
         $username = $row['username'];
         $created = $row['created'];
         $status = $row['status'];
@@ -106,7 +108,7 @@ require_once('html_head_inc.php');
         }
 
 ?>
-<h3><?php print( htmlentities($username,HTML_ENTITIES,'UTF-8') ); ?></h3>
+<h3><?php print( htmlentities($username,HTML_ENTITIES,'UTF-8') ); print($mod_user);?></h3>
 <table>
 <tr><td>Account created:</td><td><b><?php print($created); ?></b></td></tr>
 <tr><td>Status:</td><td><?php print($status); ?> <?php if ($banned && $pban  == 0) { print('<a href="' . $root_dir . $page_ban . '?moduserid=' . $moduserid . '&bantime=-1"><b>Remove ban</b</a>'); }?></td></tr>
@@ -116,9 +118,17 @@ require_once('html_head_inc.php');
 <P>
 Posts | <?php print( $active_posts . $deleted_posts . $censored_posts ); ?>
 <P>Ips used for postings: <?php print($ips); ?>
+
+<div style="padding: 8px; background:lightgray">
+| <a href="modrole.php?grant=yes&userid=<?=$moduserid?>">Grant moderator role|</a> | <a href="modrole.php?revoke=yes&userid=<?=$moduserid?>">Revoke moderator role</a> |
+</div>
+
+
+
 <?php
     if ( $row['status'] != 2 ) {
 ?>
+<div style="padding: 8px; background:#fae1e1">
 <Form action="<?php print( $root_dir . $page_ban); ?>" target="bottom" method="post">
 <input type="hidden" name="moduserid" value="<?php print( $moduserid ); ?>"/>
 Ban this user for 
@@ -148,9 +158,12 @@ Ban this user for
             print( 'Reason: ');
         }
 ?>
-<input type="text" id="ban_reason" size="80" maxlength="127" name="ban_reason" value=""/>
+<input type="text" id="ban_reason" style="width:100%"  maxlength="127" name="ban_reason" value=""/>
 <input type="Submit" value="Ban this user"/>
 </form>
+</div>
+<hr>
+sss
 <?php
 }
 ?>
