@@ -162,8 +162,6 @@ Ban this user for
 <input type="Submit" value="Ban this user"/>
 </form>
 </div>
-<hr>
-sss
 <?php
 }
 ?>

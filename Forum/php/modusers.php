@@ -1,9 +1,22 @@
 <?php
-/*$Id: modusers.php 814 2012-10-16 13:28:15Z dmitriy $*/
 
 require_once('head_inc.php');
 
     if ( !is_null( $moder ) && $moder > 0 ) {
+
+	//WHO IS ONLINE? 
+	$query ="SELECT user_id, updated, username  FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 30 MINUTE;";
+	//die($query);
+        $result = mysql_query($query);
+        if (!$result) {
+            mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+            die('Query failed ' );
+        }
+        while ($row = mysql_fetch_assoc($result)) {
+            $users_online = $users_online . $row['username'] . ', ';
+        }
+        
+	//REGESTERED USERS
         $cur_page = $page_m_users;
         $how_many = 50;
         $max_id = 1;
@@ -93,10 +106,12 @@ require_once('custom_colors_inc.php');
 </head>
 <body id="html_body">
 <div class="content">
+<div>
+Now online: <br>
+<?=$users_online?><hr>
+</div>
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
-
-//require('menu_inc.php');
 
         if (!is_null($err) && strlen($err) > 0) {
             print('<BR><font color="red"><b>' . $err . '</b></font>');
@@ -114,7 +129,7 @@ require_once('custom_colors_inc.php');
 <!--</ol>-->
 <?php
     } else {
-        print( "You have no access to this page." );
+        print( "Access denied." );
     }
 ?>
 </div>
