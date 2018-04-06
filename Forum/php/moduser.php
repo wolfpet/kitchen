@@ -1,5 +1,4 @@
 <?php
-/*$Id: moduser.php 803 2012-10-14 19:35:33Z dmitriy $*/
 
 require_once('head_inc.php');
 require_once('get_params_inc.php');
@@ -109,6 +108,7 @@ require_once('html_head_inc.php');
 
 ?>
 <h3><?php print( htmlentities($username,HTML_ENTITIES,'UTF-8') ); print($mod_user);?></h3>
+
 <table>
 <tr><td>Account created:</td><td><b><?php print($created); ?></b></td></tr>
 <tr><td>Status:</td><td><?php print($status); ?> <?php if ($banned && $pban  == 0) { print('<a href="' . $root_dir . $page_ban . '?moduserid=' . $moduserid . '&bantime=-1"><b>Remove ban</b</a>'); }?></td></tr>
@@ -168,9 +168,10 @@ Ban this user for
 
 <?php
     } else {
-        print( "You have no access to this page." );
+        print( "Access denied." );
     }
 ?>
+<hr>
 </body>
 </html>
 
