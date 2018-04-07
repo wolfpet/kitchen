@@ -5,6 +5,7 @@ require_once('head_inc.php');
     if ( !is_null( $moder ) && $moder > 0 ) {
 
 	//WHO IS ONLINE? 
+	$users_online_count=0;
 	$query ="SELECT user_id, updated, username  FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 60 MINUTE Group by username;";
 	//die($query);
         $result = mysql_query($query);
@@ -14,9 +15,11 @@ require_once('head_inc.php');
         }
         while ($row = mysql_fetch_assoc($result)) {
             $users_online = $users_online . $row['username'] . ', ';
+            $users_online_count++;
         }
 
 	//Visited today 
+	$users_today_count=0;
 	$query ="SELECT user_id, updated, username  FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 1440 MINUTE Group by username;";
 	//die($query);
         $result = mysql_query($query);
@@ -26,6 +29,7 @@ require_once('head_inc.php');
         }
         while ($row = mysql_fetch_assoc($result)) {
             $users_today = $users_today . $row['username'] . ', ';
+            $users_today_count++;
         }
 
 
@@ -120,9 +124,9 @@ require_once('custom_colors_inc.php');
 <body id="html_body">
 <div class="content">
 <div>
-<h3>Now online:</h3>
+<h3>Now online (<?=$users_online_count?>):</h3>
 <?=$users_online?><hr>
-<h3>Visited today</h3>
+<h3>Visited today (<?=$users_today_count?>):</h3>
 <?=$users_today?><hr>
 </div>
 <?php

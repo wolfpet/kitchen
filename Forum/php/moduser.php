@@ -120,7 +120,7 @@ Posts | <?php print( $active_posts . $deleted_posts . $censored_posts ); ?>
 <P>Ips used for postings: <?php print($ips); ?>
 
 <div style="padding: 8px; background:lightgray">
-| <a href="modrole.php?grant=yes&userid=<?=$moduserid?>">Grant moderator role|</a> | <a href="modrole.php?revoke=yes&userid=<?=$moduserid?>">Revoke moderator role</a> |
+| <?php if($mod_user!=' - Moderator'){?><a href="modrole.php?grant=yes&userid=<?=$moduserid?>">Make a moderator</a> |<?php }else{ ?> <a href="modrole.php?revoke=yes&userid=<?=$moduserid?>">Revoke moderator privileges</a> |<?php }?> 
 </div>
 
 
