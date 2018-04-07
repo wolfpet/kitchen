@@ -53,60 +53,6 @@
   right: 0;
 }
 
-/* We consider screens less than 600 px mobile */
-@media screen and (max-width: 600px) {
-	.ribbon {height: 54px;}
-	.ribbonGroup {display: none;}
-	.ribbonGroupMobile{border-style: none;}
-	.ribbonIcon{width: 47px; height: 47px;}
-	.ribbonGroupTitle{display: none;}
-	.button__badge{font-size: 12px;}
-
-}
-
-/* Really small phone screens! */
-@media screen and (max-width: 400px) {
-	.ribbon {height: 50px;}
-	.ribbonGroup {display: none;}
-	.ribbonGroupMobile{border-style: none;}
-	.ribbonIcon{width: 37px; height: 37px;}
-	.ribbonGroupTitle{display: none;}
-	.button__badge{font-size: 10px;}
-}
-
-/* Ridiculously tiny phone screens! */
-@media screen and (max-width: 300px) {
-	.ribbon {height: 42px;}
-	.ribbonGroup {display: none;}
-	.ribbonGroupMobile{border-style: none;}
-	.ribbonIcon{width: 27px; height: 27px;}
-	.ribbonGroupTitle{display: none;}
-	.button__badge{font-size: 8px;}
-}
-
-/* A watch or something?  */
-@media screen and (max-width: 250px) {
-	.ribbon {height: 35px;}
-	.ribbonGroup {display: none;}
-	.ribbonGroupMobile{border-style: none;}
-	.ribbonIcon{width: 20px; height: 20px;}
-	.ribbonGroupTitle{display: none;}
-	.button__badge{font-size: 6px;}
-}
-
-
-.ribbonIcon:hover { 
-	background-color: #0090c0;
-	cursor: pointer;
-}
-
-svg.ribbonIcon {
-	color: #ffffff;
-	display: block;
-	width: 100%;
-	height: 100%;
-}
-
 .tooltip {
     position: relative;
     display: inline-block;
@@ -143,6 +89,69 @@ svg.ribbonIcon {
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+
+.mobileOnly {
+ display: none;
+}
+
+
+
+/* We consider screens less than 600 px mobile */
+@media screen and (max-width: 600px) {
+	.ribbon {height: 54px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 47px; height: 47px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 12px;}
+	.mobileOnly{display: inline-block}
+}
+
+/* Really small phone screens! */
+@media screen and (max-width: 400px) {
+	.ribbon {height: 50px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 37px; height: 37px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 10px;}
+	.mobileOnly{display: inline-block}
+}
+
+/* Ridiculously tiny phone screens! */
+@media screen and (max-width: 300px) {
+	.ribbon {height: 42px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 27px; height: 27px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 8px;}
+	.mobileOnly{display: inline-block}
+}
+
+/* A watch or something?  */
+@media screen and (max-width: 250px) {
+	.ribbon {height: 35px;}
+	.ribbonGroup {display: none;}
+	.ribbonGroupMobile{border-style: none;}
+	.ribbonIcon{width: 20px; height: 20px;}
+	.ribbonGroupTitle{display: none;}
+	.button__badge{font-size: 6px;}
+	.mobileOnly{display: inline-block}
+}
+
+
+.ribbonIcon:hover { 
+	background-color: #0090c0;
+	cursor: pointer;
+}
+
+svg.ribbonIcon {
+	color: #ffffff;
+	display: block;
+	width: 100%;
+	height: 100%;
 }
 
 /* Dropdown menu for PMAIL:  incox, sent and new */
@@ -204,10 +213,6 @@ body#html_body {
 #slider {display:none;}
 
 }
-@media screen and (max-width: 400px) {
-.notificationMessage {font-size: xx-small;}
-.notificationContainer{top:44px;}
-}
 .notificationLi {
     height: 60px; 
     position: relative; 
@@ -238,6 +243,20 @@ body#html_body {
     position: relative;
     color: grey;
 }
+
+/* Hamburger Menu*/
+.hamburgerItem {
+    position: relative; 
+    top: 12px;
+    font-size: large;
+}
+
+@media screen and (max-width: 400px) {
+.notificationMessage {font-size: xx-small;}
+.notificationContainer{top:44px;}
+.hamburgerItem {font-size: small;}
+}
+
 
 .draggable { width: 50px; height: 30px;}
 #slider { cursor: n-resize;   top:35vh; right: 0px; background: white;}

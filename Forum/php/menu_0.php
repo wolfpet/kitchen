@@ -66,8 +66,21 @@ function collapseFindMenu()
     document.getElementById("OpenFindRibbonGroup").style.display='inline-block';
 }
 
+function openMenu()
+{
+    closeNotifications();
+    //close menu if already open
+    if(document.getElementById("HamburgerContainer").style.display=='none')document.getElementById("HamburgerContainer").style.display='block';
+    else document.getElementById("HamburgerContainer").style.display='none';
+}
+function closeMenu()
+{
+    document.getElementById("HamburgerContainer").style.display='none';
+}
+
 function openNotifications()
 {
+    closeMenu();
     if(document.getElementById("NotificationsContainer").style.display=='none')
     {
         //restart the timer:
@@ -247,7 +260,8 @@ function msToTime(duration) {
 function openMessage(id)
 {
  window.frames["bottom"].location = "msg.php?id=" + id;
- openNotifications();
+ closeNotifications();
+ closeMenu();
 }
 function openNewMessages()
 {
@@ -255,19 +269,22 @@ function openNewMessages()
     window.frames["contents"].location = "bydate.php";
     //open answered as well, since it's a subset. There must be a better way to reset the badge, TODO!
     document.getElementById("overley_iframe").src= "answered.php";
-    openNotifications();
+    closeNotifications();
+    closeMenu();
     resetBadges();
 }
 function openAnswered()
 {
     window.frames["contents"].location = "answered.php";
-    openNotifications();
+    closeMenu();
+    closeNotifications();
     resetBadges();
 }
 
 function openPolls()
 {
     window.frames["contents"].location = "polls.php";
+    closeMenu();
     closeNotifications();
     resetBadges();
 }
@@ -275,6 +292,7 @@ function openPolls()
 function openBooks()
 {
     window.frames["contents"].location = "books.php";
+    closeMenu();
     closeNotifications();
     resetBadges();
 }
@@ -282,6 +300,7 @@ function openBooks()
 function openMovies()
 {
     window.frames["contents"].location = "movies.php";
+    closeMenu();
     closeNotifications();
     resetBadges();
 }
@@ -322,11 +341,13 @@ function openPM()
  document.getElementById('newNotificationsBadge').style.display = 'none';          
  document.getElementById('newPMBadge').style.display = 'none';
  document.getElementById('newPMBadge').innerHTML='0';
+ closeMenu();
 }
 
 function openProfile()
 {
  openOverlay('profile');
+ closeMenu();
 }
 </script>
 <div id="Ribbon" class="ribbon" style="background-color: <?=$ribbonBackground?>; color:<?=$ribbonColor?>;">
@@ -344,8 +365,16 @@ function openProfile()
 
 
 	<div id="NotificationsRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
-		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">Recent</div>
+		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">Forum</div>
 		<div id="NotificationsRibbonGroupIconContainer">
+
+			<span id="NotificationsIcon" class="ribbonIcon tooltip mobileOnly"> <a onclick="openMenu();">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+				<path fill="<?=$ribbonColor ?>" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+				</g></svg>
+				<span class="tooltiptext">Menu</span></a>
+			</span> 
+
 			<span id="NotificationsIcon" class="ribbonIcon tooltip"><a onclick="openNotifications();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
 				<path fill="<?=$ribbonColor ?>" d="M7.58 4.08L6.15 2.65C3.75 4.48 2.17 7.3 2.03 10.5h2c.15-2.65 1.51-4.97 3.55-6.42zm12.39 6.42h2c-.15-3.2-1.73-6.02-4.12-7.85l-1.42 1.43c2.02 1.45 3.39 3.77 3.54 6.42zM18 11c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2v-5zm-6 11c.14 0 .27-.01.4-.04.65-.14 1.18-.58 1.44-1.18.1-.24.15-.5.15-.78h-4c.01 1.1.9 2 2.01 2z" class="style-scope iron-icon"></path>
@@ -354,11 +383,16 @@ function openProfile()
 				<!-- This is a badge sample that indicates that there are new notifications -->
 				<span id="newNotificationsBadge" class="button__badge" style="display:none;">4</span></a>
 			</span> 
+			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="closeNotifications();" href="<?=$root_dir.$page_new?>">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg>
+				<span class="tooltiptext">New thread</span></a>
+			</span> 
+
 		</div>
 	</div>
 
 <?php }?>
-	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";>
+	<div id="ViewRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">View</div>
 		<div id="ViewRibbonGroupIconContainer">
 			<span id="Refresh" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();" href="<?=$root_dir.$page_expanded?>">
@@ -393,29 +427,7 @@ function openProfile()
 		</div>
 	</div>  
 
-<!--
-	<div id="SortRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";">
-		<div id="SortRibbonGroupTitle" class="ribbonGroupTitle">Sort</div>
-		<div id="SortRibbonGroupIconContainer">
-			<span class="ribbonIcon tooltip" id="ByDateIcon"><a target="contents" href="<?=$root_dir.$page_bydate?>?mode=bydate" onclick="closeNotifications();resetBadges();">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path class="ribbonIcon" fill="<?=$ribbonColor ?>" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g></svg>
-				<span class="tooltiptext">By Date</span></a>
-			</span> 
-		</div>
-	</div>
--->
 <?php if ($logged_in) { ?>
-
-	<div id="WriteRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile">
-		<div id="WriteRibbonGroupTitle" class="ribbonGroupTitle">Write</div>
-		<div id="WriteRibbonGroupIconContainer">
-			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="closeNotifications();" href="<?=$root_dir.$page_new?>">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg>
-				<span class="tooltiptext">New thread</span></a>
-			</span> 
-		</div>
-	</div>
-
 
 	<div id="OpenFindRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroup">
 		<div id="OpenFindRibbonGroupTitle" class="ribbonGroupTitle">Stuff</div>
@@ -450,7 +462,7 @@ function openProfile()
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"></path></g></svg>
 				<span class="tooltiptext">My bookmarks</span></a>
 			</span> 
-			<span id="Gallery" class="ribbonIcon tooltip"><a onclick="closeNotifications();openGallery();">
+			<span id="Gallery" class="ribbonIcon tooltip"><a onclick="closeNotifications();closeMenu();openGallery();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" class="style-scope iron-icon"></path>	</g></svg>
 				<span class="tooltiptext">Photo Gallery</span></a>
 			</span> 
@@ -683,5 +695,138 @@ function openProfile()
     <div id="events">
     </div>
 </div>
+<!-- Hamburger -->
 
+<div id="HamburgerContainer" style="display: none;" class="notificationContainer">
+    <li class="notificationLi" style="display: block; height: 30px; cursor:default; background: lightgrey" id="eventTemplateLi">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div id="notificationMessage" class="notificationMessage">View Options</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/threads.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey"  d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Refresh Threads</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();contents.toggleAll();">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12.17c-.74 0-1.33.6-1.33 1.33s.6 1.33 1.33 1.33 1.33-.6 1.33-1.33-.59-1.33-1.33-1.33zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Collapse Threads</div>
+	</div>
+    </li>
+    
+    <!--stuff -->
+    
+    <li class="notificationLi" style="display: block; height: 30px; cursor:default; background: lightgrey" id="eventTemplateLi">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div id="notificationMessage" class="notificationMessage">Various Stuff</div>
+	</div>
+    </li>
+
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/search.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Advanced Search</div>
+	</div>
+    </li>
+
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/mymessages.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">My Messages</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/mybookmarks.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">My Bookmarks</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();openGallery();">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" class="style-scope iron-icon"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Photo Gallery</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();openBooks();">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"></path>	    
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Book Library</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();openMovies();">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Movie Library</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();openPolls();">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Polls</div>
+	</div>
+    </li>
+
+<?php if ($logged_in && !is_null($moder) && $moder > 0) { ?>
+    <!-- Moderator UI -->
+    <li class="notificationLi" style="display: block; height: 30px; cursor:default; background: lightgrey" id="eventTemplateLi">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div id="notificationMessage" class="notificationMessage">Moderator</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/modusers.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Users</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/modips.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z"></path>	    
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">IP Addresses</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/moddelposts.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>	    
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Deleted Messages</div>
+	</div>
+    </li>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/modcensposts.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Censored Messages</div>
+	</div>
+    </li>
+
+<?php } ?>
+
+</div>
 <!-- --------------------- -->
