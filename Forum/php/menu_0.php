@@ -544,7 +544,39 @@ function openProfile()
 	</div>
 <?php } ?>
 
-
+	<div id="SearchRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px; width: 120px; padding: 4px" class="ribbonGroup">
+		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">Quick Search</div>
+		    <span id="QuickSearch" class="ribbonIcon tooltip">
+			    <input id="quickSearch" onkeyup="doSearch(this.value);" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" type="text" style="width:115px; height:16px; border-width:0px; position:absolute; top:5px;    font-size: smaller;"></input> 
+		    </span>
+	</div>
+	<script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
+	<script>
+	var delayTimer;
+	function doSearch(text) {
+	    clearTimeout(delayTimer);
+	    delayTimer = setTimeout(function() {
+	    console.log("search:");
+	    document.getElementById("text").value= text;
+	    console.log(document.getElementById("text").value);
+	    document.getElementById("quickSearchForm").submit();
+	    }, 2000); // Will do the ajax stuff after 1000 ms, or 1 s
+	}
+	</script>
+	
+	<div style="display: none">
+	 <form action="/dosearch.php" method="post" id="quickSearchForm">
+	 <input type="hidden" name="mode" id="mode" value="">
+	 <input type="text" id="author" name="author" value="" size="32" maxlength="64">
+	 <input type="text" id="text" name="text">
+	 <select name="searchin">
+	  <option value="1">Body and Subject</option>
+	  <option value="2">Body</option>
+	  <option value="3">Subject</option>
+	</select>
+        </form>
+	</div>
+	
 <?php if ($logged_in == false) { ?>
 	<div id="WelcomeRibbonGroup" style="float: right;border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Welcome!</div>
@@ -565,6 +597,8 @@ function openProfile()
 			</span> 
 		</div>
 	</div>
+
+
 <?php } ?>
 
 <?php if ($logged_in) { ?>
@@ -593,6 +627,11 @@ function openProfile()
 			</span> 
 		</div>
 	</div>
+	
+	
+
+	
+	
 <?php } ?>	
 <?php if (function_exists('pages_function')) { ?>
 	<div id="PagesRibbonGroup" class="ribbonGroupMobile"; style="float: right;">
