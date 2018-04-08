@@ -546,7 +546,7 @@ function openProfile()
 
 	<div id="SearchRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px; width: 120px; padding: 4px" class="ribbonGroup">
 		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">Quick Search</div>
-		    <span id="QuickSearch" class="ribbonIcon tooltip">
+		    <span id="QuickSearch" class="ribbonIcon tooltip" style="width:0px">
 			    <input id="quickSearch" onkeyup="doSearch(this.value);" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" type="text" style="width:115px; height:16px; border-width:0px; position:absolute; top:5px;    font-size: smaller;"></input> 
 		    </span>
 	</div>
@@ -554,6 +554,7 @@ function openProfile()
 	<script>
 	var delayTimer;
 	function doSearch(text) {
+	    if(text.length <3)return;
 	    clearTimeout(delayTimer);
 	    delayTimer = setTimeout(function() {
 	    console.log("search:");
