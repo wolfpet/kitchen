@@ -123,6 +123,7 @@ if ($logout === true) {
 }
 
 </style>
+<script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
 <script>
 var currentSenderID=0;
 var currentSenderName = "";
@@ -447,7 +448,7 @@ if($totalConvos >0)$welcomeMsg= "Select existing or"
   </div>
 </div>
 <div id="PMEntry" class="PMEntry" style="display: none">
-    <textarea id="PMEntryText" class="PMEntryText" onfocus="startTyping(this);">Type your message here</textarea>
+    <textarea id="PMEntryText" class="PMEntryText" onfocus="startTyping(this);RegisterField(this, true, false);"  onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);">Type your message here</textarea>
     <button type="button" class="PMSendBtn" id="PMSendBtn"  onclick="sendMessage();">Send</button>
 </div>
 </body>
