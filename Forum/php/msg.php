@@ -122,7 +122,7 @@ function react(msg_id, reaction) {
 
 function openReactDiv()
 {
- if(document.getElementById("react_div").style.display=='none')document.getElementById("react_div").style.display='block';
+ if(document.getElementById("react_div").style.display=='none'||document.getElementById("react_div").style.display=='' )document.getElementById("react_div").style.display='block';
  else document.getElementById("react_div").style.display='none';
 }
 
@@ -289,7 +289,6 @@ function addToMovies(msgid)
 if (isset($reactions)) {
 ?>
 <div class="reactions-dropdown">
-<!-- <span><a target="bottom" href="javascript:;">React</a></span> -->
         <span class="ribbonIcon tooltip greyHover" id="ReactIcon">
     	 <a href="javascript:;" onclick="openReactDiv();">
     	        <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>

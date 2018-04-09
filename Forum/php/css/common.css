@@ -179,9 +179,6 @@ em {
     white-space:nowrap;
 }
 
-.reactions-dropdown:hover .reactions-dropdown-content {
-    display: block;
-}
 
 /* Scroll2Top */
 #scroll2top {
