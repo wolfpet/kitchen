@@ -16,6 +16,8 @@ if (!$logged_in)die('Error 403: Not authorized. Login is required to create poll
     margin-top: 5px;
 }
 </style>
+
+<script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
 <script>
 var numberOfAnswers=2;
 
@@ -30,7 +32,7 @@ function addAnswer()
         fieldValues.push(x[i].value);
     }
     numberOfAnswers++;
-    var answerHTML = 'Answer '+numberOfAnswers+':<br><input type="text" class="pollText" id="pollAnswer'+numberOfAnswers+'" name="pollAnswer'+numberOfAnswers+'"><br>';
+    var answerHTML = 'Answer '+numberOfAnswers+':<br><input type="text" class="pollText" id="pollAnswer'+numberOfAnswers+'" name="pollAnswer'+numberOfAnswers+'" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);"><br>';
     document.getElementById('answers').innerHTML +=answerHTML;
     //restore all values
     for (i = 0; i < x.length-1; i++)
@@ -57,12 +59,12 @@ function savePoll()
 <body>
  <form id="pollForm" name="pollForm" action="polls_new.php" method="post" autocomplete="off">
  Question:<br>
- <input type="text" class="pollText" name="pollQuestion"><br><br>
+ <input type="text" class="pollText" name="pollQuestion" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);"><br><br>
  <div id="answers">
    Answer 1:<br>
-   <input type="text" class="pollText" id="pollAnswer1" name="pollAnswer1"><br>
+   <input type="text" class="pollText" id="pollAnswer1" name="pollAnswer1" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);"><br>
    Answer 2:<br>
-   <input type="text" class="pollText" id="pollAnswer1" name="pollAnswer2"><br>
+   <input type="text" class="pollText" id="pollAnswer1" name="pollAnswer2" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);"><br>
 
  </div>
  <br>
