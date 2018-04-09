@@ -109,6 +109,7 @@ function load_reaction(data) {
 }
 
 function react(msg_id, reaction) {
+  document.getElementById("react_div").style.display='none';
   var method = "PATCH";
   var action = "/api/messages/"  + msg_id + "/reactions/" + reaction;
   console.log(method + " " + action);
@@ -117,6 +118,12 @@ function react(msg_id, reaction) {
     url: action,
     success: load_reaction
   });
+}
+
+function openReactDiv()
+{
+ if(document.getElementById("react_div").style.display=='none')document.getElementById("react_div").style.display='block';
+ else document.getElementById("react_div").style.display='none';
 }
 
 function toggleExpand()
@@ -284,7 +291,7 @@ if (isset($reactions)) {
 <div class="reactions-dropdown">
 <!-- <span><a target="bottom" href="javascript:;">React</a></span> -->
         <span class="ribbonIcon tooltip greyHover" id="ReactIcon">
-    	 <a href="javascript:;">
+    	 <a href="javascript:;" onclick="openReactDiv();">
     	        <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
 		    <path id="reactIcon" class="ribbonIcon" fill="#000000"  d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g>
 		</svg>
@@ -293,7 +300,7 @@ if (isset($reactions)) {
     	</span> 
 
 
-<div class="reactions-dropdown-content">
+<div class="reactions-dropdown-content" id="react_div">
 <?php
   $icons = '';
   foreach (array_keys($reactions) as $key) {
