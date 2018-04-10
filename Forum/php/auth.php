@@ -21,7 +21,7 @@ require_once('get_params_inc.php');
 
 
     if (!is_null($auth_cookie) && !is_null($user)) {
-        $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.moder, s.safe_mode, u.menu_style, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated, u.last_pm_check_time, u.show_smileys, u.reply_to_email from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_real_escape_string($user) . '\'';
+        $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.email, u.moder, s.safe_mode, u.menu_style, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated, u.last_pm_check_time, u.show_smileys, u.reply_to_email from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_real_escape_string($user) . '\'';
         $result = mysql_query($query);
 	//die($query);
         if (!$result) {
@@ -45,7 +45,19 @@ require_once('get_params_inc.php');
             $last_pm_check_time = $row['last_pm_check_time'];
             $reply_to_email = $row['reply_to_email'];
             $menu_style = $row['menu_style'];
+            $email= $row['email'];
+            //check against the black list
+            require("modblacklist.php");
+            $blackListSize =  count($email_blacklist);
             
+            for($i=0; $i<$blackListSize; $i++)
+            {
+    		if($email == $email_blacklist[$i])
+    		{
+    		    header('Location: '.$redirectTo);
+    		    die();
+    		}
+            }
             if ( $status == 2 ) {
                 $logout = true;
             }
