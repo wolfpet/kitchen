@@ -542,7 +542,7 @@ function openProfile()
 			</span> 
 		</div>
 	</div>
-<?php } ?>
+
 
 	<div id="SearchRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px; width: 120px; padding: 4px" class="ribbonGroup">
 		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">Quick Search</div>
@@ -578,6 +578,7 @@ function openProfile()
         </form>
 	</div>
 	
+<?php } ?>
 <?php if ($logged_in == false) { ?>
 	<div id="WelcomeRibbonGroup" style="float: right;border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Welcome!</div>
