@@ -115,18 +115,25 @@ if (!is_null($user_id) && $user_id != null) {
            $color_topics_hover= '#FF0000';
            $color_topics_visited='#0080c0';
          }
+    //font: device-specific, stored in the cookie
+    $fontSize=10;
+    if(isset($_COOKIE['fontSize'])) {$fontSize = $_COOKIE['fontSize'];}
+    $font='Verdana,Arial';
+    if(isset($_COOKIE['font'])) {$font = $_COOKIE['font'];}
+    
 ?>
 
 <style>
-     a:link    {color:<?=$color_topics_unread?>; font-family:Verdana,Arial; text-decoration:none;}
-     a:visited {color:<?=$color_topics_visited?>; font-family:Verdana,Arial; text-decoration:none;}
-     a:active  {color:<?=$color_topics_hover?>; font-family:Verdana,Arial; text-decoration:none;}
-     a:hover   {color:<?=$color_topics_hover?>; font-family:Verdana,Arial; text-decoration:underline;}
+     * {font-family:<?=$font?>; font-size:<?=$fontSize?>pt;}
+     a:link    {color:<?=$color_topics_unread?>; font-family:<?=$font?>; text-decoration:none;}
+     a:visited {color:<?=$color_topics_visited?>; font-family:<?=$font?>; text-decoration:none;}
+     a:active  {color:<?=$color_topics_hover?>; font-family:<?=$font?>; text-decoration:none;}
+     a:hover   {color:<?=$color_topics_hover?>; font-family:<?=$font?>; text-decoration:underline;}
      a.user_link {color:black;}
      .selected  {background:#E0F1FF; /* Yellow = #FFFF99 */}
-     h1<---->{font-family:Verdana,Arial; font-size:36pt;}
-     h2<--->{font-family:Verdana,Arial; font-size:24pt; color:#0080c0;}
-     h3<--->{font-family:Verdana,Arial; font-size:14pt; color:#0080c0;}
+     h1{font-family:<?=$font?>; font-size:36pt;}
+     h2{font-family:<?=$font?>; font-size:24pt; color:#0080c0;}
+     h3{font-family:<?=$font?>; font-size:14pt; color:#0080c0;}
      /* Pager */
      .pagination li.active span {
          background-color: <?=$ribbonBackground?>;

@@ -43,16 +43,54 @@ $(document).ready(function() {
     $("#textUnread").spectrum("set", "<?=$color_topics_unread?>");
     $("#textRead").spectrum("set",  "<?=$color_topics_visited?>");
     $("#textTitles").spectrum("set", "<?=$color_titles?>");
+    //init local settings from cookies
+    initiateLocalSettings();
 });
+
+function initiateLocalSettings()
+{
+  //layout
+  var layout = parent.getCookie("verticalLayout");
+  if(layout=='false') document.getElementById("verticalLayout").checked = false;
+  else document.getElementById("verticalLayout").checked = true;
+  //font type
+  var font = parent.getCookie("font");
+  if(font=='')font='Verdana'
+  document.getElementById("Font").value=font;
+  //font size
+  var fontSize = parent.getCookie("fontSize");
+  if(fontSize=='')fontSize=10;
+  document.getElementById("FontSize").value=fontSize;
+}
+
+function saveLocalSettings()
+{
+var layout=false;
+if(document.getElementById("verticalLayout").checked)layout=true;
+//save layout
+document.cookie = "verticalLayout="+layout+"; expires=01 Jan 2040 12:00:00 UTC; path=/";
+
+var font;
+font= document.getElementById("Font").value;
+document.cookie = "font="+font+"; expires=01 Jan 2040 12:00:00 UTC; path=/";
+
+var fontSize;
+fontSize =document.getElementById("FontSize").value;
+document.cookie = "fontSize="+fontSize+"; expires=01 Jan 2040 12:00:00 UTC; path=/";
+
+//reload
+top.location.reload();
+}
 
 
 </script>
 <ul class="tab">
-  <li><a class="tablinks" onclick="openTab(event, 'General')">General</a></li>
+  <li><a class="tablinks" onclick="openTab(event, 'AcrossDevices')">Account</a></li>
+  <li><a class="tablinks" onclick="openTab(event, 'ThisDevice')">This Device</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Colors')">Colors</a></li>
   <li><a class="tablinks" onclick="openTab(event, 'Ignore')">Ignore</a></li>
 </ul>
-<div id="General" class="tabcontent">
+<div id="AcrossDevices" class="tabcontent">
 <table> 
 <tr>
 <td valign="top" nowrap>
@@ -127,6 +165,29 @@ $(document).ready(function() {
 </table>
 </div>
 
+<div id="ThisDevice" class="tabcontent">
+<table> 
+<tr>
+<tr>
+<td align="right">Font Type: </td>
+<td><input id="Font" name="Font" type="text" maxlength="80" value=""/></td>
+</tr>
+<tr>
+
+<td align="right">Font Size: </td>
+<td><input id="FontSize" name="FontSize" type="text" maxlength="2" value="" style="width:50px"/></td>
+</tr>
+
+<tr>
+<td align="right">Vertical Pane Layout </td>
+<td><input id="verticalLayout" name="verticalLayout" type="checkbox" /></td>
+</tr>
+<tr>
+<td colspan="2"><br/> <input type="button" value="Update" onclick="saveLocalSettings();"/></td>
+</tr>
+
+</table>
+</div>
 
 <div id="Colors" class="tabcontent">
 <table>
@@ -277,7 +338,7 @@ $(document).ready(function() {
 </div>
 <script>
 
-openTab(event, 'General'); //open general tab by default
+openTab(event, 'AcrossDevices'); //open general tab by default
 tablinks = document.getElementsByClassName("tablinks");
 tablinks[0].className += " active";
 

@@ -2,7 +2,7 @@
 require_once('head_inc.php');
 require_once('html_head_inc.php');
 //require('pm2_msg_inc.php');
-
+require_once('custom_colors_inc.php');
 
 if ($logout === true) {
         header( "Location: http://$host$root_dir$page_expanded" ) ;
