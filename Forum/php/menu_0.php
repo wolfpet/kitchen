@@ -566,7 +566,7 @@ function openProfile()
 	</script>
 	
 	<div style="display: none">
-	 <form action="/dosearch.php" method="post" id="quickSearchForm">
+	 <form action="/doquicksearch.php" method="post" id="quickSearchForm">
 	 <input type="hidden" name="mode" id="mode" value="">
 	 <input type="text" id="author" name="author" value="" size="32" maxlength="64">
 	 <input type="text" id="text" name="text">
