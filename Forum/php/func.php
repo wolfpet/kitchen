@@ -297,7 +297,7 @@ function get_threads_ex($limit = 200, $thread_id = null, $user_id = null) {
 	}
 
    //exclude pinned threads (if any)
-  $query .= ' AND p.thread_id NOT IN (SELECT thread_id FROM confa_pins WHERE owner_id='.$user_id.')';
+   if(!is_null($user_id)){ $query .= ' AND p.thread_id NOT IN (SELECT thread_id FROM confa_pins WHERE owner_id='.$user_id.')';}
   $query .= ' order by thread_id desc, level, msg_id desc';
   $result = mysql_query($query);
   

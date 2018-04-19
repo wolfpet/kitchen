@@ -168,6 +168,8 @@ function _pages_function($add_fluff=false) {
 
     $limit = strpos($agent, 'iPad') ? 7 : (strpos($agent, 'iPhone') || strpos($agent, 'like Mac OS') ? 5 : 200);
 
+    if(!is_null($user_id))
+    {
     $result = get_pinned_threads($user_id);
     if (mysql_num_rows($result)!=0) 
     { 
@@ -184,7 +186,8 @@ function _pages_function($add_fluff=false) {
       else {print('Please <a target="bottom" href="new_user.php">register</a> or <a style="cursor: pointer; color: blue"  onclick="top.openLoginForm();">login</a> for full experience.');die();}
      }
     }
-
+    }
+    
     $result = get_threads_ex($limit, null, $user_id);
     $content = array();
     $last_thread = -1;
