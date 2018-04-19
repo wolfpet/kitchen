@@ -255,8 +255,30 @@ function get_show_hidden_and_ignored() {
   }
 }
 
+
+
+
 //"
-function get_threads_ex($limit = 200, $thread_id = null) {
+function get_pinned_threads($user_id)
+{
+  //die($user_id);
+    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \''
+    . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz
+    . ':00\') as modified, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter,'
+    . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t, confa_pins pins ';
+      $query.= 'where p.author=u.id and t.id = p.thread_id and t.status != 2 ';
+      $query .= ' AND p.thread_id = pins.thread_id AND pins.owner_id='.$user_id;
+      $query .= ' order by thread_id desc, level, msg_id desc';
+    //die($query);
+      $result = mysql_query($query);
+        if (!$result) {
+         mysql_log( __FILE__, 'get_threads failed ' . mysql_error() . ' QUERY: ' . $query);
+        die('Query failed ');
+      }
+    return $result;
+}
+
+function get_threads_ex($limit = 200, $thread_id = null, $user_id = null) {
 
   global $prop_tz;
   global $work_page;
@@ -265,7 +287,7 @@ function get_threads_ex($limit = 200, $thread_id = null) {
   $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' 
     . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
     . ':00\') as modified, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter,'
-    . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t ';
+    . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t  ';
   $query.= 'where p.author=u.id and t.id = p.thread_id and t.status != 2 ';
 	
 	if (is_null($thread_id)) {
@@ -274,7 +296,9 @@ function get_threads_ex($limit = 200, $thread_id = null) {
 		$query .= 'and p.thread_id < ' . $thread_id . ' and p.thread_id >=' . ($thread_id - $limit);
 	}
 
-	$query .= ' order by thread_id desc, level, msg_id desc';
+   //exclude pinned threads (if any)
+  $query .= ' AND p.thread_id NOT IN (SELECT thread_id FROM confa_pins WHERE owner_id='.$user_id.')';
+  $query .= ' order by thread_id desc, level, msg_id desc';
   $result = mysql_query($query);
   
   if (!$result) {

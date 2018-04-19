@@ -168,11 +168,27 @@ function _pages_function($add_fluff=false) {
 
     $limit = strpos($agent, 'iPad') ? 7 : (strpos($agent, 'iPhone') || strpos($agent, 'like Mac OS') ? 5 : 200);
 
-    $result = get_threads_ex($limit);
+    $result = get_pinned_threads($user_id);
+    if (mysql_num_rows($result)!=0) 
+    { 
+     $msgs = print_threads_ex($result, $content, $last_thread, $limit);
+
+     //display the threads if set to display to anonymous viewers and
+     if($show_content)
+     {
+      print_msgs($content, $msgs);
+     }
+     else
+     {
+      if(!is_null($user_id) && $user_id != null){print_msgs($content, $msgs);}
+      else {print('Please <a target="bottom" href="new_user.php">register</a> or <a style="cursor: pointer; color: blue"  onclick="top.openLoginForm();">login</a> for full experience.');die();}
+     }
+    }
+
+    $result = get_threads_ex($limit, null, $user_id);
     $content = array();
     $last_thread = -1;
     $msgs = print_threads_ex($result, $content, $last_thread, $limit);
-
     //display the threads if set to display to anonymous viewers and
     if($show_content)
     {

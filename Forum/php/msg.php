@@ -156,6 +156,24 @@ function hashtag(text) {
   document.querySelector('form[name="hashtag"]').submit();
 }
 
+function pinThread(threadID)
+{
+  var user_id = <?php print($user_id);  ?>;
+  //add the thread to pinned
+    $.ajax({
+            type: "POST",
+            url: "pin_api.php",
+            data: {user: user_id, thread: threadID, action: 'pin'} ,
+            success: function(data) {
+            if(data.includes('thread pinned')){document.getElementById("pinThreadIcon").style.fill='red';document.getElementById("pin_title").innerHTML="Unpin Thread";}
+            else {document.getElementById("pinThreadIcon").style.fill='black';document.getElementById("pin_title").innerHTML="Pin Thread";}
+            //reload top frame
+            window.open('threads.php', 'contents');
+            }
+         });
+}
+
+
 function addToBooks(msgid)
 {
   var user_id = <?php print($user_id);  ?>;
@@ -346,16 +364,7 @@ if (isset($reactions)) {
     		<g> <path class="ribbonIcon" fill="#000000" d="M9.01 14H2v2h7.01v3L13 15l-3.99-4v3zm5.98-1v-3H22V8h-7.01V5L11 9l3.99 4z"></path></g>
 	    </svg>
 	    <span class="tooltiptext">Synchronize</span>
-	</a>	
-	</span> 
-	
-	<span id="msgThread" class="ribbonIcon tooltip">
-	    <a target="bottom" href="<?php print($root_dir . $page_thread); ?>?id=<?php print($msg_id); ?>">
-	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
-		    <path class="ribbonIcon" fill="#000000" d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path>
-	    </g></svg>
-	    <span class="tooltiptext">Thread</span>
-	    </a>
+	</a>
 	</span> 
 
   
@@ -373,7 +382,28 @@ if (is_null($msg_bookmark)) {
 	    <span class="tooltiptext"><?php if (is_null($msg_bookmark)) { ?> Bookmark<?php }else { ?> Delete Bookmark <?php } ?></span>
 	    </a>
 	</span> 
-	
+
+<?php if($parent==0){ 
+//thread! check if pinned already.
+$query ='select thread_id, owner_id from confa_pins where thread_id=' . $thread_id . ' AND owner_id=' . $user_id;
+$result = mysql_query($query);
+if (!$result) { die('Query failed'); }
+    $num_rows=0;
+    while ($row = mysql_fetch_assoc($result))
+{
+     $num_rows++;
+}
+if($num_rows < 1){$pin_color='black';$pin_title="Pin Thread";}else{$pin_color='red';$pin_title="Unpin Thread";}
+
+
+?>
+        <span id="msgPin" class="ribbonIcon tooltip"><a onclick="javascript:pinThread(<?php print($thread_id); ?>);return false;">
+	    <svg class="ribbonIcon greyHover" viewBox="0 0 24 25" preserveAspectRatio="xMidYMid meet"><g>
+		    <path id="pinThreadIcon" class="ribbonIcon" fill="<?=$pin_color?>" d="M9 6v1h.5v5L8 13v2h3.5v4h1v-4H16v-2l-1.5-1V7h.5V6H9z"></path>
+	    </g></svg>
+	    <span id="pin_title" class="tooltiptext"><?=$pin_title?></span></a>
+	</span> 
+<?php } ?>
         <span id="msgBooks" class="ribbonIcon tooltip"><a onclick="javascript:addToBooks(<?php print($msg_id); ?>);return false;">
 	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
 		    <path id="addBookIcon" class="ribbonIcon" fill="#000000" d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"></path>

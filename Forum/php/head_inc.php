@@ -165,6 +165,7 @@ require_once('mysql_log.php');
     mysql_log(__FILE__, 'Could not select database ' . mysql_error());
     die('Could not select database');
   }
+mysql_set_charset('utf8');
 require_once('get_params_inc.php');
 require_once('auth.php');
 

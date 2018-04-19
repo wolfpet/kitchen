@@ -3,8 +3,10 @@
   include_facebook_api_if_required($msgbody);
   initialize_highlightjs_if_required($msgbody);
 ?>
-<h3 onclick="toggleExpand();" style="cursor: pointer" id="subject"><?php print($subject); ?></h3>
-Author: <b><?php print($author . '</b>' . ' '); 
+
+<h3 onclick="toggleExpand();" style="cursor: pointer" id="subject"><?php print($subject); ?>
+</h3>
+Author: <b><?php print($author . '</b>' .  ' '); 
 if (!is_null($views)) {
   print(" [$views views] " );
 }

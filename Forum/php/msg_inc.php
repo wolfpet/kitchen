@@ -1,5 +1,4 @@
 <?php
-/*$Id: msg_inc.php 988 2014-01-05 01:14:33Z dmitriy $*/
 
 require_once('head_inc.php');
 
@@ -15,12 +14,12 @@ require_once('head_inc.php');
         mysql_log( __FILE__, 'query 1 failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
     }
-    
+
     $reads = '';
     $likes = '';
     $dislikes = '';
     $reaction = array(); // reaction to names
-    
+
     while($row = mysql_fetch_assoc($result)) {
         if ($row['valuelike'] > 0) {
           if (strlen($likes) > 0) {
@@ -102,6 +101,7 @@ require_once('head_inc.php');
         $modified = $row['modified'];
         $revisions = $row['revisions'];
         $msg_status = $row['status'];
+        $thread_id= $row['thread_id'];
         $content_flags = $row['content_flags'];
         if ( !is_null($row['post_closed']) && $row['post_closed'] > 0 ) {
             $post_closed = true;
