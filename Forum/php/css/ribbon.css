@@ -214,7 +214,7 @@ body#html_body {
 
 }
 .notificationLi {
-    /*height: 60px;*/ 
+    min-height: 60px;
     position: relative; 
     border-bottom: 1px solid; 
     background-color: #fff;
