@@ -67,6 +67,21 @@ if($imageGallery == 'postimage')
 <?php  require_once('custom_colors_inc.php'); ?>
 
 <base target="bottom">
+<script>
+function loadimage(img)
+{
+ setTimeout(function()
+ {
+  img.style.opacity= 1;
+  var downloadingImage = new Image();
+  downloadingImage.onload = function(){
+  img.src = this.src;
+    };
+     downloadingImage.src = img.alt;
+ }
+   , 500);
+}
+</script>
 </head>
 <body onload="javascript:var subj = document.getElementById('subj'); addEvent(subj,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); subj.focus();">
 <?php 

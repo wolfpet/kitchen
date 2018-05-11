@@ -42,6 +42,19 @@ function resizeMe(iframe)
     iframe.width  = iframe.contentWindow.document.body.scrollWidth + 5;
     iframe.height = iframe.contentWindow.document.body.scrollHeight + 25;
 }
+function loadimage(img)
+{
+ setTimeout(function()
+  {
+    img.style.opacity= 1;
+    var downloadingImage = new Image();
+    downloadingImage.onload = function(){
+    img.src = this.src;
+  };
+   downloadingImage.src = img.alt;
+    }
+   , 500);
+   }
 </script>
 <?php
 
