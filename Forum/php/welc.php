@@ -6,6 +6,26 @@
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <link rel="stylesheet" type="text/css" href="css/disc2.css?<?=filemtime('css/disc2.css')?>">
 <link rel="stylesheet" type="text/css" href="css/common.css?1476981264">
+<script>
+function loadimage(img)
+{
+ setTimeout(function()
+  {
+    img.style.opacity= 1;
+    var downloadingImage = new Image();
+    downloadingImage.onload = function(){
+    img.src = this.src;
+    };
+    downloadingImage.src = img.alt;
+  }
+      , 50);
+}
+function resizeMe(iframe)
+{
+    iframe.width  = iframe.contentWindow.document.body.scrollWidth + 5;
+    iframe.height = iframe.contentWindow.document.body.scrollHeight + 25;
+}
+</script>
 </head>
 <body>
 <div id="postPreview" style="display: none; height: 90vh; width: 95vw; position: absolute; background-color: white;"></div>
