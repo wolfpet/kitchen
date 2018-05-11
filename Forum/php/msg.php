@@ -206,6 +206,22 @@ function addToMovies(msgid)
          });
 }
 
+function loadimage(img)
+{
+ setTimeout(function()
+ {
+  img.style.opacity= 1;
+  var downloadingImage = new Image();
+  downloadingImage.onload = function(){
+      img.src = this.src;
+      };
+      downloadingImage.src = img.alt;
+  //img.src = img.alt;
+ }
+ , 500);
+
+}
+
 </script>
 <base target="bottom">
 </head>

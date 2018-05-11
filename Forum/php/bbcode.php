@@ -96,7 +96,8 @@ function bbcode_naked_images($str) {
       if(empty($m[1])) return $m[0];
 	else 
 	{
-	    return '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
+            //return '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
+            return '<img onload="loadimage(this);" style="cursor: pointer;max-width: 99%;max-height: 79vh;opacity: 0.5;" src="images/empty-image.png" alt="' . $m[1] . '"/>';
 	}
     }, $str);
   
