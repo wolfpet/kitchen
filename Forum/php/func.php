@@ -1334,7 +1334,7 @@ function instagram($body, $embed = true) {
   if (!$embed) return $body;
   
   // e.g. https://www.instagram.com/p/BGyE7jfF2of/
-  $pattern = '(?:https?://)(?:www\.)?(?:instagram\.com/p/)([0-9a-zA-Z\-]*)(?:/[^\s<\]"]*)?';
+  $pattern = '(?:https?:\/\/)(?:www\.)?(?:instagram\.com\/p\/)([0-9a-zA-Z\-_]*)(?:\/[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
     function ($matches) use ($embed, $pattern) {
