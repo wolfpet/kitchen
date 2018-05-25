@@ -26,20 +26,7 @@ function resetBadges()
 }
 function openLoginForm()
 {
-
      openOverlay("loginForm");
-    /*
-    if(document.getElementById("loginForm").style.display=='none')
-    {
-        document.getElementById("loginForm").style.display='block';
-        document.getElementById("loginIcon").style.fill='red';
-    }
-    else
-    {
-        document.getElementById("loginForm").style.display='none';
-        document.getElementById("loginIcon").style.fill='white';    
-    }
-    */
 }
 
 function expandModeratorMenu()
@@ -124,6 +111,9 @@ function openNotifications()
     else
     {
 	closeNotifications();
+	//clear page title
+        resetBadges();
+
     }
 }
 
@@ -543,7 +533,7 @@ function openProfile()
 		</div>
 	</div>
 
-
+<?php } ?>
 	<div id="SearchRibbonGroup" style="border: <?=$groupBorder?>; border-style: solid; border-width: 1px; width: 120px; padding: 4px" class="ribbonGroup">
 		<div id="NotificationsRibbonGroupTitle" class="ribbonGroupTitle">Quick Search</div>
 		    <span id="QuickSearch" class="ribbonIcon tooltip" style="width:0px">
@@ -578,7 +568,7 @@ function openProfile()
         </form>
 	</div>
 	
-<?php } ?>
+
 <?php if ($logged_in == false) { ?>
 	<div id="WelcomeRibbonGroup" style="float: right;border: <?=$groupBorder?>; border-style: solid; border-width: 1px;" class="ribbonGroupMobile";>
 		<div id="ViewRibbonGroupTitle1" class="ribbonGroupTitle">Welcome!</div>
