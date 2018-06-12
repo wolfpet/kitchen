@@ -1286,7 +1286,7 @@ function twitter($body, $embed = true) {
       $obj2 = file_get_contents("https://api.twitter.com/1/statuses/oembed.json?url=" . $url);
       
       if($obj2 === FALSE) 
-        return $url;
+        return $url . ' ';
 
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
