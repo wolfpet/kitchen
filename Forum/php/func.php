@@ -1281,15 +1281,20 @@ function twitter($body, $embed = true) {
         return $matches[0];
 
       $url = preg_replace('/\s+/', '', $matches[0]);
-      $id  = $matches[1];
+			$id  = $matches[1];
+
       $obj2 = file_get_contents("https://api.twitter.com/1/statuses/oembed.json?url=" . $url);
-      if($obj2 === FALSE)return $url . ' ';
+      
+      if($obj2 === FALSE) 
+        return $url;
+
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
       return trim(preg_replace('/\s+/', ' ', $ar2->html));
 		},
 		$body
 	);
+  
 	return $result;
 }
 
@@ -1329,7 +1334,7 @@ function instagram($body, $embed = true) {
   if (!$embed) return $body;
   
   // e.g. https://www.instagram.com/p/BGyE7jfF2of/
-  $pattern = '(?:https?://)(?:www\.)?(?:instagram\.com/p/)([0-9a-zA-Z\-]*)(?:/[^\s<\]"]*)?';
+  $pattern = '(?:https?:\/\/)(?:www\.)?(?:instagram\.com\/p\/)([0-9a-zA-Z\-_]*)(?:\/[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
     function ($matches) use ($embed, $pattern) {
@@ -1361,7 +1366,7 @@ function tmdb($body, $embed = true) {
   global $host, $tmdb_key;
   
   // e.g. http://www.imdb.com/title/tt2582782/?ref_=nm_flmg_act_4
-  $pattern = '(?:https?:\/\/)?(?:www\.)?imdb\.com\/(?:title|name)\/((?:tt|nm)[0-9]+)\/?(?:(?:\?|.)[^\s\[<\]"]*)?';
+  $pattern = '(?:https?:\/\/)?((?:www\.)?|(?:m\.))imdb\.com\/(?:title|name)\/((?:tt|nm)[0-9]+)\/?(?:(?:\?|.)[^\s\[<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
     function ($matches) use ($embed, $host, $pattern, $tmdb_key) {
