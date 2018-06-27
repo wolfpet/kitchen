@@ -1366,7 +1366,7 @@ function tmdb($body, $embed = true) {
   global $host, $tmdb_key;
   
   // e.g. http://www.imdb.com/title/tt2582782/?ref_=nm_flmg_act_4
-  $pattern = '(?:https?:\/\/)?((?:www\.)?|(?:m\.))imdb\.com\/(?:title|name)\/((?:tt|nm)[0-9]+)\/?(?:(?:\?|.)[^\s\[<\]"]*)?';
+  $pattern = '(?:https?:\/\/)?(?:(?:www\.)?|(?:m\.))imdb\.com\/(?:title|name)\/((?:tt|nm)[0-9]+)\/?(?:(?:\?|.)[^\s\[<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
     function ($matches) use ($embed, $host, $pattern, $tmdb_key) {
