@@ -1465,6 +1465,7 @@ function chuck($percentage) {
 }
 
 function can_edit_post($msg_author, $msg_time, $current_user, $msg_id) {
+  global $days_to_edit_post;
 
   // Editing is enabled if the user is an author, the message is less than 1 day old and there were no answers
   if ( strcmp($msg_author, $current_user) != 0)
@@ -1475,7 +1476,7 @@ function can_edit_post($msg_author, $msg_time, $current_user, $msg_id) {
    
   $diff = ($curtime - $time) / 3600;
   
-  if ($diff > 24) return false;
+  if ($diff > (isset($days_to_edit_post) ? $days_to_edit_post : 1) * 24) return false;
 /*    
   $query = "SELECT count(*) as cnt from confa_posts where parent = " . $msg_id;
   $result = mysql_query($query);

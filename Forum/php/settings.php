@@ -64,6 +64,7 @@ $imageGalleryBucket='';
 //Tenor GIF service key
 $tenorGifKey='LIVDSRZULELA';
 
+$days_to_edit_post = 3;
 
 ?>
 
