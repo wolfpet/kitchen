@@ -156,6 +156,9 @@
         if (array_key_exists('email', $_POST)) {
             $email = trim($_POST['email']);
         }
+        if (array_key_exists('email1', $_POST)) {
+            $email1 = trim($_POST['email1']);
+        }
         if (array_key_exists('email2', $_POST)) {
             $email2 = trim($_POST['email2']);
         }

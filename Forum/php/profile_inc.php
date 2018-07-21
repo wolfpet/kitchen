@@ -110,7 +110,7 @@ top.location.reload();
 <td>Leave the fields blank if you <br>don't want to change your password<br><br></td>
 </tr>
 <td align="right">Email</td>
-<td><input id="email" name="email" type="text" maxlength="80" value="<?php print($email); ?>"/></td>
+<td><input id="email1" name="email1" type="text" maxlength="80" value="<?php print($email); ?>"/></td>
 </tr>
 <tr>
 <td align="right">Retype email: </td>
