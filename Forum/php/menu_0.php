@@ -29,6 +29,11 @@ function openLoginForm()
      openOverlay("loginForm");
 }
 
+function openNewThreadForm()
+{
+     openOverlay("newThreadForm");
+}
+
 function expandModeratorMenu()
 {
     document.getElementById("ModRibbonGroup").style.display='inline-block';
@@ -373,7 +378,7 @@ function openProfile()
 				<!-- This is a badge sample that indicates that there are new notifications -->
 				<span id="newNotificationsBadge" class="button__badge" style="display:none;">4</span></a>
 			</span> 
-			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="closeNotifications();" href="<?=$root_dir.$page_new?>">
+			<span id="NewThreadIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="closeNotifications(); openNewThreadForm();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M3 15.25V19h3.75L15.5 10.5l-3.75-3.75L3 15.25zM18 8c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></g></svg>
 				<span class="tooltiptext">New thread</span></a>
 			</span> 

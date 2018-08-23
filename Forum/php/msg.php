@@ -222,6 +222,11 @@ function loadimage(img)
 
 }
 
+function openReplyForm(replyUrl)
+{
+ parent.openReply(replyUrl);
+}
+
 </script>
 <base target="bottom">
 </head>
@@ -348,7 +353,8 @@ if (isset($reactions)) {
 
 <?php if ( !$reply_closed ) { ?>
 	<span class="ribbonIcon tooltip" id="ReplyIcon">
-	 <a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>">
+	 <!-- <a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>"> -->
+	 <a onclick="openReplyForm('<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>');">
     	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet">
     		  <g><path class="ribbonIcon" fill="#000000" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g>
     	    </svg>

@@ -184,6 +184,12 @@ function openMsg(msgId)
 }
 
 
+function openReply(replyUrl)
+{
+    openOverlay("replyForm");
+    document.getElementById("overley_iframe").src=replyUrl;
+}
+
 // - - - - Overlay - - - - - 
 
 function openOverlay(name)
@@ -224,6 +230,17 @@ function openOverlay(name)
     {
         renderOverlayPanels("Forum Login")
         document.getElementById("overley_iframe").src="login_form.php";
+    }
+    //New thread Form
+    if(name=='newThreadForm')
+    {
+        renderOverlayPanels("New Thread")
+        document.getElementById("overley_iframe").src="new.php";
+    }
+    //New thread Form
+    if(name=='replyForm')
+    {
+        renderOverlayPanels("Reply")
     }
     
 }
