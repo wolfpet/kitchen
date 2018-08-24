@@ -100,13 +100,8 @@ function sendMessage()
         return;
     }
     document.getElementById("msgform").submit();
-    closeForm();
 }
 
-function closeForm()
-{
- try{ parent.closeOverlay();}catch{}
-}
 </script>
 
 <!-- <h3><?php print($title);?></h3> -->
