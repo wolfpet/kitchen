@@ -31,7 +31,7 @@ require_once('html_head_inc.php');
                     $update = ' password=password(\'' . $password . '\')';
                 } 
             }
-            if (is_null($email) || strlen($email) == 0) {
+            if (is_null($email1) || strlen($email1) == 0) {
                 if (strlen($update) == 0) {
                     $err = 'At least one - email or password should be populated for the update';
                     break;
@@ -41,18 +41,18 @@ require_once('html_head_inc.php');
                     $err = 'Please, retype email';
                     break;
                 }
-                if (strcmp($email, $email2)) {
+                if (strcmp($email1, $email2)) {
                     $err = 'Email does not match';
                     break; 
                 }
-                $err = validateEmail($email);
+                $err = validateEmail($email1);
                 if (strlen($err) > 0 ){
                     break;
                 }
                 if (strlen($update) > 0) {
                     $update .= ', ';
                 }
-                $update .= 'email=\'' . mysql_real_escape_string( $email ). '\' ';
+                $update .= 'email=\'' . mysql_real_escape_string( $email1 ). '\' ';
             }
             if (strlen($update) > 0) {
                 $update .= ', ';
