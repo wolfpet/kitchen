@@ -297,12 +297,12 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($app) {
  * GET /messages/$id/answers
  */
 $app->get('/api/messages/{id:[0-9]+}/answers', function($msg_id) {
-  global $prop_tz, $server_tz;
+  global $prop_tz, $server_tz, $user_id;
   
   $response = new Response();
 
   $query = 'SELECT u.username, u.moder, p.auth, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, p.subject, p.status, p.content_flags, LENGTH(IFNULL(p.body,"")) as len, p.thread_id, p.level, p.id as id, p.level, p.chars, p.page, (select count(*) from confa_posts where parent = p.id) as counter '
-    .' from confa_posts p, confa_users u where p.author=u.id and p.parent = ' . $msg_id . ' order by id desc';
+    .' from confa_posts p, confa_users u where p.author=u.id and p.parent = ' . $msg_id . ' and p.author not in (SELECT ignored from confa_ignor where ignored_by='.$user_id.') order by id desc';
     
   $result = mysql_query($query);
 
@@ -402,7 +402,7 @@ $app->get('/api/messages', function() use ($app) {
               . ':00\') as created, p.subject, p.author as author, p.status, p.id as msg_id, p.chars, p.content_flags, p.parent, p.level, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
               . ':00\') as modified, p.page, (select count(*) from confa_posts where parent = p.id) as counter, false as thread_closed,'
               . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u' 
-              . ' where p.author=u.id and p.id > ' . $max_id . ' and p.status != 2 order by p.id desc limit 500';
+              . ' where p.author=u.id and p.id > ' . $max_id . ' and p.status != 2 and p.author not in (SELECT ignored from confa_ignor where ignored_by='.$user_id.') order by p.id desc limit 500';
           } else { // could not find the last id
             $count = $default_count;
           }
@@ -413,14 +413,14 @@ $app->get('/api/messages', function() use ($app) {
       //if min_id is provided then return the subset of msgs
       //between min_id and the latest, but not more than max count
       if($min_id >0) {
-        $query = 'SELECT  p.subject, p.author from confa_posts p where p.id > '. $min_id . ' order by p.id desc limit 500';
+        $query = 'SELECT p.subject, p.author from confa_posts p where p.id > '. $min_id . ' and p.author not in (SELECT ignored from confa_ignor where ignored_by='.$user_id.') order by p.id desc limit 500';
       }
       if (is_null($query)) {
         $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
           . ':00\') as created, p.subject, p.author as author, p.status, p.id as msg_id, p.chars, p.content_flags, p.parent, p.level, p.page, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
           . ':00\') as modified, (select count(*) from confa_posts where parent = p.id) as counter, false as thread_closed,'
           . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u' 
-          . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 order by p.id desc limit ' . $count;        
+          . ' where p.author=u.id' . ($max_id > 0 ? (' and p.id <= ' . $max_id) : '') . ' and p.status != 2 and p.author not in (SELECT ignored from confa_ignor where ignored_by='.$user_id.') order by p.id desc limit ' . $count;        
       }
       $result = mysql_query($query);
       break;
@@ -440,7 +440,8 @@ $app->get('/api/messages', function() use ($app) {
           p.subject, p.author, p.status, p.id as id, p.id as msg_id, p.chars, (select count(*) from confa_posts
           where parent = p.id) as counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks,
           (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p,
-          confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 and p.id >= '.$min_bydate_id.' order by id desc limit 100';
+          confa_posts b, confa_users u where p.parent=b.id and b.author=' . $user_id . ' and p.author=u.id and p.status != 2 and p.id >= '.$min_bydate_id.
+          ' and p.author not in (SELECT ignored from confa_ignor where ignored_by='.$user_id.') order by id desc limit 100';
           //die($query);
       $result = mysql_query($query);
 
