@@ -13,7 +13,7 @@ require_once('custom_colors_inc.php');
 </script>
 
 <link rel="stylesheet" type="text/css" href="css/spectrum.css">
-<script type="text/javascript" src="js/profinit.js"></script>
+<script type="text/javascript" src="<?=autoversion('js/profinit.js')?>"></script>
 <script type="text/javascript" src="js/spectrum.js"></script>
 <script type="text/javascript" src="js/profcolors.js"></script>
 

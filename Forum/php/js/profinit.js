@@ -1,6 +1,14 @@
 $(document).ready(function() {
 
 colorInit();
+
+function sortUL(selector) {
+  var $list = $(selector);
+
+  $list.children().detach().sort(function(a, b) {
+    return $(a).text().localeCompare($(b).text());
+  }).appendTo($list);
+}
             //$("#status_text").html("&nbsp;");
             $('#btnIgnor').click(function(e) {
             $("#status_text").html("&nbsp;");
@@ -12,6 +20,8 @@ colorInit();
 
                 $('#lstIgnor').append($(selectedOpts).clone());
                 $(selectedOpts).remove();
+                sortUL('#lstIgnor');
+                sortUL('#lstNoIgnor');
                 e.preventDefault();
             });
 
@@ -25,6 +35,8 @@ colorInit();
 
                 $('#lstNoIgnor').append($(selectedOpts).clone());
                 $(selectedOpts).remove();
+                sortUL('#lstIgnor');
+                sortUL('#lstNoIgnor');
                 e.preventDefault();
             });
             $('#Save').click(function(e) {
