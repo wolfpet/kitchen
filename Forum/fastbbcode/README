@@ -1,8 +1,0 @@
-To compile and install:
-$ phpize
-$ ./configure --enable-fastbbcode
-$ make
-$ sudo make install
-
-Then add fastbbcode.so to extensions in php.ini
-
