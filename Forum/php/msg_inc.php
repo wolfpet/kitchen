@@ -169,7 +169,7 @@ require_once('head_inc.php');
         $parent = $row['parent'];
         if (!is_null($parent)) {
             mysql_free_result($result);
-            $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.auth, p.status, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.body, p.author, u.id from confa_users u, confa_posts p where u.id=p.author and p.id=' . $parent;
+            $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.auth, p.status, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.body, p.author, u.id user_id from confa_users u, confa_posts p where u.id=p.author and p.id=' . $parent;
             $result = mysql_query($query) or die('error to request parent message');
             if (mysql_num_rows($result) != 0) {
                 $row = mysql_fetch_assoc($result) or die('error to fetch parent row');;
@@ -180,8 +180,13 @@ require_once('head_inc.php');
                 if ( $row['status'] == 2 ) {
                     $in_response = 'In response to: <I><font color="gray"><del>This message has been deleted</del></font></I>  by <b>' . $parent_author . '</b>' . ', ' . $parent_date . '<br> ';    
                 } else { 
-                    $parent_subject = htmlentities(translit($row['subject'], $proceeded), HTML_ENTITIES,'UTF-8');
-                    $in_response ='In response to: <a href="' . $root_dir . $page_msg . '?id=' . $parent . '">' . $parent_subject . '</a> by <b>' . $parent_author . '</b>' . ', ' . $parent_date . '<br> ';
+                    get_show_hidden_and_ignored();
+                    if ($ignored != null && in_array($row['user_id'], $ignored)) {
+                      $in_response ='In response to: <font color="lightgrey"/>Hidden message</font>  by <b>' . $parent_author . '</b>, ' . $parent_date . '<br> ';
+                    } else {
+                      $parent_subject = htmlentities(translit($row['subject'], $proceeded), HTML_ENTITIES,'UTF-8');
+                      $in_response ='In response to: <a href="' . $root_dir . $page_msg . '?id=' . $parent . '">' . $parent_subject . '</a> by <b>' . $parent_author . '</b>' . ', ' . $parent_date . '<br> ';
+                    }    
                 }
             }
         }
