@@ -42,6 +42,9 @@ require("pm_msg_inc.php");
       if (strncasecmp($subj, 're: ', 4)) {
              $subj = 'Re: ' . $subj;
         }        
+    } 
+    if (isset($quote) && strlen($quote) > 0) {
+      $body = "[quote]".$quote."[/quote]";
     }
 
 require('send_inc.php'); 

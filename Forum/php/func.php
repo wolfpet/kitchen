@@ -261,6 +261,8 @@ function get_show_hidden_and_ignored() {
 //"
 function get_pinned_threads($user_id)
 {
+  global $prop_tz, $server_tz;
+  
   //die($user_id);
     $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \''
     . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz
