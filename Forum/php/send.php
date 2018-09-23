@@ -38,7 +38,10 @@ require("pm_msg_inc.php");
              $subj = 'Re: ' . $subj;
         }        
     }
-
+    if (isset($quote) && strlen($quote) > 0) {
+      $body = "[quote]".$quote."[/quote]";
+    }	
+    
 require('send_inc.php'); 
 require_once('tail_inc.php');
 

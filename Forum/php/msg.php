@@ -16,6 +16,7 @@ $managed = true;
 ?><link rel="stylesheet" type="text/css" href="<?=autoversion('css/diff.css');?>">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="<?=autoversion('js/func.js');?>"></script>
 <script language="javascript">
 function report_on() {
   toggleDiv("report");
@@ -205,9 +206,32 @@ Closed |
 <?php
 } else {
 ?>
-
-<a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>">Reply</a> |
-<span style="background-color: rgb(224, 224, 224);"><a href="<?php print( $root_dir . $page_pmail_send . '?to=' . $author . '&re=' .  $msg_id); ?>"); ?>Reply to sender (private)</a></span> |
+<script>
+  function reply() {
+    submitReply('frmReply');
+  }
+  function private() {
+    submitReply('frmReplyPrivate');
+  }  
+  function submitReply(frmName) {
+    var f = document.getElementById(frmName);
+    f['quote'].value = getQuote();
+    f.submit();
+  }  
+</script>
+  <form action="<?php print($root_dir . $page_new); ?>" method="post" style="display:inline" id="frmReply">
+      <input type="hidden" name="re" value="<?php print($msg_id); ?>"/>
+      <input type="hidden" name="quote" id="quote"/>
+      <a href="javascript:reply();">Reply</a>
+  </form>
+<!--<a href="<?php print($root_dir . $page_new); ?>?re=<?php print($msg_id); ?>">Reply</a>--> |
+  <form action="<?php print($root_dir . $page_pmail_send); ?>" method="post" style="display:inline" id="frmReplyPrivate">
+      <input type="hidden" name="re" value="<?php print($msg_id); ?>"/>
+      <input type="hidden" name="to" value="<?php print($author); ?>"/>
+      <input type="hidden" name="quote" id="quote"/>
+      <span style="background-color: rgb(224, 224, 224);"><a href="javascript:private();">Reply to sender (private)</a></span> |
+  </form>
+<!--<span style="background-color: rgb(224, 224, 224);"><a href="<?php print( $root_dir . $page_pmail_send . '?to=' . $author . '&re=' .  $msg_id); ?>"); ?>Reply to sender (private)</a></span> |-->
 <?php
 }
 ?>

@@ -50,6 +50,8 @@ $thread_owner = false;
       } else {
         die('No such message');
       }		
+    } else if (isset($quote) && strlen($quote) > 0) {
+      $body = "[quote]".$quote."[/quote]";
     }
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">

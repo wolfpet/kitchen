@@ -118,8 +118,7 @@ function insertBBCode(fieldId, tag) {
     }
   } else if (tag == "quote" && msgbody != null && (getSelectedTextWithin(msgbody) != "" || getSelectedTextWithin(subject) != "")) {
     // insert quoted text at insertion
-    var quote = getSelectedTextWithin(msgbody);
-    if (quote == "") quote = getSelectedTextWithin(subject);
+    var quote = getQuote();
     var textToInsert = '[' + tag +']' + quote + '[/' + tag +']';
     element.value = ((ss > 0) ? element.value.substring(0, ss) : "") + textToInsert + element.value.substring(element.value.length - tl); 
     if (element.setSelectionRange) { 
@@ -141,6 +140,18 @@ function insertBBCode(fieldId, tag) {
   element.focus();
 }
 
+  function getQuote() {
+    var msgbody = document.getElementById("msgbody");
+    var subject = msgbody != null ? document.getElementById("subject") : null;
+    
+    var quote = msgbody == null ? "" : getSelectedTextWithin(msgbody);
+    if (quote == "" && subject != null) {
+      quote = getSelectedTextWithin(subject);
+    }
+    
+    return quote;
+  }
+  
   function insertSmiley(fieldId, smileyName)
   {
     var myField = document.getElementById(fieldId);

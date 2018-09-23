@@ -171,6 +171,9 @@
         if (array_key_exists('re', $_POST)) {
             $re = intval($_POST["re"],10);
         }
+        if (array_key_exists('quote', $_POST)) {
+            $quote = $_POST["quote"];
+        }
         if (array_key_exists('preview', $_POST)) {
             $preview = $_POST["preview"];
         }
