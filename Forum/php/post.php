@@ -90,6 +90,8 @@ if($imageGallery == 'postimage')
       }
     require_once('msg_form_inc.php');
     }
+  } else {
+    print('<B><font color="red">' . $err . '</font></B><BR></body></html>');
   }
 
 //require('new_inc.php');
