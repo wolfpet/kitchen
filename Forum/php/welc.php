@@ -1,4 +1,4 @@
-<?php require_once('settings.php'); ?>
+<?php require_once('head_inc.php'); ?>
 
 <Html>
 <HEAD>
@@ -36,7 +36,7 @@ Hi and welcome! There are only 3 rules in this forum: <br><br>
 3. No persistent activism is welcome, including, but not limited to political propaganda. Positive political discussions are welcome, however.<br>
 <br>
 All 3 rules are subject to moderators' interpretation. Please do not complain. They are also subject to change without notice.
-<hr>
+<p>
 <h3>Did you know?</h3>
 <span id="know1" style="display:none">You can add searchable <span style="color: blue">#hashtags</span> to your messages similar to Twitter and Facebook!</span>
 <span id="know2" style="display:none">You can paste <span style="color: blue">Youtube, Facebook and Twitter</span> links and they will render inline!</span>
@@ -54,7 +54,8 @@ All 3 rules are subject to moderators' interpretation. Please do not complain. T
 
 
 <?php if (isset($tmdb_key)) {?>
-<span id="tmdb-attribution" style=" display:block; color:lightgray;height:10%;position:absolute;bottom:0;left:0;">This product uses the TMDb API but is not endorsed or certified by TMDb.&nbsp;<a target="_blank" href="https://www.themoviedb.org/"><img src="images/powered-by-rectangle-green.png" valign="middle" height="50%"></a></span>
+<p><br/><p>
+<span id="tmdb-attribution" style=" display:block;color:lightgray;height:10%"><a target="_blank" href="https://www.themoviedb.org/"><img src="images/powered-by-rectangle-green.png" valign="middle" height="50%"></a>&nbsp;This product uses the TMDb API but is not endorsed or certified by TMDb.</span>
 <?php } ?>
 
 <br><br><br><br><br><br>
