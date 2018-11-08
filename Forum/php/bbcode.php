@@ -128,6 +128,8 @@ function before_bbcode($original_body, &$has_video=null) {
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/posts/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',    
     // FB photo e.g. https://www.facebook.com/photo.php?fbid=1845794888790800
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/photo\.php\?fbid=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    // Twitter moments e.g. https://twitter.com/i/moments/1047551358948319233
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?twitter\.com\/i\/moments\/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // imgur
     '#(?<!(\[url(=|]))|\[img=)((?:https?://)(?:www\.)?i\.imgur\.com/([^\s\.]*)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
@@ -143,6 +145,7 @@ function before_bbcode($original_body, &$has_video=null) {
     '<div class="fb-video" data-href="$2" data-width="500"></div><br/>Link: <a href="$2" target="_blank">$2</a>',
     '<div class="fb-post" data-href="$2" data-width="500" data-show-text="true"></div><br/>Link: <a href="$2" target="_blank">$2</a>',  
     '<div class="fb-post" data-href="$2" data-width="500"></div><br/>Link: <a href="$2" target="_blank">$2</a>',  
+    '<a class="twitter-moment" href="$2?ref_src=twsrc%5Etfw">$2</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>',    
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="a/$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="'.$protocol.'://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin='.$protocol.'://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
