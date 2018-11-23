@@ -177,9 +177,16 @@ function before_bbcode($original_body, &$has_video=null) {
 
   // other replacements
   $body = preg_replace( array (
+    // WhatsApp formatting
+    //
     '#\s*$#s', // extra trailing spaces 
     '#^\s#s' // extra leading spaces 
      ), array (
+    // WhatsApp formatting
+    '[i]$1[/i]',
+    '[b]$1[/b]',
+    '[s]$1[/s]',
+    //
     '', 
     ''
      ), $body);
