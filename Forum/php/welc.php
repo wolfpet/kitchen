@@ -5,7 +5,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <link rel="stylesheet" type="text/css" href="css/disc2.css?<?=filemtime('css/disc2.css')?>">
-<link rel="stylesheet" type="text/css" href="css/common.css?1476981264">
+<link rel="stylesheet" type="text/css" href="css/common.css?<?=filemtime('css/common.css')?>">
+<script src="js/history.js?<?=filemtime('js/history.js')?>"></script>
 <script>
 function loadimage(img)
 {
@@ -51,19 +52,20 @@ All 3 rules are subject to moderators' interpretation. Please do not complain. T
 <span id="know11" style="display:none">You can change <span style="color: blue"> the forum colors!</span> Click Colors in the profile section.</span>
 <span id="know12" style="display:none">Don't like the graphic menu icons? <span style="color: blue"> Switch to classic</span> forum menu in the profile section.</span>
 <span id="know13" style="display:none">Resetting notifications without reloading is easy:<span style="color: blue"> Click on the bell icon, then click again</span> and the red badges will go away.</span>
-
-
+<p>
+<div id="history"></div>
 <?php if (isset($tmdb_key)) {?>
-<p><br/><p>
+<br/><p>
 <span id="tmdb-attribution" style=" display:block;color:lightgray;height:10%"><a target="_blank" href="https://www.themoviedb.org/"><img src="images/powered-by-rectangle-green.png" valign="middle" height="50%"></a>&nbsp;This product uses the TMDb API but is not endorsed or certified by TMDb.</span>
 <?php } ?>
 
 <br><br><br><br><br><br>
 <script type="text/javascript">
-        function knowAddress() {
+      function knowAddress() {
         var x = Math.floor((Math.random() * 13) + 1);
         document.getElementById("know" + x).style.display="block";
-}
+        historyData.start();
+      }
 window.onload = knowAddress;
 </script>
 
