@@ -1432,7 +1432,7 @@ function tmdb($body, $embed = true) {
           if (isset($title)) {
             $new_body .= "\n[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url][/color]";
             if (isset($rating)) {
-              $new_body .= ' [color=black][b]' . $rating . '[/b][/color][size=8]/10[/size]';
+              $new_body .= ' [color=black][b]' . $rating . '[/b][/color][size=8]/10 TMDB[/size]';
             }
           } else {
             $new_body .= "\nLink: [url]".$url."[/url]";
