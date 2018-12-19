@@ -381,35 +381,26 @@ div#hr2{
 }
 
 .playbutton {
-  border: 0;
-  background: transparent;
-  box-sizing: border-box;
-  width: 0;
-  height: 15px;
-
-  border-color: transparent transparent transparent #404040;
-  transition: 100ms all ease;
-  cursor: pointer;
-
-  border-style: solid;
-  margin-left: 2px;
-  border-width: 7px 0 7px 12px;
-  
+  height: 4%;
   -webkit-user-select: none;  
   -moz-user-select: none;    
   -ms-user-select: none;      
   user-select: none;
 }
 
-.playbutton.paused {
-  margin-bottom: 1px;
-  border-style: double;
-  border-width: 0px 0 0px 12px;
+.playbutton.hidden {
+   display: none;
 }
 
 .playbutton:hover {
   border-color: transparent transparent transparent #606060;
 }
 
+#history div h4 {
+  display: inline-block;
+  width: 200px;  
+  margin-top:10px;
+  margin-bottom:16px;
+}
 
 
