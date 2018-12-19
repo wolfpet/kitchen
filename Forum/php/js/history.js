@@ -121,29 +121,64 @@ historyData = {
       });    
     },
     timeout : 15000,
-    display : function () {
+    paused : false,
+    click : function(btn) {
+      if (btn.id == "play" || btn.id == "pause") {
+        btn.classList.toggle("hidden");
+        document.getElementById(btn.id == "pause" ? "play" : "pause").classList.toggle("hidden");
+        historyData.paused = !historyData.paused;
+      } else if (btn.id == "skipback") {
+        historyData.skip(-1);
+        historyData.display(true);
+      } else {
+        historyData.skip(1);
+        historyData.display(true);        
+      }
+      btn.blur();
+      return false;
+    },
+    skip : function (increment) {
+      if (increment) {        
+      } else {
+        increment = 1;
+      }
+      historyData.index += increment;
+
+      var data = historyData.payload.data;
+      if (historyData.index >= data.Events.length) {
+        historyData.index = 0;
+      } else if (historyData.index < 0) {
+        historyData.index = data.Events.length-1;
+      }
+    },
+    display : function (noskip) {
       var div = document.getElementById("history");
       if (div) {
+        if (historyData.time) clearTimeout(historyData.time);
+
         var text = "";
-        
+
         var data = historyData.payload.data;
         if (data.Events.length > 0) {
-          if (historyData.index >= data.Events.length) {
-            historyData.index = 0;
-          }
-                    
-          var event = data.Events[historyData.index++];          
-          var date = historyData.payload.date;
-          event.date = date;
+          
+          var event = data.Events[historyData.index];          
+          event.date = historyData.payload.date;
+          
+          if (!noskip) historyData.skip();          
           
           if (historyData.callback) {
             text = historyData.callback(event);
           } else {
-            text = "<p><h4>" + event.date + ", " + event.year + "</h4>" + event.html +"</p>";
+            text = '<div><h4 class="history-header">' + event.date + ", " + event.year + '</h4>'
+            + '<input id="skipback" class="playbutton" type="image" src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Oxygen480-actions-media-skip-backward.svg" onclick="historyData.click(this);" focusable="false"></input>'
+            + '<input id="play" class="playbutton'  + (historyData.paused ? " hidden" : "") + '" type="image" src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Oxygen480-actions-media-playback-start.svg" onclick="historyData.click(this);" focusable="false"></input>'
+            + '<input id="pause" class="playbutton' + (historyData.paused ? "" : " hidden") + '" type="image" src="https://upload.wikimedia.org/wikipedia/commons/8/83/Oxygen480-actions-media-playback-pause.svg" onclick="historyData.click(this);" focusable="false"></input>'
+            + '<input id="skipforward" class="playbutton" type="image" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Oxygen480-actions-media-skip-forward.svg" onclick="historyData.click(this);" focusable="false"></input>'
+            + '</div><div>' + event.html +"</div><p/>";
           }
         }
         div.innerHTML = text;
-        setTimeout(historyData.display, historyData.timeout);
+        historyData.time = setTimeout(historyData.display, historyData.timeout);
       }
   }
 }

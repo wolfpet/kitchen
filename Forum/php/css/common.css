@@ -357,4 +357,27 @@ ul.tab li a:focus, .active {
 	color: #FFFFFF;
 }
 
+.playbutton {
+  margin-left: 16px;
+  height: 4%;
+  -webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+  user-select: none;
+}
+
+.playbutton.hidden {
+   display: none;
+}
+
+.playbutton:hover {
+  border-color: transparent transparent transparent #606060;
+}
+
+#history div h4 {
+  display: inline-block;
+  width: 200px;  
+  margin-top:10px;
+  margin-bottom:16px;
+}
 
