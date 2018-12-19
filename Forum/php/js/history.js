@@ -169,6 +169,7 @@ historyData = {
           if (historyData.callback) {
             text = historyData.callback(event);
           } else {
+            text = '<div><h4 class="history-header">' + event.date + ", " + event.year + '</h4>'
             + '<input id="skipback" class="playbutton" type="image" src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Oxygen480-actions-media-skip-backward.svg" onclick="historyData.click(this);" focusable="false"></input>'
             + '<input id="play" class="playbutton'  + (historyData.paused ? " hidden" : "") + '" type="image" src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Oxygen480-actions-media-playback-start.svg" onclick="historyData.click(this);" focusable="false"></input>'
             + '<input id="pause" class="playbutton' + (historyData.paused ? "" : " hidden") + '" type="image" src="https://upload.wikimedia.org/wikipedia/commons/8/83/Oxygen480-actions-media-playback-pause.svg" onclick="historyData.click(this);" focusable="false"></input>'

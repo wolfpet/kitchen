@@ -381,6 +381,7 @@ div#hr2{
 }
 
 .playbutton {
+  margin-left: 16px;
   height: 4%;
   -webkit-user-select: none;  
   -moz-user-select: none;    
