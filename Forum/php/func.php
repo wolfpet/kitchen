@@ -858,10 +858,10 @@ function print_msgs($ar, $msgs) {
     $keys = array_keys($ar);
     print("<dl><dd>\n");
     foreach ($keys as $key) {
-        //if ($msgs[$key] != "") {
-        print($msgs[$key]);
-        print("<BR>\n");
-        //}
+        if ($msgs[$key] != "") {
+          print($msgs[$key]);
+          print("<BR>\n");
+        }
         if (sizeof($ar[$key]) > 0) {
             print_msgs($ar[$key], $msgs);
         }
