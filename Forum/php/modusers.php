@@ -3,9 +3,18 @@
 require_once('head_inc.php');
 
     if ( !is_null( $moder ) && $moder > 0 ) {
-
+    
+        function boldmoder($text, $rec, $list) {
+          if ($rec['moder']) 
+            if (isset($list) && $list)
+              return $text . '<span class="edited">*</span>';
+            else 
+              return '<b>' . $text . '</b>';
+          
+          return $text;
+        }
 	//WHO IS ONLINE? 
-	$query ="SELECT user_id, updated, username  FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 60 MINUTE Group by username;";
+	$query ="SELECT user_id, updated, username, moder FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 60 MINUTE Group by username;";
 	//die($query);
         $users_online = array();
         $result = mysql_query($query);
@@ -14,11 +23,11 @@ require_once('head_inc.php');
             die('Query failed ' );
         }
         while ($row = mysql_fetch_assoc($result)) {
-          $users_online[] = $row['username'];
+          $users_online[] = boldmoder($row['username'], $row, true);
         }
 
 	//Visited today 
-	$query ="SELECT user_id, updated, username  FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 1440 MINUTE Group by username;";
+	$query ="SELECT user_id, updated, username, moder FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 1440 MINUTE Group by username;";
 	//die($query);
         $users_today = array();
         $result = mysql_query($query);        
@@ -27,7 +36,7 @@ require_once('head_inc.php');
             die('Query failed ' );
         }
         while ($row = mysql_fetch_assoc($result)) {
-            $users_today[] = $row['username'];
+            $users_today[] = boldmoder($row['username'], $row, true);
         }
 
 	//REGESTERED USERS
@@ -78,8 +87,8 @@ require_once('head_inc.php');
         }
 
         $query = 'SELECT username, status, moder, ban, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as ban_ends, CONVERT_TZ(created, \'' 
-          . $server_tz . '\', \'' . $prop_tz . ':00\') as created, id, (select max(updated) from confa_sessions s where s.user_id=u.id) last_seen from confa_users u order by username'; 
-
+          . $server_tz . '\', \'' . $prop_tz . ':00\') as created, id, CONVERT_TZ((select max(updated) from confa_sessions s where s.user_id=u.id), \'' . $server_tz . '\', \'' . $prop_tz . ':00\') last_seen from confa_users u order by username';
+        
         $result = mysql_query($query);
         if (!$result) {
             mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -109,6 +118,8 @@ require_once('head_inc.php');
             if ( $row['status'] == 2 ) {
                 $enc_user= '<del>' . $enc_user . '</del>';
             }
+            
+            $enc_user= boldmoder($enc_user, $row, false);
             $line = '<tr><td>' . $num . ' <a target="bottom" href="' . $root_dir . $page_m_user . '?moduserid=' . $id . '"> ' . $enc_user . ' </a>' . '</td><td align="center">' . $id . '</td><td align="center">' . $status . '</td><td align="center">' . $created . '</td><td align="center">' . $last_seen . '</td></tr>';
             $out .= $line;
             $num++;
