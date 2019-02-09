@@ -1427,7 +1427,7 @@ function tmdb($body, $embed = true) {
       if ($embed && isset($thumbnail)) {
           $new_body = "\n\n[img=https://image.tmdb.org/t/p/w185".$thumbnail."]";
           if (isset($tooltip)) {
-            $new_body .= $tooltip . '[/img]';
+            $new_body .= str_replace("\n", "", trim($tooltip)) . '[/img]';
           }
           if (isset($title)) {
             $new_body .= "\n[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url][/color]";
