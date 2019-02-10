@@ -602,7 +602,7 @@ $app->get('/api/reactions', function() use ($app) {
     foreach (array_keys($reactions) as $reaction) {
       $result[] = array(
         'label' => $reaction,
-        'url' => 'http://'.$host.$root_dir.'images/smiles/'.$reaction.'.gif'
+        'url' => 'http://'.$host.$root_dir.'images/reactions/'.$reaction.'.gif'
       );
     }
     $response->setContentType('application/json');
@@ -684,7 +684,7 @@ function api_get_ratings($msg_id) {
         if (array_key_exists($reaction, $reactions1)) {
           $reactions1[$reaction]['names'][] = $row['userlike'];
         } else {
-          $reactions1[$reaction] = array("names" => array($row['userlike']), "url" => 'http://'.$host.$root_dir.'images/smiles/'.$row['reaction'].'.gif');
+          $reactions1[$reaction] = array("names" => array($row['userlike']), "url" => 'http://'.$host.$root_dir.'images/reactions/'.$row['reaction'].'.gif');
         }
       }
       if (!is_null($row['valuelike']))
