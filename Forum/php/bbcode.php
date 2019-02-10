@@ -44,8 +44,8 @@ function do_bbcode($str, $auth_id, $msg_id) {
       '<a target="_blank" href="//$1">$2</a>',
       '<a target="_blank" href="$1">$1</a>',
       '<a target="_blank" href="//$1">$1</a>',
-      '<img src="$1" alt="" title="$2"/>',
-      '<img src="//$1" alt="" title="$2"/>',
+      '<img src="$1" alt="" title="$2" style="white-space: pre-line;"/>',
+      '<img src="//$1" alt="" title="$2" style="white-space: pre-line;"/>',
       '<img src="$1" alt=""/>',
       '<img src="//$1" alt=""/>',
       '<img src="$1" alt=""/>',
@@ -91,14 +91,13 @@ function bbcode_naked_images($str) {
   // Deal with untagged images
   $str = preg_replace_callback('#'.unless_in_quotes('(?:ftp|https?):\/\/[^\s>"]+\.(?:jpg|jpeg|gif|png|bmp)(?:[^\s<"]*)?').'#is', // unprocessed images (i.e. without quotes around them)
     function ($m) {
-      global $auth_id;
-      global $msg_id;
-      if(empty($m[1])) return $m[0];
-	else 
-	{
-            //return '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
-            return '<img onload="loadimage(this);" style="cursor: pointer;max-width: 99%;max-height: 79vh;opacity: 0.5;" src="images/empty-image.png" alt="' . $m[1] . '"/>';
-	}
+      global $auth_id, $msg_id;
+      if(empty($m[1])) 
+        return $m[0];
+      else if (is_agent_iOS()) 
+        return '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
+      else
+        return '<img onload="loadimage(this);" style="cursor: pointer;max-width: 99%;max-height: 79vh;opacity: 0.5;" src="images/empty-image.png" alt="' . $m[1] . '"/>';      
     }, $str);
   
   // Google pic URLs are also images
@@ -451,7 +450,7 @@ function render_smileys_step2($body) {
       if(!$exists) 
         return $matches[0];
 
-      return '<img width="25px" src="http://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
+      return '<img src="http://'.$host.$root_dir.$path.'" alt="'.$name.'" title="'.$name.'"/>';
 		},
 		$body
 	);

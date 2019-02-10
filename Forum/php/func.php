@@ -1453,6 +1453,11 @@ function tmdb($body, $embed = true) {
 	return $result;
 }
 
+function is_agent_iOS() {
+    global $agent;
+    return strpos($agent, 'iPad') || strpos($agent, 'iPhone') || strpos($agent, 'like Mac OS');
+}
+
 // Returns random Chuck Norris fact in $percentage cases
 function chuck($percentage) {
  if (rand(0, 100) < $percentage) {
