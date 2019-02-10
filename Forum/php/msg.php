@@ -102,7 +102,7 @@ function load_reaction(data) {
   var index = 0;
   for (var r in data.reactions) {
     if (index > 0) reaction+='&nbsp';
-    reaction += '<img src="' + data.reactions[r].url + '" alt="' + r + '" valign="middle"/>&nbsp;' + data.reactions[r].names.join(", ");
+    reaction += '<img src="' + data.reactions[r].url + '" alt="' + r + '"/>&nbsp;' + data.reactions[r].names.join(", ");
     index++;
   }
   console.log(reaction);
@@ -669,7 +669,7 @@ if (sizeof($reaction) > 0) {
       if ($index > 0) {
         $footer .= '&nbsp;';
       }
-      $footer .= '<img width="25px" src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'" valign="middle"/>&nbsp;'.$reaction[$key].'';
+      $footer .= '<img width="25px" src="http://'.$host.$root_dir.'images/smiles/'.$key.'.gif" alt="'.$key.'"/>&nbsp;'.$reaction[$key].'';
       $index++;
     }
   }
