@@ -2180,7 +2180,7 @@ function smileys($fieldId=null) {
     while (false !== ($entry = readdir($handle))) {
         if ($entry != "." && $entry != "..") {
             $name = explode(".", $entry)[0];
-            $out .= '<img src="http://'.$host.$root_dir.'images/smiles/'.$entry.'" title="'.$name.'" alt="'.$name.'"'.
+            $out .= '<img src="http://'.$host.$root_dir.autoversion('images/smiles/'.$entry).'" title="'.$name.'" alt="'.$name.'"'.
               (is_null($fieldId) ? '' : (' onclick="javascript:insertSmiley(\''.$fieldId.'\',\''.$name.'\');"')).
             '/> ';
         }
