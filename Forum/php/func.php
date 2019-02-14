@@ -2176,17 +2176,22 @@ function smileys($fieldId=null) {
   $out = "";
   
   if ($handle = opendir('images/smiles')) {
-
+    $smiles = array();
     while (false !== ($entry = readdir($handle))) {
         if ($entry != "." && $entry != "..") {
             $name = explode(".", $entry)[0];
-            $out .= '<img src="http://'.$host.$root_dir.autoversion('images/smiles/'.$entry).'" title="'.$name.'" alt="'.$name.'"'.
-              (is_null($fieldId) ? '' : (' onclick="javascript:insertSmiley(\''.$fieldId.'\',\''.$name.'\');"')).
-            '/> ';
+            $smiles[$name] = $entry;
         }
     }
-    
     closedir($handle);
+    
+    asort($smiles);
+    
+    foreach ($smiles as $name => $entry) {
+      $out .= '<img src="http://'.$host.$root_dir.autoversion('images/smiles/'.$entry).'" title="'.$name.'" alt="'.$name.'"'.
+        (is_null($fieldId) ? '' : (' onclick="javascript:insertSmiley(\''.$fieldId.'\',\''.$name.'\');"')).
+        '/> ';
+    }    
   }
   return $out;
 }
