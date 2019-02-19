@@ -31,37 +31,32 @@ if(isset($_FILES["file"]))
  }
 }
 
-
 if($imageGallery == 'amazon')
 {
-//upload to s3
-
+  //upload to s3
  require 's3/vendor/autoload.php';
 
  // Create the AWS service builder, providing the path to the config file
  $aws = Aws::factory('gallery_s3config.php');
  $s3Client = $aws->get('s3');
-
-
  $bucket = $imageGalleryBucket;
  $keyname = $randPicName . $_FILES["file"]["name"];
  // $filepath should be absolute path to a file on disk
  $filepath = realpath ($output_dir. $randPicName. $_FILES["file"]["name"]);
- //echo $filepath;
+ // echo 'Uploading ' . $filepath . ' to ' . $bucket . ' as ' . $keyname;
+ 
  // Upload a file.
- $result = $s3Client->putObject(array(
-    'Bucket'       => $bucket,
-    'Key'          => $keyname,
-    'SourceFile'   => $filepath,
-    'ContentType'  => 'text/plain',
-    'ACL'          => 'public-read',
-    'StorageClass' => 'REDUCED_REDUNDANCY',
-    'Metadata'     => array(    
-    'param1' => 'value 1',
-    'param2' => 'value 2'
-    )
- ));
-
+ try {
+   $result = $s3Client->putObject(array(
+      'Bucket'       => $bucket,
+      'Key'          => $keyname,
+      'SourceFile'   => $filepath,
+      'ContentType'  => 'text/plain',
+      'StorageClass' => 'REDUCED_REDUNDANCY'
+   ));
+ } catch (S3Exception $e) {
+   echo $e->getMessage();
+ }
 
  //delete the temp file
  unlink($filepath);
@@ -71,12 +66,11 @@ if($imageGallery == 'amazon')
     //old fashion form submit
     header('Location: gallery_append_url.php?image='. $result['ObjectURL']); 
  }
- else
+ else if ($result != '')
  {
     //ajax request
     echo $result['ObjectURL'];
  }
-
 }
 
 if($imageGallery == 'local')
