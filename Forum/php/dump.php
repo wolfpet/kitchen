@@ -28,17 +28,23 @@ $time = strftime('%Y-%m-%d %H:%M:%S') . "\n";
 
 $log_name = "log/requests-" .  date("Y-m-d") . ".log"; 
 $fp=fopen( $log_name, 'a' ); 
-if (flock($fp, LOCK_EX)) {
-  fputs($fp, $time);
-  fputs($fp, $server); 
-  fputs($fp, $cookie); 
-  fputs($fp, $post); 
-  fputs($fp, $get); 
-  fputs($fp, "============\n"); 
-  flock($fp, LOCK_UN);
+if ($fp) {
+  if (flock($fp, LOCK_EX)) {
+    fputs($fp, $time);
+    fputs($fp, $server); 
+    fputs($fp, $cookie); 
+    fputs($fp, $post); 
+    fputs($fp, $get); 
+    fputs($fp, "============\n"); 
+    flock($fp, LOCK_UN);
+  }
+  fclose($fp); 
+} else {
+    error_log($server); 
+    error_log($cookie); 
+    error_log($post); 
+    error_log($get); 
 }
-fclose($fp); 
-
 ?>
 
 
