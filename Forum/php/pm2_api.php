@@ -6,31 +6,32 @@ require_once('head_inc.php');
 if($user_id==null)die('unauthorized');
 
 //post new pm?
-$body  = $_POST['body'];
-
-if($body !=null) 
-{
-    $receiver = $_POST['receiver'];
-    postPM($receiver, $user_id, $body); 
-    return;
+if (isset($_POST['body']) && isset($_POST['receiver'])) {
+  $body  = $_POST['body'];
+  $receiver = $_POST['receiver'];
+  postPM($receiver, $user_id, $body); 
+  return;
 }
 
 //delete pm?
-$action = $_GET['action'];
-if($action == 'del')
-{
-    $id = $_GET['id'];
-    deletePM($id, $user_id);
-    return;
-}
+if (isset($_GET['action'])) {
+  $action = $_GET['action'];
+  
+  if($action == 'del')
+  {
+      $id = $_GET['id'];
+      deletePM($id, $user_id);
+      return;
+  }
 
-//return latest messages?
-if($action == 'ping')
-{
-    $senderid = $_GET['senderid'];
-    $lastMsgId = $_GET['lastMsgId'];
-    getLatestPMs($senderid, $user_id, $lastMsgId);
-    return;
+  //return latest messages?
+  if($action == 'ping')
+  {
+      $senderid = $_GET['senderid'];
+      $lastMsgId = $_GET['lastMsgId'];
+      getLatestPMs($senderid, $user_id, $lastMsgId);
+      return;
+  }  
 }
 
 //apparently none of the above. Return the full PMs list 
@@ -38,8 +39,6 @@ $sender = $_GET['senderid'];
 $receiver = $user_id;
 getConvo($sender, $receiver);
 require_once('tail_inc.php');
-
-
 
 // ---------- PM2 API Functions ---------------
 
