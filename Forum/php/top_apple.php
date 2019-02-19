@@ -44,23 +44,76 @@ $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: 
             } 
           });
 });
-
 </script>
+<!-- iOS compatibility -->
+<style>
+  html, body{
+      height: 100%;
+  }
+
+  .url-wrapper{
+      height: 100%;
+  }
+
+  .url-wrapper iframe{
+      height: 100%;
+      width: 100%;
+  }
+
+  .url-wrapper.ios{
+      overflow-y: auto;
+      -webkit-overflow-scrolling:touch !important;
+      height: 100%;
+  }
+
+  .url-wrapper.ios iframe{
+      height: 100%;
+      min-width: 100%;
+      width: 100px;
+      *width: 100%;
+  }
+</style>
+<script type="text/javascript">
+function create_iframe(id, name, url){
+
+    var wrapper = jQuery('#'+id);
+
+    if(navigator.userAgent.match(/(iPod|iPhone|iPad)/)){
+        wrapper.addClass('ios');
+        var scrolling = 'no';
+    }else{
+        var scrolling = 'yes';
+    }
+
+    jQuery('<iframe>', {
+        src: url,
+        id:  name,
+        'name': name,
+        frameborder: 0,
+        scrolling: scrolling
+    }).appendTo(wrapper);
+}
+function init() {
+  create_iframe('frame1', 'contents', 'threads.php');
+  create_iframe('frame2', 'bottom', 'welc.php');
+}
+</script>
+<!-- end -->
 <title><?=$title?></title>
 </head>
-<body id="html_body" style="overflow: hidden;">
+<body id="html_body" style="overflow: hidden;" onload="init();">
 <?php
 require('menu_inc.php');
 ?>
-<div id="frame1" style="position: static; height: calc(50vh - 54px); background-color: white;display: inline-block;width: 100vw;">
-    <iframe style="border: none;" width="100%" height="100%" name="contents" src="threads.php"></iframe>
+<div class="url-wrapper" id="frame1" style="position: static; height: calc(50vh - 54px); background-color: white;display: inline-block;width: 100vw;">
+    <!--<iframe style="border: none;" width="100%" height="100%" name="contents" src="threads.php"></iframe>-->
 </div>
 <hr id="hr1">
 <div id="slider-area">
-    <div id="slider" class="draggable ui-widget-content"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="resizer" fill="grey" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9L10 5.5 13.5 9H11v4H9V9H6.5zm11 6L14 18.5 10.5 15H13v-4h2v4h2.5z"></path></g></svg></div>
+    <div id="slider" class="draggable ui-widget-content"><!--<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="resizer" fill="grey" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9L10 5.5 13.5 9H11v4H9V9H6.5zm11 6L14 18.5 10.5 15H13v-4h2v4h2.5z"></path></g></svg>--></div>
 </div>
-<div id="frame2" style="position: relative;height: 48vh; background-color: white;display: inline-block; width: 100vw;">
-    <iframe style="border: none;" width="100%" height="100%" name="bottom" id="bottom" src="welc.php"></iframe>
+<div class="url-wrapper" id="frame2" style="position: relative;height: 48vh; background-color: white;display: inline-block; width: 100vw;">
+    <!--<iframe style="border: none;" width="100%" height="100%" name="bottom" id="bottom" src="welc.php"></iframe>-->
 </div>
 <?php
 require('gallery_inc.php');

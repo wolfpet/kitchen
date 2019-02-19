@@ -166,7 +166,7 @@ function _pages_function($add_fluff=false) {
 
     print('<div id="threads">');
 
-    $limit = strpos($agent, 'iPad') ? 7 : (strpos($agent, 'iPhone') || strpos($agent, 'like Mac OS') ? 5 : 200);
+    $limit = 200;
 
     if(!is_null($user_id))
     {
