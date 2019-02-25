@@ -252,8 +252,7 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($app) {
   }
   
   // retrieve the message
-  $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.body, p.author, u.id as id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.status, t.author as t_author, t.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
-  $result = mysql_query($query);
+  $result = get_message($msg_id);
   
   if (!$result) {
     

@@ -349,7 +349,7 @@ function print_subject($subj) {
   return preg_replace('#\((?:c|C|с|С)\)#', '©', preg_replace('#([^\.])\.$#', '$1', preg_replace('#(\(\-+\))|(\(edited\))#', '', trim(grammar_nazi($subj)))));
 }
 
-function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $indent=true) {
+function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $indent=true, $views=true, $len=true, $target="bottom") {
   
   global $root_dir;
   global $page_msg;
@@ -460,10 +460,22 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
       if ($add_icon) {
         $line .= $icon;
       }
-      $line .= $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="bottom" onclick="selectMsg(\''.$row['msg_id'].'\');" onmouseover="previewMsg(\''.$row['msg_id'].'\');" onmouseout="clearPreview();" href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>'.$nsfw.$suffix.' ';
+      
+      $line .= $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="'.$target.'" ';
+      
+      if ($target == "bottom") {
+        $line .= 'onclick="selectMsg(\''.$row['msg_id'].'\');" onmouseover="previewMsg(\''.$row['msg_id'].'\');" onmouseout="clearPreview();" ';
+      }
+      $line .= 'href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>' .$nsfw .$suffix. ' ';
   }
   
-  $line .= '<b>' . $enc_user . '</b>' .  ' [' . $row['views'] . ' views] ' . $date . ' <b>' . $length . '</b> bytes';
+  $line .= '<b>' . $enc_user . '</b> ';
+
+  if ($views) $line .= '[' . $row['views'] . ' views] ';
+  
+  $line .= $date;
+
+  if ($len) $line .= ' <b>' . $length . '</b> bytes';
   
   if (!is_null($row['bookmarks'])) {
     $bookmarks = $row['bookmarks'];
@@ -631,6 +643,15 @@ function print_line_in_one_thread($row) {
   }
   
   return $line . " </span>";
+}
+
+function get_message($msg_id) {
+  global $server_tz, $prop_tz;
+  
+  $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.chars, p.content_flags, p.views, p.id as msg_id, p.status, p.auth, p.parent, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.body, p.author, u.id as id, t.closed as thread_closed, ( select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.status, t.author as t_author, t.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
+  $result = mysql_query($query);
+  
+  return $result;
 }
 
 // NG: end

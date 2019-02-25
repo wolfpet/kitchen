@@ -110,6 +110,24 @@ function bbcode_naked_images($str) {
 }
 
 function bbcode_naked_urls($str) {
+  global $host;
+  
+  // render URLs to forum messages
+  $str = preg_replace_callback('#'.unless_in_quotes('https?://'.$host.'/msg.php\?id=[0-9]+').'#is', // unprocessed URLs(i.e. without quotes around them)
+    function ($m) {
+      if(empty($m[1])) return $m[0];
+					else {
+            if(!preg_match('#.*id=([0-9]+)#i', $m[1], $matches) || !is_numeric($matches[1])) 
+              return $m[0];
+            
+            $result = get_message(intval($matches[1]));
+            if (!$result || mysql_num_rows($result) == 0) return $m[0];
+            
+            $row = mysql_fetch_assoc($result);
+            
+            return print_line($row, false, false, false, false, false, false, "_blank");
+		      }
+    }, $str);
 
   // '[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]'
   return preg_replace_callback('#'.unless_in_quotes('[[:alpha:]]+://[^<>[:space:]\"]+').'#is', // unprocessed URLs(i.e. without quotes around them)
