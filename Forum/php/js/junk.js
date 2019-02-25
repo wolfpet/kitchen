@@ -18,6 +18,13 @@ function getDL(target) {
   return (target != null && target.tagName == "DL") ? target : null;
 }
 
+function isTopic(item) {
+  for (var i=0; i<4; i++) {
+    if (item!=null) item = item.parentNode;
+  }
+  return item != null && item.tagName == "DIV";
+}
+
 function decorate(target, topic, display_value) {
   // console.log("decorating " + target + " topic= " + topic + " " + display_value);
   target.style.display = display_value;
@@ -45,9 +52,9 @@ function toggle(target) {
   } 
     
   if (target.style.display == "none") {
-	decorate(target, topic, "block");
+    decorate(target, topic, "block");
   } else {
-	decorate(target, topic, "none");
+    decorate(target, topic, "none");
   }  
   // use Web Storage to persist user's selection
   if(typeof(Storage)!=="undefined") {
@@ -57,7 +64,7 @@ function toggle(target) {
 
 function recall_state() {
   // restore DL visibility based on data in local storage
-  if(typeof(Storage)!=="undefined") {
+  if (typeof(Storage)!=="undefined") {
       // use Web Storage to restore user's selection
     
     // iterate through message topics 
@@ -82,25 +89,44 @@ function recall_state() {
 var toggled = 'none';
 
 function toggleAll() {
-    // iterate through message topics 
+    decorateAll(toggled);
+    if(toggled=='none') {
+      toggled='block'; 
+      parent.document.getElementById("toggle").innerHTML = "Expand";
+    } else {
+      toggled='none'; 
+      parent.document.getElementById("toggle").innerHTML = "Collapse";
+    }
+}
+
+function decorateAll(toggled) {
+    // iterate through message topics     
     var array = document.getElementsByTagName("A");
     for (var i = 0; i < array.length; ++i) {
       var item = array[i];
-      if (item.target != "bottom") continue;
-        var target = getDL(item);
-        if (target != null) {  // sanity check
-          decorate(target, item, toggled);
+      if (item.target != "bottom" || !isTopic(item)) continue;
+      var target = getDL(item);
+      
+      if (target != null) {  // sanity check
+        var value = null;
+        
+        // if hiding, hide topic else restore the saved state, if found.
+        if (toggled != 'none' && typeof(Storage) !== "undefined") {
+          value = localStorage.getItem(item.parentNode.id);
+        } 
+        
+        if (value == null) {
+          value = toggled;
         }
+        
+        decorate(target, item, value);
       }
-      if(toggled=='none'){toggled='block'; parent.document.getElementById("toggle").innerHTML = "Expand";}
-      else {toggled='none'; parent.document.getElementById("toggle").innerHTML = "Collapse";}
+    }  
 }
-
-
-
-
-
-
+// this function is called on autoload -- we use this to decorate new loaded topics
+function instrument(div) {
+  decorateAll(toggled=='none' ? 'block' : 'none');
+}
 
 var windowonloadbeforejunk = window.onload;
 
