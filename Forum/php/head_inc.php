@@ -148,7 +148,7 @@ $page_goto='navigate.php';
 // Redirect if URL is not correct
 
 if ( isset( $_SERVER['HTTP_HOST'] ) && strcmp( $_SERVER['HTTP_HOST'], $host ) ) {
-    print( "<HTML><BODY><A target=\"_blank\" href=\"http://" . $host . $root_dir . "\">Wrong URL" . $_SERVER['HTTP_HOST'] . ". Please, click here.</A></BODY></HTML>" );
+    print( "<HTML><BODY><A target=\"_blank\" href=\"//" . $host . $root_dir . "\">Wrong URL" . $_SERVER['HTTP_HOST'] . ". Please, click here.</A></BODY></HTML>" );
     die();
 }
 

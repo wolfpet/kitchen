@@ -180,7 +180,7 @@ function before_bbcode($original_body, &$has_video=null) {
     '<a class="twitter-moment" href="$2?ref_src=twsrc%5Etfw">$2</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>',    
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="a/$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
-    '<div class="youtube"><iframe type="text/html" width="480" height="320" src="http://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=http://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
+    '<div class="youtube"><iframe type="text/html" width="480" height="320" src="//www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=//' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
     '<div class="s3"><video width=480" height="320" controls><source src="$2" type="video/mp4"></video><br/>Link: <a href="$2" target="_blank">$2</a></div>'    
     ), $original_body);    
     
@@ -260,16 +260,19 @@ function after_bbcode($body) {
     '<div>$1</div>',
     '$1<a href="javascript:hashtag(\'$2\')">$2</a>'
     ), $body);    
-       
+  
+  // fix old YouTube iframes to work over https
+  $body = str_replace('src="http://www.youtube-nocookie.com/embed/', 'src="//www.youtube-nocookie.com/embed/', $body);  
+  
   return fix_msg_target($body);
 }
 
 /** 
- * Replaces target for URLs that reference messages of this forum
+ * Replaces target for URLs that reference messages of this forum -- TODO check if this still works!
  */
 function fix_msg_target($body) {
   global $host;
-  return str_replace('<a target="_blank" href="http://'.$host.'/msg.php?id=', '<a target="bottom" href="http://'.$host.'/msg.php?id=', $body);
+  return str_replace(' target="_blank" href="/msg.php?id=', ' target="bottom" href="/msg.php?id=', $body);
 }
 
 /**
@@ -369,6 +372,7 @@ function render_for_db($msgbody) {
   $msgbody = youtube( $msgbody );
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
+  
   return $msgbody;
 }
 
@@ -509,5 +513,4 @@ function grammar_nazi($body) {
     'P.S. '
     ), $body);    
 }
-
 ?>
