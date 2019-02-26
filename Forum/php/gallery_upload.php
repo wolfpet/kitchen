@@ -24,8 +24,8 @@ if(isset($_FILES["file"]))
   move_uploaded_file($_FILES["file"]["tmp_name"], $dumpFile);
   //resize to 1200px max
   $img = resize_image($dumpFile, 1200, 1200);
-  $ext = pathinfo($dumpFile, PATHINFO_EXTENSION);
-  if($ext == 'jpg'){ imagejpeg($img, $dumpFile);}
+  //$ext = pathinfo($dumpFile, PATHINFO_EXTENSION);
+  //if($ext == 'jpg'){ imagejpeg($img, $dumpFile);}
   //if($ext == 'png'){ imagepng($img, $dumpFile);} //commented for now. the library seems to be corrupting the PNG
   $result = "http://" . $host . $root_dir . $imageGalleryDumpFolder . $randPicName. $_FILES["file"]["name"];
  }
