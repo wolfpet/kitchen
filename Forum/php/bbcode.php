@@ -472,7 +472,7 @@ function render_smileys_step2($body) {
       if(!$exists) 
         return $matches[0];
 
-      return '<img src="http://'.$host.$root_dir.autoversion($path).'" alt="'.$name.'" title="'.$name.'"/>';
+      return '<img src="'.$root_dir.autoversion($path).'" alt="'.$name.'" title="'.$name.'"/>';
 		},
 		$body
 	);

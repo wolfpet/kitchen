@@ -339,7 +339,7 @@ if (isset($reactions)) {
   $icons = '';
   foreach (array_keys($reactions) as $key) {
     if (strlen($icons) > 0) $icons .= '&nbsp;';
-    $icons .= '<a href="javascript:react('.$msg_id.',\''.$key.'\');"><img src="http://'.$host.$root_dir.'images/reactions/'.$key.'.gif" alt="'.$key.'" title="'.$key.'"/></a>';
+    $icons .= '<a href="javascript:react('.$msg_id.',\''.$key.'\');"><img src="'.$root_dir.'images/reactions/'.$key.'.gif" alt="'.$key.'" title="'.$key.'"/></a>';
   }
   print($icons);
 ?></div></div>
@@ -669,7 +669,7 @@ if (sizeof($reaction) > 0) {
       if ($index > 0) {
         $footer .= '&nbsp;';
       }
-      $footer .= '<img src="http://'.$host.$root_dir.'images/reactions/'.$key.'.gif" alt="'.$key.'"/>&nbsp;'.$reaction[$key].'';
+      $footer .= '<img src="'.$root_dir.'images/reactions/'.$key.'.gif" alt="'.$key.'"/>&nbsp;'.$reaction[$key].'';
       $index++;
     }
   }

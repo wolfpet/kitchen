@@ -130,7 +130,7 @@ if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER
 }
 ?>
 <div id="subj_div" style="padding-top: 5px; padding-bottom: 5px">
-Subject: <input style="width: 60%; border: lightgrey; border-style: solid; border-width: 1px;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" maxlength="254" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
+Subject: <input style="width: 60%; border: lightgrey; border-style: solid; border-width: 1px;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" maxlength="255" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
 </div>
 
   
@@ -350,7 +350,7 @@ if ($keyboard) {
 <tr><td>[color=#FF0000]<font color="gray">Red Text</font>[/color]</td><td><span style="color: rgb(255, 0, 0);">Red Text</span></td></tr>
 <tr><td>[color=FF0000]<font color="gray">Red Text</font>[/color]</td><td><span style="color: rgb(255, 0, 0);">Red Text</span></td></tr>
 <tr><td>[size=15]<font color="gray">Large Text</font>[/size]</td><td><span style="font-size: 15pt;">Large Text</span></td></tr>
-<tr><td>[img=<font color="gray">http://<?php print( $host); ?>/images/Tip-Hat.gif</font>]</td><td><img src="http://<?php print( $host); ?>/images/Tip-Hat.gif"></td></tr>
+<tr><td>[img=<font color="gray">http://<?php print( $host ); ?>/images/Tip-Hat.gif</font>]</td><td><img src="<?php print( $root_dir); ?>images/Tip-Hat.gif"></td></tr>
 </tbody></table>
 </div>
   
