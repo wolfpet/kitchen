@@ -214,9 +214,7 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
 
 function autoload_threads($last_thread, $limit) {?>
   <script language="JavaScript">
-  
-    set_max_id(<?=$last_thread?>, "<?=$limit?>");
-    
+    set_max_id(<?=$last_thread?>, "<?=$limit?>");    
   </script>
   <div id="scroll2top"><a href="#" target="contents" onclick="javascript:scroll2Top2('threads_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;"></a></div>
   <div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div><?php 
@@ -464,7 +462,10 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
       $line .= $icons . '<a id="' . $row['msg_id'] . '" name="' . $row['msg_id'] . '" target="'.$target.'" ';
       
       if ($target == "bottom") {
-        $line .= 'onclick="selectMsg(\''.$row['msg_id'].'\');" onmouseover="previewMsg(\''.$row['msg_id'].'\');" onmouseout="clearPreview();" ';
+         if (!is_apple()) {
+           $line .= 'onclick="selectMsg(\''.$row['msg_id'].'\');"';
+           $line .= ' onmouseover="previewMsg(\''.$row['msg_id'].'\');" onmouseout="clearPreview();" ';
+         }
       }
       $line .= 'href="' . $root_dir . $page_msg . '?id=' . $row['msg_id'] . '">' . $b_start . $subj . $b_end . '</a>' .$nsfw .$suffix. ' ';
   }
@@ -2209,7 +2210,7 @@ function smileys($fieldId=null) {
     asort($smiles);
     
     foreach ($smiles as $name => $entry) {
-      $out .= '<img src="http://'.$host.$root_dir.autoversion('images/smiles/'.$entry).'" title="'.$name.'" alt="'.$name.'"'.
+      $out .= '<img src="'.$root_dir.autoversion('images/smiles/'.$entry).'" title="'.$name.'" alt="'.$name.'"'.
         (is_null($fieldId) ? '' : (' onclick="javascript:insertSmiley(\''.$fieldId.'\',\''.$name.'\');"')).
         '/> ';
     }    
@@ -2363,4 +2364,18 @@ function recentEvents($user, $numberOfEvents){
     return $events;
 }
 
+function is_apple() {
+  global $agent; 
+  return is_ipad() || is_iphone() || strpos($agent, 'iPod') || strpos($agent, 'like Mac OS');
+}
+
+function is_ipad() {
+  global $agent; 
+  return strpos($agent, 'iPad');  
+}
+
+function is_iphone() {
+  global $agent; 
+  return strpos($agent, 'iPhone');  
+}
 ?>

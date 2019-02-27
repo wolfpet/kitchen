@@ -5,16 +5,11 @@ require_once('html_head_inc.php');
 require_once('mysql_log.php');
 
 //temp woraround for iOS. Ugly, I know. Need time to figure out what to do here
-$iPod    = stripos($_SERVER['HTTP_USER_AGENT'],"iPod");
-$iPhone  = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
-$iPad    = stripos($_SERVER['HTTP_USER_AGENT'],"iPad");
-
-if( $iPod || $iPhone || $iPad)
-{
-//redirect to top_apple
-$url='top_apple.php';
-echo '<META HTTP-EQUIV=REFRESH CONTENT="1; '.$url.'">';
-die();
+if(is_apple()) {
+  //redirect to top_apple
+  $url='top_apple.php';
+  echo '<META HTTP-EQUIV=REFRESH CONTENT="1; '.$url.'">';
+  die();
 }
 ?>
 <base target="bottom">

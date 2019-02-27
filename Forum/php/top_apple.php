@@ -74,6 +74,8 @@ $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: 
   }
 </style>
 <script type="text/javascript">
+var lastY = 0; // Needed in order to determine direction of scroll.
+
 function create_iframe(id, name, url){
 
     var wrapper = jQuery('#'+id);
@@ -92,6 +94,30 @@ function create_iframe(id, name, url){
         frameborder: 0,
         scrolling: scrolling
     }).appendTo(wrapper);
+
+    // fix scrolling issues for div
+    $(".url-wrapper").on('touchstart', function(event) {
+        lastY = event.touches[0].clientY;
+    });
+
+    $(".url-wrapper").on('touchmove', function(event) {
+        var top = event.touches[0].clientY;
+
+        // Determine scroll position and direction.
+        var scrollTop = $(event.currentTarget).scrollTop();
+        var direction = (lastY - top) < 0 ? "up" : "down";
+
+        // FIX IT!
+        if (scrollTop == 0 && direction == "up") {
+          // Prevent scrolling up when already at top as this introduces a freeze.
+          event.preventDefault();
+        } else if (scrollTop >= (event.currentTarget.scrollHeight - event.currentTarget.outerHeight()) && direction == "down") {
+          // Prevent scrolling down when already at bottom as this also introduces a freeze.
+          event.preventDefault();
+        }
+
+        lastY = top;
+    });    
 }
 function init() {
   create_iframe('frame1', 'contents', 'threads.php');
@@ -105,16 +131,12 @@ function init() {
 <?php
 require('menu_inc.php');
 ?>
-<div class="url-wrapper" id="frame1" style="position: static; height: calc(50vh - 54px); background-color: white;display: inline-block;width: 100vw;">
-    <!--<iframe style="border: none;" width="100%" height="100%" name="contents" src="threads.php"></iframe>-->
-</div>
+<div class="url-wrapper" id="frame1" style="position: static; height: calc(50vh - 54px); background-color: white;display: inline-block;width: 100vw;"></div>
 <hr id="hr1">
 <div id="slider-area">
     <div id="slider" class="draggable ui-widget-content"><!--<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path id="resizer" fill="grey" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9L10 5.5 13.5 9H11v4H9V9H6.5zm11 6L14 18.5 10.5 15H13v-4h2v4h2.5z"></path></g></svg>--></div>
 </div>
-<div class="url-wrapper" id="frame2" style="position: relative;height: 48vh; background-color: white;display: inline-block; width: 100vw;">
-    <!--<iframe style="border: none;" width="100%" height="100%" name="bottom" id="bottom" src="welc.php"></iframe>-->
-</div>
+<div class="url-wrapper" id="frame2" style="position: relative;height: 48vh; background-color: white;display: inline-block; width: 100vw;"></div>
 <?php
 require('gallery_inc.php');
 require('overlay_inc.php');
