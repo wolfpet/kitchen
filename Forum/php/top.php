@@ -19,17 +19,19 @@ if(is_apple()) {
 <script>
 function expand()
 {
-verticalLayout = getCookie("verticalLayout");
-if(verticalLayout=='true')return;
-document.getElementById("frame1").style.height='0vh';
-document.getElementById("frame2").style.height='88vh';
+  verticalLayout = getCookie("verticalLayout");
+  if(verticalLayout=='true')return;
+  document.getElementById("frame1").style.height='0vh';
+  document.getElementById("frame2").style.height='88vh';
+  document.getElementById("hr1").style.display='none';
 }
 function restore()
 {
-verticalLayout = getCookie("verticalLayout");
-if(verticalLayout=='true')return;
-document.getElementById("frame1").style.height='40vh';
-document.getElementById("frame2").style.height='48vh';
+  verticalLayout = getCookie("verticalLayout");
+  if(verticalLayout=='true')return;
+  document.getElementById("frame1").style.height='40vh';
+  document.getElementById("frame2").style.height='48vh';
+  document.getElementById("hr1").style.display='block';
 }
 
 $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: false, axis: "y", 
