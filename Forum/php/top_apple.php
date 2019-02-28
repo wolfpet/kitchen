@@ -5,8 +5,8 @@ require_once('html_head_inc.php');
 require_once('mysql_log.php');
 ?>
 <base target="bottom">
-
 <script type="text/javascript" src="<?=autoversion('js/controls.js')?>"></script>
+<script type="text/javascript" src="<?=autoversion('js/autoload.js')?>"></script>
 <script type="text/javascript" src="js/jquery-ui.js"></script>
 <script>
 function expand()
@@ -74,12 +74,28 @@ $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: 
       width: 100px;
       *width: 100%;
   }
+  
+  #scroll2top {
+      position: fixed;
+      top: 4.6em !important;
+      left: 0.3em !important;
+      display:none;
+      z-index:9999;
+  }
+  
+  #scroll2top span {
+    padding:0.3em;
+  }
+  
+  #scroll2top span img {
+   -webkit-filter: invert(1);
+   filter: invert(1);
+  }  
 </style>
 <script type="text/javascript">
 var lastY = 0; // Needed in order to determine direction of scroll.
 
-function create_iframe(id, name, url){
-
+function create_iframe(id, name, url) {
     var wrapper = jQuery('#'+id);
 
     if(navigator.userAgent.match(/(iPod|iPhone|iPad)/)){
@@ -124,15 +140,36 @@ function create_iframe(id, name, url){
 function init() {
   create_iframe('frame1', 'contents', 'threads.php');
   create_iframe('frame2', 'bottom', 'welc.php');
+  
+  $("#frame1").scroll(function() {
+    load_more1();
+  });
 }
 function scroller2Top() {
   $("#frame1").scrollTop(0);
+}
+function load_more1() {
+ var scroller = document.getElementById("scroll2top");
+
+ if (scroller != null) {
+    var rect = document.getElementById("contents").getBoundingClientRect();
+    // console.log("scroller y=" + y + " yOffset=" + yOffset + " threadsY=" + rect.top);
+    if (rect.top < 0) {
+      scroller.style.display = "block";
+    } else {
+      scroller.style.display = "none";
+    }
+  } else {
+    alert("no scroller");
+  }  
 }
 </script>
 <!-- end -->
 <title><?=$title?></title>
 </head>
 <body id="html_body" style="overflow: hidden;" onload="init();">
+  <div id="scroll2top"><span style="cursor: pointer; color:blue" onclick="javascript:scroller2Top();"><img border=0 src="images/up.png" alt="Up" title="Back to top"></span></div>
+  <!--<div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div> -->
 <?php
 require('menu_inc.php');
 ?>
