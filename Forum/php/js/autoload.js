@@ -8,10 +8,6 @@ function load_threads(div, id, count) {
   if (loading) return;
   loading = true;
   
-  var indicator = document.getElementById('loading');
-  if (indicator != null) 
-    indicator.style.display = "block";
-  
   if (max_id.length == 0) {
     max_id = "" + id;  
     console.log("max id=" + max_id);
@@ -30,20 +26,20 @@ function load_threads(div, id, count) {
     var OK = 200; // status 200 is a successful return.
     if (xhr.readyState === DONE) {        
       try {
-        var indicator = document.getElementById('loading');
-        if (indicator != null) indicator.style.display = "none";
         if (xhr.status === OK) {
             // alert(xhr.responseText); // 'This is the returned text.'
             var text = xhr.responseText;
             var id = text.indexOf("id=");
             var start = text.indexOf("<dl");
-            if (start >= 0) {
+            if (start >= 0 && text.indexOf("<span") > 0) {
               max_id = text.substring(id + 3, start);
               console.log("new max id=" + (max_id));
-              div.innerHTML = div.innerHTML + " " + text.substring(start);
+              append_content(div, " " + text.substring(start));
               if (typeof instrument !== 'undefined') {
                 instrument("#" + div.id);
               }
+            } else {
+              console.log("no new content");
             }
         } else {
             // alert('Error: ' + xhr.status); // An error occurred during the request.
@@ -57,16 +53,18 @@ function load_threads(div, id, count) {
   xhr.send(null);
 }
 
+function append_content(div, html) {
+  // div.insertAdjacentHTML('beforeend', html);
+  var newcontent = document.createElement('div'); newcontent.innerHTML = html; 
+  while (newcontent.firstChild) {
+    div.appendChild(newcontent.firstChild);
+  }
+}
+
 function scroll2Top2(element){ 
   var ele = document.getElementById(element);
   if (ele != null) {
-    var sidebar = document.getElementById("sidebar");
-    if (sidebar == null) {
-      // setTimeout(window.scrollTo(ele.offsetLeft,ele.offsetTop), 100);
-      $('#'+element).scrollTop(0);
-    } else {
-      sidebar.scrollTop = 0;
-    }
+    $('#'+element).scrollTop(0);
   } else {
     console.log("Cannot scroll to " + element);
   }
@@ -101,18 +99,24 @@ function load_more() {
   }
 }
 
+if (parent.load_more) {
+  // iOS
+  setInterval(function(){ 
+    // ask parent script to see if we need to load more threads
+    if (parent.load_more()) {
+      var div = document.getElementById("threads");
+      if (div != null) {
+        load_threads(div, max_id, limit);
+      }
+    }
+  }, 500);
+} else {
+  // everything else
+  window.onscroll = load_more;
+}
+
 function set_max_id(id, how_many) {
   max_id = id;
   limit = how_many;
   console.log("set max id=" + (max_id) + " limit=" + limit);
 }
-
-window.onscroll = load_more;
-
-$( "#sidebar" ).scroll(function() {
-  if($(this)[0].scrollHeight - 300 > 0 && $(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 300) {
-    var div = document.getElementById("threads");
-    if (div != null)
-      load_threads(div, max_id, limit / 2);    
-  }
-});
