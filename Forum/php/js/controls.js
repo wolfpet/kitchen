@@ -44,8 +44,10 @@ function setVerticaLayout()
     document.getElementById('frame2').style.width = '48vw';
     document.getElementById('frame2').style.height = '90vh';
     document.getElementById('hr1').style.display = 'none';
-    document.getElementById('slider').style.display = 'none';    
-    document.getElementById('slider-area').style.display = 'none';
+    if (document.getElementById('slider'))
+      document.getElementById('slider').style.display = 'none';    
+    if (document.getElementById('slider-area'))
+      document.getElementById('slider-area').style.display = 'none';
     //disable vertical layout button. It's already vertical.
     document.getElementById('Vertical').style.display = 'none';
     document.getElementById('Horizontal').style.display = 'inline-block';
@@ -61,8 +63,10 @@ function setHorizontalLayout()
     document.getElementById('frame2').style.width = '100vw';
     document.getElementById('frame2').style.height = '48vh';
     document.getElementById('hr1').style.display = 'block';
-    document.getElementById('slider').style.display = 'block';    
-    document.getElementById('slider-area').style.display = 'block';
+    if (document.getElementById('slider')) 
+      document.getElementById('slider').style.display = 'block';    
+    if (document.getElementById('slider-area'))
+      document.getElementById('slider-area').style.display = 'block';    
     //disable horizontal  layout button. It's already vertical.
     document.getElementById('Vertical').style.display = 'inline-block';
     document.getElementById('Horizontal').style.display = 'none';
@@ -78,8 +82,10 @@ function openGallery()
     //display the Gallery UI.
     document.getElementById('gallery').style.display = 'block';
     document.getElementById('menu_cover').style.display = 'block';
-    document.getElementById('slider').style.display = 'none';
-    document.getElementById('slider-area').style.display = 'none';
+    if (document.getElementById('slider')) 
+      document.getElementById('slider').style.display = 'none';
+    if (document.getElementById('slider-area'))
+      document.getElementById('slider-area').style.display = 'none';
 }
 
 function openPicInGallery(img, userId, messageId)
@@ -108,17 +114,20 @@ function openPicInGallery(img, userId, messageId)
     document.getElementById('menu_cover').style.display = 'block';
 
     //turn off the resizer
-    document.getElementById('slider').style.display = 'none';    
-    document.getElementById('slider-area').style.display = 'none';
-            
+    if (document.getElementById('slider'))
+      document.getElementById('slider').style.display = 'none';    
+    if (document.getElementById('slider-area'))
+      document.getElementById('slider-area').style.display = 'none';            
 }
 
 function closeGallery()
 {
     document.getElementById('gallery').style.display = 'none';
     document.getElementById('menu_cover').style.display = 'none';
-    document.getElementById('slider').style.display = 'block';
-    document.getElementById('slider-area').style.display = 'block';
+    if (document.getElementById('slider'))
+      document.getElementById('slider').style.display = 'block';
+    if (document.getElementById('slider-area'))  
+      document.getElementById('slider-area').style.display = 'block';
             
 }
 
@@ -232,16 +241,19 @@ function closeOverlay()
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('overlay_menu_cover').style.display = 'none';
     document.getElementById("overley_iframe").src="blank.php";
-    document.getElementById('slider').style.display = 'block';
-    document.getElementById('slider-area').style.display = 'block';
+    if (document.getElementById('slider'))
+      document.getElementById('slider').style.display = 'block';
+    if (document.getElementById('slider-area'))
+      document.getElementById('slider-area').style.display = 'block';
 }
 function renderOverlayPanels(title)
 {
-
         closeNotifications();
         document.getElementById('overlay').style.display = 'block';
         document.getElementById('overlay_menu_cover').style.display = 'block';
-        document.getElementById('slider').style.display = 'none';
-        document.getElementById('slider-area').style.display = 'none';
+        if (document.getElementById('slider'))
+          document.getElementById('slider').style.display = 'none';
+        if (document.getElementById('slider-area'))
+          document.getElementById('slider-area').style.display = 'none';
         document.getElementById("overlay_title").text=title;
 }
