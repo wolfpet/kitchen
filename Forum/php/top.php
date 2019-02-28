@@ -64,7 +64,7 @@ $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: 
 require('menu_inc.php');
 ?>
 <div id="frame1" style="position: static; height: calc(50% - 74px); background-color: white;display: inline-block;width: 100vw;">
-    <iframe style="border: none;" width="100%" height="100%" name="contents" src="threads.php"></iframe>
+    <iframe style="border: none;" width="100%" height="100%" name="contents" id="contents" src="threads.php"></iframe>
 </div>
 <hr id="hr1">
 <div id="slider-area">

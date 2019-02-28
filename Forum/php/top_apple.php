@@ -125,6 +125,9 @@ function init() {
   create_iframe('frame1', 'contents', 'threads.php');
   create_iframe('frame2', 'bottom', 'welc.php');
 }
+function scroller2Top() {
+  $("#frame1").scrollTop(0);
+}
 </script>
 <!-- end -->
 <title><?=$title?></title>

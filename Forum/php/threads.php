@@ -86,7 +86,18 @@ function clearPreview()
   if(parent.bottom.document.getElementById("postPreview")==null)return; //nowhere to preview
   parent.bottom.document.getElementById("postPreview").style.display = "none";
 }
-
+function scroll2Top3() {
+  if (parent.scroller2Top) {
+    parent.scroller2Top();
+    return false;
+  }
+  
+  $([document.documentElement, document.body]).animate({
+        scrollTop: $("#up").offset().top
+    }, 200);
+    
+  return false;
+}
 </script>
 <base target="bottom">
 <?php
@@ -200,14 +211,14 @@ function _pages_function($add_fluff=false) {
     else
     {
       if(!is_null($user_id) && $user_id != null){print_msgs($content, $msgs);}
-      else {print('Please <a target="bottom" href="new_user.php">register</a> or <a style="cursor: pointer; color: blue"  onclick="top.openLoginForm();">login</a> for full experience.');die();}
+      else {print('Please <a target="bottom" href="new_user.php">register</a> or <a style="cursor: pointer; color:blue" onclick="top.openLoginForm();">login</a> for full experience.');die();}
     }
 
     print('</div>');
 
     // print_pages($max_page, $page, 'contents', $cur_page);
-    print('<BR><a href="#up">Up</a>');
-    print('&nbsp;&nbsp;<a href="javascript:load_threads(document.getElementById(\'threads\'), '.$last_thread.','.$limit.');" target="_top">More</a>');
+    print('<BR><span style="cursor: pointer; color:blue" onclick="scroll2Top3();">Up</span>');
+    print('&nbsp;&nbsp;<span onclick="load_threads(document.getElementById(\'threads\'), '.$last_thread.','.$limit.');" style="cursor: pointer; color:blue">More</span>');
 
     $end_timestamp = time();
     $duration = $end_timestamp - $start_timestamp;
