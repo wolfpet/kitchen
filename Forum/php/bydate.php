@@ -177,7 +177,7 @@ $show_hidden = 2;
         $num++;
     }
 
-
+    $oldout = '';
     while ($row = mysql_fetch_assoc($oldresult)) {
         $id = $row['id'];
         $ban_ends = $row['ban_ends'];
@@ -332,7 +332,6 @@ function onNewMessageCount(count, elapsed_time) {
       qts.innerHTML = '(in ' + (elapsed_time / 1000) +  ' seconds) <b>' + year + ' ' + monthNames[monthIndex] + ' ' + day + ' ' + strTime + '</b>';
   }                      
 }
-
 </script>
 <base target="bottom">
 <?php  require_once('custom_colors_inc.php'); ?>

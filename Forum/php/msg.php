@@ -365,12 +365,12 @@ if (isset($reactions)) {
       <input type="hidden" name="re" value="<?php print($msg_id); ?>"/>
       <input type="hidden" name="quote" id="quote"/>
       <span class="ribbonIcon tooltip" id="ReplyIcon">
-      <a href="javascript:reply();">
+      <span style="cursor: pointer; color:blue" onclick="javascript:reply();">
             <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet">
             <g><path class="ribbonIcon" fill="#000000" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g>
             </svg>
             <span class="tooltiptext">Reply</span>
-         </a> 
+         </span> 
       </span> 
   </form>
 
@@ -389,12 +389,12 @@ if (isset($reactions)) {
       <input type="hidden" name="to" value="<?php print($author); ?>"/>
       <input type="hidden" name="quote" id="quote"/>
     <span id="PrivateIcon" class="ribbonIcon tooltip">
-      <a href="javascript:private();">
+      <span style="cursor: pointer; color:blue" onclick="javascript:private();">
         <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet">
           <g> <path class="ribbonIcon" fill="#000000"  d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g>
         </svg>
         <span class="tooltiptext">Reply privately</span>
-      </a>
+      </span>
     </span> 
   </form>
 	
