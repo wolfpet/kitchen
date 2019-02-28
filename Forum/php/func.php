@@ -91,9 +91,9 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
       die('Query failed: ' . mysql_error() . ' QUERY: ' . $query);
     }
     
-    if ($row = mysql_fetch_assoc($result)) {       
+    if ($row = mysql_fetch_assoc($result)) {
       // You've got mail! Let's find out how many
-      $pm_author = $row['username'];
+      $pm_author = isset($row) ? $row['username'] : "";
       $pm_count = 0;
       do {
         $pm_count++;
@@ -106,23 +106,29 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
         if (windowonload != null) {
           windowonload(e);        
         }
-        location.hash = "#openModal";
+        openPMDialog();
         console.log("openModal ended");
       }
       function openPmail()
       {
         //to support old inbox for some conservative users who do want to live in the past
-        try{
-        openPM();
-        }
-        catch(err)
-        {
-        //must be classic menu eh
-        //alert("fail");
-        window.open("pmail.php", "contents");
+        try {
+          parent.openPM();
+        } catch(err) {
+          //must be classic menu eh
+          //alert("fail");
+          window.open("pmail.php", "contents");
         }
       }
-      </script><div id="close"/><div id="openModal" class="modalDialog"><div><a href="#close" target="<?=$target?>" title="Close" class="close">X</a>
+      function openPMDialog() {
+        document.getElementById("openModal").style.opacity = 1;
+        document.getElementById("openModal").style.pointerEvents = "auto";
+      }
+      function closePMDialog() {
+        document.getElementById("openModal").style.opacity = 0;
+        document.getElementById("openModal").style.pointerEvents = "none";
+      }      
+      </script><div id="openModal" class="modalDialog"><div><span onclick="closePMDialog();" style="cursor:pointer;" title="Close" class="close">X</span>
         <table cellpadding="5"><tr><td><img src="images/ygm.png" style="width:80%;height:auto;"/></td><td width="75%">
           <h3>You've got PM!</h3><?php
           if ($pm_count == 1) {?>
@@ -130,7 +136,7 @@ function notify_about_new_pm($user_id, $last_login, $target="contents") {
           } else { ?>
             <p>You have <?=$pm_count ?> new private messages.</p><?php
           } ?>
-          <p>Click <a style="cursor: pointer; color: red;" target="contents" onclick="javascript:location.hash='#close'; openPmail();return true;">here</a> to open</p>
+          <p>Click <a style="cursor: pointer; color: red;" target="contents" onclick="javascript:closePMDialog(); openPmail(); return false;">here</a> to open</p>
         </td></tr></table>
       </div>
     </div><?php
