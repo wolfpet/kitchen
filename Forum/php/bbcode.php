@@ -125,7 +125,7 @@ function bbcode_naked_urls($str) {
             
             $row = mysql_fetch_assoc($result);
             
-            return print_line($row, false, false, false, false, false, false, "_blank");
+            return ":&nbsp;". print_line($row, false, false, false, false, false, false, "_blank");
 		      }
     }, $str);
 
