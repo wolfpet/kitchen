@@ -27,7 +27,7 @@ function resizeMe(iframe)
     iframe.height = iframe.contentWindow.document.body.scrollHeight + 25;
 }
 </script>
-</head>
+<base target="_blank"></head>
 <body>
 <div id="postPreview" style="display: none; height: 90vh; width: 95vw; position: absolute; background-color: white;"></div>
 <H3> <?=$title;?> forum</H3>
@@ -55,10 +55,9 @@ All 3 rules are subject to moderators' interpretation. Please do not complain. T
 <p>
 <div id="history"></div>
 <?php if (isset($tmdb_key)) {?>
-<br/><p>
+<br/>
 <span id="tmdb-attribution" style=" display:block;color:lightgray;height:10%"><a target="_blank" href="https://www.themoviedb.org/"><img src="images/powered-by-rectangle-green.png" valign="middle" height="50%"></a>&nbsp;This product uses the TMDb API but is not endorsed or certified by TMDb.</span>
 <?php } ?>
-
 <br><br><br><br><br><br>
 <script type="text/javascript">
       function knowAddress() {
