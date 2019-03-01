@@ -144,6 +144,19 @@ function toggleExpand()
 	
     }
 }
+function initExpand() 
+{
+  if (parent.expanded && parent.expanded()) 
+  {
+    document.getElementById("expandMsg").style.display='none';
+    document.getElementById("restoreMsg").style.display='block';    
+  }
+  else
+  {
+    document.getElementById("expandMsg").style.display='block';
+    document.getElementById("restoreMsg").style.display='none';
+  }
+}
 function resizeMe(iframe)
 {
     iframe.width  = iframe.contentWindow.document.body.scrollWidth + 5;
@@ -173,7 +186,6 @@ function pinThread(threadID)
             }
          });
 }
-
 
 function addToBooks(msgid)
 {
@@ -226,7 +238,7 @@ function loadimage(img)
 </script>
 <base target="bottom">
 </head>
-<body><form name="hashtag" id="hashtag" action="dosearch.php" method="post" target="contents">
+<body onload="initExpand();"><form name="hashtag" id="hashtag" action="dosearch.php" method="post" target="contents">
   <input type="hidden" id="text" name="text"/>
   <input type="hidden" id="searchin" name="searchin"/>
   <input type="hidden" id="fromyear" name="fromyear" value="0"/>

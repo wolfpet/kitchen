@@ -99,9 +99,22 @@ function toggleExpand()
       parent.expand();	
     }
 }
+function initExpand() 
+{
+  if (parent.expanded && parent.expanded()) 
+  {
+    document.getElementById("expandMsg").style.display='none';
+    document.getElementById("restoreMsg").style.display='block';    
+  }
+  else
+  {
+    document.getElementById("expandMsg").style.display='block';
+    document.getElementById("restoreMsg").style.display='none';
+  }
+}
 </script>
 </head>
-<body onload="javascript:var subj = document.getElementById('subj'); addEvent(subj,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); subj.focus();">
+<body onload="javascript: initExpand(); var subj = document.getElementById('subj'); addEvent(subj,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); subj.focus();">
   <div id="expandMsg" onclick="toggleExpand();parent.expand();" style="float: right;position: relative;width: 0px;top: -20px;right: -5px;cursor: pointer;">
     <svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></g></svg>
   </div>

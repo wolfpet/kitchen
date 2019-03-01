@@ -33,6 +33,18 @@ function restore()
   document.getElementById("frame2").style.height='48vh';
   document.getElementById("hr1").style.display='block';
 }
+function expanded() 
+{
+  return document.getElementById("hr1").style.display == 'none';
+}
+function toggle() 
+{
+  if (expanded()) {
+    restore();
+  } else {
+    expand();
+  }
+}
 /*
 $( function() { $( "#slider" ).draggable({ containment: "#slider-area", scroll: false, axis: "y", 
       start: function() {
