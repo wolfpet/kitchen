@@ -94,7 +94,7 @@ function bbcode_naked_images($str) {
       global $auth_id, $msg_id;
       if(empty($m[1])) 
         return $m[0];
-      else if (is_agent_iOS()) 
+      else if (is_agent_iOS() || strpos($m[1], ".gif") !== false) 
         return '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
       else
         return '<img onload="loadimage(this);" style="cursor: pointer;max-width: 99%;max-height: 79vh;opacity: 0.5;" src="images/empty-image.png" alt="' . $m[1] . '"/>';      
