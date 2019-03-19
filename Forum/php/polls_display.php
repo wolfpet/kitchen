@@ -132,7 +132,7 @@ function whoVoted(answer)
               {
                 var voter = msgArray[i];
                 //add to voters div
-                document.getElementById('whoVoted').innerHTML += voter + ', ';
+                document.getElementById('whoVoted').innerHTML += (i > 0 ? ', ' : '') + voter;
               }
             }
         });
