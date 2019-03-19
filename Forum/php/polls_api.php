@@ -1,5 +1,6 @@
 <?php
 require_once('dump.php');
+require_once('mysql_log.php');
 require_once('head_inc.php');
 
 if ($user_id == null) die('unauthorized');
@@ -15,11 +16,41 @@ function is_poll_anonymous($answerId) {
     return false;
 }
 
+function can_vote($user_id) {
+    $query = 'select count(*) as cnt from confa_posts where author=' . $user_id;
+    $result = mysql_query($query);
+    
+    if ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+      mysql_log('polls_api', $user_id . ' created ' . $row['cnt'] . ' messages');
+      return intval($row['cnt']) > 10; // wrote more than 10 messages
+    }
+    
+    $query = 'select created from confa_users where id=' . $user_id;
+    $result = mysql_query($query);
+    
+    if ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+      $d1 = new DateTime();
+      $d2 = new DateTime($row['created']);
+      $diff = $d2->diff($d1);
+      mysql_log('polls_api', $user_id . ' was created ' . $diff->y . ' years ago, ' . $row['created']);
+      return $diff->y > 5;      // or registered > 5 years ago
+    }
+    
+    mysql_log('polls_api', $user_id . ' is not allowed to vote in anonymous polls');    
+    return false;  
+}
+
 $action = $_GET['action'];
 if ($action == 'vote')
 {
     $questionId = intval($_GET['questionId']);
     $answerId = intval($_GET['answerId']);
+    
+    if (is_poll_anonymous($answerId) && !can_vote($user_id)) {
+      http_response_code(403);
+      return;      
+    }
+    
     $query = 'INSERT INTO confa_polls(type, owner_id,  question_id, answer_id) values(2, '.$user_id.', '.$questionId.','.$answerId.')';
     
     $result = mysql_query($query);
