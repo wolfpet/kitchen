@@ -1,0 +1,1 @@
+alter table confa_polls add column `anon` SMALLINT NULL DEFAULT 0;

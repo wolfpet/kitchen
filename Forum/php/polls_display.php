@@ -4,8 +4,6 @@ require_once('head_inc.php');
 require_once('html_head_inc.php');
 //if($user_id==null)die('unauthorized');
 ?>
-
-
 <html>
 <head>
 <style>
@@ -76,6 +74,14 @@ require_once('html_head_inc.php');
     width: 50%;
     height: 50%;
 }
+.anon {
+    // background-color: #e9ebee;
+    background-color: #404040;
+    color: white;
+    border-radius: 0.4em;    
+    padding-left: 5px;
+    padding-right: 5px;
+}
 </style>
 </head>
 <script>
@@ -117,26 +123,25 @@ function vote(checkbox, question, answer)
 
 function whoVoted(answer)
 {
-   document.getElementById('whoVoted').innerHTML='Voted for this option: <hr>';
    $.ajax({
               type: "GET",
               url: 'polls_api.php',
               data: { answerId: answer, action: 'whoVoted'} ,
               success: function(events) {
-              var msgArray = $.map(events, function(value, index) {
-              return [value];
-              });
-              var count = msgArray.length;
-              if(count < 1)return; //no events
-              for(i=0; i<count; i++)
-              {
-                var voter = msgArray[i];
-                //add to voters div
-                document.getElementById('whoVoted').innerHTML += (i > 0 ? ', ' : '') + voter;
+                
+                document.getElementById('whoVoted').innerHTML='<b>Voted for this option</b>:<p>';
+                
+                var msgArray = $.map(events, function(value, index) {
+                  return [value];
+                });
+                
+                for(var i = 0; i < msgArray.length; i++) {
+                  document.getElementById('whoVoted').innerHTML += (i > 0 ? ', ' : '') + msgArray[i];
+                }
+                
+                document.getElementById('whoVoted').style.display='block';
               }
-            }
-        });
-   document.getElementById('whoVoted').style.display='block';
+          });
 }
 </script>
 <body>
@@ -144,13 +149,17 @@ function whoVoted(answer)
 <div class="pollContainer">
  <div class="pollAnswerContainer">
 <?php 
-$pollId= $_GET["poll"];
+$pollId = intval($_GET["poll"]);
 //question
-$query ='select content from confa_polls where id=' . $pollId;
+$query ='select content, anon from confa_polls where type=0 and id=' . $pollId;
 $result = mysql_query($query);
 if (!$result) { die('Query failed'); }
 $row = mysql_fetch_array($result, MYSQL_ASSOC);
 $question = $row['content'];
+$anon = $row['anon'];
+if ($anon) {
+  echo '<span class="anon">anonymous</span>&nbsp;';
+}
 echo $question .'<br>';
 //total votes
 $query =' select count(id) as total_votes from confa_polls where question_id='. $pollId. ' and type=2';
@@ -171,7 +180,7 @@ while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
     $sub_result = mysql_query($sub_query);
     $sub_row = mysql_fetch_array($sub_result, MYSQL_ASSOC);
     $votes = $sub_row['votes'];
-    $percentagePoints = $votes * 100 /$total_votes;
+    $percentagePoints = $total_votes > 0 ? $votes * 100 / $total_votes : 0;
     //check if I voted
     $sub_query = 'select id from confa_polls where owner_id='.$user_id.' and question_id='.$pollId.' and answer_id='.$answerOptionId;
     $sub_result = mysql_query($sub_query);
@@ -179,16 +188,16 @@ while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
     if(mysql_num_rows($sub_result)>0)$checked=true;//voted already
 
 ?>
-
-
-
-  <div class="pollDiv pollResults" onclick="whoVoted(<?=$answerOptionId?>);">+<?=$votes?></div>
+  <div class="pollDiv pollResults" 
+  <?php if ($anon == 0) { ?>
+  onclick="whoVoted(<?=$answerOptionId?>);"
+  <?php } ?>
+  >+<?=$votes?></div>
   <div class="pollAnswer">
     <div class="pollDiv pollCheckboxDiv"><input type="checkbox" class="pollCheckbox" value="on" onclick="vote(this, <?=$pollId?>, <?=$answerOptionId?>);" <?php if($checked)print('checked');?>></div>
     <div class="partialBackground" style="width: <?=$percentagePoints?>%;"></div>
     <div class="pollAnswerText"><?=$answerOptionContent?></div>
   </div>
-
 <?php
 }
 ?>

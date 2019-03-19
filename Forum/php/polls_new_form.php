@@ -58,20 +58,21 @@ function savePoll()
 
 <body>
  <form id="pollForm" name="pollForm" action="polls_new.php" method="post" autocomplete="off">
- Question:<br>
+ Question:<br/>
  <input type="text" class="pollText" name="pollQuestion" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);"><br><br>
  <div id="answers">
    Answer 1:<br>
    <input type="text" class="pollText" id="pollAnswer1" name="pollAnswer1" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);"><br>
    Answer 2:<br>
    <input type="text" class="pollText" id="pollAnswer1" name="pollAnswer2" onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);"><br>
-
  </div>
- <br>
+ <br/>
  <a onclick="addAnswer();" style="cursor: pointer;     color: blue;">Add an answer</a>
- <br>
- <br>
+ <br/>
+ <br/>
  <input type="hidden" id="numberOfAnswers" name="numberOfAnswers" value="2">
+ <input type="checkbox" id="anonymous" name="anonymous" value="0">Make anonymous</input>
+ <p/>
  <button onclick="savePoll();" style="width: 180px; height: 45px; cursor: pointer;" type="button">Save</button>
  </form>
  <br>
