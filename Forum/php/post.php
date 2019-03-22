@@ -94,6 +94,9 @@ if($imageGallery == 'postimage')
     print('<B><font color="red">' . $err . '</font></B><BR></body></html>');
   }
 
-//require('new_inc.php');
+if (!isset($preview)) {
+  require('new_inc.php');
+}
+
 require_once('tail_inc.php');
 ?>
