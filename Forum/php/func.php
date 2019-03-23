@@ -1099,16 +1099,89 @@ function m_print_threads($result, &$content) {
     return $msgs;
 }
 
-function sendmail($address, $subj, $body) {
+function xmail($address, $subject, $body, $headers) {
+  global $gmail_username;
+  
+  if (isset($gmail_username))
+    return gmail($address, $subject, $body, $headers);
+  else
+    return sendmail($address, $subject, $body, $headers);
+}
+
+function sendmail($address, $subject, $body, $headers) {
+  global $host, $from_email;
+  
 	$body = str_replace("\n.", "\n..", $body);
 	$body = wordwrap($body, 70, "\r\n");
-	$headers = 'From: kirdyk.forum@gmail.com' . "\r\n" .
-    'Reply-To: do_not_reply@kirdyk.com' . "\r\n" .
-    'X-Mailer: PHP/' . phpversion();
+  
+  if (!isset($headers)) {
+    $headers = 'From: ' . $from_email . "\r\n" .
+      'Reply-To: do_not_reply@' . $host ."\r\n" .
+      'X-Mailer: PHP/' . phpversion();
+  }
 	
-	$result = mail ( $address, $subject, $body, $headers);
+	$result = mail( $address, $subject, $body, $headers );
 	
 	return $result;
+}
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+if (isset($gmail_username)) {
+  // PHP Mailer Library
+  require_once 'PHPMailer/src/Exception.php';
+  require_once 'PHPMailer/src/PHPMailer.php';
+  require_once 'PHPMailer/src/SMTP.php';
+}
+
+function gmail($address, $subject, $body, $headers) {
+  global $gmail_username, $gmail_password, $from_email, $host;
+
+  try {
+     
+    $mail = new PHPMailer(TRUE);
+
+    $mail->AddReplyTo($from_email, $from_email);
+    $mail->SetFrom($from_email, $from_email);
+    $mail->AddAddress($address);
+    $mail->Subject = $subject;
+     
+    if (isset($headers) && strpos($headers, "MIME-Version")) {
+      $mail->IsHTML(true);
+    }
+     
+    $mail->Body = $body;
+     
+    /* Tells PHPMailer to use SMTP. */
+    $mail->isSMTP();
+    /* SMTP server address. */
+    $mail->Host = 'smtp.gmail.com';
+    /* Use SMTP authentication. */
+    $mail->SMTPAuth = true;
+    /* Set the encryption system. */
+    $mail->SMTPSecure = 'tls';
+    /* SMTP authentication username. */
+    $mail->Username = $gmail_username;     
+    /* SMTP authentication password. */
+    $mail->Password = $gmail_password;
+    /* Set the SMTP port. */
+    $mail->Port = 587;     
+    /* Finally send the mail. */
+    $mail->send();
+    
+    return true;
+  }
+  catch (Exception $e)
+  {
+     error_log($e->errorMessage());
+  }
+  catch (Exception $e)
+  {
+     error_log($e->getMessage());
+  }  
+
+  return false;
 }
 
 // =================== YOUTUBE/RUTUBE ===================
@@ -2157,7 +2230,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
             $headers = "From: $from_email\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=UTF-8\r\n"; // ISO-8859-1
-            mail($author_email,$email_subject,$message,$headers); 
+            xmail($author_email,$email_subject,$message,$headers); 
           }
         }
       }
@@ -2272,8 +2345,8 @@ function get_tz_list() {
     foreach($zonen AS $zone) {
       extract($zone);
       if($continent == 'America' || $continent == 'Asia' || /* $continent == 'Australia' || $continent == 'Pacific' */ $continent == 'Europe') {
-        $key = $continent.'/'.$city;
-        if (!array_key_exists($key, $result) ) {
+        $key = $continent.'/'.$city;        
+        if (!array_key_exists($key, $result) && $subcity == '') {
           try {
             $offset = get_tz_offset($key);
             $result[$key] = array('name' => str_replace('_',' ',$city), 'offset' => $offset);

@@ -66,5 +66,11 @@ $tenorGifKey='LIVDSRZULELA';
 
 $days_to_edit_post = 3;
 
+// To use Gmail, download https://github.com/PHPMailer/PHPMailer and copy into ./PHPMailer directory
+// then uncomment and configure GMail credentials
+
+// $gmail_username = "your_gmail_account";
+// $gmail_password = "your_gmail_password";
+
 ?>
 

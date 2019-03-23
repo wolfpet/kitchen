@@ -54,7 +54,7 @@ require_once('html_head_inc.php');
                 $message = $user . ", your new generated password is\n\n" . $newpass . "\n\nFeel free to login and change it in your profile";
                 $from = $from_email;
                 $headers = "From: $from";
-                if (mail($to,$subject,$message,$headers)) {
+                if (xmail($to,$subject,$message,$headers)) {
                   $query = 'UPDATE confa_users set password=password(\'' . $newpass . '\'), modified=NULL  where username=\'' . $user . '\'';
                   $result = mysql_query($query);
                   if (!$result) {

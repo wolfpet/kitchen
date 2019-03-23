@@ -40,7 +40,7 @@ if ( strlen($act_link) > 0 ) {
           $email_subject = "Your registration on $host forum website";
           $email_message = "We regret to inform that your request of registration the user '$username' has been declined.\n\nThe administration wishes you luck in your future endeavors.";
           $email_headers = "From: $from_email";
-          mail($email,$email_subject,$email_message,$email_headers);
+          xmail($email,$email_subject,$email_message,$email_headers);
           die('The registration of user <b>' . $username. '</b> has been declined.');           
         } else
           die('The link has expired.'); 
@@ -65,16 +65,20 @@ if ( strlen($act_link) > 0 ) {
 <body>
 <?php
     if (isset($reg_type) && $reg_type == REG_TYPE_CONFIRM) {
-      print('<p>Account <B>' . $username . '</B> has been activated. The user may now login to the <a href="http://' . $host . $root_dir . '" target="_top">forum');      
+      print('<p>Account <B>' . $username . '</B> has been activated. The user may now login to the <a href="http://' . $host . $root_dir . '" target="_top">forum</a>.');      
       // post a welcome to forum
       // post('Welcome, ' . $username.'!', 'Your account has been activated, you may now login to the forum.');
       // send an email to the user
       $email_subject = "Your registration on $host forum website";
       $email_message = "Welcome, ". $username."!\n\nYour account has been activated, you may now login to the forum.";
       $email_headers = "From: $from_email";
-      mail($email,$email_subject,$email_message,$email_headers);
+      if (xmail($email,$email_subject,$email_message,$email_headers)) {
+        print(' Email notification was sent to ' . $email);
+      } else {
+        print(' Email notification was NOT sent due to error(s). Check log files');
+      }
     } else {
-      print('<p><B>' . $username . '</B>, your account has been activated. Now you may login to the <a href="http://' . $host . $root_dir . '" target="_top">forum</a>');
+      print('<p><B>' . $username . '</B>, your account has been activated. Now you may login to the <a href="http://' . $host . $root_dir . '" target="_top">forum</a>.');
     }
     require_once('tail_inc.php');
 ?>
