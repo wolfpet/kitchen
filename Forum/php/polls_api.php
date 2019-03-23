@@ -33,7 +33,7 @@ function can_vote($user_id) {
       $d2 = new DateTime($row['created']);
       $diff = $d2->diff($d1);
       mysql_log('polls_api', $user_id . ' was created ' . $diff->y . ' years ago, ' . $row['created']);
-      return $diff->y > 5;      // or registered > 5 years ago
+      return $diff->y > 3;      // or registered > 3 years ago
     }
     
     mysql_log('polls_api', $user_id . ' is not allowed to vote in anonymous polls');    
