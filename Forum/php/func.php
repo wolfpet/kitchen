@@ -1733,8 +1733,8 @@ function login($username, $passw, $create_session=true) {
           
           mysql_log( __FILE__, 'insert query succeded for username= ' . $user . ' QUERY: ' . $query);
           
-          setcookie('auth_'.$dbname, $md5, 1800000000, $root_dir, $host, false, true);
-          setcookie('user_'.$dbname, $user, 1800000000, $root_dir, $host, false, true);
+          setcookie('auth_'.$dbname, $md5, 1800000000, $root_dir, explode(":", $host)[0], false, true);
+          setcookie('user_'.$dbname, $user, 1800000000, $root_dir, explode(":", $host)[0], false, true);
         } else {
           mysql_log( __FILE__, 'login succeded for username= ' . $user . '. no session was created');
         }
