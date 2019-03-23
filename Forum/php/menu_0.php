@@ -470,7 +470,14 @@ function openProfile()
 			<span id="Polls" class="ribbonIcon tooltip"><a onclick="closeNotifications();openPolls();">
 				<svg class="ribbonIcon" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g> <path fill="<?=$ribbonColor ?>" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></g></svg>
 				<span class="tooltiptext">Polls</span></a>
+			</span>
+      
+<?php if ($logged_in && (is_null($moder) || $moder <= 0)) { // not moderators can still see users ?>
+			<span id="Users" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir . $page_m_users?>">
+				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" class="style-scope iron-icon"></path></g></svg>
+				<span class="tooltiptext">Users</span></a>
 			</span> 
+<?php } ?>
 
 			<span id="Search" class="ribbonIcon tooltip"><a target="bottom" onclick="closeNotifications();" href="<?=$root_dir.$page_search . (strcmp($cur_page, $page_my_bookmarks) == 0 ? "?mode=bookmarks" : "")?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></g></svg>
@@ -507,16 +514,12 @@ function openProfile()
 				<span class="tooltiptext">Hide</span></a>
 			</span> 
 
-<?php if ($regs > 0) { ?>
-			<span id="Registrations" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir.$page_registrations?>">
-				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
-				<span class="tooltiptext">Registrations</span>
-				<span id="newPMBadge" class="button__badge"><?=$regs ?></span></a>
-			</span>
-<?php } ?>
 			<span id="Users" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir . $page_m_users?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" class="style-scope iron-icon"></path></g></svg>
 				<span class="tooltiptext">Users</span></a>
+<?php if ($regs > 0) { ?>
+				<span id="newPMBadge" class="button__badge"><?=$regs ?></span></a>
+<?php } ?>
 			</span> 
 			<span id="IPs" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir . $page_m_ips?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z" class="style-scope iron-icon"></path></path></g></svg>
@@ -816,6 +819,16 @@ function openProfile()
 	    <div id="hamburgerRefresh" class="hamburgerItem">Polls</div>
 	</div>
     </li>
+<?php if ($logged_in && (is_null($moder) || $moder <= 0)) { ?>
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();window.open('/modusers.php','contents');">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
+	    <path fill="grey" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path>
+	    </g></svg></div>
+	    <div id="hamburgerRefresh" class="hamburgerItem">Users</div>
+	</div>
+    </li>
+<?php } ?>
 
 <?php if ($logged_in && !is_null($moder) && $moder > 0) { ?>
     <!-- Moderator UI -->

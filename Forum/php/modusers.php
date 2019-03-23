@@ -2,17 +2,17 @@
 
 require_once('head_inc.php');
 
-    if ( !is_null( $moder ) && $moder > 0 ) {
-    
-        function boldmoder($text, $rec, $list) {
-          if ($rec['moder']) 
-            if (isset($list) && $list)
-              return $text . '<span class="edited">*</span>';
-            else 
-              return '<b>' . $text . '</b>';
-          
-          return $text;
-        }
+function boldmoder($text, $rec, $list) {
+  if ($rec['moder']) 
+    if (isset($list) && $list)
+      return $text . '<span class="edited">*</span>';
+    else 
+      return '<b>' . $text . '</b>';
+  
+  return $text;
+}
+
+if ($logged_in) {
 	//WHO IS ONLINE? 
 	$query ="SELECT user_id, updated, username, moder FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 60 MINUTE Group by username;";
 	//die($query);
@@ -38,7 +38,39 @@ require_once('head_inc.php');
         while ($row = mysql_fetch_assoc($result)) {
             $users_today[] = boldmoder($row['username'], $row, true);
         }
+}
 
+if ( !is_null( $moder ) && $moder > 0 ) {
+            
+  //REGISTRATIONS
+        $how_many = 50;
+        $max_id = 1;
+        $last_id = 0;
+        $limit = '';
+
+        $query = 'SELECT username, email, actkey, CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created from confa_regs order by username'; 
+        $result = mysql_query($query);
+        if (!$result) {
+            mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+            die('Query failed ' );
+        }
+
+        $num = 1;  
+        $out = '';
+        while ($row = mysql_fetch_assoc($result)) {
+            $created = $row['created'];
+            $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
+            $enc_mail = htmlentities($row['email'], HTML_ENTITIES,'UTF-8');
+            $md5 = $row['actkey'];
+            $line = '<tr><td align="center">'. $enc_user . '</td><td align="center">'. $enc_mail . '</td><td align="center">' . $created . '</td><td width="25%" align="center" nowrap>'
+              .'<form method="get" action="//'. $host . $root_dir . $page_activate .'" target="bottom">'
+              .'<input type="hidden" name="act_link" value="'. $md5.'"/><input name="action" type="submit" value="Confirm"/><input name="action" type="submit" value="Decline"/></form>'
+              .'</td></tr>';
+            $out .= $line;
+            $num++;
+        }
+        $registrations = $out;
+        
 	//REGESTERED USERS
         $cur_page = $page_m_users;
         $how_many = 50;
@@ -95,8 +127,6 @@ require_once('head_inc.php');
             die('Query failed ' );
         }
 
-        $num = 1;  
-
         $out = '';
         if (mysql_num_rows($result) == 0) {
             $max_id = $last_id;
@@ -141,12 +171,20 @@ require_once('custom_colors_inc.php');
 </head>
 <body id="html_body">
 <div class="content">
+<?php if (isset($registrations) && $registrations) { ?>
+  <table width="95%">
+  <tr><th>Username</th><th>Email</th><th>Requested</th><th>Action</th></tr>
+  <?php print($registrations); ?>
+  </table>
+<?php } ?>
 <div>
-<h3>Now online (<?=sizeof($users_online)?>)</h3>
-<?=implode(", ", $users_online)?><p/>
-<h3>Visited today (<?=sizeof($users_today)?>)</h3>
-<?=implode(", ", $users_today)?><p/>
-</div>
+<?php if ($logged_in) { ?>
+  <h3>Now online (<?=sizeof($users_online)?>)</h3>
+  <?=implode(", ", $users_online)?><p/>
+  <h3>Visited today (<?=sizeof($users_today)?>)</h3>
+  <?=implode(", ", $users_today)?><p/>
+  </div>
+<?php } ?>
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
 
@@ -165,7 +203,7 @@ require_once('custom_colors_inc.php');
 </table>
 <!--</ol>-->
 <?php
-    } else {
+    } else if (!$logged_in) {
         print( "Access denied." );
     }
 ?>

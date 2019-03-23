@@ -43,8 +43,6 @@ require_once('html_head_inc.php');
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
 
-//require('menu_inc.php');
-
         if (!is_null($err) && strlen($err) > 0) {
             print('<BR><font color="red"><b>' . $err . '</b></font>');
         }
@@ -53,12 +51,10 @@ require_once('html_head_inc.php');
         }
 ?>
 
-<!--<ol>-->
 <table width="95%">
 <tr><th>Username</th><th>Email</th><th>Created</th><th>Action</th></tr>
 <?php print($out); ?>
 </table>
-<!--</ol>-->
 <?php
     } else {
         print( "You have no access to this page." );
