@@ -119,6 +119,11 @@ require_once('head_inc.php');
                 $enc_user= '<del>' . $enc_user . '</del>';
             }
             
+            if (!$last_seen) {
+              $last_seen = '<form method="get" action="//'. $host . $root_dir . $page_activate .'" target="bottom">'
+              .'<input type="hidden" name="moduserid" value="'. $id.'"/><input name="action" type="submit" value="Invite again"/></form>';            
+            }
+            
             $enc_user= boldmoder($enc_user, $row, false);
             $line = '<tr><td>' . $num . ' <a target="bottom" href="' . $root_dir . $page_m_user . '?moduserid=' . $id . '"> ' . $enc_user . ' </a>' . '</td><td align="center">' . $id . '</td><td align="center">' . $status . '</td><td align="center">' . $created . '</td><td align="center">' . $last_seen . '</td></tr>';
             $out .= $line;
@@ -137,10 +142,10 @@ require_once('custom_colors_inc.php');
 <body id="html_body">
 <div class="content">
 <div>
-<h3>Now online (<?=sizeof($users_online)?>):</h3>
-<?=implode(", ", $users_online)?><hr>
-<h3>Visited today (<?=sizeof($users_today)?>):</h3>
-<?=implode(", ", $users_today)?><hr>
+<h3>Now online (<?=sizeof($users_online)?>)</h3>
+<?=implode(", ", $users_online)?><p/>
+<h3>Visited today (<?=sizeof($users_today)?>)</h3>
+<?=implode(", ", $users_today)?><p/>
 </div>
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {

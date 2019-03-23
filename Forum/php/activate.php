@@ -12,7 +12,7 @@ require_once('html_head_inc.php');
 if (isset($reg_type) && $reg_type == REG_TYPE_CLOSED) {
   die('Registration is closed');
 }
-if ( strlen($act_link) > 0 ) {
+if ( isset($act_link) && strlen($act_link) > 0 ) {
     $query = 'SELECT username, password, timediff(current_timestamp, created) as td, email, actkey from confa_regs where actkey=\'' . mysql_real_escape_string($act_link) . '\'';
     $result = mysql_query($query);
     if (!$result) {
@@ -57,6 +57,23 @@ if ( strlen($act_link) > 0 ) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
     }
+  } else if (!is_null( $moder ) && $moder > 0) {
+    // moderator wants to resend an invitation
+    
+    // if user exists, then continue
+    $query = 'SELECT username, email from confa_users where id=\'' . mysql_real_escape_string($moduserid) . '\'';
+    $result = mysql_query($query);
+    if (!$result) {
+        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+        die('Query failed');
+    } 
+    if ( mysql_num_rows($result) == 0) {
+        die('Invalid request. User with id=' . $moduserid . ' does not exist');
+    }
+    
+    $email = $row['email'];
+    $username = $row['username'];
+    
   } else {
       die('Invalid request');
   }
@@ -65,7 +82,7 @@ if ( strlen($act_link) > 0 ) {
 <body>
 <?php
     if (isset($reg_type) && $reg_type == REG_TYPE_CONFIRM) {
-      print('<p>Account <B>' . $username . '</B> has been activated. The user may now login to the <a href="http://' . $host . $root_dir . '" target="_top">forum</a>.');      
+      print('<p>Account <B>' . $username . '</B> has been activated. The user may now login to the <a href="//' . $host . $root_dir . '" target="_top">forum</a>.');      
       // post a welcome to forum
       // post('Welcome, ' . $username.'!', 'Your account has been activated, you may now login to the forum.');
       // send an email to the user
@@ -73,9 +90,9 @@ if ( strlen($act_link) > 0 ) {
       $email_message = "Welcome, ". $username."!\n\nYour account has been activated, you may now login to the forum.";
       $email_headers = "From: $from_email";
       if (xmail($email,$email_subject,$email_message,$email_headers)) {
-        print(' Email notification was sent to ' . $email);
+        print('<p/>Email notification was sent to ' . $email);
       } else {
-        print(' Email notification was NOT sent due to error(s). Check log files');
+        print('<p/>Email notification was <b>NOT</b> sent due to error(s). Check log files');
       }
     } else {
       print('<p><B>' . $username . '</B>, your account has been activated. Now you may login to the <a href="http://' . $host . $root_dir . '" target="_top">forum</a>.');
