@@ -149,7 +149,7 @@ if ( !is_null( $moder ) && $moder > 0 ) {
                 $enc_user= '<del>' . $enc_user . '</del>';
             }
             
-            if (!$last_seen) {
+            if (!$last_seen && $row['status'] != 2) {
               $last_seen = '<form method="get" action="//'. $host . $root_dir . $page_activate .'" target="bottom">'
               .'<input type="hidden" name="moduserid" value="'. $id.'"/><input name="action" type="submit" value="Invite again"/></form>';            
             }

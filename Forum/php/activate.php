@@ -70,7 +70,8 @@ if ( isset($act_link) && strlen($act_link) > 0 ) {
     if ( mysql_num_rows($result) == 0) {
         die('Invalid request. User with id=' . $moduserid . ' does not exist');
     }
-    
+    $row = mysql_fetch_assoc( $result );
+
     $email = $row['email'];
     $username = $row['username'];
     
