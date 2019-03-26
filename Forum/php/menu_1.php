@@ -205,16 +205,27 @@ New ]<?php
     }
 ?>
 
-
 <?php
     if (strcmp($cur_page, $page_my_bookmarks) == 0) {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_my_bookmarks); ?>"><I>Bookmarks</I></a> ]</span>
+<a target="contents" class="menu" href="<?php print($root_dir . $page_my_bookmarks); ?>"><I>Bookmarks</I></a>
 <?php
 } else {
-?><a target="contents" class="menu" href="<?php print($root_dir . $page_my_bookmarks); ?>">Bookmarks</a> ]</span>
+?><a target="contents" class="menu" href="<?php print($root_dir . $page_my_bookmarks); ?>">Bookmarks</a>
 <?php
 }
+    if (is_null($moder) || $moder == 0) {
+        if (strcmp($cur_page, $page_m_users) == 0) {
+?>
+| <a target="contents" class="menu" href="<?php print($root_dir . $page_m_users); ?>"><I>Users</I></a>
+<?php
+        } else {
+?>
+| <a target="contents" class="menu" href="<?php print($root_dir . $page_m_users); ?>">Users</a>
+<?php
+        }
+    }
+?> ]</span><?php
     if (!is_null($moder) && $moder > 0) {
       $regs = get_regs_count();
 ?>&nbsp;&nbsp;<SPAN STYLE="background-color: #FFE0E0">[
