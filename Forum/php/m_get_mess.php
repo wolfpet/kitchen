@@ -26,8 +26,7 @@ if(!empty($mess_id)){
 			echo trim($s_mess);
 			}	
 		}
-    $query = 'UPDATE confa_posts SET views=views + 1 where id=' . $mess_id;
-    $result = mysql_query($query);
+    $result = increment_views($msg_id);
 	}
 require_once('tail_inc.php');  
 ?>

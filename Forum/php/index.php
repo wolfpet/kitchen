@@ -229,24 +229,15 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($app) {
     $format = strtolower($format);
  
   // update views
-  $query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id;
-  $result = mysql_query($query);
-  if (!$result || $result == 0) {
-    
-    $response->setStatusCode(404, 'Not Found')->sendHeaders();
-    $response->setContentType('application/json');
-    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Message not found')));
-    
-    return $response;
-  }
-
+  $result = increment_views($msg_id);
+  
   // get likes/dislikes/reads
   $ratings = api_get_ratings($msg_id);
   if (!$ratings) {
     // error
-    $response->setStatusCode(400, 'Error')->sendHeaders();
+    $response->setStatusCode(404, 'Not Found')->sendHeaders();
     $response->setContentType('application/json');
-    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array(mysql_error())));
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array('Message not found')));
 
     return $response;
   }

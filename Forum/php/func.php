@@ -65,6 +65,19 @@ function get_regs_count() {
     return intval($row[0]);
 }
 
+function increment_views($msg_id) {
+  global $user_id, $logged_in;
+  
+  if ($logged_in) {
+    $query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id . ' and not exists (select * from confa_reports where user=' . $user_id. ' and post='.$msg_id.')';
+    $result1 = mysql_query($query);
+    $result2 = mysql_query('INSERT IGNORE INTO confa_reports (user, post) VALUES (' . $user_id. ',' . $msg_id.')');
+    return $result1;
+  }
+  
+  return 1;
+}
+
 function notify_about_new_pm($user_id, $last_login, $target="contents") {
     global $cur_page;
     global $page_pmail;

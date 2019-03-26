@@ -54,7 +54,7 @@ require_once('head_inc.php');
     mysql_free_result($result);
 
     // Performing SQL query to retrieve reports
-    $query = 'SELECT u.username as user, r.content_flags as flags from confa_users u, confa_reports r where r.user=u.id and r.post=' . $msg_id;
+    $query = 'SELECT u.username as user, r.content_flags as flags from confa_users u, confa_reports r where r.user=u.id and r.content_flags > 0 and r.post=' . $msg_id;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query 1 failed ' . mysql_error() . ' QUERY: ' . $query);

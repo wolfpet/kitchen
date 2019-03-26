@@ -128,8 +128,7 @@ if (!is_null($row['likes'])) {
 
         $l++;
     } 
-    $query = 'UPDATE confa_posts set views=views + 1 where id=' . $msg_id;
-    $result = mysql_query($query);
+    $result = increment_views($msg_id);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
