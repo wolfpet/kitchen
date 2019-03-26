@@ -70,50 +70,54 @@ function openNotifications()
     closeMenu();
     if(document.getElementById("NotificationsContainer").style.display=='none')
     {
-        //restart the timer:
-        try{update_bydate_counter();}catch(err){}
+      //restart the timer:
+      try{update_bydate_counter();}catch(err){}
 
-	//events API
-	checkForEvents();
+      //events API
+      checkForEvents();
 
-	document.getElementById("NotificationsContainer").style.display='block';
-	//render timestamps
-	var rd = new Date();
-	render_time = rd.getTime();
-	if(render_time>check_time)
-	{
-	    //opened after the refresh
-	    diffTime=render_time-check_time;
-	
-	    var minutes = Math.floor(diffTime / 60000);
-	    var seconds = ((diffTime % 60000) / 1000).toFixed(0);
-	    if(minutes==0)minutes='';
-	    else minutes= minutes + ' minutes ';
-	    seconds = seconds + ' seconds ago.';
-	    document.getElementById('newPostsTime').innerHTML =  "Checked "  + minutes + seconds;
-	    document.getElementById('newAnswersTime').innerHTML = "Checked "  + minutes + seconds;
-	    document.getElementById('newPMTime').innerHTML = "Checked "  + minutes + seconds; 
-	    
-	    /*
-	    //pmail is different, don't ask why...
-	    var pmailTime = <?php print(time()); ?> * 1000;
-	    diffTime = render_time - pmailTime;
-	    minutes = Math.floor(diffTime / 60000);
-	    seconds = ((diffTime % 60000) / 1000).toFixed(0);
-	    if(minutes==0)minutes='';
-	    else minutes= minutes + ' minutes ';
-	    seconds = seconds + ' seconds ago.';
-	    document.getElementById('newPMTime').innerHTML = "Checked " + minutes + seconds;
-	    */
-
-	}
+      document.getElementById("NotificationsContainer").style.display='block';
+      
+      //render timestamps
+      var rd = new Date();
+      render_time = rd.getTime();
+      if(render_time>check_time)
+      {
+        //opened after the refresh
+        diffTime=render_time-check_time;
+    
+        var minutes = Math.floor(diffTime / 60000);
+        var seconds = ((diffTime % 60000) / 1000).toFixed(0);
+        
+        if (minutes==0) 
+          minutes = '';
+        else 
+          minutes= minutes + ' minutes ';
+        
+        seconds = seconds + ' seconds ago.';
+        document.getElementById('newPostsTime').innerHTML =  "Checked "  + minutes + seconds;
+        document.getElementById('newAnswersTime').innerHTML = "Checked "  + minutes + seconds;
+        document.getElementById('newPMTime').innerHTML = "Checked "  + minutes + seconds; 
+        document.getElementById('newRegTime').innerHTML = "Checked "  + minutes + seconds; 
+        
+        /*
+        //pmail is different, don't ask why...
+        var pmailTime = <?php print(time()); ?> * 1000;
+        diffTime = render_time - pmailTime;
+        minutes = Math.floor(diffTime / 60000);
+        seconds = ((diffTime % 60000) / 1000).toFixed(0);
+        if(minutes==0)minutes='';
+        else minutes= minutes + ' minutes ';
+        seconds = seconds + ' seconds ago.';
+        document.getElementById('newPMTime').innerHTML = "Checked " + minutes + seconds;
+        */
+      }
     }
     else
     {
-	closeNotifications();
-	//clear page title
-        resetBadges();
-
+      closeNotifications();
+      //clear page title
+      resetBadges();
     }
 }
 
@@ -224,6 +228,21 @@ function checkForEvents()
                     newEventLi.style.display = "block";
                     document.getElementById('events').appendChild(newEventLi);
                  }
+                  if(eventsArray[i][0]=='4')
+                 {
+                    //new User Registration event
+                    var templateLi = document.getElementById('newUserRegEventTemplateLi');
+                    var newEventLi = templateLi.cloneNode(true); // true means clone all childNodes and all event handlers
+                    newEventLi.id = "event_" + i;
+
+                    var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> requested to be registered</span><span class='notificationMessage' style='font-style: italic;'></span>";
+                    newEventLi.querySelector("#notificationMessage").innerHTML = msg;
+                    newEventLi.querySelector("#eventTime").innerHTML = diff + " ago.";
+                    newEventLi.setAttribute("onclick", "openUsers();");
+
+                    newEventLi.style.display = "block";
+                    document.getElementById('events').appendChild(newEventLi);
+                 }
                }
              }
            }
@@ -270,7 +289,13 @@ function openAnswered()
     closeNotifications();
     resetBadges();
 }
-
+function openUsers()
+{
+    window.frames["contents"].location = "modusers.php";
+    closeMenu();
+    closeNotifications();
+    resetBadges();
+}
 function openPolls()
 {
     window.frames["contents"].location = "polls.php";
@@ -348,8 +373,6 @@ function openProfile()
 <?php } else { print($title); }?>
 </div>
 <?php }?>
-
-
 
 <?php if ($logged_in) { ?>
 
@@ -622,11 +645,6 @@ function openProfile()
 			</span> 
 		</div>
 	</div>
-	
-	
-
-	
-	
 <?php } ?>	
 <?php if (function_exists('pages_function')) { ?>
 	<div id="PagesRibbonGroup" class="ribbonGroupMobile"; style="float: right;">
@@ -692,6 +710,13 @@ function openProfile()
 	    <div id="eventTime" class="notificationTime">Just now</div>
 	</div>
     </li>
+    <li class="notificationLi" style="display: none;" id="newUserRegEventTemplateLi">
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg></div>
+	    <div id="notificationMessage" class="notificationMessage"></div>
+	    <div id="eventTime" class="notificationTime">Just now</div>
+	</div>
+    </li>
     <!-- end of templates -->
 
     <li class="notificationLi" onclick="openNewMessages();">
@@ -718,7 +743,7 @@ function openProfile()
         	    <?php if (!is_null($new_pm) && $new_pm > 0) { $styleStr = 'display:block;';} else {$styleStr = 'display:none;';} ?>
         	    <span id="newPMBadge" class="button__badge" style="<?=$styleStr?>"><?=$new_pm?></span>
 	    </div>
-	    <div class="notificationMessage" id="pmNotificationMessage">You have received <?=$new_pm?>  new private messages since you last checked. 
+	    <div class="notificationMessage" id="pmNotificationMessage">You have received <?=$new_pm?> new private messages since you last checked. 
 	    <?php if($new_pm >0){ ?>
 	    Check your pmail!
 	    <?php } ?>
@@ -726,6 +751,18 @@ function openProfile()
 	    <div id="newPMTime" class="notificationTime">long ago eh</div>
 	</div>
     </li>
+<?php if ($logged_in && !is_null($moder) && $moder > 0) { ?>    
+    <li class="notificationLi"  onclick="openUsers();"> <!-- Hide, unless there are registrations -->
+	<div style="padding: 6px 30px 5px 12px;">
+	    <div class="notificationIcon"><svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
+        	    <?php if ($regs > 0) { $styleStr = 'display:block;';} else {$styleStr = 'display:none;';} ?>
+        	    <span id="newRegBadge" class="button__badge" style="<?=$styleStr?>"><?=$regs?></span>
+	    </div>
+	    <div class="notificationMessage" id="pmNotificationMessage">There are <?=$regs?> registration requests waiting.</div>
+	    <div id="newRegTime" class="notificationTime">long ago eh</div>
+	</div>
+    </li>    
+<?php } ?>    
     <div id="events">
     </div>
 </div>

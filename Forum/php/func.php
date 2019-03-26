@@ -2440,18 +2440,19 @@ function recentEvents($user, $numberOfEvents){
     $events[]= null;
     $query = 'SELECT confa_events.event_id, confa_events.item_owner_id, confa_events.event_type, confa_events.added, confa_posts.subject, confa_users.username, confa_events.item_id from confa_events, confa_posts, confa_users  where (confa_events.item_owner_id='.$user.' OR confa_events.item_owner_id=0) AND confa_events.item_id=confa_posts.ID AND confa_users.id=confa_events.event_owner_id ORDER BY added DESC;';
     $result = mysql_query($query);
-        while ($row = mysql_fetch_assoc($result)) {
-		$numberOfEvents--;
-		$eventType = $row['event_type'];
-    		$added = $row['added'];
-    		$msgSubj = $row['subject'];
-    		$whoReacted = $row['username'];
-    		$itemId = $row['item_id'];
-                $event_data = array($eventType, $added, $msgSubj, $whoReacted, $itemId);
-                
-                array_push($events,$event_data);
-                if($numberOfEvents==0)break;
-                }
+    while ($row = mysql_fetch_assoc($result)) {
+      $numberOfEvents--;
+      $eventType = $row['event_type'];
+      $added = $row['added'];
+      $msgSubj = $row['subject'];
+      $whoReacted = $row['username'];
+      $itemId = $row['item_id'];
+      
+      $event_data = array($eventType, $added, $msgSubj, $whoReacted, $itemId);                  
+      array_push($events,$event_data);
+      
+      if ($numberOfEvents==0) break;
+    }
 
     return $events;
 }
