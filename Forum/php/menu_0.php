@@ -167,7 +167,7 @@ function checkForEvents()
                      if(title.length >40)title=title.substring(0, 45) + "...";
                      var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> reacted to your post </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                      newEventLi.querySelector("#notificationMessage").innerHTML = msg;
-                     newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
+                     newEventLi.querySelector("#eventTime").innerHTML = diff + " ago.";
                      newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
 
                      newEventLi.style.display = "block";
@@ -184,7 +184,7 @@ function checkForEvents()
                     if(title.length >40)title=title.substring(0, 50) + "...";
                     var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> started a new thread </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
-                    newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
+                    newEventLi.querySelector("#eventTime").innerHTML = diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
 
                     newEventLi.style.display = "block";
@@ -201,7 +201,7 @@ function checkForEvents()
                     if(title.length >40)title=title.substring(0, 50) + "...";
                     var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> replied to your post </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
-                    newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
+                    newEventLi.querySelector("#eventTime").innerHTML = diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
 
                     newEventLi.style.display = "block";
@@ -218,7 +218,7 @@ function checkForEvents()
                     if(title.length >40)title=title.substring(0, 50) + "...";
                     var msg = "<span class='notificationMessage' style='font-weight: bold;'>" + eventsArray[i][3] + "</span><span class='notificationMessage'> bookmarked your post </span><span class='notificationMessage' style='font-style: italic;'>" + title + "</span>";
                     newEventLi.querySelector("#notificationMessage").innerHTML = msg;
-                    newEventLi.querySelector("#eventTime").innerHTML = "Happened " + diff + " ago.";
+                    newEventLi.querySelector("#eventTime").innerHTML = diff + " ago.";
                     newEventLi.setAttribute("onclick", "openMessage(" + eventsArray[i][4] + ");");
 
                     newEventLi.style.display = "block";
