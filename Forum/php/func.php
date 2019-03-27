@@ -2082,7 +2082,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       } 
     }
     // update post
-    $query = 'UPDATE confa_posts SET subject=\'' . mysql_real_escape_string($subj) . '\',body=' . $ibody . ',modified=now(),ip=' .$ip. ',user_agent=' .$agent. ',content_flags='.$content_flags . ', chars='. $chars . ',views=0 WHERE id=' . $msg_id;
+    $query = 'UPDATE confa_posts SET subject=\'' . mysql_real_escape_string($subj) . '\',body=' . $ibody . ',modified=now(),ip=' .$ip. ',user_agent=' .$agent. ',content_flags='.$content_flags . ', chars='. $chars . ' WHERE id=' . $msg_id;
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);

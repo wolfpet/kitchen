@@ -1,0 +1,2 @@
+DELETE FROM confa_reports WHERE id NOT IN (select cid from (select min(id) cid from confa_reports group by post, `user`, content_flags) b);
+CREATE UNIQUE INDEX confa_reports_index ON confa_reports (post,user);
