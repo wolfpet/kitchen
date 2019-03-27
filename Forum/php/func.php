@@ -1179,7 +1179,9 @@ function gmail($address, $subject, $body, $headers) {
     /* SMTP authentication password. */
     $mail->Password = $gmail_password;
     /* Set the SMTP port. */
-    $mail->Port = 587;     
+    $mail->Port = 587;
+    /* Set charset. */
+    $mail->CharSet = 'UTF-8';
     /* Finally send the mail. */
     $mail->send();
     
