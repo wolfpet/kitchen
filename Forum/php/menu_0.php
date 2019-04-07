@@ -753,7 +753,7 @@ function openProfile()
         	    <?php if ($regs > 0) { $styleStr = 'display:block;';} else {$styleStr = 'display:none;';} ?>
         	    <span id="newRegBadge" class="button__badge" style="<?=$styleStr?>"><?=$regs?></span>
 	    </div>
-	    <div class="notificationMessage" id="regNotificationMessage">There are <span id="newRegBadge2"><?=$regs > 0 ? $regs : 'no' ?></span> registration requests awaiting your decision.</div>
+	    <div class="notificationMessage" id="regNotificationMessage">There are <span id="newRegBadge2"><?=$regs > 0 ? $regs : 'no' ?></span> registration requests waiting.</div>
 	    <div id="newRegTime" class="notificationTime">long ago eh</div>
 	</div>
     </li>    
