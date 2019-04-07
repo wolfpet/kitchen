@@ -915,6 +915,41 @@ function api_post($app, $re, $msg_id, $privately=false) {
 }
 
 /*******************  
+    Registration
+ *******************/
+
+$app->get('/api/registrations', function() use ($app) {
+  global $logged_in, $user_id, $err_login, $moder;
+  
+  $response = new Response();
+
+  if (!$logged_in) {
+
+    $response->setStatusCode(403, 'Authentication error');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( is_null($err_login) ? "User not logged in" : $err_login)));
+    
+    return $response;
+    
+  } else if (is_null($moder) || $moder <= 0) {
+    $response->setStatusCode(401, 'Unauthorized');
+    $response->setContentType('application/json');
+    $response->setJsonContent(array('status' => 'ERROR', 'messages' => array( "Not a moderator")));
+
+    return $response;
+  }
+
+  $regs = get_regs_count();
+  
+  $response = new Response();
+ 
+  $response->setContentType('application/json');
+  $response->setJsonContent($regs);
+  
+  return $response;
+});
+  
+/*******************  
     Private Mail
  *******************/
 

@@ -7,6 +7,7 @@ var pmId=0;
 var byDateCounter = 0;
 var answeredCounter = 0;
 var pmCounter = 0;
+var regCounter = 0;
 var total_count = 0;
 var min_bydate_id =0; //we'll query "answered" api so this will be a limit.
 var check_time = 0; //time the script checked the DB
@@ -15,11 +16,21 @@ var render_time = 0; //time the user opened the notification center
 $( document ).ready(function() 
 {
     //check if logged in. exit if not.
-    if(document.getElementById('newNotificationsBadge') == null)return;
+    if(document.getElementById('newNotificationsBadge') == null) return;
+    
     //call byDate API periodically
-    window.setTimeout( function() {byDateCaller();}, 1000 );
-    bydate_timer = window.setInterval(function(){byDateCaller();}, 60000);
-    pm_timer = window.setInterval(function(){pmCaller();}, 60000);
+    window.setTimeout(byDateCaller, 1000);
+    bydate_timer = window.setInterval(byDateCaller, 60000);
+    
+    pmCounter = Number(document.getElementById('newPMBadge').innerHTML);
+    window.setInterval(pmCaller, 60000);
+    
+    // only update registrations counter if moderator
+    var modBadge = document.getElementById('newModBadge');
+    if(modBadge != null) {
+      regCounter = Number(modBadge.innerHTML);
+      window.setInterval(regsCaller, 5 * 6000);
+    }
 });
 
 function byDateCaller()
@@ -56,6 +67,18 @@ function pmCaller()
               success: function(data)
               {
                  pm(data);
+              }
+      });
+}
+
+function regsCaller()
+{
+      $.ajax({
+              type: "GET",
+              url: "./api/registrations",
+              success: function(data)
+              {
+                 regs(data);
               }
       });
 }
@@ -116,9 +139,19 @@ function pm(data)
     var newPMId = data.id;
     if(pmId < newPMId)
     {
-	pmCounter++;
-	updateBadges();
-	pmId = newPMId;
+      pmCounter++;
+      updateBadges();
+      pmId = newPMId;
+    }
+}
+
+function regs(data)
+{
+    var oldCounter = regCounter;    
+    regCounter = Number(data);
+    
+    if (oldCounter != regCounter) {
+      updateBadges();
     }
 }
 
@@ -166,14 +199,33 @@ function updateBadges()
         document.getElementById('newAnswersBadge2').innerHTML ='no';
     }
     //pm badge
-    if(pmCounter>0)
+    if (pmCounter > 0)
     {
-     //update the PM badge.
-     document.getElementById('newPMBadge').style.display = 'block';
-     document.getElementById('newPMBadge').innerHTML = pmCounter;
-     document.getElementById('pmNotificationMessage').innerHTML =  'At least ' + pmCounter + ' new PMs waiting in your inbox!';     
+      //update the PM badge.
+      document.getElementById('newPMBadge').style.display = 'block';
+      document.getElementById('newPMBadge').innerHTML = pmCounter;
+      // document.getElementById('pmNotificationMessage').innerHTML =  'At least ' + pmCounter + ' new PMs waiting in your inbox!';     
+      document.getElementById('newPMBadge2').innerHTML = pmCounter;
      total_count++;
+    } else {
+      document.getElementById('newPMBadge2').innerHTML = 'no';
     }
+    //regs badge
+    if (regCounter > 0) {
+      document.getElementById('newRegBadge').style.display = 'block';
+      document.getElementById('newRegBadge').innerHTML = document.getElementById('newRegBadge2').innerHTML = regCounter;
+      document.getElementById('newModBadge').style.display = 'block';
+      document.getElementById('newModBadge').innerHTML = regCounter;
+      document.getElementById('newUserBadge').style.display = 'block';
+      document.getElementById('newUserBadge').innerHTML = regCounter;
+      total_count++;
+    } else {
+      document.getElementById('newRegBadge').style.display = 'none';
+      document.getElementById('newModBadge').style.display = 'none';
+      document.getElementById('newUserBadge').style.display = 'none';
+      document.getElementById('newRegBadge2').innerHTML = 'no';
+    }
+    
     //update timestamps
     if(document.getElementById('newPostsTime')!==null)
     {
@@ -187,6 +239,7 @@ function updateBadges()
              document.getElementById('newPostsTime').innerHTML = 'Just now';
              document.getElementById('newAnswersTime').innerHTML = 'Just now';
              document.getElementById('newPMTime').innerHTML = 'Just now';
+             document.getElementById('newRegTime').innerHTML = 'Just now';
           }
     }
     //update total notifications badge, page title
@@ -216,7 +269,7 @@ function addCounter(text, count, bold, pad)
 
 function updateThreads(data)
 {
-for(i=data.count-1; i>=0; i--)
+  for(i=data.count-1; i>=0; i--)
     {
       var id = data.messages[i].id;
       //check if such title has already been rendered
@@ -246,7 +299,7 @@ for(i=data.count-1; i>=0; i--)
     }
 }
 
-//legacy code: not sure what it does. TODO: investigate!
+// the code below is to support shift+click selection of checkboxes used e.g. in old PM UI
 var focused = null;
 // shift - select
 $(document).ready(function(){

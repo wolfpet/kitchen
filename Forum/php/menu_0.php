@@ -519,10 +519,7 @@ function openProfile()
 			<span id="OpenModIcon" class="ribbonIcon tooltip"><a target="bottom" onclick="expandModeratorMenu();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M1 21h12v2H1zM5.245 8.07l2.83-2.827 14.14 14.142-2.828 2.828zM12.317 1l5.657 5.656-2.83 2.83-5.654-5.66zM3.825 9.485l5.657 5.657-2.828 2.828-5.657-5.657z" class="style-scope iron-icon"></path></g></svg>
 				<span class="tooltiptext">Moderator</span></a>
-				<?php if ($regs > 0) { ?>
-				<span id="newPMBadge" class="button__badge"><?=$regs ?></span></a>
-				<?php } ?>
-				
+				<span id="newModBadge" class="button__badge" style="<?= $regs > 0 ? 'display:block;' : 'display:none;' ?>"><?=$regs ?></span></a>
 			</span> 
 		</div>
 	</div>
@@ -540,9 +537,7 @@ function openProfile()
 			<span id="Users" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir . $page_m_users?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" class="style-scope iron-icon"></path></g></svg>
 				<span class="tooltiptext">Users</span></a>
-<?php if ($regs > 0) { ?>
-				<span id="newPMBadge" class="button__badge"><?=$regs ?></span></a>
-<?php } ?>
+				<span id="newUserBadge" class="button__badge" style="<?= $regs > 0 ? 'display:block;' : 'display:none;' ?>"><?=$regs ?></span></a>
 			</span> 
 			<span id="IPs" class="ribbonIcon tooltip"><a target="contents" href="<?=$root_dir . $page_m_ips?>">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z" class="style-scope iron-icon"></path></path></g></svg>
@@ -743,7 +738,7 @@ function openProfile()
         	    <?php if (!is_null($new_pm) && $new_pm > 0) { $styleStr = 'display:block;';} else {$styleStr = 'display:none;';} ?>
         	    <span id="newPMBadge" class="button__badge" style="<?=$styleStr?>"><?=$new_pm?></span>
 	    </div>
-	    <div class="notificationMessage" id="pmNotificationMessage">You have received <?=$new_pm?> new private messages since you last checked. 
+	    <div class="notificationMessage" id="pmNotificationMessage">You have received <span id="newPMBadge2"><?=$new_pm?></span> new private messages since you last checked. 
 	    <?php if($new_pm >0){ ?>
 	    Check your pmail!
 	    <?php } ?>
@@ -758,7 +753,7 @@ function openProfile()
         	    <?php if ($regs > 0) { $styleStr = 'display:block;';} else {$styleStr = 'display:none;';} ?>
         	    <span id="newRegBadge" class="button__badge" style="<?=$styleStr?>"><?=$regs?></span>
 	    </div>
-	    <div class="notificationMessage" id="pmNotificationMessage">There are <?=$regs?> registration requests waiting.</div>
+	    <div class="notificationMessage" id="regNotificationMessage">There are <span id="newRegBadge2"><?=$regs > 0 ? $regs : 'no' ?></span> registration requests awaiting your decision.</div>
 	    <div id="newRegTime" class="notificationTime">long ago eh</div>
 	</div>
     </li>    
