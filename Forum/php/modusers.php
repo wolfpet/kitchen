@@ -5,7 +5,7 @@ require_once('head_inc.php');
 function boldmoder($text, $rec, $list) {
   if ($rec['moder']) 
     if (isset($list) && $list)
-      return $text . '<span class="edited">*</span>';
+      return $text . '<span style="color:green;">*</span>';
     else 
       return '<b>' . $text . '</b>';
   
@@ -161,8 +161,8 @@ if ( !is_null( $moder ) && $moder > 0 ) {
         }
     }
 
-sort($users_online);
-sort($users_today);
+natcasesort($users_online);
+natcasesort($users_today);
 
 require_once('html_head_inc.php');
 require_once('custom_colors_inc.php'); 

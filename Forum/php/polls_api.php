@@ -90,6 +90,10 @@ if($action == 'whoVoted')
       array_push($voters, $row['user']);
     }
     
+    usort($voters, function($x, $y) {
+       return strcasecmp($x['user'] , $y['user']);
+    });
+    
     header('Content-type:application/json;charset=utf-8');
     echo json_encode($voters);
     $status = 201;
