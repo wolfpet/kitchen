@@ -332,7 +332,8 @@ function loadimage(img)
       <div id="reactions-dropdown">
 
 <?php
-if (isset($reactions)) {
+
+if (isset($reactions) && $user_id != $auth_id) {
 ?>
 <div class="reactions-dropdown">
         <span class="ribbonIcon tooltip greyHover" id="ReactIcon">
