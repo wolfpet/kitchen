@@ -4,101 +4,96 @@
 //"
 $(document).keyup(function(e) {
      if (e.keyCode == 27) { // escape key maps to keycode `27`
-         //close various overlays
-         if(document.getElementById("NotificationsContainer").style.display=='block')
-         {
-                document.getElementById("NotificationsContainer").style.display='none';
-         }
-         if(document.getElementById("gallery").style.display=='block')
-         {
-                document.getElementById("gallery").style.display='none';
-                document.getElementById("menu_cover").style.display='none';
+         // close various overlays
+         $("#NotificationsContainer").toggle(false);
+
+         if ( $("#gallery").css('display') == 'block') {
+                $('#gallery').css('display', 'none');
+                $('#menu_cover').css('display', 'none');
          }
      }
  });
 
-function resetBadges()
-{
-    document.getElementById('newNotificationsBadge').style.display = 'none';
-    document.getElementById('newPostsBadge').style.display = 'none';
-    document.getElementById('newAnswersBadge').style.display = 'none';
+function resetBadges() {
+    $('#newNotificationsBadge').css('display', 'none');
+    $('#newPostsBadge').css('display', 'none');
+    $('#newAnswersBadge').css('display', 'none');
     document.title = '<?=$title?>';
 }
-function openLoginForm()
-{
+
+function openLoginForm() {
      openOverlay("loginForm");
 }
 
-function expandModeratorMenu()
-{
-    document.getElementById("ModRibbonGroup").style.display='inline-block';
-    document.getElementById("OpenModRibbonGroup").style.display='none';
+function expandModeratorMenu() {
+    $('#ModRibbonGroup').css('display', 'inline-block');
+    $('#OpenModRibbonGroup').css('display', 'none');
 }
 
-function collapseModeratorMenu()
-{
-    document.getElementById("ModRibbonGroup").style.display='none';
-    document.getElementById("OpenModRibbonGroup").style.display='inline-block';
+function collapseModeratorMenu() {
+    $('#OpenModRibbonGroup').css('display', 'inline-block');
+    $('#ModRibbonGroup').css('display', 'none');
 }
 
-function expandFindMenu()
-{
-    document.getElementById("FindRibbonGroup").style.display='inline-block';
-    document.getElementById("OpenFindRibbonGroup").style.display='none';
+function expandFindMenu() {
+    $('#FindRibbonGroup').css('display', 'inline-block');
+    $('#OpenFindRibbonGroup').css('display', 'none');
 }
 
-function collapseFindMenu()
-{
-    document.getElementById("FindRibbonGroup").style.display='none';
-    document.getElementById("OpenFindRibbonGroup").style.display='inline-block';
+function collapseFindMenu() {
+    $('#OpenFindRibbonGroup').css('display', 'inline-block');
+    $('#FindRibbonGroup').css('display', 'none');
 }
 
 function openMenu()
 {
     closeNotifications();
-    //close menu if already open
-    if(document.getElementById("HamburgerContainer").style.display=='none')document.getElementById("HamburgerContainer").style.display='block';
-    else document.getElementById("HamburgerContainer").style.display='none';
-}
-function closeMenu()
-{
-    document.getElementById("HamburgerContainer").style.display='none';
+    // close menu if already open
+    $("#HamburgerContainer").toggle();
 }
 
-function openNotifications()
-{
+function closeMenu() {
+    $("#HamburgerContainer").toggle(false);
+}
+
+function openNotifications() {    
     closeMenu();
-    if(document.getElementById("NotificationsContainer").style.display=='none')
-    {
+    
+    if ($("#NotificationsContainer").css('display') == 'none') {
       //restart the timer:
-      try{update_bydate_counter();}catch(err){}
+      try {
+        update_bydate_counter();
+      } catch(err) {
+        // do nothing
+      }
 
       //events API
       checkForEvents();
 
-      document.getElementById("NotificationsContainer").style.display='block';
+      $("#NotificationsContainer").toggle(true);
       
       //render timestamps
       var rd = new Date();
-      render_time = rd.getTime();
-      if(render_time>check_time)
+      var render_time = rd.getTime();
+      if (render_time > check_time)
       {
         //opened after the refresh
-        diffTime=render_time-check_time;
+        diffTime = render_time - check_time;
     
         var minutes = Math.floor(diffTime / 60000);
-        var seconds = ((diffTime % 60000) / 1000).toFixed(0);
+        var seconds = ((diffTime % 60000) / 1000).toFixed(0) + ' seconds ago.';
         
-        if (minutes==0) 
+        if (minutes == 0) 
           minutes = '';
         else 
-          minutes= minutes + ' minutes ';
+          minutes = minutes + ' minutes ';
         
-        seconds = seconds + ' seconds ago.';
-        document.getElementById('newPostsTime').innerHTML =  "Checked "  + minutes + seconds;
-        document.getElementById('newAnswersTime').innerHTML = "Checked "  + minutes + seconds;
-        document.getElementById('newPMTime').innerHTML = "Checked "  + minutes + seconds; 
-        document.getElementById('newRegTime').innerHTML = "Checked "  + minutes + seconds; 
+        var text = "Checked "  + minutes + seconds;
+        
+        $('#newPostsTime').html(text);
+        $('#newAnswersTime').html(text);
+        $('#newPMTime').html(text);
+        $('#newRegTime').html(text);
         
         /*
         //pmail is different, don't ask why...
@@ -124,7 +119,7 @@ function openNotifications()
 function checkForEvents()
 {
     //this function checks the notifications api periodically
-    document.getElementById('events').innerHTML="";
+    $('#events').html("");
     var url1 = "./notifications_api.php?userid=<?=$user_id?>&number=20";
     var me = "<?=$user?>";
 
@@ -349,13 +344,12 @@ function closeNotifications()
 
 function openPM()
 {
- pmCounter=0; //thread autoload won't highlight the pm badge again when the time comes (unless there are new pm between now and the next clock tic)
+ pmCounter = 0; //thread autoload won't highlight the pm badge again when the time comes (unless there are new pm between now and the next clock tic)
  openOverlay('pm');
- document.getElementById('newPMBadge').innerHTML = 0;
- document.getElementById('pmNotificationMessage').innerHTML =  'No new PMs since you last checked';
- document.getElementById('newNotificationsBadge').style.display = 'none';          
- document.getElementById('newPMBadge').style.display = 'none';
- document.getElementById('newPMBadge').innerHTML='0';
+ $('#pmNotificationMessage').html('No new PMs since you last checked');
+ $('#newNotificationsBadge').css('display', 'none');
+ $('#newPMBadge').css('display', 'none');
+ $('#newPMBadge').html('0');
  closeMenu();
 }
 

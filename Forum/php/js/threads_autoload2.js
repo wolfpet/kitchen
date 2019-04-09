@@ -112,7 +112,7 @@ function byDate(data)
 function answered(data)
 {
     var user_id = data.user_id;
-    for(i=0; i<data.count; i++)
+    for(var i=0; i<data.count; i++)
     {
      if(data.messages[i].author.id != user_id)
      {
@@ -202,28 +202,29 @@ function updateBadges()
     if (pmCounter > 0)
     {
       //update the PM badge.
-      document.getElementById('newPMBadge').style.display = 'block';
-      document.getElementById('newPMBadge').innerHTML = pmCounter;
+      $('#newPMBadge').css('display', 'block');
+      $('#newPMBadge').html(pmCounter);
       // document.getElementById('pmNotificationMessage').innerHTML =  'At least ' + pmCounter + ' new PMs waiting in your inbox!';     
-      document.getElementById('newPMBadge2').innerHTML = pmCounter;
-     total_count++;
+      $('#newPMBadge2').html(pmCounter);
+      total_count++;
     } else {
-      document.getElementById('newPMBadge2').innerHTML = 'no';
+      $('#newPMBadge2').html('no');
     }
     //regs badge
     if (regCounter > 0) {
-      document.getElementById('newRegBadge').style.display = 'block';
-      document.getElementById('newRegBadge').innerHTML = document.getElementById('newRegBadge2').innerHTML = regCounter;
-      document.getElementById('newModBadge').style.display = 'block';
-      document.getElementById('newModBadge').innerHTML = regCounter;
-      document.getElementById('newUserBadge').style.display = 'block';
-      document.getElementById('newUserBadge').innerHTML = regCounter;
+      $('#newRegBadge').css('display', 'block');
+      $('#newRegBadge').html(regCounter);
+      $('#newModBadge').css('display', 'block');
+      $('#newModBadge').html(regCounter);
+      $('#newUserBadge').css('display', 'block');
+      $('#newUserBadge').html(regCounter);
+      $('#newRegBadge2').html(regCounter);
       total_count++;
     } else {
-      document.getElementById('newRegBadge').style.display = 'none';
-      document.getElementById('newModBadge').style.display = 'none';
-      document.getElementById('newUserBadge').style.display = 'none';
-      document.getElementById('newRegBadge2').innerHTML = 'no';
+      $('#newRegBadge').css('display', 'none');
+      $('#newModBadge').css('display', 'none');
+      $('#newUserBadge').css('display', 'none');
+      $('#newRegBadge2').html('no');
     }
     
     //update timestamps
@@ -234,12 +235,12 @@ function updateBadges()
           //reset the timers if the div is visible _next_ time this runs.
           var timeDiff = check_time - render_time;
           var diffSeconds =  ((timeDiff % 60000) / 1000).toFixed(0);
-          if(diffSeconds>5)
+          if (diffSeconds > 5)
           {
-             document.getElementById('newPostsTime').innerHTML = 'Just now';
-             document.getElementById('newAnswersTime').innerHTML = 'Just now';
-             document.getElementById('newPMTime').innerHTML = 'Just now';
-             document.getElementById('newRegTime').innerHTML = 'Just now';
+             $('#newPostsTime').html('Just now');
+             $('#newAnswersTime').html('Just now');
+             $('#newPMTime').html('Just now');
+             $('#newRegTime').html('Just now');
           }
     }
     //update total notifications badge, page title
@@ -254,8 +255,8 @@ function updateBadges()
       totalCountBadge.style.display = 'none';
     }
     // update title
-    var newTitle = addCounter(window.parent.document.title, total_count, false, true);
-    window.parent.document.title = newTitle;
+    window.parent.document.title = 
+      addCounter(window.parent.document.title, total_count, false, true);
 }
 
 function addCounter(text, count, bold, pad) 
