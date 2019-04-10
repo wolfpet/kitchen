@@ -741,7 +741,7 @@ function openProfile()
 	</div>
     </li>
 <?php if ($logged_in && !is_null($moder) && $moder > 0) { ?>    
-    <li class="notificationLi"  onclick="openUsers();"> <!-- Hide, unless there are registrations -->
+    <li class="notificationLi"  onclick="openUsers();" id="newRegs"> <!-- Hide, unless there are registrations -->
 	<div style="padding: 6px 30px 5px 12px;">
 	    <div class="notificationIcon"><svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="grey" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g></svg>
         	    <?php if ($regs > 0) { $styleStr = 'display:block;';} else {$styleStr = 'display:none;';} ?>

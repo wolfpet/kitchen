@@ -211,7 +211,8 @@ function updateBadges()
       $('#newPMBadge2').html('no');
     }
     //regs badge
-    if (regCounter > 0) {
+    if (regCounter > 0) {      
+      $('#newRegs').toggle(true);
       $('#newRegBadge').css('display', 'block');
       $('#newRegBadge').html(regCounter);
       $('#newModBadge').css('display', 'block');
@@ -221,6 +222,7 @@ function updateBadges()
       $('#newRegBadge2').html(regCounter);
       total_count++;
     } else {
+      $('#newRegs').toggle(false);
       $('#newRegBadge').css('display', 'none');
       $('#newModBadge').css('display', 'none');
       $('#newUserBadge').css('display', 'none');
