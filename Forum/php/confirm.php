@@ -30,18 +30,12 @@ function toggleExpand()
       parent.expand();	
     }
 }
-function initExpand() 
-{
-  if (parent.expanded && parent.expanded()) 
-  {
-    document.getElementById("expandMsg").style.display='none';
-    document.getElementById("restoreMsg").style.display='block';    
-  }
-  else
-  {
-    document.getElementById("expandMsg").style.display='block';
-    document.getElementById("restoreMsg").style.display='none';
-  }
+
+function initExpand() {
+  // collapse the message
+  document.getElementById("expandMsg").style.display='block';
+  document.getElementById("restoreMsg").style.display='none';
+  parent.restore();
 }
 </script>
 <title>Thank you, </title></head>
