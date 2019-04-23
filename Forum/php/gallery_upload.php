@@ -16,19 +16,32 @@ if(isset($_FILES["file"]))
  //Filter the file types , if you want.
  if ($_FILES["file"]["error"] > 0)
  {
-  echo "Error: " . $_FILES["file"]["error"] . "";
+  error_log("Error uploading: " . $_FILES["file"]["name"] .": " . $_FILES["file"]["error"]);
+  
+  if ($_FILES["file"]["error"] == 1) 
+    die("File is too large");
+  else 
+    die("Error: " . $_FILES["file"]["error"]);
  }
  else
  {
   $dumpFile = $output_dir. $randPicName . $_FILES["file"]["name"];
   move_uploaded_file($_FILES["file"]["tmp_name"], $dumpFile);
+  
   //resize to 1200px max
-  $img = resize_image($dumpFile, 1200, 1200);
-  //$ext = pathinfo($dumpFile, PATHINFO_EXTENSION);
+  //$img = resize_image($dumpFile, 1200, 1200);
+  $ext = pathinfo($dumpFile, PATHINFO_EXTENSION);
   //if($ext == 'jpg'){ imagejpeg($img, $dumpFile);}
   //if($ext == 'png'){ imagepng($img, $dumpFile);} //commented for now. the library seems to be corrupting the PNG
+  
+  if (strcasecmp($ext, 'jpg') == 0 || strcasecmp($ext, 'jpeg') == 0) { 
+    rotate_image($dumpFile);
+  }
+
   $result = "http://" . $host . $root_dir . $imageGalleryDumpFolder . $randPicName. $_FILES["file"]["name"];
  }
+} else {
+  die("No file");
 }
 
 if($imageGallery == 'amazon')
@@ -42,8 +55,8 @@ if($imageGallery == 'amazon')
  $bucket = $imageGalleryBucket;
  $keyname = $randPicName . $_FILES["file"]["name"];
  // $filepath should be absolute path to a file on disk
- $filepath = realpath ($output_dir. $randPicName. $_FILES["file"]["name"]);
- // echo 'Uploading ' . $filepath . ' to ' . $bucket . ' as ' . $keyname;
+ $filepath = realpath($output_dir. $randPicName. $_FILES["file"]["name"]);
+ error_log('Uploading ' . $filepath . ' to ' . $bucket . ' as ' . $keyname . "...");
  
  // Upload a file.
  try {
@@ -88,7 +101,6 @@ if($imageGallery == 'local')
  }
 }
 
-
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
@@ -123,5 +135,42 @@ function resize_image($file, $w, $h, $crop=FALSE) {
     $dst = imagecreatetruecolor($newwidth, $newheight);
     imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
     return $dst;
+}
+
+function rotate_image($filename) {
+  $rotate = 0;
+  $exif = @exif_read_data($filename, 'IFD0');
+  $ort = empty($exif['Orientation'])?'':$exif['Orientation'];
+  $source = imagecreatefromjpeg($filename);
+
+  switch ($ort) {
+    case 2:
+      break;
+    case 3:
+      $rotate = imagerotate($source, 180, 0);
+      break;
+    case 4:
+      break;
+    case 5:
+      break;	
+    case 6:
+      $rotate = imagerotate($source, -90, 0);
+      break;	
+    case 7:
+      break;	
+    case 8:
+      $rotate = imagerotate($source, 90, 0);
+      break;
+    default:
+      break;
+  }
+
+  if(!empty($rotate)) {
+    $result = imagejpeg($rotate, $filename);
+    error_log("Rotated " . $filename . ": result=" . $result);
+    return $result;
+  }
+  
+  return true;
 }
 ?>

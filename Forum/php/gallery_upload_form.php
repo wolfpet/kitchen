@@ -8,7 +8,7 @@ if (!$logged_in)die('Error 403: Not authorized. Login is required to upload imag
 <html>
 <head>
 <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> -->
-<script src="../js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery-1.10.2.min.js"></script>
 <style>
 
 #dragandrophandler
