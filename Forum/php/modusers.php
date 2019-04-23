@@ -164,6 +164,8 @@ if ( !is_null( $moder ) && $moder > 0 ) {
 natcasesort($users_online);
 natcasesort($users_today);
 
+$users_today = array_diff($users_today, $users_online);
+
 require_once('html_head_inc.php');
 require_once('custom_colors_inc.php'); 
 ?>
