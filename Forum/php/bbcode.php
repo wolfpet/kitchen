@@ -50,7 +50,6 @@ function do_bbcode($str, $auth_id, $msg_id) {
       '<img src="//$1" alt=""/>',
       '<img src="$1" alt=""/>',
       '<iframe style="border-style: none; width: 100%; max-width: 460px;" id="poll$1" class="poll" src="polls_display.php?poll=$1" onload="resizeMe(this);"></iframe>'
-       
   );
   
   // Perform the actual conversion
@@ -73,6 +72,12 @@ function do_bbcode($str, $auth_id, $msg_id) {
   while ($count > 0) {
     $str = preg_replace($format_search, $format_replace, $str, -1, $count);
   }
+  
+  $str = preg_replace_callback("#\[html=([^\]]*?)\]\s*(.*?)\[\/html\]#is", function ($m) {
+      $content = base64_decode($m[2]);      
+      return "<div>" . $content . "</div>";
+  }, $str);
+
    //print('before naked called:-->'.$str.'<--');
   
   // Uncoded images & URLs   
@@ -186,9 +191,6 @@ function before_bbcode($original_body, &$has_video=null) {
     
   if (isset($has_video) && !is_null($has_video)) $has_video = strcmp($body, $original_body) != 0;
 
-  // Embedding Twitter and other links
-  $body = instagram(gfycat(twitter($body)));
-  
   // Fix postimage.org tags
   $body = fix_postimage_tags($body);
 
@@ -366,10 +368,15 @@ function gallery_cleanup($body)
     return $processedBody; 
 }
 
-
 function render_for_db($msgbody) {
-
   $msgbody = youtube( $msgbody );
+
+  // Strip user-entered [html] tags
+  $msgbody = preg_replace("#(\[html=[^\]]*?\].*?\[\/html\])#is", "", $msgbody);
+  
+  // Embedding Twitter and other links
+  $msgbody = instagram(gfycat(twitter($msgbody)));
+  
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
   
@@ -377,8 +384,11 @@ function render_for_db($msgbody) {
 }
 
 function render_for_editing($msgbody) {
-  // process [render] tags 
+  // process [render] tags
   $msgbody = preg_replace("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", "$1", $msgbody);
+  // process [html] tags
+  $msgbody = preg_replace("#\[html=([^\]]*?)\](.*?)\[\/html\]#is", "$1", $msgbody);
+  
   return $msgbody;
 }
 

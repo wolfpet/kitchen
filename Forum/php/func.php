@@ -1408,7 +1408,10 @@ function twitter($body, $embed = true) {
 
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
-      return trim(preg_replace('/\s+/', ' ', $ar2->html));
+      $new_body = trim(preg_replace('/\s+/', ' ', $ar2->html));
+      
+      return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';
+
 		},
 		$body
 	);
@@ -1440,7 +1443,9 @@ function gfycat($body, $embed = true) {
 
       $ar2 = json_decode($obj2);
       // var_dump($ar2);
-      return trim(preg_replace('/\s\s+/', ' ', $ar2->gfyItem->gifUrl)).'<br/>Direct link: <a href="'.$url.'">'.$url.'</a>';
+      $new_body = trim(preg_replace('/\s\s+/', ' ', $ar2->gfyItem->gifUrl)).'<br/>Direct link: <a href="'.$url.'">'.$url.'</a>';
+      
+      return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';      
 		},
 		$body
 	);
@@ -1472,7 +1477,11 @@ function instagram($body, $embed = true) {
 
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
-      return trim(preg_replace('/\s\s+/', ' ', $ar2->html));
+      
+      $new_body = trim(preg_replace('/\s\s+/', ' ', $ar2->html));
+      
+      return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';
+
 		},
 		$body
 	);
