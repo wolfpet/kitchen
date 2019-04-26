@@ -73,10 +73,18 @@ function do_bbcode($str, $auth_id, $msg_id) {
     $str = preg_replace($format_search, $format_replace, $str, -1, $count);
   }
   
-  $str = preg_replace_callback("#\[html=([^\]]*?)\]\s*(.*?)\[\/html\]#is", function ($m) {
-      $content = base64_decode($m[2]);      
+  // Process [html] tag
+  $html = false;
+  $str = preg_replace_callback("#\[html=([^\]]*?)\]\s*(.*?)\[\/html\]#is", function ($m) use (&$html) {
+      $content = base64_decode($m[2]);
+      $html = true;
       return "<div>" . $content . "</div>";
   }, $str);
+  
+  if (!$html) {
+    // attempt to do an old-school twitter/instagram embedding instead
+    $str = instagram(twitter($str, true, true), true, true);
+  }
 
    //print('before naked called:-->'.$str.'<--');
   

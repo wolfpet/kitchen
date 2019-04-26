@@ -1384,14 +1384,14 @@ function dailymotion($body, $embed = true) {
 	return tmdb($result, $embed);
 }
 
-function twitter($body, $embed = true) {
+function twitter($body, $embed = true, $in_place = false) {
   if (!$embed) return $body;
   
   // e.g. https://twitter.com/elonmusk/status/627040381729906688 or https://twitter.com/K4rlHungus/status/772244915128598528?s=09
   $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)(?:/[^\s<\]"]*)?(?:(?:\?|&)[^\s<\]"]*)?\s*';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
-    function ($matches) use ($embed, $pattern) {
+    function ($matches) use ($embed, $pattern, $in_place) {
       // var_dump($matches);
       if(count($matches) < 5) return $matches[0];
       
@@ -1410,8 +1410,10 @@ function twitter($body, $embed = true) {
       // var_dump($ar2);         			 
       $new_body = trim(preg_replace('/\s+/', ' ', $ar2->html));
       
-      return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';
-
+      if ($in_place)
+        return $new_body;
+      else
+        return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';
 		},
 		$body
 	);
@@ -1419,14 +1421,14 @@ function twitter($body, $embed = true) {
 	return $result;
 }
 
-function instagram($body, $embed = true) {
+function instagram($body, $embed = true, $in_place = false) {
   if (!$embed) return $body;
   
   // e.g. https://www.instagram.com/p/BGyE7jfF2of/
   $pattern = '(?:https?:\/\/)(?:www\.)?(?:instagram\.com\/p\/)([0-9a-zA-Z\-_]*)(?:\/[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
-    function ($matches) use ($embed, $pattern) {
+    function ($matches) use ($embed, $pattern, $in_place) {
       // var_dump($matches);
       if(count($matches) < 5) return $matches[0];
       
@@ -1446,8 +1448,10 @@ function instagram($body, $embed = true) {
       
       $new_body = trim(preg_replace('/\s\s+/', ' ', $ar2->html));
       
-      return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';
-
+      if ($in_place)
+        return $new_body;
+      else
+        return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';
 		},
 		$body
 	);
