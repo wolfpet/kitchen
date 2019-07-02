@@ -192,11 +192,15 @@ function api_get_threads($max_thread_id, $count=50) {
   );
 }
 
-function api_get_body($body, $status=1, $format='html') {
+function api_get_body($body, $status=1, $format='html', $flags=0) {
+  global $safe_mode, $content_nsfw;
+
   if ($status == 3) {
     $msgbody = $format == 'raw' ? '' : '<font color="red">censored</font>';
-  } else if ($status == 2) {
-    $msgbody = '';  // message deleted
+  } else if ($status == 2) { // message deleted
+    $msgbody = '';
+  } else if ($flags & $content_nsfw && isset($safe_mode) && $safe_mode != 0) { // NSFW
+    $msgbody = $format == 'raw' ? '' : '<H3 style="color:lightgray; display: table-cell; vertical-align: middle; text-align:center;">NSFW</H3>';
   } else {
     $msgbody = $format == 'raw' ? $body : render_for_display($body);
   }
@@ -271,7 +275,7 @@ $app->get('/api/messages/{id:[0-9]+}', function($msg_id) use ($app) {
       'page' => intval($row['page']),
       'parent' => intval($row['parent']),
       'closed' => filter_var($row['post_closed'], FILTER_VALIDATE_BOOLEAN),
-      'body' => array(($format == 'raw' ? 'raw' : 'html') => api_get_body($row['body'], $row['status'], $format))
+      'body' => array(($format == 'raw' ? 'raw' : 'html') => api_get_body($row['body'], $row['status'], $format, $row['content_flags']))
     ));
       
   } else {
