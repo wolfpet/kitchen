@@ -161,11 +161,11 @@ if (!is_null($user_id) && $user_id != null) {
 </head>
 <body id="threads_body">
 <?php
-function _pages_function($add_fluff=false, $add_up=true) {
+function _pages_function($add_fluff=false) {
     global $max_page, $page, $cur_page;
-    if ($add_up) 
-      print('<a id="up" name="up"></a>');
+    print('<a id="up" name="up"></a>');
     print_pages($max_page, $page, 'contents', $cur_page, '', $add_fluff, $add_fluff);
+    // print_pages(5, $page, 'contents', $cur_page, '', $add_fluff, $add_fluff);
 }
 
     $show_hidden = 2;
@@ -216,21 +216,17 @@ function _pages_function($add_fluff=false, $add_up=true) {
 
     print('</div>');
 
-    if (is_apple()) {
-      // provide page numbers for iOS and disable auto-load
-      print('<BR/>');
-      _pages_function(false, false);
-      autoload_threads($last_thread, 0);
-    } else {
-      // print_pages($max_page, $page, 'contents', $cur_page);
-      print('<BR><span style="cursor: pointer; color:blue" onclick="scroll2Top3();">Up</span>');
-      print('&nbsp;&nbsp;<span onclick="load_threads(document.getElementById(\'threads\'), '.$last_thread.','.$limit.');" style="cursor: pointer; color:blue">More</span>');
-      autoload_threads($last_thread, $limit);
-    }
-    
+    // print_pages($max_page, $page, 'contents', $cur_page);
+    print('<BR><span style="cursor: pointer; color:blue" onclick="scroll2Top3();">Up</span>');
+    print('&nbsp;&nbsp;<span onclick="load_threads(document.getElementById(\'threads\'), '.$last_thread.','.$limit.');" style="cursor: pointer; color:blue">More</span>');
+
     $end_timestamp = time();
     $duration = $end_timestamp - $start_timestamp;
     print('<!-- ' . $duration . ' milliseconds -->');
+
+   // print($show_hidden . "|");
+   // print_r($ignored);
+   autoload_threads($last_thread, $limit);
 ?>
 <table cellpadding=1 cellspacing=0 width="90%">
   <tr>

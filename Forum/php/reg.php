@@ -142,10 +142,6 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
             mysql_log( __FILE__, 'insert failed ' . mysql_error() . ' QUERY: ' . $query); 
             die('Query failed');
         }
-        // fire event
-        $query = 'INSERT INTO confa_events(item_owner_id,  item_id, event_owner_id, event_type) values(0, 0, ' . $user . ', 4)';
-        $result = mysql_query( $query );
-        
         $to = $email;
         $subject = "Forum registration";
         $message = "To activate your account, please click the following link or copy and paste it in your browser:<p><a href=\"http://" . $host . $root_dir . $page_activate . '?act_link=' . $md5 . '">http://' . $host . $root_dir . $page_activate . '?act_link=' . $md5 . "</a><p>This link will be valid for 24 hours.\n";
