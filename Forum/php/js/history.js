@@ -83,6 +83,9 @@ historyData = {
 		    var callback, month, day, host;
  
 		    if ( typeof(options) == "function" ) {
+            var today = new Date();
+            month = today.getMonth() + 1;
+            day = today.getDate();
 			      callback = options;
 		    }
 		    else if ( typeof(options) == "object" ) {
@@ -91,7 +94,7 @@ historyData = {
 			      day = options.day;
 	      }
         
-		    this.jsonP.get(this.host + '/date', {}, function(tmp) {
+		    this.jsonP.get(this.host + '/date/' + month + '/' + day, {}, function(tmp) {
 				    historyData.data = tmp.data;
 				    historyData.url = tmp.url;
 				    historyData.date = tmp.date;
