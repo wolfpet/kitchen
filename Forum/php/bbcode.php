@@ -157,33 +157,34 @@ function bbcode_naked_urls($str) {
  */
 function before_bbcode($original_body, &$has_video=null) {
   global $host;
+  // echo "in";
   
   $body = preg_replace( array (
     // Vimeo on-the-fly e.g. https://vimeo.com/129252030
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?vimeo\.com/([0-9]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', 
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?vimeo\.com/([0-9]*+)(?:(?:\?|&)[^\s<\]"]*+)?)#is', 
     // Coub on the fly e.g. http://coub.com/view/3lbz7
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?coub\.com/(?:view|embed)/([0-9a-zA-Z]*)(?:(?:\?|&)[^\s<\]"]*)?)#is', 
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?coub\.com/(?:view|embed)/([0-9a-zA-Z]*+)(?:(?:\?|&)[^\s<\]"]*+)?)#is', 
     // FB video clip (permanent link) e.g. https://www.facebook.com/kolesiko.taiskoe/videos/vb.100006902082868/1524658977774157/?type=2&theater
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/videos/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/videos/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // FB video clip (temporary link) e.g. https://video-ord1-1.xx.fbcdn.net/hvideo-xap1/v/t42.1790-2/10444296_1524659357774119_1276856449_n.mp4?efg=eyJybHIiOjM2NSwicmxhIjo1MTJ9&rl=365&vabr=203&oh=e9a02a9d91fe8de7d59750a03447dc42&oe=55A5D0C0
-    '#(?<!\[url(=|\]))((?:https?://)?video-[^\s<\]"]+\.mp4(?:(?:\?)[^\s<\]"]*)?)#is',
-    // FB video clip (yet another) e.g. https://www.facebook.com/video.php?v=911326538908142
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/video\.php\?v=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!\[url(=|\]))((?:https?://)?video-[^\s<\]"]+\.mp4(?:(?:\?)[^\s<\]"]*+)?)#is',
+    // FB video clip (yet another) e.g. https://www.facebook.com/video.php?v=911326538908142 or https://www.facebook.com/watch/?v=626596821291241
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/(?:video\.php|watch/)\?v=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // FB post e.g. https://www.facebook.com/pablitomoiseevich/posts/10154405819774010
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/posts/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',    
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/posts/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',    
     // FB photo e.g. https://www.facebook.com/photo.php?fbid=1845794888790800
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/photo\.php\?fbid=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/photo\.php\?fbid=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // Twitter moments e.g. https://twitter.com/i/moments/1047551358948319233
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?twitter\.com\/i\/moments\/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?twitter\.com\/i\/moments\/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // imgur
-    '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?i\.imgur\.com\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
-    '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?i\.imgur\.com\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
+    '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // gfycat e.g. https://gfycat.com/BrightFragrantAmurstarfish
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?gfycat\.com\/([^\s<\]"]*)(?:(?:\?|&)[^\s<\]"]*)?)#is',   
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?gfycat\.com\/([^\s<\]"]*+)(?:(?:\?|&)[^\s<\]"]*+)?)#is',   
     // youtube with no http(s) prefix
-    '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // s3 vipvip videos e.g. https://s3.amazonaws.com/vipvip.ca/mLxY9XSZWRVIDEO0296.mp4
-    '#(?<!\[url(=|\]))((?:https?://).*/(.*\.mp4)(?:(?:\?|&)[^\s<\]"]*)?)#is'
+    '#(?<!\[url(=|\]))((?:https?://).+\.mp4(?:(?:\?|&)[^\s<\]"]*+)?)#is'
      ), array (
     '<div class="vimeo"><iframe src="https://player.vimeo.com/video/$3" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
     '<div class="coub"><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',  
@@ -199,13 +200,13 @@ function before_bbcode($original_body, &$has_video=null) {
     '<div class="gfycat"><iframe src="https://www.gfycat.com/ifr/$3" frameborder="0" scrolling="no" width="640" height="346" allowfullscreen></iframe></div>',
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="//www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=//' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
     '<div class="s3"><video width=480" height="320" controls><source src="$2" type="video/mp4"></video><br/>Link: <a href="$2" target="_blank">$2</a></div>'    
-    ), $original_body);    
+    ), $original_body);
     
+  // echo "1(".preg_errtxt(preg_last_error()). ")";
+  
   if (isset($has_video) && !is_null($has_video)) $has_video = strcmp($body, $original_body) != 0;
-
   // Fix postimage.org tags
   $body = fix_postimage_tags($body);
-
   // other replacements
   $body = preg_replace( array (
     // WhatsApp formatting
@@ -224,8 +225,24 @@ function before_bbcode($original_body, &$has_video=null) {
     '', 
     ''
      ), $body);
-  
+     
+  // echo "{\n" . $body . "\n}\n";
+
   return $body;
+}
+
+function preg_errtxt($errcode)
+{
+    static $errtext;
+
+    if (!isset($errtxt))
+    {
+        $errtext = array();
+        $constants = get_defined_constants(true);
+        foreach ($constants['pcre'] as $c => $n) if (preg_match('/_ERROR$/', $c)) $errtext[$n] = $c;
+    }
+
+    return array_key_exists($errcode, $errtext)? $errtext[$errcode] : NULL;
 }
 
 /** 
