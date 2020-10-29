@@ -122,8 +122,8 @@ function before_bbcode($original_body, &$has_video=null) {
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/videos/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // FB video clip (temporary link) e.g. https://video-ord1-1.xx.fbcdn.net/hvideo-xap1/v/t42.1790-2/10444296_1524659357774119_1276856449_n.mp4?efg=eyJybHIiOjM2NSwicmxhIjo1MTJ9&rl=365&vabr=203&oh=e9a02a9d91fe8de7d59750a03447dc42&oe=55A5D0C0
     '#(?<!\[url(=|\]))((?:https?://)?video-[^\s<\]"]+\.mp4(?:(?:\?)[^\s<\]"]*)?)#is',
-    // FB video clip (yet another) e.g. https://www.facebook.com/video.php?v=911326538908142
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/video\.php\?v=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',
+    // FB video clip (yet another) e.g. https://www.facebook.com/video.php?v=911326538908142 or https://www.facebook.com/watch/?v=626596821291241
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/(?:video\.php|watch/)\?v=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // FB post e.g. https://www.facebook.com/pablitomoiseevich/posts/10154405819774010
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/\S+/posts/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*)?)#is',    
     // FB photo e.g. https://www.facebook.com/photo.php?fbid=1845794888790800
