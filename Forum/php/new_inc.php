@@ -93,6 +93,7 @@ function insertPoll()
 
 function sendMessage()
 {
+    changed(false);
     //validate the subj
     if(document.getElementById("subj").value=='')
     {
@@ -101,7 +102,6 @@ function sendMessage()
     }
     document.getElementById("msgform").submit();
 }
-
 </script>
 
 <!-- <h3><?php print($title);?></h3> -->
@@ -130,10 +130,8 @@ if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER
 }
 ?>
 <div id="subj_div" style="padding-top: 5px; padding-bottom: 5px">
-Subject: <input style="width: 60%; border: lightgrey; border-style: solid; border-width: 1px;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" maxlength="255" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
+Subject: <input oninput='changed(true);' style="width: 60%; border: lightgrey; border-style: solid; border-width: 1px;" type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" maxlength="255" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' />
 </div>
-
-  
   <!-- EDITING TOOLS -->
   <div id="StyleRibbonGroup" style="border: lightgrey; border-style: solid; border-width: 1px;" class="ribbonGroup";>
   <div id="StyleRibbonGroupTitle" class="ribbonGroupTitle">Style</div>
@@ -182,9 +180,6 @@ Subject: <input style="width: 60%; border: lightgrey; border-style: solid; borde
 	    </g></svg>
 	    <span class="tooltiptext">Strikethrough</span></a>
 	</span> 
-
-	
-
     </div>
   </div>
   
@@ -274,7 +269,7 @@ Subject: <input style="width: 60%; border: lightgrey; border-style: solid; borde
 
   <!-- END OF EDITING TOOLS -->
     <div style="padding-top: 0px">
-        <textarea style="margin-top: 6px;margin-bottom: 10px;width: 90%; height: 100px; border: lightgrey; border-style: solid; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php  if (is_null($body) && $user == '486') { $body = '1';} print($body);?></textarea>
+        <textarea oninput='changed(true);' style="margin-top: 6px;margin-bottom: 10px;width: 90%; height: 100px; border: lightgrey; border-style: solid; border-width: 1px;" id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php  if (is_null($body) && $user == '486') { $body = '1';} print($body);?></textarea>
         <iframe id="galleryUploadFrame" style="margin-top: 6px;margin-bottom: 10px;display: none; width: 91%; height: 100px; border: lightgrey; border-style: solid; border-width: 1px;"></iframe>
 
         <div id="tenor_gifs" style="margin-bottom: 10px; overflow-y: scroll; padding-top: 5px; padding-bottom: 5px; width: 91%; height: 200px; display:none;border: lightgrey; border-style: solid; border-width: 1px;">
