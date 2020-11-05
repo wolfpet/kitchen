@@ -1422,13 +1422,15 @@ function twitter($body, $embed = true, $in_place = false) {
 }
 
 function instagram($body, $embed = true, $in_place = false) {
-  if (!$embed) return $body;
+  global $fb_key;
+  
+  if (!$embed || !$fb_key) return $body;
   
   // e.g. https://www.instagram.com/p/BGyE7jfF2of/
   $pattern = '(?:https?:\/\/)(?:www\.)?(?:instagram\.com\/p\/)([0-9a-zA-Z\-_]*)(?:\/[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
-    function ($matches) use ($embed, $pattern, $in_place) {
+    function ($matches) use ($embed, $pattern, $in_place, $fb_key) {
       // var_dump($matches);
       if(count($matches) < 5) return $matches[0];
       
@@ -1437,8 +1439,8 @@ function instagram($body, $embed = true, $in_place = false) {
 
       $url = $matches[0];
 			$id  = $matches[1];
-
-      $obj2 = file_get_contents("https://api.instagram.com/oembed/?url=" . $url);
+      
+      $obj2 = file_get_contents("https://graph.facebook.com/v8.0/instagram_oembed?url=" . $url . '&access_token=' . $fb_key);
       
       if($obj2 === FALSE) 
         return $url;
