@@ -97,7 +97,7 @@ $title = 'Private message';
         $email=$row['email'];
         if (!is_null($email) && strlen($email) > 0) {
           #$to = $email;
-          $subject = "You have new private message on $host forum website";
+          $subject = "You have a new private message on $host forum website";
           $message = "";
           $message .= '<html><body><style type="text/css">';
           $message .= file_get_contents('css/disc2.css');          
@@ -108,10 +108,18 @@ $title = 'Private message';
           $message .= '</div><hr/>';
           $message .= '<p>Visit <a href="'.$protocol.':://'.$host.'/'.$page_goto.'?pm_id='.$msg_id.'">'.$host.'</a> to reply</p>';
           $message .= '</body></html>';
-          $headers = "From: $from_email\r\n";
-          $headers .= "MIME-Version: 1.0\r\n";
-          $headers .= "Content-Type: text/html; charset=UTF-8\r\n"; // ISO-8859-1
-          mail($email,$subject,$message,$headers);
+          // not needed, no international characters
+          // $email_subject= "=?utf-8?b?".base64_encode($email_subject)."?=";
+          $headers[] = 'MIME-Version: 1.0';
+          // not needed, no international characters
+          // $headers.= "From: =?utf-8?b?".base64_encode($who_replied)."?= <".$from_email.">\r\n";
+          $headers[] = "Content-type: text/html; charset=utf-8";
+          // additional headers
+          $headers[] = "From: $from_email";
+          // not needed, no reply necessary
+          // $headers.= "Reply-To: $reply\r\n";
+          $headers[] = "X-Mailer: PHP/" . phpversion();
+          mail($email, $subject, $message, implode("\r\n", $headers)); 
         }
         $username = $user;      
         $success = true;

@@ -2111,7 +2111,7 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
       $result = mysql_query($query);
       if (!$result) {
         mysql_log( __FILE__ . __LINE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-      }else if (mysql_num_rows($result) != 0) {
+      } else if (mysql_num_rows($result) != 0) {
         $row = mysql_fetch_assoc($result);
         if ($row['reply_to_email'] && is_null($row['ignored'])){
           // User wants to receive e-mail notifications
@@ -2132,10 +2132,20 @@ function post($subj, $body, $re=0, $msg_id=0, $ticket="", $nsfw=false, $to) {
             $message .= '</div><hr/>';
             $message .= '<p>Visit <a href="'.$protocol.'://'.$host.'/'.$page_goto.'?re='.$id.'&page='.$msg_page.'">'.$host.'</a> to reply!</p>';
             $message .= '</body></html>';
-            $headers = "From: $from_email\r\n";
-            $headers .= "MIME-Version: 1.0\r\n";
-            $headers .= "Content-Type: text/html; charset=UTF-8\r\n"; // ISO-8859-1
-            mail($author_email,$email_subject,$message,$headers); 
+            // encode the payload
+            
+            // not needed, no international characters
+            // $email_subject= "=?utf-8?b?".base64_encode($email_subject)."?=";
+            $headers[] = 'MIME-Version: 1.0';
+            // not needed, no international characters
+            // $headers.= "From: =?utf-8?b?".base64_encode($who_replied)."?= <".$from_email.">\r\n";
+            $headers[] = "Content-type: text/html; charset=utf-8";
+            // additional headers
+            $headers[] = "From: $from_email";
+            // not needed, no reply necessary
+            // $headers.= "Reply-To: $reply\r\n";
+            $headers[] = "X-Mailer: PHP/" . phpversion();
+            mail($author_email, $email_subject, $message, implode("\r\n", $headers)); 
           }
         }
       }
