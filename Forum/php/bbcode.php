@@ -180,7 +180,9 @@ function before_bbcode($original_body, &$has_video=null) {
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?i\.imgur\.com\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // gfycat e.g. https://gfycat.com/BrightFragrantAmurstarfish
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?gfycat\.com\/([^\s<\]"]*+)(?:(?:\?|&)[^\s<\]"]*+)?)#is',   
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?gfycat\.com\/([^\s<\]"]*+)(?:(?:\?|&)[^\s<\]"]*+)?)#is',
+    // telegram e.g. https://t.me/nexta_live/13722
+    '#(?<!\[url(=|\]))(?:https?:\/\/)t\.me\/(\w*+\/[0-9]*+)#is',
     // youtube with no http(s) prefix
     '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // s3 vipvip videos e.g. https://s3.amazonaws.com/vipvip.ca/mLxY9XSZWRVIDEO0296.mp4
@@ -198,6 +200,7 @@ function before_bbcode($original_body, &$has_video=null) {
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="a/$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     // '<div class="gfycat"><iframe src="https://www.gfycat.com/ifr/$3" frameborder="0" scrolling="no" width="100%" height="100%" style="position:absolute;top:0;left:0;" allowfullscreen></iframe></div>',
     '<div class="gfycat"><iframe src="https://www.gfycat.com/ifr/$3" frameborder="0" scrolling="no" width="640" height="346" allowfullscreen></iframe></div>',
+    '<div class="telegram"><script async src="https://telegram.org/js/telegram-widget.js?1" data-telegram-post="$2" data-width="100%"></script></div>',
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="//www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin=//' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
     '<div class="s3"><video width=480" height="320" controls><source src="$2" type="video/mp4"></video><br/>Link: <a href="$2" target="_blank">$2</a></div>'    
     ), $original_body);

@@ -407,3 +407,7 @@ div#hr2{
 #reaction img {
   vertical-align:middle;
 }
+
+.telegram {
+    width: fit-content;
+}
