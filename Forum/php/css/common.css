@@ -381,3 +381,8 @@ ul.tab li a:focus, .active {
   margin-bottom:16px;
 }
 
+.telegram {
+    width: fit-content;
+    margin: 0;
+}
+
