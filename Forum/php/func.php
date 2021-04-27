@@ -1240,14 +1240,14 @@ function dailymotion($body, $embed = true) {
 	return tmdb($result, $embed);
 }
 
-function twitter($body, $embed = true) {
+function twitter($body, $embed = true, $in_place = false) {
   if (!$embed) return $body;
   
   // e.g. https://twitter.com/elonmusk/status/627040381729906688 or https://twitter.com/K4rlHungus/status/772244915128598528?s=09
   $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)(?:/[^\s<\]"]*)?(?:(?:\?|&)[^\s<\]"]*)?\s*';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
-    function ($matches) use ($embed, $pattern) {
+    function ($matches) use ($embed, $pattern, $in_place) {
       // var_dump($matches);
       if(count($matches) < 5) return $matches[0];
       
@@ -1264,7 +1264,12 @@ function twitter($body, $embed = true) {
 
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
-      return trim(preg_replace('/\s+/', ' ', $ar2->html));
+      $new_body = trim(preg_replace('/\s+/', ' ', $ar2->html));
+
+      if ($in_place)
+        return $new_body;
+      else
+        return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';
 		},
 		$body
 	);
@@ -1457,46 +1462,16 @@ function tmdb_tag($body, $embed = true) {
  	return $result;
  }
  
-function gfycat($body, $embed = true) {
-  if (!$embed) return $body;
-  
-  // e.g. https://gfycat.com/BrightFragrantAmurstarfish
-  $pattern = '(?:https?:\/\/)(?:gfycat\.com\/)([^\s<\]"]*)(?:\/[^\s<\]"]*)?';
-	
-  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
-    function ($matches) use ($embed, $pattern) {
-      // var_dump($matches);
-      if(count($matches) < 4) return $matches[0];
-      
-      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
-        return $matches[0];
+function instagram($body, $embed = true, $in_place = false) {
+  global $fb_key;
 
-      $url = $matches[0];
-			$id  = $matches[1];
-
-      $obj2 = file_get_contents("https://gfycat.com/cajax/get/" . $id);
-      
-      if($obj2 === FALSE) 
-        return $url;
-
-      $ar2 = json_decode($obj2);
-      // var_dump($ar2);
-      return trim(preg_replace('/\s\s+/', ' ', $ar2->gfyItem->gifUrl)).'<br/>Direct link: <a href="'.$url.'">'.$url.'</a>';
-		},
-		$body
-	);
-  
-	return $result;
-}
-
-function instagram($body, $embed = true) {
-  if (!$embed) return $body;
+  if (!$embed || !$fb_key) return $body;
   
   // e.g. https://www.instagram.com/p/BGyE7jfF2of/
   $pattern = '(?:https?:\/\/)(?:www\.)?(?:instagram\.com\/p\/)([0-9a-zA-Z\-_]*)(?:\/[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
-    function ($matches) use ($embed, $pattern) {
+    function ($matches) use ($embed, $pattern, $in_place, $fb_key) {
       // var_dump($matches);
       if(count($matches) < 5) return $matches[0];
       
@@ -1506,14 +1481,19 @@ function instagram($body, $embed = true) {
       $url = $matches[0];
 			$id  = $matches[1];
 
-      $obj2 = file_get_contents("https://api.instagram.com/oembed/?url=" . $url);
+      $obj2 = file_get_contents("https://graph.facebook.com/v8.0/instagram_oembed?url=" . $url . '&access_token=' . $fb_key);
       
       if($obj2 === FALSE) 
         return $url;
 
       $ar2 = json_decode($obj2);
       // var_dump($ar2);         			 
-      return trim(preg_replace('/\s\s+/', ' ', $ar2->html));
+      $new_body = trim(preg_replace('/\s\s+/', ' ', $ar2->html));
+
+      if ($in_place)
+        return $new_body;
+      else
+        return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';
 		},
 		$body
 	);

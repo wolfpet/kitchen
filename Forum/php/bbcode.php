@@ -68,6 +68,20 @@ function do_bbcode($str) {
   while ($count > 0) {
     $str = preg_replace($format_search, $format_replace, $str, -1, $count);
   }
+  
+  // Process [html] tag
+  $html = false;
+  $str = preg_replace_callback("#\[html=([^\]]*?)\]\s*(.*?)\[\/html\]#is", function ($m) use (&$html) {
+      $content = base64_decode($m[2]);
+      $html = true;
+      return "<div>" . $content . "</div>";
+  }, $str);
+
+  if (!$html) {
+    // attempt to do an old-school twitter/instagram embedding instead
+    $str = instagram(twitter($str, true, true), true, true);
+  }
+
   // print('before naked called:-->'.$str.'<--');
   
   // Uncoded images & URLs   
@@ -135,6 +149,8 @@ function before_bbcode($original_body, &$has_video=null) {
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // telegram e.g. https://t.me/nexta_live/13722
     '#(?<!\[url(=|\]))(?:https?:\/\/)t\.me\/(\w*+\/[0-9]*+)#is',
+    // gfycat e.g. https://gfycat.com/BrightFragrantAmurstarfish
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?gfycat\.com\/([^\s<\]"]*)(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // youtube with no http(s) prefix
     '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?)#is',
     // MP4 videos e.g. https://s3.amazonaws.com/vipvip.ca/mLxY9XSZWRVIDEO0296.mp4
@@ -151,14 +167,13 @@ function before_bbcode($original_body, &$has_video=null) {
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="imgur"><blockquote class="imgur-embed-pub" lang="en" data-id="a/$4"><a href="//imgur.com/$4">Direct Link</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>',
     '<div class="telegram"><script async src="https://telegram.org/js/telegram-widget.js?1" data-telegram-post="$2" data-width="50%"></script></div>',    
+    // '<div class="gfycat"><iframe src="https://www.gfycat.com/ifr/$3" frameborder="0" scrolling="no" width="100%" height="100%" style="position:absolute;top:0;left:0;" allowfullscreen></iframe></div>',
+    '<div class="gfycat"><iframe src="https://www.gfycat.com/ifr/$3" frameborder="0" scrolling="no" width="640" height="346" allowfullscreen></iframe></div>',
     '<div class="youtube"><iframe type="text/html" width="480" height="320" src="'.$protocol.'://www.youtube-nocookie.com/embed/$3?enablejsapi=1&start=0&wmode=transparent&origin='.$protocol.'://' . $host . '" frameborder="0"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
     '<div class="s3"><video width=480" height="320" controls><source src="$2" type="video/mp4"></video><br/>Link: <a href="$2" target="_blank">$2</a></div>'    
     ), $original_body);    
     
   if (isset($has_video) && !is_null($has_video)) $has_video = strcmp($body, $original_body) != 0;
-
-  // Embedding Twitter and other links
-  $body = instagram(gfycat(twitter($body)));
   
   // Fix postimage.org tags
   $body = fix_postimage_tags($body);
@@ -309,6 +324,13 @@ function render_for_display($msgbody, $render_smiles=true) {
 function render_for_db($msgbody) {
 
   $msgbody = youtube( $msgbody );
+
+  // Strip user-entered [html] tags
+  $msgbody = preg_replace("#(\[html=[^\]]*?\].*?\[\/html\])#is", "", $msgbody);
+
+  // Embedding Twitter and other links
+  $msgbody = instagram(twitter($msgbody));
+
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
   
@@ -320,7 +342,10 @@ function render_for_editing($msgbody) {
   $msgbody = preg_replace_callback("#\[render=([^\]]*?)\](.*?)\[\/render\]#is", function($matches) {
     return str_replace("`5D", "]", $matches[1]);
   }, $msgbody);
-    
+
+  // process [html] tags
+  $msgbody = preg_replace("#\[html=([^\]]*?)\](.*?)\[\/html\]#is", "$1", $msgbody);
+
   return $msgbody;
 }
 function render_smileys_but_exclude_pre_tags($body) {
