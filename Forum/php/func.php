@@ -1244,7 +1244,7 @@ function kinopoisk($body, $embed = true) {
   global $host, $kinopoisk_key;
   
   // e.g. https://www.kinopoisk.ru/film/46294/
-  $pattern = '(?:https?:\/\/)?www\.kinopoisk\.ru\/film\/([0-9]+)\/?(?:\??[^\s\[<\]"]*)?';
+  $pattern = '(?:https?:\/\/)?www\.kinopoisk\.ru\/(?:film|series)\/([0-9]+)\/?(?:\??[^\s\[<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
     function ($matches) use ($embed, $host, $pattern, $kinopoisk_key) {
