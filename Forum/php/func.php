@@ -1440,7 +1440,7 @@ function instagram($body, $embed = true, $in_place = false) {
       $url = $matches[0];
 			$id  = $matches[1];
       
-      $obj2 = file_get_contents("https://graph.facebook.com/v8.0/instagram_oembed?url=" . $url . '&access_token=' . $fb_key);
+      $obj2 = file_get_contents("https://graph.facebook.com/v10.0/instagram_oembed?url=" . urlencode($url) . '&access_token=' . $fb_key);
       
       if($obj2 === FALSE) 
         return $url;
@@ -1547,8 +1547,89 @@ function tmdb($body, $embed = true) {
 		$body
 	);
   
+	return kinopoisk($result);
+}
+
+function kinopoisk($body, $embed = true) {
+  global $host, $kinopoisk_key;
+  
+  // e.g. https://www.kinopoisk.ru/film/46294/
+  $pattern = '(?:https?:\/\/)?www\.kinopoisk\.ru\/film\/([0-9]+)\/?(?:\??[^\s\[<\]"]*)?';
+	
+  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
+    function ($matches) use ($embed, $host, $pattern, $kinopoisk_key) {
+      // var_dump($matches);
+      if(count($matches) < 5) return $matches[0];
+      
+      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+        return $matches[0];
+
+      $url = $matches[0];
+			$id  = $matches[1];
+
+      $new_body = $url;
+      
+      if (isset($kinopoisk_key)) {
+        if (strcmp($kinopoisk_key, "TEST") == 0) {
+            $release_date = date_parse("1996-06-25")['year'];
+            $title = "Independence Day";
+            $thumbnail = '/bqLlWZJdhrS0knfEJRkquW7L8z2.jpg';
+        } else {
+          // add X-API-KEY header
+          $opts = [
+              "http" => [
+                  "method" => "GET",
+                  "header" => "X-API-KEY: ". $kinopoisk_key . "\r\n"
+              ]
+          ];
+
+          // DOCS: https://www.php.net/manual/en/function.stream-context-create.php
+          $context = stream_context_create($opts);
+          
+          $obj2 = file_get_contents("https://kinopoiskapiunofficial.tech/api/v2.1/films/" . $id . "?append_to_response=RATING", false, $context);
+          
+          if($obj2 === FALSE) 
+            return $url;
+
+          $ar2 = json_decode($obj2);
+          //var_dump($ar2); 
+          
+          $release_date = $ar2->data->year;
+          $title = isset($ar2->data->nameEn) ? $ar2->data->nameEn : $ar2->data->nameRu;
+          $thumbnail = $ar2->data->posterUrlPreview;
+          $tooltip = $ar2->data->description;
+          $a = array_map(function($obj) { return $obj->country; }, $ar2->data->countries);
+          $country = implode(', ', $a);
+          $a = array_map(function($obj) { return $obj->genre; }, $ar2->data->genres);
+          $genre = implode(', ', $a);
+          if (isset($ar2->rating)) {
+            $rating = !is_null($ar2->rating->ratingImdb) ? "" . $ar2->rating->ratingImdb : "" . $ar2->rating->rating;
+          }
+        }
+      }
+      if ($embed && isset($thumbnail)) {
+          $new_body = "\n\n[img=".$thumbnail."]";
+          if (isset($tooltip)) {
+            $new_body .= str_replace("\n", "", trim($tooltip)) . '[/img]';
+          }
+          if (isset($title)) {
+            $new_body .= "\n[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url] - ".$genre." ([b]" . $country . "[/b])[/color]";
+            if (isset($rating)) {
+              $new_body .= ' [color=black][b]' . $rating . '[/b][/color][size=8]/10'.(is_null($ar2->rating->ratingImdb) ? '' : ' IMDB').'[/size]';
+            }
+          } else {
+            $new_body .= "\nLink: [url]".$url."[/url]";
+          }
+          $new_body = '[render=' . $url . ']' . $new_body . '[/render]';
+      }
+      return $new_body;
+		},
+		$body
+	);
+  
 	return $result;
 }
+
 
 function is_agent_iOS() {
     global $agent;
