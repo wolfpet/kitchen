@@ -1418,7 +1418,7 @@ function tmdb($body, $embed = true) {
         }
        }
        if ($embed && isset($thumbnail)) {
-           $new_body = "\n[img=https://image.tmdb.org/t/p/w185".$thumbnail."]";
+           $new_body = "[img=https://image.tmdb.org/t/p/w185".$thumbnail."]";
            if (isset($tooltip)) {
              $new_body .= $tooltip . '[/img]';
            }           
