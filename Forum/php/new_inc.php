@@ -8,7 +8,7 @@
 <script language="JavaScript" src="<?=autoversion('js/translit.js')?>"></script>
 <script language="JavaScript" src="<?=autoversion('js/func.js')?>"></script>
 
-<form action="<?php print($root_dir . $page_post); ?>" method="post" id="msgform" name="msgform">
+<form action="<?php print($root_dir . $page_post); ?>" method="post" id="msgform" name="msgform" onSubmit="return changed(false);">
 <?php
     if (isset($msg_id) && !is_null($msg_id)) {
 ?>
@@ -50,7 +50,7 @@ if (!isset($_SERVER['HTTP_USER_AGENT']) || FALSE === strpos( $_SERVER['HTTP_USER
 ?>
 <tr>
 <td>Subject:</td>
-<td colspan="2"><input type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" maxlength="254" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' maxlength="128" size="54"/></td>
+<td colspan="2"><input type="text" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" oninput='changed(true);' onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" <?php } ?> name="subj" id="subj" tabindex="1" maxlength="254" value='<?php /*print(htmlentities($subj, HTML_ENTITIES,'UTF-8'));*/ print(/*$subj*/str_replace("'", "&#39", $subj)); ?>' maxlength="128" size="54"/></td>
 </tr>
 <!--<tr>
 <td colspan="3" align="right">
@@ -91,7 +91,7 @@ if ($keyboard) {
 </tr>
 <tr>
 <td colspan="4" width="100%">
-<textarea id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php
+<textarea id="body" name="body" <?php if ($keyboard) { ?> onfocus="javascript:RegisterField(this, true, false);" oninput='changed(true);' onkeypress="javascript:translate2(event);" onkeydown="javascript:text_OnKeydown(event);" onpaste="javascript:insertURL(this);"<?php } ?> cols="90" tabindex="2" rows="8"><?php
  if (is_null($body) && $user == '486') {  // специально для Проца!
    $body = '1';
  }

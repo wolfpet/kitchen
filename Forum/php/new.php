@@ -56,10 +56,26 @@ $thread_owner = false;
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script>
+var changes = false;
+
+function beforeunload() {
+    if (changes)
+    {
+        var message = "Are you sure you want to navigate away from this page?\n\nYou have started writing or editing a post.\n\nPress OK to continue or Cancel to stay on the current page.";
+        if (confirm(message)) return true;
+        else return false;
+    }      
+}
+function changed(flag) {
+  changes = flag;
+  return true;
+}
+</script>
 <?=add_postimage()?>
 <base target="bottom">
 </head>
-<body onload="javascript:var subj = document.getElementById('subj'); addEvent(subj,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); subj.focus();">
+<body onbeforeunload="javascript:return beforeunload();" onload="javascript:var subj = document.getElementById('subj'); addEvent(subj,'focus',function(){ this.selectionStart = this.selectionEnd = this.value.length;}); subj.focus();">
 <?php 
     if (is_null($re) || strlen($re)== 0) {
 ?><table width="95%"><tr>
