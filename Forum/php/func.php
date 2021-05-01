@@ -1603,19 +1603,19 @@ function kinopoisk($body, $embed = true) {
           $a = array_map(function($obj) { return $obj->genre; }, $ar2->data->genres);
           $genre = implode(', ', $a);
           if (isset($ar2->rating)) {
-            $rating = !is_null($ar2->rating->ratingImdb) ? "" . $ar2->rating->ratingImdb : "" . $ar2->rating->rating;
+            $rating = $ar2->rating->ratingImdb != 0 ? "" . $ar2->rating->ratingImdb : "" . $ar2->rating->rating;
           }
         }
       }
       if ($embed && isset($thumbnail)) {
-          $new_body = "\n\n[img=".$thumbnail."]";
+          $new_body = "[img=".$thumbnail."]";
           if (isset($tooltip)) {
             $new_body .= str_replace("\n", "", trim($tooltip)) . '[/img]';
           }
           if (isset($title)) {
             $new_body .= "\n[color=lightslategrey][url=".$url. "][i][b]" . $title . "[/b][/i] (".$release_date.")[/url] - ".$genre." ([b]" . $country . "[/b])[/color]";
             if (isset($rating)) {
-              $new_body .= ' [color=black][b]' . $rating . '[/b][/color][size=8]/10'.(is_null($ar2->rating->ratingImdb) ? '' : ' IMDB').'[/size]';
+              $new_body .= ' [color=black][b]' . $rating . '[/b][/color][size=8]/10'.($ar2->rating->ratingImdb == 0 ? '' : ' IMDB').'[/size]';
             }
           } else {
             $new_body .= "\nLink: [url]".$url."[/url]";
