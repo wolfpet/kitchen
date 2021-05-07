@@ -239,7 +239,7 @@ Closed |
 <a target="contents" name="<?php print($msg_id); ?>" href="<?php print($root_dir . $page_expanded); ?>?page=<?php print($msg_page . '#' .$msg_id);?>">Synchronize</a> |
 <a target="bottom" href="<?php print($root_dir . $page_thread); ?>?id=<?php print($msg_id); ?>">Thread</a>
 <?php
-  if (!is_null($user_id)) {
+  if (!is_null($user_id) && $user_id != $auth_id) {
 ?>
 |
 <a target="bottom" href="javascript:like(<?=$msg_id?>,1);"><font color="green">+</FONT></a>
