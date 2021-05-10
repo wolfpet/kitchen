@@ -185,6 +185,8 @@ require_once('custom_colors_inc.php');
   <?=implode(", ", $users_online)?><p/>
   <h3>Visited today (<?=sizeof($users_today)?>)</h3>
   <?=implode(", ", $users_today)?><p/>
+  <h3>Banned users</h3>
+  <?php require('banned_inc.php');?><p/>
   </div>
 <?php } ?>
 <?php
