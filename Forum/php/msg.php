@@ -15,7 +15,6 @@ $managed = true;
 
 ?><link rel="stylesheet" type="text/css" href="<?=autoversion('css/diff.css');?>">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
-
 <!-- overreading the custom ribbon background to light grey for this row of buttons -->
 <style>
 .ribbonIcon:hover { 
@@ -155,7 +154,7 @@ function initExpand()
   {
     document.getElementById("expandMsg").style.display='block';
     document.getElementById("restoreMsg").style.display='none';
-  }
+  }  
 }
 function resizeMe(iframe)
 {
@@ -219,20 +218,16 @@ function addToMovies(msgid)
          });
 }
 
-function loadimage(img)
-{
- setTimeout(function()
- {
-  img.style.opacity= 1;
+function loadimage(img) {
+ setTimeout( function() {
+  img.style.opacity = 1;
   var downloadingImage = new Image();
-  downloadingImage.onload = function(){
-      img.src = this.src;
-      };
-      downloadingImage.src = img.alt;
+  downloadingImage.onload = function() {
+    img.src = this.src;
+  };
+  downloadingImage.src = img.alt;
   //img.src = img.alt;
- }
- , 500);
-
+ }, 500);
 }
 
 </script>
@@ -323,9 +318,7 @@ function loadimage(img)
     else {print("Please login for full experience"); die();}
 ?>
 
-
 <!--  Interactive options - react, reply, etc -->
-
 
 <div id="FooterRibbonGroup" style="border: lightgrey; border-style: solid; border-width: 1px;" class="ribbonGroupMobile" ;="">
       <div id="FooterRibbonGroupTitle" class="ribbonGroupTitle">Message Actions</div> 
