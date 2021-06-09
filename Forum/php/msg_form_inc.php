@@ -12,6 +12,9 @@
 <h3 onclick="toggleExpand();" style="cursor: pointer" id="subject"><?php print($subject); ?>
 </h3>
 Author: <b><?php print($author . '</b>' .  ' '); 
+if (isset($auth_ignoring) && $auth_ignoring > 0) {
+  print(' <sup style="color:gray">(ignores you)</sup> ');
+}
 if (!is_null($views)) {
   print(" [$views views] " );
 }

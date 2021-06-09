@@ -325,14 +325,17 @@ function loadimage(img) {
       <div id="reactions-dropdown">
 
 <?php
-
-if (isset($reactions) && $user_id != $auth_id) {
+if (isset($reactions) && $user_id != $auth_id /*&& (!isset($auth_ignoring) || $auth_ignoring == 0)*/) {
 ?>
 <div class="reactions-dropdown">
         <span class="ribbonIcon tooltip greyHover" id="ReactIcon">
+<?php if (!isset($auth_ignoring) || $auth_ignoring == 0) { ?>
     	 <a href="javascript:;" onclick="openReactDiv();">
+<?php } else {?>
+    	 <a href="javascript:;" onclick="return;">
+<?php } ?>
     	        <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
-		    <path id="reactIcon" class="ribbonIcon" fill="#000000"  d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g>
+		    <path id="reactIcon" class="ribbonIcon" fill="<?=!isset($auth_ignoring) || $auth_ignoring == 0 ? "#000000" : "lightgrey"?>"  d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g>
 		</svg>
     	    <span style="padding-left: 20px; " class="tooltiptext">React</span>
     	 </a> 
@@ -352,7 +355,8 @@ if (isset($reactions) && $user_id != $auth_id) {
 <?php } ?>
 
 
-<?php if ( !$reply_closed ) { ?>
+<?php if ( !$reply_closed ) { 
+        if (!isset($auth_ignoring) || $auth_ignoring == 0) { ?>
 <script>
   function reply() {
     submitReply('frmReply');
@@ -366,19 +370,23 @@ if (isset($reactions) && $user_id != $auth_id) {
     f.submit();
   }  
 </script>
+<?php } ?>
   <form action="<?php print($root_dir . $page_new); ?>" method="post" style="display:inline" id="frmReply">
       <input type="hidden" name="re" value="<?php print($msg_id); ?>"/>
       <input type="hidden" name="quote" id="quote"/>
       <span class="ribbonIcon tooltip" id="ReplyIcon">
+<?php if (!isset($auth_ignoring) || $auth_ignoring == 0) { ?>
       <span style="cursor: pointer; color:blue" onmousedown="javascript:reply();">
+<?php } else {?>
+      <span style="cursor: disabled; color:red" onclick="javascript:return;">
+<?php } ?>
             <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet">
-            <g><path class="ribbonIcon" fill="#000000" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g>
+            <g><path class="ribbonIcon" fill="<?=!isset($auth_ignoring) || $auth_ignoring == 0 ? "#000000" : "lightgrey"?>" d="M7 8V5l-7 7 7 7v-3l-4-4 4-4zm6 1V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"></path></g>
             </svg>
             <span class="tooltiptext">Reply</span>
          </span> 
       </span> 
   </form>
-
 <?php } else {?>
 
 	<span class="ribbonIcon tooltip" id="ReplyIcon">
@@ -389,14 +397,19 @@ if (isset($reactions) && $user_id != $auth_id) {
 	</span> 
 
 <?php } ?>
+
   <form action="<?php print($root_dir . $page_pmail_send); ?>" method="post" style="display:inline" id="frmReplyPrivate">
       <input type="hidden" name="re" value="<?php print($msg_id); ?>"/>
       <input type="hidden" name="to" value="<?php print($author); ?>"/>
       <input type="hidden" name="quote" id="quote"/>
     <span id="PrivateIcon" class="ribbonIcon tooltip">
+<?php if (!isset($auth_ignoring) || $auth_ignoring == 0) { ?>
       <span style="cursor: pointer; color:blue" onclick="javascript:private();">
-        <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet">
-          <g> <path class="ribbonIcon" fill="#000000"  d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g>
+<?php } else {?>
+      <span style="cursor: disabled; color:red" onclick="javascript:return;">
+<?php } ?>
+        <svg class="ribbonIcon" style="cursor: no-drop; color:red" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet" >
+          <g> <path class="ribbonIcon" fill="<?=!isset($auth_ignoring) || $auth_ignoring == 0 ? "#000000" : "lightgrey"?>" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></g>
         </svg>
         <span class="tooltiptext">Reply privately</span>
       </span>
@@ -483,9 +496,6 @@ if($num_rows < 1){$pin_color='black';$pin_title="Pin Thread";}else{$pin_color='r
 	</span> 
 <?php } ?>
 
-
-
-
 <?php    if (intval($revisions) > 0) {
 ?>     
 
@@ -497,8 +507,6 @@ if($num_rows < 1){$pin_color='black';$pin_title="Pin Thread";}else{$pin_color='r
 	    <span class="tooltiptext">Revisions</span></a>
 	</span> 
 <?php } ?>
-
-
 
 <?php if ($user_id != $auth_id) { ?>
 
@@ -514,7 +522,6 @@ if($num_rows < 1){$pin_color='black';$pin_title="Pin Thread";}else{$pin_color='r
 <?php
 }
 ?>
-
 
 	<!-- Moderator -->
 <?php    if ( !is_null( $moder ) && $moder > 0 ) { ?>
