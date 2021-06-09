@@ -63,3 +63,8 @@ iframe {
 .mbutton#reply {
   float:right;
 }
+#reply-disabled {
+  float:right;
+  cursor:disabled;
+  color:red !important;
+}
