@@ -329,7 +329,7 @@ function render_for_db($msgbody) {
   $msgbody = preg_replace("#(\[html=[^\]]*?\].*?\[\/html\])#is", "", $msgbody);
 
   // Embedding Twitter and other links
-  $msgbody = instagram(twitter($msgbody));
+  $msgbody = tiktok(instagram(twitter($msgbody)));
 
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);

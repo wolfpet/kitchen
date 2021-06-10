@@ -1320,6 +1320,44 @@ function kinopoisk($body, $embed = true) {
 	return tmdb($result, $embed);
 }
 
+function tiktok($body, $embed = true, $in_place = false) {
+  global $host;
+  
+  // e.g. https://www.tiktok.com/@kabaniushi/video/6942145594857131270?lang=en&is_copy_url=1&is_from_webapp=v1
+  $pattern = '(?:https?:\/\/)?www\.tiktok\.com\/\@(?:\w+)\/video\/([0-9]+)(?:\??[^\s\[<\]"]*)?';
+	
+  $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
+    function ($matches) use ($embed, $host, $pattern) {
+      // var_dump($matches);
+      if(count($matches) < 5) return $matches[0];
+      
+      if(!preg_match('#'.$pattern.'#i', $matches[0], $matches)) 
+        return $matches[0];
+
+      $url = $matches[0];
+			$id  = $matches[1];
+
+      $obj2 = file_get_contents("https://www.tiktok.com/oembed?url=".$url);
+      
+      if($obj2 === FALSE) 
+        return $url;
+
+      $ar2 = json_decode($obj2);
+      // var_dump($ar2); 
+      
+      $new_body = trim(preg_replace('/\s\s+/', ' ', $ar2->html));
+      
+      if ($in_place)
+        return $new_body;
+      else
+        return '[html=' . $url . ']' . base64_encode($new_body) . '[/html]';      
+		},
+		$body
+	);
+  
+	return $result;
+}
+
 function twitter($body, $embed = true, $in_place = false) {
   if (!$embed) return $body;
   
