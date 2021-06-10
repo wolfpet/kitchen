@@ -180,7 +180,7 @@ function before_bbcode($original_body, &$has_video=null) {
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?i\.imgur\.com\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // gfycat e.g. https://gfycat.com/BrightFragrantAmurstarfish
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?gfycat\.com\/([^\s<\]"]*+)(?:(?:\?|&)[^\s<\]"]*+)?)#is',
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?gfycat\.com\/([^\s<\]"]*+)(?:(?:\?|&)[^\s<\]"]*+)?)#is',   
     // telegram e.g. https://t.me/nexta_live/13722
     '#(?<!\[url(=|\]))(?:https?:\/\/)t\.me\/(\w*+\/[0-9]*+)#is',
     // youtube with no http(s) prefix
@@ -407,7 +407,7 @@ function render_for_db($msgbody) {
   $msgbody = preg_replace("#(\[html=[^\]]*?\].*?\[\/html\])#is", "", $msgbody);
   
   // Embedding Twitter and other links
-  $msgbody = instagram(twitter($msgbody));
+  $msgbody = tiktok(instagram(twitter($msgbody)));
   
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
