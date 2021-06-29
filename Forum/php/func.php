@@ -1655,7 +1655,7 @@ function tiktok($body, $embed = true, $in_place = false) {
       $ar2 = json_decode($obj2);
       // var_dump($ar2); 
       
-      $new_body = trim(preg_replace('/\s\s+/', ' ', $ar2->html));
+      $new_body = trim( preg_replace( array('/\s\s+/', '/style=\"/'), array(' ', 'style="margin:9px;'), $ar2->html));
       
       if ($in_place)
         return $new_body;
