@@ -18,14 +18,14 @@ require_once('html_head_inc.php');
   print("Mode: " . $mode."<br/>");
   while ($row = mysql_fetch_assoc($result)) {
     $body = $row['body'];
-    print("Original:<br/>".$body);
+    print("Original:<br/>".nl2br($body));
     
     $body = render_for_editing($body);
-    print("<br/><br/><b>Restored:</b><br/>".$body);
+    print("<br/><br/><b>Restored:</b><br/>".nl2br($body));
     
     // new content
     $body = render_for_db($body);
-    print("<br/><br/><b>Restored:</b><br/>".$body);
+    print("<br/><br/><b>To be saved:</b><br/>".nl2br($body));
     
     // save here
     if (isset($mode) && $mode == "save") {

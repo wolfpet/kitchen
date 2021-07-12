@@ -1,6 +1,6 @@
 <?php
 
-function do_bbcode($str, $auth_id, $msg_id) {
+function do_bbcode($str, $auth_id, $msg_id, $link_renderer) {
 
   // The array of regex patterns to look for
   $format_search = array(
@@ -89,7 +89,7 @@ function do_bbcode($str, $auth_id, $msg_id) {
    //print('before naked called:-->'.$str.'<--');
   
   // Uncoded images & URLs   
-  return bbcode_naked_urls(bbcode_naked_images($str, $auth_id, $msg_id));
+  return bbcode_naked_urls(bbcode_naked_images($str), $link_renderer);
 }
 
 // ================ Handling of URLs and Images outside of bb code ==========================
@@ -122,11 +122,11 @@ function bbcode_naked_images($str) {
   return $str;
 }
 
-function bbcode_naked_urls($str) {
+function bbcode_naked_urls($str, $link_renderer) {
   global $host;
   
   // render URLs to forum messages
-  $str = preg_replace_callback('#'.unless_in_quotes('https?://'.$host.'/msg.php\?id=[0-9]+').'#is', // unprocessed URLs(i.e. without quotes around them)
+  $str = preg_replace_callback('#'.unless_in_quotes('https?://'.$host.'\/msg.php\?id=[0-9]+').'#is', // unprocessed URLs(i.e. without quotes around them)
     function ($m) {
       if(empty($m[1])) return $m[0];
 					else {
@@ -144,10 +144,10 @@ function bbcode_naked_urls($str) {
 
   // '[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]'
   return preg_replace_callback('#'.unless_in_quotes('[[:alpha:]]+://[^<>[:space:]\"]+').'#is', // unprocessed URLs(i.e. without quotes around them)
-    function ($m) {
+    function ($m) use ($link_renderer) {
       if(empty($m[1])) return $m[0];
 					else {
-						return '<a target="_blank" href="' . $m[1] . '">' . $m[1] . '</a>';
+						return $link_renderer($m[1]); 
 					     }
     }, $str);
 }
@@ -357,11 +357,18 @@ function getPicTags($str, $startDelimiter, $endDelimiter) {
 /**
  * Renderers
  */
-function render_for_display($msgbody, $render_smiles=true, $auth_name, $auth_id, $msg_id) {
+function render_for_display($msgbody, $render_smiles=true, $auth_name, $auth_id, $msg_id, $link_renderer) {
 
   $msgbody = preg_replace("#\[render=([^\]]*?)\]\s*(.*?)\[\/render\]#is", "[div]$2[/div]", $msgbody);
 
-  $msgbody = render_but_exclude_tags($msgbody, function($body) use ($render_smiles) {
+  if (!isset($link_renderer)) {
+    // echo " using default link renderer ";
+    $link_renderer = 'default_link_renderer';
+  } else {
+    // echo " using custom link renderer ";
+  }
+
+  $msgbody = render_but_exclude_tags($msgbody, function($body) use ($render_smiles, $link_renderer) {
     global $smileys;
     global $auth_id;
     global $msg_id;
@@ -377,10 +384,11 @@ function render_for_display($msgbody, $render_smiles=true, $auth_name, $auth_id,
     $body = htmlentities($body, HTML_ENTITIES,'UTF-8');
 
     if ($render_smiles) {
-      $body = render_smileys_step2($body); 
+      $body = render_smileys_step2($body);
     }
+    
 	  $body = before_bbcode($body);
-	  $body = do_bbcode($body, $auth_id, $msg_id);
+	  $body = do_bbcode($body, $auth_id, $msg_id, $link_renderer);
 	  $body = nl2br($body);
 	  $body = after_bbcode($body);
 	  $body = grammar_nazi($body);
@@ -407,12 +415,39 @@ function render_for_db($msgbody) {
   $msgbody = preg_replace("#(\[html=[^\]]*?\].*?\[\/html\])#is", "", $msgbody);
   
   // Embedding Twitter and other links
-  $msgbody = tiktok(instagram(twitter($msgbody)));
+  $msgbody = decorate_links(tiktok(instagram(twitter($msgbody))));
   
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
   
   return $msgbody;
+}
+
+function decorate_links($msgbody) {
+  // discover links that are to be rendered
+  $links = array();
+  // echo "decorate_links called ";
+
+  render_for_display($msgbody, false, "", "111", "111", function($url) use (&$links) {
+    array_push($links, $url);
+  });
+  //echo " links found: "; print_r($links);
+  
+  // replace links one by one
+  foreach ($links as $url) {
+    $link = decorate_link($url);
+    if ($link !== false) {
+      // replace url with a decorated link
+      $msgbody = render_but_exclude_tags($msgbody, function($body1) use ($url, $link) {
+        return render_but_exclude_tags($body1, function($body) use ($url, $link) {
+          return str_replace($url, $link, $body); 
+        }, '[code]','[code]');
+      }, '[url]','[url]');
+    }
+  }
+  
+  // echo $msgbody;
+  return $msgbody;  
 }
 
 function render_for_editing($msgbody) {

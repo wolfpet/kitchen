@@ -1630,6 +1630,124 @@ function kinopoisk($body, $embed = true) {
 	return $result;
 }
 
+function default_link_renderer($url) {
+  return '<a target="_blank" href="' . $url . '">' . $url . '</a>';
+}
+
+  /*
+    <meta property="og:title" content="В сети опубликовали ответы Путина на прямой линии 30 июня" />
+    <meta property="og:url" content="https://panorama.wtf/news/v-seti-opublikovali-otvety-putina-na-pryamoj-linii-30-iyunya" />
+    <meta property="og:site_name" content="Панорама" />
+    <meta property="og:image" content="https://panorama.pub/storage/c3/a0/586b2b4ee952bab3ecc96af90d26/previews/8049-w1200.jpg" />        
+  */
+function og($html, $tag, $prefix = '<meta property="og:') {
+    $tag1 = $prefix . $tag;
+    // echo "<br/>looking for [" . htmlentities($tag1) . "] in " . mb_strlen($html) . " characters<br/>";
+  
+    $pos = mb_stripos($html, $tag1);
+    if ($pos !== false) {
+      // echo ' found at ' . $pos;
+      $end = mb_strpos($html, '/>', $pos + 20);
+      $begin = mb_stripos($html, 'content="', $pos + 20);
+      if ($begin !== false && $begin < $end) {
+        // echo " getting " . $tag." ";
+        $start = $begin + 9;
+        $result = mb_substr($html, $start, mb_strpos($html, "\"", $start + 1) - $start);
+        // echo "[" . htmlentities($result) . "] ";
+        return $result;
+      }
+    }
+    return false;
+}
+
+function decorate_link($url) {
+  // echo "?";
+  
+  $page = file_get_contents($url, false, null, 0, 5000);
+  
+  $headers = $http_response_header;
+  // print_r($http_response_header);
+
+  if (is_array($headers)) {
+    // echo "!";
+  
+    // check if the content type is HTML
+    $html = false;
+    foreach ($headers as $header) {
+      $content_type = stripos($header, 'Content-Type');
+      if ($content_type !== false && stripos($header, 'text/html', $content_type + 12) !== false) {
+        $html = true;
+        break;
+      }
+    }
+    // if html, fetch it
+    if ($html) {
+      // echo "#";
+      if ($page !== FALSE) {
+        // echo "@";
+        // parse it and get HEAD element
+        $end = mb_stripos($page, '<body>');
+        // echo $end . ' index of body \n';
+        
+        if ($end !== false) {
+          $head = mb_substr($page, 0, $end);
+        } else {
+          $head = $page;
+        }
+        
+        // echo htmlentities($head);
+        
+        // see if there are og elements
+        $title = og($head, "title");
+        $image = og($head, "image");
+        
+        if ($image === false) {
+          // another way to get an image e.g. <meta itemprop="image" content="https://panorama.pub/storage/c3/a0/586b2b4ee952bab3ecc96af90d26/previews/8049-w1200.jpg" />
+          $image = og($head, "image", '<meta itemprop="');
+        }
+        
+        if ($title === false) {
+          // <meta name="description" content="
+          $title = og($head, "description", '<meta name="');
+        }
+        
+        if ($title === false) {
+          // check if there is title e.g. <title>В сети опубликовали ответы Путина на прямой линии 30 июня</title>
+          $pos = mb_stripos($head, '<title>');
+          if ($pos !== false) {
+            $end = mb_stripos($head, "</title>", $pos + 7);
+            if ($end !== false && $end > $pos) {
+              $title = mb_substr($head, $pos + 7, $end - ($pos +7));
+            }
+          }
+        }
+        
+        if ($title) {
+          $new_body = "";
+          
+          if ($image) {
+            $new_body .= "[img=".$image."]\n";
+          }
+          
+          $new_body .= "[url=".$url. "][i][b]" . $title . "[/b][/i][/url]";
+          
+          return '[render=' . $url . ']' . $new_body . '[/render]';
+        }
+      }
+    } else {
+      // echo "$url (this is not html! ignore)";
+    }
+    // echo "+";
+  } else {
+    // echo "-";
+  }
+  
+  // echo "=";
+
+	return false;
+}
+
+
 function tiktok($body, $embed = true, $in_place = false) {
   global $host;
   
@@ -1637,7 +1755,7 @@ function tiktok($body, $embed = true, $in_place = false) {
   $pattern = '(?:https?:\/\/)?www\.tiktok\.com\/\@(?:\w+)\/video\/([0-9]+)(?:\??[^\s\[<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
-    function ($matches) use ($embed, $host, $pattern) {
+    function ($matches) use ($embed, $host, $pattern, $in_place) {
       // var_dump($matches);
       if(count($matches) < 5) return $matches[0];
       
