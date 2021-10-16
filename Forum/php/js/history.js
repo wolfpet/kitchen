@@ -99,7 +99,7 @@ historyData = {
             + '<input id="play" class="playbutton'  + (historyData.paused ? " hidden" : "") + '" type="image" src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Oxygen480-actions-media-playback-start.svg" onclick="historyData.click(this);" focusable="false"></input>'
             + '<input id="pause" class="playbutton' + (historyData.paused ? "" : " hidden") + '" type="image" src="https://upload.wikimedia.org/wikipedia/commons/8/83/Oxygen480-actions-media-playback-pause.svg" onclick="historyData.click(this);" focusable="false"></input>'
             + '<input id="skipforward" class="playbutton" type="image" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Oxygen480-actions-media-skip-forward.svg" onclick="historyData.click(this);" focusable="false"></input>'
-            + '</div><div>' + event.html +"</div><p/>";
+            + '</div><div>' + event.no_year_html +"</div><p/>";
           }
         }
         div.innerHTML = text;
