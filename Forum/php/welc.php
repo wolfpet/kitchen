@@ -6,6 +6,7 @@
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/disc2.css')?>">
 <link rel="stylesheet" type="text/css" href="<?=autoversion('css/common.css')?>">
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
 <script src="<?=autoversion('js/history.js')?>"></script>
 <script>
 function loadimage(img)
