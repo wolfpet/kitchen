@@ -270,34 +270,61 @@ function addCounter(text, count, bold, pad)
     return text;
 }
 
+function divMode() {
+   return document.getElementById("_contents");
+}
+
 function updateThreads(data)
 {
+  console.log("updateThreads(" + data.count + ")");
+  
   for(i=data.count-1; i>=0; i--)
     {
       var id = data.messages[i].id;
       //check if such title has already been rendered
-      if(contents.document.getElementById(id)!=null)continue;
+      if (divMode()) {
+        if(document.getElementById(id)!=null) {
+          console.log("thread " + id + " already rendered");
+          continue;
+        }
+      } else {
+        if(contents.document.getElementById(id)!=null) {
+          console.log("thread " + id + " already rendered");
+          continue;
+        }
+      }
       //doesn't exist. Render!
       var parentId = data.messages[i].parent;
-      var thread = contents.document.getElementById('sp_' + parentId);
-      if(thread == null)continue; //parent is outside the loaded threads, Skip.
+      var thread = divMode() ? document.getElementById('sp_' + parentId) : contents.document.getElementById('sp_' + parentId);
+      if(thread == null) { 
+        console.log("parent thread " + parentId + " not part of the document");
+        continue; //parent is outside the loaded threads, Skip.
+      }
       var authorName = data.messages[i].author.name;
       var authorId= data.messages[i].author.id;
       var subj = data.messages[i].subject;
       var views = data.messages[i].views;
       var created = data.messages[i].created;
       var dl = document.createElement('dl');
-      dl.innerHTML='<dd><span id="sp_'+id+'"><img border="0" src="images/dn.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="'+id+'" name="'+id+'" target="bottom" onclick="selectMsg(\''+id+'\');" href="/msg.php?id='+id+'">'+subj+'</a> <b><a class="user_link" href="/byuser.php?author_id='+authorId+'" target="contents">'+authorName+'</a></b> ['+views+' views] '+created+'</span><br></dd>';
-      var newHtml = '<span id="sp_'+id+'"><img border="0" src="images/dn.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="'+id+'" name="'+id+'" target="bottom" onclick="selectMsg(\''+id+'\');" href="/msg.php?id='+id+'">'+subj+'</a> <b><a class="user_link" href="/byuser.php?author_id='+authorId+'" target="contents">'+authorName+'</a></b> ['+views+' views] '+created+'</span><br>';
+      var newHtml =    '<span id="sp_'+id+'"><img border="0" src="images/dn.gif" width="16" height="16" alt="*" align="top" style="padding:0px 0px 3px 0px;"> <a id="'+id+'" name="'+id+'" target="bottom" onclick="selectMsg(\''+id+'\');" href="/msg.php?id='+id+'">'+subj+'</a> <b><a class="user_link" href="/byuser.php?author_id='+authorId+'" target="contents">'+authorName+'</a></b> ['+views+' views] '+created+'</span>';
+      dl.innerHTML='<dd>' + newHtml + '</dd>';
       if(parentId==0)
       {
         //new thread
-        var threadsDiv = contents.document.getElementById('threads');
+        var threadsDiv = divMode() ? document.getElementById('threads') : contents.document.getElementById('threads');
         threadsDiv.insertBefore(dl, threadsDiv.firstChild);
       }
       else
       {
+         // find next br & attach after it
+         var br = thread.nextSibling;
+         if (br) {
+             if (br.tagName == "BR") {
+               thread = br;
+             }
+         }
          thread.outerHTML  += '<dl><dd>' + newHtml + '</dl></dd>';
+         
       }
     }
 }

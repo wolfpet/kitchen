@@ -347,7 +347,7 @@ if (isset($reactions) && $user_id != $auth_id /*&& (!isset($auth_ignoring) || $a
   $icons = '';
   foreach (array_keys($reactions) as $key) {
     if (strlen($icons) > 0) $icons .= '&nbsp;';
-    $icons .= '<a href="javascript:react('.$msg_id.',\''.$key.'\');"><img src="'.$root_dir.'images/reactions/'.$key.'.gif" alt="'.$key.'" title="'.$key.'"/></a>';
+    $icons .= '<a href="javascript:;"><img src="'.$root_dir.'images/reactions/'.$key.'.gif" alt="'.$key.'" title="'.$key.'" onclick="react('.$msg_id.',\''.$key.'\');"/></a>';
   }
   print($icons);
 ?></div></div>
@@ -371,7 +371,7 @@ if (isset($reactions) && $user_id != $auth_id /*&& (!isset($auth_ignoring) || $a
   }  
 </script>
 <?php } ?>
-  <form action="<?php print($root_dir . $page_new); ?>" method="post" style="display:inline" id="frmReply">
+  <form action="<?php print($root_dir . $page_new); ?>" method="post" style="display:inline" id="frmReply" target="bottom">
       <input type="hidden" name="re" value="<?php print($msg_id); ?>"/>
       <input type="hidden" name="quote" id="quote"/>
       <span class="ribbonIcon tooltip" id="ReplyIcon">
@@ -561,9 +561,9 @@ function showMod()
         <span id="msgModCensor" class="ribbonIcon tooltip" style="display: none">
 <?php        
         if ( $msg_status == 3 ) {
-            print( '<a href="' . $root_dir . 'modcensor.php' . '?action=uncensor&id=' . $msg_id . '">' );
+            print( '<a href="' . $root_dir . 'modcensor.php' . '?action=uncensor&id=' . $msg_id . '" target="bottom">' );
         } else {
-            print( '<a href="' . $root_dir . 'modcensor.php' . '?action=censor&id=' . $msg_id . '">' );
+            print( '<a href="' . $root_dir . 'modcensor.php' . '?action=censor&id=' . $msg_id . '" target="bottom">' );
         }
 ?>
 	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
@@ -584,9 +584,9 @@ function showMod()
         <span id="msgModDel" class="ribbonIcon tooltip" style="display: none">
 <?php
         if ( $msg_status == 2 ) {
-            print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=undelete&id=' . $msg_id . '">' );
+            print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=undelete&id=' . $msg_id . '" target="bottom">' );
         } else {
-            print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=delete&id=' . $msg_id . '">' );
+            print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=delete&id=' . $msg_id . '" target="bottom">' );
         }
 ?>
         
@@ -607,9 +607,9 @@ function showMod()
         <span id="msgModCloseThread" class="ribbonIcon tooltip" style="display: none">
 <?php
             if ( $thread_closed ) {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openthread&id=' . $msg_id . '">' );
+                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openthread&id=' . $msg_id . '" target="bottom">' );
             } else {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closethread&id=' . $msg_id . '">' );
+                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closethread&id=' . $msg_id . '" target="bottom">' );
             }
 
 ?>        
@@ -631,9 +631,9 @@ function showMod()
         <span id="msgModCloseMsg" class="ribbonIcon tooltip" style="display: none">
 <?php
             if ( $post_closed ) {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openpost&id=' . $msg_id . '">' );
+                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=openpost&id=' . $msg_id . '" target="bottom">' );
             } else {
-                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closepost&id=' . $msg_id . '">' );
+                print( ' <a href="' . $root_dir . 'modcensor.php' . '?action=closepost&id=' . $msg_id . '" target="bottom">' );
             }
 ?>
 	    <svg class="ribbonIcon greyHover" viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>

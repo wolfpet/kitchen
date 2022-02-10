@@ -6,9 +6,13 @@ require_once('html_head_inc.php');
 ?>
 <html>
 <script>
-var itm = parent.bottom.document.getElementById('msgform');
+var itm = parent.document.getElementById('msgform');
+if (itm) {
+  console.log("found msgform");
+} else {
+  itm = parent.bottom.document.getElementById('msgform');
+}
 var cln = itm.cloneNode(true);
-
 
 document.addEventListener("DOMContentLoaded", function(event) {
 document.getElementById("form_clone").appendChild(cln);

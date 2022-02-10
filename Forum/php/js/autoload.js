@@ -61,32 +61,41 @@ function append_content(div, html) {
   }
 }
 
-function scroll2Top2(element){ 
-  var ele = document.getElementById(element);
-  if (ele != null) {
-    $('#'+element).scrollTop(0);
+function scroll2Top2(){ 
+  if ( $('#_contents').length ) {
+    $('#_contents').scrollTop(0);
   } else {
-    console.log("Cannot scroll to " + element);
+    $('#contents', top.document).contents().scrollTop(0);
   }
   return false;
 }    
 
 function load_more() {
+  // console.log("load_more called");
+  
 	var div = document.getElementById("threads");
   var parent = document.getElementById("threads_body");
+  var iframes = parent != null;
+  
+  if (!iframes) {
+    parent = document.getElementById("_contents");
+  }
+  
   if (parent == null || div == null) {
     console.log("Something is not right: threads or html body element is not found");
     return;
   }
-	var contentHeight = parent.offsetHeight;
-	var yOffset = window.pageYOffset; 
-	var y = yOffset + window.innerHeight;
+	var contentHeight = iframes ? parent.offsetHeight : parent.scrollHeight;
+	var y = iframes ? window.pageYOffset + window.innerHeight : parent.scrollTop + parent.offsetHeight;
+  // console.log("scroller y=" + y + " contentHeight=" + contentHeight + " " + parent.scrollTop);
+
 	if ( y >= contentHeight - 300) {
+    console.log("load_more thinks we need to load more and called load_threads");
 		load_threads(div, max_id, limit);
     if (typeof instrument !== 'undefined') {
       instrument("#" + div.id);
     }
-	}
+  }
   var scroller = document.getElementById("scroll2top");
   if (scroller != null) {
     var rect = div.getBoundingClientRect();
@@ -99,13 +108,20 @@ function load_more() {
   }
 }
 
-if (parent.load_more) {
+if (document.getElementById("_contents")) {
+  console.log("div mode detected");
+  document.getElementById("_contents").onscroll = load_more;
+} else if (parent.load_more) {
   // iOS
+  console.log("iOS needs to ask whether to load more");
+  
   setInterval(function(){ 
     // ask parent script to see if we need to load more threads
     if (parent.load_more()) {
+      console.log("iOS needs to ask to load more");
       var div = document.getElementById("threads");
       if (div != null) {
+        console.log("iOS calls load_threads");
         load_threads(div, max_id, limit);
       }
     }

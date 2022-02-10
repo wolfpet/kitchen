@@ -3,6 +3,11 @@
 require_once('head_inc.php');
 
 function boldmoder($text, $rec, $list) {
+  global $covid_users;
+  
+  if (isset($covid_users) && array_key_exists($text, $covid_users)) {
+    $text .= '<img src="images/medal-medal-svgrepo-com.svg" style="width:7pt;fill:orange;valign:top;"/>';
+  }
   if ($rec['moder']) 
     if (isset($list) && $list)
       return $text . '<span style="color:green;">*</span>';

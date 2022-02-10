@@ -7,7 +7,7 @@ require_once('mysql_log.php');
 //temp woraround for iOS. Ugly, I know. Need time to figure out what to do here
 if(is_apple()) {
   //redirect to top_apple
-  $url='top_apple.php';
+  $url='top2.php';
   echo '<META HTTP-EQUIV=REFRESH CONTENT="1; '.$url.'">';
   die();
 }

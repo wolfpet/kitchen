@@ -408,7 +408,7 @@ function openProfile()
 				</g></svg>
 				<span class="tooltiptext">Refresh</span></a>
 			</span> 
-			<span id="Collapse" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications();contents.toggleAll();">
+			<span id="Collapse" class="ribbonIcon tooltip"><a target="contents" onclick="closeNotifications(); document.getElementById('_contents') ? toggleAll() : contents.toggleAll();">
 				<svg class="ribbonIcon"  viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g><path fill="<?=$ribbonColor ?>" d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12.17c-.74 0-1.33.6-1.33 1.33s.6 1.33 1.33 1.33 1.33-.6 1.33-1.33-.59-1.33-1.33-1.33zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"></path></g></svg>
 				<span id="toggle" class="tooltiptext">Collapse</span></a>
 			</span> 
@@ -623,7 +623,7 @@ function openProfile()
 				<span class="tooltiptext">Settings</span></a>
 			</span> 
       <?php
-      $url = $root_dir . $cur_page . '?logout=true';
+      $url = '?logout=true';
       if (!is_null( $author_id ) ) { 
         $url .= '&author_id=' . $author_id;
       }   
@@ -771,7 +771,7 @@ function openProfile()
 	    <div id="hamburgerRefresh" class="hamburgerItem">Refresh Threads</div>
 	</div>
     </li>
-    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu();contents.toggleAll();">
+    <li class="notificationLi" style="display: block;" id="refreshLi" onclick="closeMenu(); document.getElementById('_contents') ? toggleAll() : contents.toggleAll();">
 	<div style="padding: 6px 30px 5px 12px;">
 	    <div class="notificationIcon"><svg viewBox="-3 0 30 25" preserveAspectRatio="xMidYMid meet"><g>
 	    <path fill="grey" d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12.17c-.74 0-1.33.6-1.33 1.33s.6 1.33 1.33 1.33 1.33-.6 1.33-1.33-.59-1.33-1.33-1.33zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"></path>

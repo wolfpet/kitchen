@@ -95,6 +95,7 @@ function openPicInGallery(img, userId, messageId)
     var currentPic = [img.currentSrc, userId, messageId];
     $.post("gallery_api.php", {'get_imgUrls_and_Posts' : userId}, function(data,status)
     {
+        console.log(data);
                     galleryImages = $.map(data, function(value, index) {
                     return [value];
 		    });
@@ -201,12 +202,35 @@ function openOverlay(name)
     //message preview
     if(name=='preview')
     {
-	//check if subject is specified
-	if(bottom.document.getElementById('subj').value=='')
-	{
-	    bottom.document.getElementById("subj_div").style.color='red';
-	    return;
-	}
+      /*	if (bottom.document) {
+    if (bottom.document.getElementById('subj').value=='')
+    {
+        bottom.document.getElementById("subj_div").style.color='red';
+        return;
+    }
+  } else {
+    if (document.getElementById('subj').value=='')
+    {
+        document.getElementById("subj_div").style.color='red';
+        return;
+    }    
+  }
+   */
+    	//check if subject is specified
+      var subj = document.getElementById("subj");
+      if (subj) {
+        if (subj.value=='')
+        {
+            document.getElementById("subj_div").style.color='red';
+            return;
+        }    
+      } else {
+        if(bottom.document.getElementById('subj').value=='')
+        {
+            bottom.document.getElementById("subj_div").style.color='red';
+            return;
+        }
+      }
 	renderOverlayPanels("Message Preview")
 	document.getElementById("overley_iframe").src="overlay_post_form_clone.php";
     }

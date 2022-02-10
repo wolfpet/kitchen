@@ -235,7 +235,7 @@ function autoload_threads($last_thread, $limit) {?>
   <script language="JavaScript">
     set_max_id(<?=$last_thread?>, "<?=$limit?>");    
   </script>
-  <div id="scroll2top"><a href="#" target="contents" onclick="javascript:scroll2Top2('threads_body');"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;"></a></div>
+  <div id="scroll2top"><a href="javascript:;"><img border=0 src="images/up.png" alt="Up" title="Back to top" onmouseout="this.style.opacity=0.5;" style="opacity:0.5" onmouseover="this.style.opacity=1;" onclick="javascript:scroll2Top2('threads_body');"/></a></div>
   <div id="loading" style="color:gray;position:fixed;left: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;text-align: right;display:none">Loading...&nbsp;</div><?php 
 }
 
@@ -387,6 +387,7 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
   global $ignored;
   
   global $user;
+  global $covid_users;
 
   $b_start = '';
   $b_end = '';
@@ -447,7 +448,10 @@ function print_line($row, $collapsed=false, $add_arrow=false, $add_icon=true, $i
   if ( $banned === true ) {
       $enc_user = '<font color="grey">' . $enc_user . '</font>';
   }
-  $enc_user = '<a class="user_link" href="' . $root_dir . $page_byuser . '?author_id=' . $row['user_id'] . '" target="contents">' . $enc_user . '</a>';  
+  $enc_user = '<a class="user_link" href="' . $root_dir . $page_byuser . '?author_id=' . $row['user_id'] . '" target="contents">' . $enc_user . '</a>';
+  if (isset($covid_users) && array_key_exists($row['username'], $covid_users)) {
+    $enc_user .= '<img src="images/medal-medal-svgrepo-com.svg" style="width:7pt;fill:orange;valign:top;"/>';
+  }
   if ($row['status'] == 2 ) {
       $line = ($indent ? '&nbsp;' : '') . '<span id="sp_'.$row['msg_id'].'">';
       if ($add_icon) {
@@ -1388,8 +1392,8 @@ function twitter($body, $embed = true, $in_place = false) {
   if (!$embed) return $body;
   
   // e.g. https://twitter.com/elonmusk/status/627040381729906688 or https://twitter.com/K4rlHungus/status/772244915128598528?s=09
-  $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)(?:/[^\s<\]"]*)?(?:(?:\?|&)[^\s<\]"]*)?\s*';
-	
+  $pattern = '(?:https?://)(?:mobile\.)?(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)(?:/[^\s<\]"]*)?(?:(?:\?|&)[^\s<\]"]*)?\s*';	
+
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
     function ($matches) use ($embed, $pattern, $in_place) {
       // var_dump($matches);
@@ -1665,6 +1669,8 @@ function decorate_link($url) {
   
   $page = file_get_contents($url, false, null, 0, 5000);
   
+  if (!isset($http_response_header)) return false;
+  
   $headers = $http_response_header;
   // print_r($http_response_header);
 
@@ -1700,6 +1706,8 @@ function decorate_link($url) {
         // see if there are og elements
         $title = og($head, "title");
         $image = og($head, "image");
+
+        // $title = html_entity_decode($title);
         
         if ($image === false) {
           // another way to get an image e.g. <meta itemprop="image" content="https://panorama.pub/storage/c3/a0/586b2b4ee952bab3ecc96af90d26/previews/8049-w1200.jpg" />
@@ -1718,6 +1726,8 @@ function decorate_link($url) {
             $end = mb_stripos($head, "</title>", $pos + 7);
             if ($end !== false && $end > $pos) {
               $title = mb_substr($head, $pos + 7, $end - ($pos +7));
+              // could be HTML-encoded
+              // $title = html_entity_decode($title);
             }
           }
         }
@@ -1728,6 +1738,8 @@ function decorate_link($url) {
           if ($image) {
             $new_body .= "[img=".$image."]\n";
           }
+          
+          // echo 'Got title: ' . $title;
           
           $new_body .= "[url=".$url. "][i][b]" . $title . "[/b][/i][/url]";
           

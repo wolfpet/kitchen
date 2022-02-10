@@ -47,7 +47,7 @@ Username: <input type="text" id="user" name="user" maxlength="64" size="16" valu
 </td></tr><tr><td align="right">-->
 <?=isset($safe_mode) && $safe_mode != 0 ? "<img src='images/small_green_dot.png' valign='center' style='margin-right:5px; background:transparent;' title='Safe Mode'/>" : ""?>
 [ <a href="<?php 
-    $url = $root_dir . $cur_page . '?logout=true';
+    $url = '?logout=true';
     if (!is_null( $author_id ) ) { 
         $url .= '&author_id=' . $author_id;
     }   

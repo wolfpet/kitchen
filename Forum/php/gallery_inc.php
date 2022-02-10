@@ -11,6 +11,7 @@ div.gallery_container {
     max-height: 100vh;
     height: 100vh;
     display: none;
+    overflow: auto;
 }
         
 header {
@@ -50,11 +51,11 @@ div.gallery_exit_btn_div:hover #gallery_exit_btn { fill: #fff; }
 .column-right:hover #gallery_nav_right {fill: white;}
 .column-center{ display: inline-block; width: 88%; height: 100%; }
 
-img {
+img#currentPhoto {
     background: black;
     vertical-align: middle;
-    max-height: 80vh;
-    max-width: 88vw;
+    max-width: 100vh;
+    max-height: 100vh;
 }
 </style>
 

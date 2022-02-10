@@ -51,7 +51,7 @@ div.overlay_exit_btn_div:hover #overlay_exit_btn { fill: #fff; }
 .column-right:hover #overlay_nav_right {fill: white;}
 .column-center{ display: inline-block; width: 88%; height: 100%; }
 
-img {
+.overlay_container div .overlay_column_center img {
     background: black;
     vertical-align: middle;
     max-height: 80vh;

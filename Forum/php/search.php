@@ -17,7 +17,7 @@ require_once('custom_colors_inc.php');
         print('<B><font color="red">' . $err . '</font></B><BR>');
     }
 ?>
-<form action="<?php print($root_dir . $page_do_search); ?>" method="post" >
+<form action="<?php print($root_dir . $page_do_search); ?>" method="post" target="contents">
 <?php 
 if (!is_null($mode)) { ?>
 <input type="hidden" name="mode" id="mode" value="<?=$mode?>"/><?php 

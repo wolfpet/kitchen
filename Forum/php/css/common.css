@@ -179,12 +179,11 @@ em {
     white-space:nowrap;
 }
 
-
 /* Scroll2Top */
 #scroll2top {
     position: fixed;
-    top: 0.6em !important;
-    left: 0.3em !important;
+    top: 0.6em;
+    left: 0em !important;
     display:none;
 }
 #scroll2top a {
@@ -382,7 +381,7 @@ div#hr2{
 
 .playbutton {
   margin-left: 16px;
-  height: 4%;
+  height: 16pt;
   -webkit-user-select: none;  
   -moz-user-select: none;    
   -ms-user-select: none;      
@@ -410,4 +409,5 @@ div#hr2{
 
 .telegram {
     width: fit-content;
+    margin: 0;
 }
