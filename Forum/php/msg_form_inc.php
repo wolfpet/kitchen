@@ -2,6 +2,11 @@
 /*$Id: msg_form_inc.php 816 2012-10-21 01:19:09Z dmitriy $*/
   include_facebook_api_if_required($msgbody);
   initialize_highlightjs_if_required($msgbody);
+
+  if (isset($auth_ignored) && $auth_ignored > 0) {
+    print('<div style="width:100%; color:gray; vertical-align: middle; text-align: center;"><i>You made a choice to not see '.$author.'\'s content. To change this, use <b>Ignore</b> tab in your profile.</i></div>');
+    die();
+  }  
 ?>
 <h3 id="subject"><?php print($subject); ?></h3>
 Author: <b><?php print($author . '</b>' . ' '); 
@@ -19,6 +24,11 @@ if ($content_flags & $content_boyan) {
 if (isset($nsfw)) {
   print('&nbsp;<span class="nsfw">NSFW</span>');
 }
+// add Ignore link if the message is not author's and from author who is NOT on an ignored list
+if ($auth_id != $user_id && isset($auth_ignored) && $auth_ignored == 0) {
+  ?>&nbsp;<span id="ignore-msg"/><a id="ignore-link" href="#">Ignore</a>
+  <?php
+}
 ?><br>
 <?php print($in_response); ?><hr><div id="msgbody"><?php 
 if (is_null($msgbody) || strlen($msgbody) == 0) {
@@ -29,7 +39,19 @@ if (is_null($msgbody) || strlen($msgbody) == 0) {
 } else {
   print($trans_body); 
 }
-?></div><hr>
-
-
-
+?></div>
+<script>
+  $( document ).ready(function() {
+    $('#ignore-link').click(function(e) {
+      var arr = new Array();
+      arr.push("<?=$auth_id?>");
+      if (window.confirm('Are you sure you do NOT want to see <?=$author?>\'s content?')) {
+        $.post("api.php", {'ignored': arr}, function(data, status){        
+          // $("#ignore-link").hide();
+          location.reload();
+        });
+      }
+      e.preventDefault();
+    });
+  });
+</script><hr>
