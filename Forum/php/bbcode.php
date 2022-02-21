@@ -175,7 +175,7 @@ function before_bbcode($original_body, &$has_video=null) {
     // FB photo e.g. https://www.facebook.com/photo.php?fbid=1845794888790800
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/photo\.php\?fbid=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // Twitter moments e.g. https://twitter.com/i/moments/1047551358948319233
-    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?twitter\.com\/i\/moments\/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
+    '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?(?:mobile\.)?twitter\.com\/i\/moments\/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // imgur
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?i\.imgur\.com\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
@@ -186,7 +186,7 @@ function before_bbcode($original_body, &$has_video=null) {
     // youtube with no http(s) prefix
     '#(?<!(\]|/|\.|=))((?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // s3 vipvip videos e.g. https://s3.amazonaws.com/vipvip.ca/mLxY9XSZWRVIDEO0296.mp4
-    '#(?<!\[url(=|\]))((?:https?://).+\.mp4(?:(?:\?|&)[^\s<\]"]*+)?)#is'
+    '#(?<!\[url(=|\]))((?:https?://)[\S]+\.mp4(?:(?:\?|&)[^\s<\]"]*+)?)#is'
      ), array (
     '<div class="vimeo"><iframe src="https://player.vimeo.com/video/$3" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',
     '<div class="coub"><iframe src="//coub.com/embed/$3?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" width="500" height="281" frameborder="0" allowfullscreen="true"></iframe><br/>Link: <a href="$2" target="_blank">$2</a></div>',  
@@ -415,7 +415,7 @@ function render_for_db($msgbody) {
   $msgbody = preg_replace("#(\[html=[^\]]*?\].*?\[\/html\])#is", "", $msgbody);
   
   // Embedding Twitter and other links
-  $msgbody = decorate_links(tiktok(instagram(twitter($msgbody))));
+  $msgbody = tiktok(instagram(twitter($msgbody)));
   
   $msgbody = fix_postimage_tags( $msgbody );
   $msgbody = grammar_nazi($msgbody);
