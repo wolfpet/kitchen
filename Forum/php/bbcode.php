@@ -233,6 +233,7 @@ function after_bbcode($body) {
     '#\[s\](.*?)\[/s\]#is', // Strikethrough ([s]text[/s])
     '#(<img src=)#is',
     '#\((?:c|C|с|С)\)#is',
+    '#\(tm\)#is',
     '#\[div\](.*?)\[/div\]#is', // div ([div]anything[/div]
     '#(^|\s)(\#[\w|\\x{0400}-\\x{04FF}]+)#ius'
     ), array (
@@ -243,6 +244,7 @@ function after_bbcode($body) {
     '<span style="text-decoration: line-through;">$1</span>',
     '<img style="max-width: 99%;max-height: 99%;" src=',
     '©',
+    '™',
     '<div>$1</div>',    
     '$1<a href="javascript:hashtag(\'$2\')">$2</a>'
     ), $body);    
