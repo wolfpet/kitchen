@@ -237,15 +237,20 @@ $(document).ready(function() {
 <!-- Start ignore table -->
 
 <?php
-    $query = "SELECT i.ignored, i.ignored_by, u.username, u.id from confa_users u, confa_ignor i where i.ignored_by=" . $user_id . " and i.ignored=u.id order by username";
+    $query = "SELECT i.ignored, i.ignored_by, u.username, u.id, uu.username ignoring_user from confa_users u, confa_ignor i, confa_users uu where (i.ignored_by=".$user_id." or i.ignored=".$user_id.") and i.ignored=u.id and i.ignored_by=uu.id order by username";
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
         die('Query failed');
       }
     $ignored = array();
+    $ignoredby = array();
     while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-      $ignored[$row['ignored']] = $row['username'];
+      if ($row['ignored_by'] == $user_id) {
+        $ignored[$row['ignored']] = $row['username'];
+      } else {
+        array_push($ignoredby, $row['ignoring_user']);
+      }
     }
 ?>
 <br/>
@@ -304,9 +309,13 @@ $(document).ready(function() {
       }
 ?>
 <tr><td colspan=3>
-<input type="checkbox" name="show_hidden" value="show_hidden" id="show_hidden" <?php print ($checked); ?>>Show placeholder for hidden messages<br>
-</br>
+<input type="checkbox" name="show_hidden" value="show_hidden" id="show_hidden" <?php print ($checked); ?>>Show placeholder for hidden messages<br/>
+<br/>
 <INPUT type="submit" value="Save" id="Save">
+<?php if (count($ignoredby) > 0) {?>
+<p>
+Ignored by: <b><?= implode("</b>, <b>", $ignoredby); ?></b>
+<?php } ?>
 <!--</form>-->
 </td> </tr>
 </table>
