@@ -9,7 +9,7 @@ require_once('head_inc.php');
     $in_response ='';
 
     // Performing SQL query to retrieve likes/dislikes
-    $query = 'SELECT u.username as userlike, l.value as valuelike, l.reaction from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id;
+    $query = 'SELECT u.username as userlike, l.value as valuelike, l.reaction from confa_users u, confa_likes l where l.user=u.id and l.post=' . $msg_id . ' and u.id not in (select i.ignored from confa_ignor i where i.ignored_by='.$user_id.')';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log( __FILE__, 'query 1 failed ' . mysql_error() . ' QUERY: ' . $query);
