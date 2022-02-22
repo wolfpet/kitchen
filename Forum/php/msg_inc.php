@@ -86,10 +86,16 @@ require_once('head_inc.php');
       . 'CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' 
       . $prop_tz . ':00\') as modified, p.created as created_ts, p.body, p.author, u.id as id, t.closed as thread_closed, '
       .'(select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.content_flags, t.author as t_author,'
-      .'(select count(*) from confa_versions v where v.parent=p.id) as revisions,'
-      .'(select count(*) from confa_ignor i where i.ignored=p.author and i.ignored_by='.$user_id.') as ignored,'
-      .'(select count(*) from confa_ignor i where i.ignored_by=p.author and i.ignored='.$user_id.') as ignoring,'
-      .'t.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
+      .'(select count(*) from confa_versions v where v.parent=p.id) as revisions,';
+      
+    if ($logged_in) {
+      $query .= '(select count(*) from confa_ignor i where i.ignored=p.author and i.ignored_by='.$user_id.') as ignored,';
+      $query .= '(select count(*) from confa_ignor i where i.ignored_by=p.author and i.ignored='.$user_id.') as ignoring,';
+    } else {
+      $query .= '0 as ignored, 0 as ignoring, ';
+    }
+    
+    $query .= 't.properties as t_properties from confa_users u, confa_posts p, confa_threads t where p.thread_id=t.id and u.id=p.author and p.id=' . $msg_id;
       
     $result = mysql_query($query);
     if (!$result) {
