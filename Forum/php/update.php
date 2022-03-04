@@ -10,6 +10,7 @@ require_once('html_head_inc.php');
     if (is_null($user) || strlen($user) == 0) {
         $err .= 'No username<BR>';
     } else if ($logged_in) {
+        do {
             $update = '';
             if (!is_null($password) && strlen($password) > 0 ) {
                 if (is_null($password2) || strlen($password2) == 0) {
@@ -93,6 +94,7 @@ require_once('html_head_inc.php');
             $smileys = isset($show_smileys);
             $reply_to_email = isset($send_reply_to_email);
             $menu_style = isset($send_menu_style) ? 1 : 0;
+        } while (false);
     }
 
     if ($err != '') {
