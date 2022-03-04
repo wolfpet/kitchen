@@ -9,7 +9,7 @@ require_once('html_head_inc.php');
     $info = '';
     if (is_null($user) || strlen($user) == 0) {
         $err .= 'No username<BR>';
-    } else {
+    } else if ($logged_in) {
         do {
             $update = '';
             if (!is_null($password) && strlen($password) > 0 ) {
