@@ -196,14 +196,26 @@ New ]<?php
     }
 ?>
 
-
 <?php
     if (strcmp($cur_page, $page_my_bookmarks) == 0) {
 ?>
-<a target="contents" class="menu" href="<?php print($root_dir . $page_my_bookmarks); ?>"><I>Bookmarks</I></a> ]</span>
+<a target="contents" class="menu" href="<?php print($root_dir . $page_my_bookmarks); ?>"><I>Bookmarks</I></a>
 <?php
 } else {
-?><a target="contents" class="menu" href="<?php print($root_dir . $page_my_bookmarks); ?>">Bookmarks</a> ]</span>
+?><a target="contents" class="menu" href="<?php print($root_dir . $page_my_bookmarks); ?>">Bookmarks</a>
+
+<?php if ($logged_in && (is_null($moder) || $moder <= 0)) { // not moderators can still see users page
+    if (strcmp($cur_page, $page_m_users) == 0) { ?>
+ | <a target="contents" class="menu" href="<?php print($root_dir . $page_m_users); ?>"><I id="answered">Users</I></a>
+<?php
+    } else {
+?>
+ | <a target="contents" class="menu" href="<?php print($root_dir . $page_m_users); ?>" id="answered">Users</a>
+<?php
+    }
+}
+?>
+ ]</span>
 <?php
 }
     if (!is_null($moder) && $moder > 0) {

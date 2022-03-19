@@ -3,7 +3,74 @@
 
 require_once('head_inc.php');
 
-    if ( !is_null( $moder ) && $moder > 0 ) {
+function boldmoder($text, $rec, $list) {
+  if ($rec['moder']) 
+    if (isset($list) && $list)
+      return $text . '<span style="color:green;">*</span>';
+    else 
+      return '<b>' . $text . '</b>';
+  
+  return $text;
+}
+
+if ($logged_in) {
+	//WHO IS ONLINE? 
+	$query ="SELECT user_id, updated, username, moder FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 60 MINUTE Group by username;";
+	//die($query);
+        $users_online = array();
+        $result = mysql_query($query);
+        if (!$result) {
+            mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+            die('Query failed ' );
+        }
+        while ($row = mysql_fetch_assoc($result)) {
+          $users_online[] = boldmoder($row['username'], $row, true);
+        }        
+	$query ="SELECT user_id, updated, username, moder FROM confa_sessions, confa_users WHERE confa_sessions.user_id=confa_users.ID AND updated >= NOW() - INTERVAL 1440 MINUTE Group by username;";
+	//die($query);
+        $users_today = array();
+        $result = mysql_query($query);        
+        if (!$result) {
+            mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+            die('Query failed ' );
+        }
+        while ($row = mysql_fetch_assoc($result)) {
+            $users_today[] = boldmoder($row['username'], $row, true);
+        }
+}
+
+if ( !is_null( $moder ) && $moder > 0 ) {
+
+        //REGISTRATIONS
+        $how_many = 50;
+        $max_id = 1;
+        $last_id = 0;
+        $limit = '';
+
+        $query = 'SELECT username, email, actkey, CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created from confa_regs order by username'; 
+        $result = mysql_query($query);
+        if (!$result) {
+            mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+            die('Query failed ' );
+        }
+
+        $num = 1;  
+        $out = '';
+        while ($row = mysql_fetch_assoc($result)) {
+            $created = $row['created'];
+            $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
+            $enc_mail = htmlentities($row['email'], HTML_ENTITIES,'UTF-8');
+            $md5 = $row['actkey'];
+            $line = '<tr><td align="center">'. $enc_user . '</td><td align="center">'. $enc_mail . '</td><td align="center">' . $created . '</td><td width="25%" align="center" nowrap>'
+              .'<form method="get" action="//'. $host . $root_dir . $page_activate .'" target="bottom">'
+              .'<input type="hidden" name="act_link" value="'. $md5.'"/><input name="action" type="submit" value="Confirm"/><input name="action" type="submit" value="Decline"/></form>'
+              .'</td></tr>';
+            $out .= $line;
+            $num++;
+        }
+        $registrations = $out;
+
+        //REGESTERED USERS
         $cur_page = $page_m_users;
         $how_many = 50;
         $max_id = 1;
@@ -50,7 +117,8 @@ require_once('head_inc.php');
             die('Query failed ' );
         }
 
-        $query = 'SELECT username, status, moder, ban, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as ban_ends, CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, id from confa_users ' . $limit . ' order by username'; 
+        $query = 'SELECT username, status, moder, ban, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as ban_ends, CONVERT_TZ(created, \'' 
+          . $server_tz . '\', \'' . $prop_tz . ':00\') as created, id, (select max(updated) from confa_sessions s where s.user_id=u.id) last_seen from confa_users u order by username'; 
 
         $result = mysql_query($query);
         if (!$result) {
@@ -69,6 +137,7 @@ require_once('head_inc.php');
             $id = $row['id'];
             $created = $row['created'];
             $status = 'Active';
+            $last_seen = $row['last_seen'];
             if (!is_null($row['ban_ends']) && strcmp($row['ban_ends'], '0000-00-00 00:00:00')) {
                 $status = 'Banned till ' . $row['ban_ends'];
             }
@@ -80,11 +149,16 @@ require_once('head_inc.php');
             if ( $row['status'] == 2 ) {
                 $enc_user= '<del>' . $enc_user . '</del>';
             }
-            $line = '<tr><td>' . $num . ' <a target="bottom" href="' . $root_dir . $page_m_user . '?moduserid=' . $id . '"> ' . $enc_user . ' </a>' . '</td><td align="center">' . $id . '</td><td align="center">' . $status . '</td><td align="center">' . $created . '</td></tr>';
+            $line = '<tr><td>' . $num . ' <a target="bottom" href="' . $root_dir . $page_m_user . '?moduserid=' . $id . '"> ' . $enc_user . ' </a>' . '</td><td align="center">' . $id . '</td><td align="center">' . $status . '</td><td align="center">' . $created . '</td><td align="center">' . $last_seen . '</td></tr>';
             $out .= $line;
             $num++;
         }
     }
+
+natcasesort($users_online);
+natcasesort($users_today);
+
+$users_today = array_diff($users_today, $users_online);
 
 require_once('html_head_inc.php');
 
@@ -92,10 +166,26 @@ require_once('html_head_inc.php');
 <base target="bottom">
 </head>
 <body id="html_body">
+<?php if ($logged_in) { 
+require('menu_inc.php');
+} ?>
+<div class="content">
+<?php if (isset($registrations) && $registrations) { ?>
+  <table width="95%">
+  <tr><th>Username</th><th>Email</th><th>Requested</th><th>Action</th></tr>
+  <?php print($registrations); ?>
+  </table>
+<?php } ?>
+<div>
+<?php if ($logged_in) { ?>
+  <h3>Now online (<?=sizeof($users_online)?>)</h3>
+  <?=implode(", ", $users_online)?><p/>
+  <h3>Visited today (<?=sizeof($users_today)?>)</h3>
+  <?=implode(", ", $users_today)?><p/>
+  </div>
+<?php } ?>
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
-
-require('menu_inc.php');
 
         if (!is_null($err) && strlen($err) > 0) {
             print('<BR><font color="red"><b>' . $err . '</b></font>');
@@ -107,15 +197,16 @@ require('menu_inc.php');
 
 <!--<ol>-->
 <table width="95%">
-<tr><th>Username</th><th>Id</th><th>Status</th><th>Created</th></tr>
+<tr><th>Username</th><th>Id</th><th>Status</th><th>Created</th><th>Last seen</th></tr>
 <?php print($out); ?>
 </table>
 <!--</ol>-->
 <?php
-    } else {
-        print( "You have no access to this page." );
+    } else if (!$logged_in) {
+        print( "Access denied." );
     }
 ?>
+</div>
 </body>
 </html>
 <?php
