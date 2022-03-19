@@ -74,6 +74,8 @@ require_once('html_head_inc.php');
         }
 
         $row = mysql_fetch_assoc($result);
+        $mod_user = $row['moder'];
+        if($mod_user!=null)$mod_user = ' - Moderator';
         $username = $row['username'];
         $created = $row['created'];
         $status = $row['status'];

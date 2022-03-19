@@ -189,13 +189,13 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
     $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes';
     
     if ($logged_in) {
-     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
+     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
     }
   
     $query .= ', p.dislikes ';
   
     if ($logged_in) {
-     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
+     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
     }
   
     $query .=  ', CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null';
@@ -276,13 +276,13 @@ function get_threads_ex($limit = 200, $thread_id = null) {
     . ' p.likes ';
     
   if ($logged_in) {
-     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
+     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
   }
   
   $query .= ', p.dislikes ';
   
   if ($logged_in) {
-     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
+     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
   }
   
   $query .=  ', p.level, CONVERT_TZ(p.created, \'' 
