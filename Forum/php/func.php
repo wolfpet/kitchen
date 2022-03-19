@@ -183,8 +183,30 @@ function get_thread_starts($min_thread_id, $max_thread_id) {
 
     global $prop_tz;
     global $server_tz;
+    global $logged_in;
+    global $user_id;
+  
+    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes';
+    
+    if ($logged_in) {
+     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
+    }
+  
+    $query .= ', p.dislikes ';
+  
+    if ($logged_in) {
+     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
+    }
+  
+    $query .=  ', CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null';
+    
+    if ($logged_in) {
+     $query .= ' and not exists (select 1 from confa_ignor i where i.ignored = l.user and i.ignored_by='.$user_id.')';
+    }
+    
+    $query .= ') as reactions from confa_posts p, confa_users u, confa_threads t ';
 
-    $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t ';
+    //$query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as modified, p.subject,  p.content_flags, t.closed as thread_closed, t.status as thread_status, t.id as thread_id, p.level, p.status, p.id as msg_id, p.chars, t.counter, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t ';
     if ( $min_thread_id < 0 ) {
         $min_thread_id = 0;
     }
@@ -247,12 +269,33 @@ function get_threads_ex($limit = 200, $thread_id = null) {
   global $prop_tz;
   global $work_page;
   global $server_tz;
-
-  $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views, p.likes, p.dislikes, p.level, CONVERT_TZ(p.created, \'' 
+  global $logged_in;
+  global $user_id;
+  
+  $query = 'SELECT u.username, u.id as user_id, u.moder, u.ban_ends, p.parent, p.closed as post_closed, p.views,'
+    . ' p.likes ';
+    
+  if ($logged_in) {
+     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
+  }
+  
+  $query .= ', p.dislikes ';
+  
+  if ($logged_in) {
+     $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
+  }
+  
+  $query .=  ', p.level, CONVERT_TZ(p.created, \'' 
     . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
     . ':00\') as modified, p.subject, p.status, p.thread_id, p.id as msg_id, p.chars, p.content_flags, t.page, t.closed as thread_closed, t.status as thread_status, t.counter,'
-    . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t ';
-  $query.= 'where p.author=u.id and t.id = p.thread_id and t.status != 2 ';
+    . ' (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null';
+    
+  if ($logged_in) {
+     $query .= ' and not exists (select 1 from confa_ignor i where i.ignored = l.user and i.ignored_by='.$user_id.')';
+  }
+    
+  $query .= ') as reactions from confa_posts p, confa_users u, confa_threads t '
+    . 'where p.author=u.id and t.id = p.thread_id and t.status != 2 ';
 	
 	if (is_null($thread_id)) {
 		$query .= 'and t.page<=' . $work_page . ' and t.id > (select max(id) from confa_threads t where t.page =' . $work_page . ') - ' . $limit; 

@@ -5,8 +5,9 @@ $duration = 0;
 require_once('head_inc.php');
 $start_timestamp = microtime(true);
 
-// 2 means show in standard mode - for users which are not logged in
-$show_hidden = 2;
+  // 2 means show in standard mode - for users which are not logged in
+  $show_hidden = 2;
+  
   $linki = mysqli_connect($dbhost, $dbuser, $dbpassword);
   if (!$linki) {
     mysql_log(__FILE__, 'Could not connect: ' . mysqli_error());
@@ -66,11 +67,21 @@ $show_hidden = 2;
     if (is_null($max_id) || strlen($max_id) == 0)
       $max_id = 0;
 
-    if ($show_hidden == 2 || $show_hidden == 1) {
-    $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 order by id desc limit 100';
-    } else if ($show_hidden == 0) {
-    $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes, p.dislikes, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 and u.id not in (select ignored from confa_ignor where ignored_by=' . $test_user_id . ') order by id desc limit 100';
-}
+    $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes';
+    if ($logged_in) {
+      $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
+    }
+    $query .= ', p.dislikes';
+    if ($logged_in) {
+       $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
+    }      
+    $query .= ', CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 ';
+    
+    if ($show_hidden == 0) {
+      $query .= ' and u.id not in (select ignored from confa_ignor where ignored_by=' . $test_user_id . ') ';
+    }
+    
+    $query .= 'order by id desc limit 100';
 
     $result = mysql_query($query);
     if (!$result) {
