@@ -69,11 +69,11 @@ $start_timestamp = microtime(true);
 
     $query = 'SELECT u.username, u.moder, u.ban_ends, p.auth, p.closed as post_closed, p.views, p.likes';
     if ($logged_in) {
-      $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
+      $query .= ' - (select count(*) from confa_likes l where l.post=p.id and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
     }
     $query .= ', p.dislikes';
     if ($logged_in) {
-       $query .= ' - (select count(*) from confa_likes l where l.post=p.id and reaction is null and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
+      $query .= ' - (select count(*) from confa_likes l where l.post=p.id and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
     }      
     $query .= ', CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.author as author, p.status, p.id as id, p.chars, p.content_flags from confa_posts p, confa_users u  where p.author=u.id and p.id > ' . $limit_id . ' and p.id <= ' . $max_id . ' and p.status != 2 ';
     
