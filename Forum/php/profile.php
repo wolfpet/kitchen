@@ -23,7 +23,7 @@ require_once('html_head_inc.php');
 <!-- <span style="color:red; font-weight:bold;" id="status_text">&nbsp;</span>  -->
 <?php
 
-    $query=' SELECT email, prop_bold, prop_tz, show_smileys, reply_to_email, menu_style from confa_users where id = ' . $user_id;
+    $query=' SELECT email, prop_bold, prop_tz, show_smileys, reply_to_email, menu_style, attributes from confa_users where id = ' . $user_id;
     $result = mysql_query( $query );
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -38,6 +38,14 @@ require_once('html_head_inc.php');
     $smileys = $row['show_smileys'];
     $reply_to_email = $row['reply_to_email'];
     $menu_style = $row['menu_style'];
+    
+    $attributes = $row['attributes'];
+    if ($attributes == null) {
+        $attributes = 0;
+    }
+    
+    $hide_non_users = $attributes & $attr_hide_content_from_non_users;
+    // print("Attributes: " .$attributes . ' ' . $hide_non_users);   
 ?>
 <?php
 require_once("profile_inc.php");

@@ -73,7 +73,15 @@ require_once('html_head_inc.php');
  
             $update .= ' reply_to_email=' . (isset($send_reply_to_email) ? "1" : "0") . ', '; 
 
-           $update .= ' menu_style=' . (isset($send_menu_style) ? "1" : "0") . ', '; 
+            $update .= ' menu_style=' . (isset($send_menu_style) ? "1" : "0") . ', '; 
+            
+            $attributes = 0;
+            
+            if (isset($hide_non_users) && $hide_non_users > 0) {
+              $attributes |= $attr_hide_content_from_non_users;
+            }
+            
+            $update .= ' attributes = ' . $attributes . ', ';
             
             if (is_null($tz)) {
                 $tz = explode(":", $server_tz)[0];
@@ -81,6 +89,7 @@ require_once('html_head_inc.php');
             
             $update .= ' prop_tz=\'' . mysql_real_escape_string($tz) . '\''; 
             
+            // print("Test: " . $update);
             $query = 'UPDATE confa_users set ' . $update . ' where id=' . $user_id; 
             $result = mysql_query($query);
             if (!$result) {

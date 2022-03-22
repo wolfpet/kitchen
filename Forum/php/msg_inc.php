@@ -159,7 +159,10 @@ require_once('head_inc.php');
                 $subject = '<h3><I><font color="gray" size="14 pt"><del>This message has been deleted</del></font></I></h3>'; 
                 $subj = 'This message has been deleted'; 
             }
-
+        } else if (isset($attributes) && $attributes & $attr_hide_content_from_non_users && !$logged_in) {
+                $msgbody = '<font color="gray">Please login for full experience.</font>';
+                $subject = '<h3><font color="gray" size="14 pt">The user chose not to share the content of this message</font></h3>'; 
+                $subj = 'The user chose not to share the content of this message';           
         } else {
             $translit_done = false;
             $msgbody = translit($row['body'], $translit_done);

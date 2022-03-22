@@ -265,5 +265,6 @@
         if (array_key_exists('menu_style', $_POST)) {
             $send_menu_style = trim($_POST['menu_style']);
         }
+        $hide_non_users = !array_key_exists('show_non_users', $_POST);
     }
 ?>

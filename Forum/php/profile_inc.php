@@ -102,6 +102,10 @@ $(document).ready(function() {
 <td><input id="safe_mode" type="checkbox" <?=!isset($safe_mode) || $safe_mode == 0 ? "checked" : ""?>></input></td>
 </tr>
 <tr>
+<td align="right">Show content to non-users:</td>
+<td><input id="show_non_users" name="show_non_users" type="checkbox" <?=!isset($hide_non_users) || !$hide_non_users ? "checked" : ""?>>
+</tr>
+<tr>
 <td align="right">Time zone:</td>
 <td>
 <select id="tz" name="tz">

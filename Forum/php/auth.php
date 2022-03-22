@@ -21,7 +21,7 @@ require_once('get_params_inc.php');
 
 
     if (!is_null($auth_cookie) && !is_null($user)) {
-        $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.moder, s.safe_mode, u.menu_style, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated, u.last_pm_check_time, u.show_smileys, u.reply_to_email from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_real_escape_string($user) . '\'';
+        $query = 'SELECT u.id, u.status, u.ban, u.prop_tz, u.moder, s.safe_mode, u.attributes, u.menu_style, u.prop_bold, u.ban_ends, u.new_pm, u.username, s.user_id, s.hash, s.updated, u.last_pm_check_time, u.show_smileys, u.reply_to_email from confa_users u, confa_sessions s where u.id = s.user_id and s.hash =\'' . $auth_cookie . '\' and u.username = \'' . mysql_real_escape_string($user) . '\'';
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -44,6 +44,7 @@ require_once('get_params_inc.php');
             $last_pm_check_time = $row['last_pm_check_time'];
             $reply_to_email = $row['reply_to_email'];
             $menu_style = $row['menu_style'];
+            $attributes = $row['attributes'];
             
             if ( $status == 2 ) {
                 $logout = true;

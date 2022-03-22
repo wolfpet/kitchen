@@ -92,6 +92,9 @@ $content_video  = 0x04;
 $content_nsfw   = 0x08;
 $content_boyan  = 0x10;
 
+// user attributes
+$attr_hide_content_from_non_users = 0x01;
+
 //$title       = 'Forum';
 $page_title = $title;
 //$root_dir    = '/kirdyk/';
