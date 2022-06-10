@@ -4,6 +4,7 @@ require_once('func.php');
 
 $mess_id=empty($_REQUEST['mess_id'])?"":str_replace("'", "", $_REQUEST['mess_id']);
 if(!empty($mess_id)){
+  $mess_id = intval(trim($mess_id));
 	$sSQL="SELECT body, status FROM confa_posts WHERE id='$mess_id'";
 	$result2=mysql_query($sSQL) or die ("MySQL err: " . mysql_error());
 	if($row2 = mysql_fetch_array($result2)){ ?>
