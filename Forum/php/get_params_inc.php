@@ -266,5 +266,6 @@
             $send_menu_style = trim($_POST['menu_style']);
         }
         $hide_non_users = !array_key_exists('show_non_users', $_POST);
+        $hide_ignore_link = array_key_exists('hide_ignore_link', $_POST);
     }
 ?>

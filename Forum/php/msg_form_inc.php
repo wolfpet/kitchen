@@ -28,7 +28,7 @@ if (isset($nsfw)) {
   print('&nbsp;<span class="nsfw">NSFW</span>');
 }
 // add Ignore link if the message is not author's and from author who is NOT on an ignored list
-if ($logged_in && $auth_id != $user_id && isset($auth_ignored) && $auth_ignored == 0) {
+if ($logged_in && $auth_id != $user_id && isset($auth_ignored) && $auth_ignored == 0 && !($attributes & $attr_hide_ignore_link)) {
   ?>&nbsp;<span id="ignore-msg"/><a id="ignore-link" href="#">Ignore</a>
   <?php
 }

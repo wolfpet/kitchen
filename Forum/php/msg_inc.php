@@ -82,7 +82,7 @@ require_once('head_inc.php');
     mysql_free_result($result);
     
     // Performing SQL query
-    $query = 'SELECT u.username, u.moder, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, '
+    $query = 'SELECT u.username, u.moder, u.attributes, p.subject, p.closed as post_closed, p.views, p.id as msg_id, p.status, p.auth, p.parent, '
       . 'CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' 
       . $prop_tz . ':00\') as modified, p.created as created_ts, p.body, p.author, u.id as id, t.closed as thread_closed, '
       .'(select max(page) from confa_threads) - t.page + 1 as page, p.thread_id, t.id, p.content_flags, t.author as t_author,'
@@ -118,6 +118,7 @@ require_once('head_inc.php');
         $content_flags = $row['content_flags'];
         $auth_ignored = $row['ignored'];
         $auth_ignoring = $row['ignoring'];
+        $auth_attributes = $row['attributes'];
         if ( !is_null($row['post_closed']) && $row['post_closed'] > 0 ) {
             $post_closed = true;
         }
@@ -159,7 +160,7 @@ require_once('head_inc.php');
                 $subject = '<h3><I><font color="gray" size="14 pt"><del>This message has been deleted</del></font></I></h3>'; 
                 $subj = 'This message has been deleted'; 
             }
-        } else if (isset($attributes) && $attributes & $attr_hide_content_from_non_users && !$logged_in) {
+        } else if (isset($auth_attributes) && $auth_attributes & $attr_hide_content_from_non_users && !$logged_in) {
                 $msgbody = '<font color="gray">Please login for full experience.</font>';
                 $subject = '<h3><font color="gray" size="14 pt">The user chose not to share the content of this message</font></h3>'; 
                 $subj = 'The user chose not to share the content of this message';           

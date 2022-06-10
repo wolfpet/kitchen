@@ -94,6 +94,7 @@ $content_boyan  = 0x10;
 
 // user attributes
 $attr_hide_content_from_non_users = 0x01;
+$attr_hide_ignore_link = 0x02;
 
 //$title       = 'Forum';
 $page_title = $title;

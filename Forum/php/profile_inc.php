@@ -106,6 +106,10 @@ $(document).ready(function() {
 <td><input id="show_non_users" name="show_non_users" type="checkbox" <?=!isset($hide_non_users) || !$hide_non_users ? "checked" : ""?>>
 </tr>
 <tr>
+<td align="right">Hide Ignore link:</td>
+<td><input id="hide_ignore_link" name="hide_ignore_link" type="checkbox" <?=isset($hide_ignore_link) && $hide_ignore_link ? "checked" : ""?>>
+</tr>
+<tr>
 <td align="right">Time zone:</td>
 <td>
 <select id="tz" name="tz">

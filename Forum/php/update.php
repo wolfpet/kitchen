@@ -80,6 +80,10 @@ require_once('html_head_inc.php');
             if (isset($hide_non_users) && $hide_non_users > 0) {
               $attributes |= $attr_hide_content_from_non_users;
             }
+
+            if (isset($hide_ignore_link) && $hide_ignore_link > 0) {
+              $attributes |= $attr_hide_ignore_link;
+            }
             
             $update .= ' attributes = ' . $attributes . ', ';
             

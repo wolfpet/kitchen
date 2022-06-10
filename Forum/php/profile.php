@@ -45,6 +45,7 @@ require_once('html_head_inc.php');
     }
     
     $hide_non_users = $attributes & $attr_hide_content_from_non_users;
+    $hide_ignore_link = $attributes & $attr_hide_ignore_link;
     // print("Attributes: " .$attributes . ' ' . $hide_non_users);   
 ?>
 <?php
