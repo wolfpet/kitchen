@@ -3,8 +3,6 @@
 require_once('dump.php');
 require_once('head_inc.php');
 
-// TODO: SQL INJECTION PREVENTION
-
 $status = 401;
 $text = "Not authorized";
 
@@ -67,7 +65,7 @@ if ($logged_in) {
       $ignored = $_POST['ignored'];
       mysql_log(__FILE__, "" . __LINE__);
       while (list($key, $val) = each($ignored)) {
-        $query = "INSERT INTO confa_ignor(ignored_by, ignored) values(" . $user_id . ", " . $val . ")";
+        $query = "INSERT INTO confa_ignor(ignored_by, ignored) values(" . $user_id . ", " . intval(trim($val)) . ")";
         $result = mysql_query($query);
         if (!$result) {
           mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
