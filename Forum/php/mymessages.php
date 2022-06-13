@@ -22,7 +22,23 @@ require_once('head_inc.php');
     $last_id = get_page_last_index('confa_posts where author=' . $author_id , $how_many, $page );
     $query = 'SELECT u.username, u.id as user_id, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz 
       . ':00\') as created, u.ban_ends, p.level, CONVERT_TZ(p.modified, \'' . $server_tz . '\', \'' . $prop_tz 
-      . ':00\') as modified, t.closed as thread_closed, t.counter, p.subject, p.content_flags, p.views, p.likes, p.dislikes, p.status, p.id as msg_id, p.chars, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null) as reactions from confa_posts p, confa_users u, confa_threads t where p.author=' 
+      . ':00\') as modified, t.closed as thread_closed, t.counter, p.subject, p.content_flags, p.views, p.likes';
+      
+    if ($logged_in) {
+      $query .= ' - (select count(*) from confa_likes l where l.post=p.id and l.value > 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as likes';
+    }
+    $query .= ', p.dislikes';
+    if ($logged_in) {
+       $query .= ' - (select count(*) from confa_likes l where l.post=p.id and l.value < 0 and exists (select 1 from confa_ignor i where i.ignored=l.user and i.ignored_by='.$user_id.')) as dislikes';
+    }
+    
+    $query .= ', p.status, p.id as msg_id, p.chars, (SELECT count(*) from confa_bookmarks b where b.post=p.id) as bookmarks, (SELECT count(*) from confa_likes l where l.post=p.id and reaction is not null';
+    
+    if ($logged_in) {
+     $query .= ' and not exists (select 1 from confa_ignor i where i.ignored = l.user and i.ignored_by='.$user_id.')';
+    }
+    
+    $query .= ') as reactions from confa_posts p, confa_users u, confa_threads t where p.author=' 
       . $author_id . ' and p.author=u.id and p.status != 2 and t.id = p.thread_id';
 
     if (intval($last_id) > 0)
