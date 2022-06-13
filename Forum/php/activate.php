@@ -3,6 +3,7 @@
 
 require_once('head_inc.php');
 require_once('html_head_inc.php');
+require_once('mail.php');
 
 ?>
 <base target="bottom">
@@ -40,7 +41,7 @@ if ( strlen($act_link) > 0 ) {
           $email_subject = "Your registration on $host forum website";
           $email_message = "We regret to inform that your request of registration the user '$username' has been declined.\n\nThe administration wishes you luck in your future endeavors.";
           $email_headers = "From: $from_email";
-          mail($email,$email_subject,$email_message,$email_headers);
+          send_mail($email,$email_subject,$email_message,$email_headers);
           die('The registration of user <b>' . $username. '</b> has been declined.');           
         } else
           die('The link has expired.'); 
@@ -72,7 +73,7 @@ if ( strlen($act_link) > 0 ) {
       $email_subject = "Your registration on $host forum website";
       $email_message = "Welcome, ". $username."!\n\nYour account has been activated, you may now login to the forum.";
       $email_headers = "From: $from_email";
-      mail($email,$email_subject,$email_message,$email_headers);
+      send_mail($email,$email_subject,$email_message,$email_headers);
     } else {
       print('<p><B>' . $username . '</B>, your account has been activated. Now you may login to the <a href="'.$protocol.'://' . $host . $root_dir . '" target="_top">forum</a>');
     }

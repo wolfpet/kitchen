@@ -1,7 +1,7 @@
 <?php
 require_once('head_inc.php');
 
-$query = 'select u.username, u.status, count(p.id) as counter from confa_users u, confa_posts p where u.status != 2 and p.author=u.id and p.test=0 group by p.author order by counter desc';
+$query = 'select u.username, u.status, u.moder, count(p.id) as counter from confa_users u, confa_posts p where u.status != 2 and p.author=u.id and p.test=0 group by p.author order by counter desc';
     $result = mysql_query($query);
     if (!$result) {
         mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -24,7 +24,7 @@ Posts by users as by <?php print( date("Y-m-d H:i:s") ); ?> CST
 <?php
     $i = 1;
     while ($row = mysql_fetch_assoc($result)) {
-        print('<TR><TD>' . $i . '</TD><TD>' . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . '</TD><TD>' . $row['counter'] . '</TD></TR>');
+        print('<TR><TD>' . $i . '</TD><TD>' . ($row['moder'] ? '<b>' : '') . htmlentities($row['username'], HTML_ENTITIES,'UTF-8') . ($row['moder'] ? '<b>' : '') . '</TD><TD>' . $row['counter'] . '</TD></TR>');
         $i = $i +1;
     }
 ?>
