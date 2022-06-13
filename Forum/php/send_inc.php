@@ -23,7 +23,7 @@
 <td colspan="2" />
 </tr>
 <tr>
-<td nowrap>To:</td><td><B><input type="text" name="to" id="to" value="<?php print($to); ?>" tabindex="1"/></B></td>
+<td nowrap>To:</td><td><B><input type="text" name="to" id="to" value="<?php print(htmlentities($to,HTML_ENTITIES,'UTF-8')); ?>" tabindex="1"/></B></td>
 <td colspan="2"/>
 </tr>
 <?php

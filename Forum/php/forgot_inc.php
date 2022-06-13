@@ -8,11 +8,11 @@
 <table>
 <tr>
 <td>Username</td>
-<td><input id="user" name="user" type="text" maxlength="32" value="<?php print($user); ?>"/></td>
+<td><input id="user" name="user" type="text" maxlength="32" value="<?php print(htmlentities($user, HTML_ENTITIES,'UTF-8')); ?>"/></td>
 </tr>
 <tr>
 <td>Email</td>
-<td><input id="email" name="email" type="text" maxlength="80" value="<?php print($email); ?>"/></td>
+<td><input id="email" name="email" type="text" maxlength="80" value="<?php print(htmlentities($email, HTML_ENTITIES,'UTF-8')); ?>"/></td>
 </tr>
 <tr>
 <td colspan="2"><br/><input type="submit" value="Regenerate password"/></td>

@@ -12,7 +12,7 @@ require_once('head_inc.php');
 
     if (isset($_GET) && is_array($_GET)) {
         $thread_id = trim($_GET['thread']);
-        $page = trim($_GET['page']);
+        $page = intval(trim($_GET['page']));
         if (is_null($thread_id) || strlen($thread_id) == 0 || !ctype_digit($thread_id)) {
             $thread_id = NULL;
         }

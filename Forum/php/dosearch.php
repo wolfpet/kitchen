@@ -104,6 +104,8 @@ require_once('head_inc.php');
 require_once('html_head_inc.php');
 
 ?>
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
 <base target="bottom">
 </head>
 <body>
@@ -119,7 +121,7 @@ require('menu_inc.php');
 ?>
 
 
-<br>Your searched for <?=is_null($mode) ? '' : $mode.' with ' ?><i><?php if (!is_null($text) && strlen($text)>0) {print('"' . $text . '"');} else { print('<u>any text</u>'); } ?></i> in <?php 
+<br>Your searched for <?=is_null($mode) ? '' : htmlentities($mode, HTML_ENTITIES,'UTF-8').' with ' ?><i><?php if (!is_null($text) && strlen($text)>0) {print('"' . htmlentities($text, HTML_ENTITIES,'UTF-8') . '"');} else { print('<u>any text</u>'); } ?></i> in <?php 
     switch($searchin) {
     case 1:
         print('<i><u>Body and subject</u></i> ');
@@ -132,7 +134,7 @@ require('menu_inc.php');
     break;
     }
     if (!is_null($author) && strlen($author)>0) {
-        print('posted by "<i>' . $author . '</i>" ');
+        print('posted by "<i>' . htmlentities($author, HTML_ENTITIES,'UTF-8') . '</i>" ');
     } else {
         print('posted by <i><u>any author</u></i> ');
     }
