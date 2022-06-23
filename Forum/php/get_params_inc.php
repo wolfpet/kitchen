@@ -46,10 +46,10 @@
             $user = $_COOKIE['user_'.$dbname];
         }
         if (array_key_exists('last_id2', $_COOKIE)) {
-            $last_id = $_COOKIE['last_id2'];
+            $last_id = intval($_COOKIE['last_id2']);
         }
         if (array_key_exists('last_answered_id2', $_COOKIE)) {
-            $last_answered_id = $_COOKIE['last_answered_id2'];
+            $last_answered_id = intval($_COOKIE['last_answered_id2']);
         }
         if (array_key_exists('orientation', $_COOKIE)) {
             $orientation = $_COOKIE['orientation'];
@@ -103,7 +103,7 @@
             $author_id = intval(trim($_GET['author_id']),10);
         }
         if (array_key_exists('moduserid', $_GET)) {
-            $moduserid = trim($_GET['moduserid']);
+            $moduserid = intval(trim($_GET['moduserid']));
         }
         if (array_key_exists('byip', $_GET)) {
             $byip = trim($_GET['byip']);
@@ -124,10 +124,10 @@
             $pm_id = intval(trim($_GET['pm_id']),10);
         }
         if (array_key_exists('likedby', $_GET)) {
-            $likedby = trim($_GET['likedby']);
+            $likedby = intval(trim($_GET['likedby']));
         }
         if (array_key_exists('howmanylikes', $_GET)) {
-            $howmanylikes = trim($_GET['howmanylikes']);
+            $howmanylikes = intval(trim($_GET['howmanylikes']));
         }
         if (array_key_exists('bantime', $_GET)) {
             $bantime = $_GET['bantime'];
@@ -184,7 +184,7 @@
             $how_many = intval($_POST["how_many"],10);
         }
         if (array_key_exists('lastpage', $_POST)) {
-            $lastpage = $_POST["lastpage"];
+            $lastpage = intval($_POST["lastpage"]);
         }
         if (array_key_exists('pmdel', $_POST)) {
             $pmdel = $_POST['pmdel'];
@@ -248,10 +248,10 @@
             $pm_id = intval(trim($_POST['pm_id']),10);
         }
         if (array_key_exists('likedby', $_POST)) {
-            $likedby = trim($_POST['likedby']);
+            $likedby = intval(trim($_POST['likedby']));
         }
         if (array_key_exists('howmanylikes', $_POST)) {
-            $howmanylikes = trim($_POST['howmanylikes']);
+            $howmanylikes = intval(trim($_POST['howmanylikes']));
         }            
         if (array_key_exists('tz', $_POST)) {
             $tz = trim($_POST['tz']);
