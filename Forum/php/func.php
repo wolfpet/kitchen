@@ -683,7 +683,7 @@ function get_max_pages_users(&$max_user_id, $user_like) {
 
     $query = 'Select count(*), max(id) from confa_users';
     if (!is_null($user_like)) {
-      $query .= ' where username like \'%' . $user_like . '%\'';
+      $query .= ' where username like \'%' . mysql_real_escape_string($user_like) . '%\'';
     }
     $result = mysql_query($query);
     if (!$result) {
@@ -703,9 +703,9 @@ function get_users($min_user_id, $max_user_id, $user_like) {
     global $server_tz;
     
     if (is_null($user_like)) {
-      $query = 'select id as user_id, username,  CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, moder, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as ban_ends from (select id, username, created, moder, ban_ends from confa_users  where status != 2 order by username) us where id >= ' . $min_user_id . ' and id <= ' . $max_user_id . ' order by username';
+      $query = 'select id as user_id, username,  CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, moder, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as ban_ends from (select id, username, created, moder, ban_ends from confa_users  where status != 2 order by username) us where id >= ' . intval($min_user_id) . ' and id <= ' . intval($max_user_id) . ' order by username';
     } else {
-      $query = 'select id as user_id, username,  CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, moder, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as ban_ends from (select id, username, created, moder, ban_ends from confa_users  where status != 2 order by username    ) us where username like \'%' . $user_like . '%\'  order by username';
+      $query = 'select id as user_id, username,  CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as created, moder, CONVERT_TZ(ban_ends, \'' . $server_tz . '\', \'' . $prop_tz . ':00\')  as ban_ends from (select id, username, created, moder, ban_ends from confa_users  where status != 2 order by username    ) us where username like \'%' . mysql_real_escape_string($user_like) . '%\'  order by username';
 
     }
     $result = mysql_query($query);

@@ -67,7 +67,7 @@ $title = 'Private message';
               die('This is duplicated post (ticket ' . $ticket . ')');
           }
         }
-        $query = 'SELECT id from confa_users where username=\'' . $user . '\' and status != 2';
+        $query = 'SELECT id from confa_users where username=\'' . mysql_real_escape_string($user) . '\' and status != 2';
         $result = mysql_query($query);
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
