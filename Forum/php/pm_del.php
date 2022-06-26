@@ -24,7 +24,7 @@ require_once('head_inc.php');
             if (strlen($add) > 0) {
                 $add .= ",";
             }
-            $add .= $pmdel[$i] . " ";
+            $add .= intval($pmdel[$i]) . " ";
         }
         
         $query .= $add;
@@ -38,8 +38,8 @@ require_once('head_inc.php');
 
     }
 
-if (isset($lastpage)) {
-  $nextpage = $lastpage;
+if (isset($lastpage) && strpos($lastpage, '.php') > 0) {
+  $nextpage = basename($lastpage);
 } else {
   $nextpage = 'pmail.php';
 }

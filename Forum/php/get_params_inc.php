@@ -242,7 +242,7 @@
             $custom = trim($_POST['custom']);
         }
         if (array_key_exists('ticket', $_POST)) {
-            $ticket = trim($_POST['ticket']);
+            $ticket = preg_replace("[^0-9\-]", "", trim($_POST['ticket']));
         }
         if (array_key_exists('pm_id', $_POST)) {
             $pm_id = intval(trim($_POST['pm_id']),10);

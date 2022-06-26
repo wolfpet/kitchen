@@ -44,20 +44,23 @@ if ($logged_in) {
 
     if (array_key_exists('update_colors', $_POST)) {
       $update_colors = $_POST['update_colors'];
-      $ribbonColor = $update_colors[0];
-      $ribbonBackground = $update_colors[1];
-      $ribbonIconBg = $update_colors[2];
-      $ribbonGroupBorder = $update_colors[3];
-      $textUnread = $update_colors[4];
-      $textHover = $update_colors[5];
-      $textRead = $update_colors[6];
-      $textTitles = $update_colors[7];
-      $query = "UPDATE confa_users set color_ribbon='" . $ribbonColor . "', color_ribbon_background='" . $ribbonBackground . "', color_icon_hover='" . $ribbonIconBg . "', color_group_border='" . $ribbonGroupBorder . "', color_topics_unread='" . $textUnread . "', color_topics_hover='". $textHover . "', color_topics_visited='" . $textRead . "', color_titles='" . $textTitles . "' where id=" . $user_id;
-      //die($query);
-      $result = mysql_query($query);
-      if (!$result) {
-        mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
-        die('Query failed');
+      $ribbonColor = intval($update_colors[0]);
+      $ribbonBackground = intval($update_colors[1]);
+      $ribbonIconBg = intval($update_colors[2]);
+      $ribbonGroupBorder = intval($update_colors[3]);
+      $textUnread = intval($update_colors[4]);
+      $textHover = intval($update_colors[5]);
+      $textRead = intval($update_colors[6]);
+      $textTitles = intval($update_colors[7]);
+      // Sanity check
+      if ($ribbonColor + $ribbonBackground > 0 && $ribbonIconBg + $ribbonGroupBorder > 0) {
+        $query = "UPDATE confa_users set color_ribbon='" . $ribbonColor . "', color_ribbon_background='" . $ribbonBackground . "', color_icon_hover='" . $ribbonIconBg . "', color_group_border='" . $ribbonGroupBorder . "', color_topics_unread='" . $textUnread . "', color_topics_hover='". $textHover . "', color_topics_visited='" . $textRead . "', color_titles='" . $textTitles . "' where id=" . $user_id;
+        //die($query);
+        $result = mysql_query($query);
+        if (!$result) {
+          mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
+          die('Query failed');
+        }
       }
     }
 
@@ -76,7 +79,7 @@ if ($logged_in) {
   $text = "Successfully updated.";
   $status = 201;
 } else {
-  $result = "Failed";
+  $text = "Failed";
 }
 
 header("HTTP/1.0 " . $status );
