@@ -29,6 +29,12 @@ if ( !isset($reg_type) ||
 <td>Retype email: </td>
 <td><input id="email2" name="email2" type="text" maxlength="80" value="<?php print(htmlentities($email2,HTML_ENTITIES,'UTF-8')); ?>"/></td>
 </tr>
+<tr>
+<td colspan=2>A few words about yourself and why you want to join <font color="grey">(200 characters maximum)</font</td>
+</tr>
+<tr>
+<td colspan=2><textarea id="subj" name="subj" cols="65" rows="3" maxlength="200"><?php print(htmlentities($subj,HTML_ENTITIES,'UTF-8')); ?></textarea></td>
+</tr>
 <?php
 if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
 ?>
