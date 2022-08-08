@@ -25,7 +25,7 @@ function do_bbcode($str, $auth_id, $msg_id, $link_renderer) {
       '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
       '#\[POLL\](.*?)\[/POLL\]#is', // Bold ([b]text[/b]
-      
+      '#\[spoiler\](.*?)\[/spoiler\]#is' // Spoiler - renders as (spoiler) when click or tap replaces it with actual content      
   );
    
   // The matching array of strings to replace matches with
@@ -49,7 +49,8 @@ function do_bbcode($str, $auth_id, $msg_id, $link_renderer) {
       '<img src="$1" alt=""/>',
       '<img src="//$1" alt=""/>',
       '<img src="$1" alt=""/>',
-      '<iframe style="border-style: none; width: 100%; max-width: 460px;" id="poll$1" class="poll" src="polls_display.php?poll=$1" onload="resizeMe(this);"></iframe>'
+      '<iframe style="border-style: none; width: 100%; max-width: 460px;" id="poll$1" class="poll" src="polls_display.php?poll=$1" onload="resizeMe(this);"></iframe>',
+      '<span class="spoiler-placeholder">(<i>spoiler:</i> <span class="spoiler">$1</span>)</span>'
   );
   
   // Perform the actual conversion

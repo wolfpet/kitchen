@@ -411,3 +411,15 @@ div#hr2{
     width: fit-content;
     margin: 0;
 }
+
+.spoiler {
+  color: transparent;
+}
+
+.spoiler:hover {
+  color: black;
+}
+
+.spoiler-placeholder:active span, .spoiler-placeholder:hover span {
+  color: black;
+}
