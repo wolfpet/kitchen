@@ -11,7 +11,7 @@ require_once('head_inc.php');
         $last_id = 0;
         $limit = '';
 
-        $query = 'SELECT username, email, actkey, CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created from confa_regs order by username'; 
+        $query = 'SELECT username, email, actkey, CONVERT_TZ(created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, description from confa_regs order by username'; 
         $result = mysql_query($query);
         if (!$result) {
             mysql_log(__FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query);
@@ -24,9 +24,14 @@ require_once('head_inc.php');
             $created = $row['created'];
             $enc_user = htmlentities($row['username'], HTML_ENTITIES,'UTF-8');
             $enc_mail = htmlentities($row['email'], HTML_ENTITIES,'UTF-8');
+            $description = htmlentities($row['description'], HTML_ENTITIES,'UTF-8');
+            $description = str_pad($description, 50);
+            if (strlen($description) > 50) {
+              $description = '<span title="' . $description . '">' . substr($description, 0, 48) . '...</span>';
+            }
             $md5 = $row['actkey'];
-            $line = '<tr><td align="center">'. $enc_user . '</td><td align="center">'. $enc_mail . '</td><td align="center">' . $created . '</td><td width="25%" align="center" nowrap>'
-              .'<form method="get" action="//'. $host . $root_dir . $page_activate .'" target="bottom">'
+            $line = '<tr><td align="center">'. $enc_user . '</td><td align="center">'. $enc_mail . '</td><td align="center">' . $created . '</td><td align="center">' . $description . '</td><td width="25%" align="center" nowrap>'
+              .'<form method="get" action="'.$protocol.'://'. $host . $root_dir . $page_activate .'" target="bottom">'
               .'<input type="hidden" name="act_link" value="'. $md5.'"/><input name="action" type="submit" value="Confirm"/><input name="action" type="submit" value="Decline"/></form>'
               .'</td></tr>';
             $out .= $line;
@@ -43,6 +48,8 @@ require_once('html_head_inc.php');
 <?php
     if ( !is_null( $moder ) && $moder > 0 ) {
 
+require('menu_inc.php');
+
         if (!is_null($err) && strlen($err) > 0) {
             print('<BR><font color="red"><b>' . $err . '</b></font>');
         }
@@ -51,10 +58,12 @@ require_once('html_head_inc.php');
         }
 ?>
 
+<!--<ol>-->
 <table width="95%">
-<tr><th>Username</th><th>Email</th><th>Created</th><th>Action</th></tr>
+<tr><th>Username</th><th>Email</th><th>Created</th><th>Description</th><th>Action</th></tr>
 <?php print($out); ?>
 </table>
+<!--</ol>-->
 <?php
     } else {
         print( "You have no access to this page." );

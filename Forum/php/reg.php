@@ -129,10 +129,18 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
             }
         }
     } 
+    if ( strlen( $err ) == 0) {
+        if (is_null($subj) || strlen($subj) < 10) {
+            $err .= 'Please tell us about yourself and why you want join this forum<BR>';
+        } else if (strlen($subj) > 200) {
+          $subj = substr($subj, 200);
+        }
+    }
     if (strlen($err) == 0) {
         $tm = date('Y-m-d H:i:s');
         $md5 = md5($tm . $user);
-        $query = 'INSERT into confa_regs(username, password, email, actkey) values(\'' .  mysql_real_escape_string($user) . '\', password(\'' . $password . '\'), \'' . $email . '\', \'' . $md5 . '\')';
+        $query = 'INSERT into confa_regs(username, password, email, actkey, description) values(\'' .  mysql_real_escape_string($user) . '\', password(\'' . mysql_real_escape_string($password) 
+        . '\'), \'' . mysql_real_escape_string($email) . '\', \'' . $md5 . '\', \'' . mysql_real_escape_string($subj) . '\')';
         $result = mysql_query( $query );
         if (!$result) {
             mysql_log( __FILE__, 'query failed ' . mysql_error() . ' QUERY: ' . $query); 
@@ -144,14 +152,14 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
         }
         $to = $email;
         $subject = "Forum registration";
-        $message = "To activate your account, please click the following link or copy and paste it in your browser:<p><a href=\"http://" . $host . $root_dir . $page_activate . '?act_link=' . $md5 . '">http://' . $host . $root_dir . $page_activate . '?act_link=' . $md5 . "</a><p>This link will be valid for 24 hours.\n";
+        $message = "To activate your account, please click the following link or copy and paste it in your browser:<p><a href=\"".$protocol."://" . $host . $root_dir . $page_activate . '?act_link=' . $md5 . '">'.$protocol.'://' . $host . $root_dir . $page_activate . '?act_link=' . $md5 . "</a><p>This link will be valid for 24 hours.\n";
         $from = $from_email;
         $headers = "From: $from";
         if ( !isset($reg_type) || $reg_type == REG_TYPE_OPEN )
           print($message);
         else if ( isset($reg_type) && $reg_type == REG_TYPE_EMAIL ) {
-          xmail($to,$subject,$message,$headers);
-          print("<B>" . $user . "</B>, activation link has been sent to " . $email . ". The link will be valid for 86400 seconds ( 24 hours )");
+          mail($to,$subject,$message,$headers);
+          print("<B>" . $user . "</B>, activation link has been sent to " . htmlentities($email, HTML_ENTITIES,'UTF-8') . ". The link will be valid for 86400 seconds ( 24 hours )");
         } else if ( isset($reg_type) && $reg_type == REG_TYPE_CONFIRM ) {
           print("In order to activate your account, your request needs to be approved by a moderator. Until that time, feel free to read the forum.");
         } else
