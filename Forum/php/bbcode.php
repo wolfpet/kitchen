@@ -23,6 +23,7 @@ function do_bbcode($str) {
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
       '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
+      '#\[spoiler\](.*?)\[/spoiler\]#is' // Spoiler - renders as (spoiler) when click or tap replaces it with actual content
   );
    
   // The matching array of strings to replace matches with
@@ -45,7 +46,8 @@ function do_bbcode($str) {
       '<img src="//$1" alt="" title="$2"/>', 
       '<img src="$1" alt=""/>',
       '<img src="//$1" alt=""/>',
-      '<img src="$1" alt=""/>'
+      '<img src="$1" alt=""/>',
+      '<span class="spoiler-placeholder">(<i>spoiler:</i> <span class="spoiler">$1</span>)</span>'      
   );
   
   // Perform the actual conversion
