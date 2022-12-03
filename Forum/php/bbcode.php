@@ -25,7 +25,7 @@ function do_bbcode($str, $auth_id, $msg_id, $link_renderer) {
       '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
       '#\[POLL\](.*?)\[/POLL\]#is', // Bold ([b]text[/b]
-      '#\[spoiler\](.*?)\[/spoiler\]#is' // Spoiler - renders as (spoiler) when click or tap replaces it with actual content      
+      '#\[spoiler\](.*?)\[/spoiler\]#is' // Spoiler - renders as (spoiler) when click or tap replaces it with actual content
   );
    
   // The matching array of strings to replace matches with
@@ -103,12 +103,12 @@ function bbcode_naked_images($str) {
  global $auth_id;
  global $msg_id; 
   // Deal with untagged images
-  $str = preg_replace_callback('#'.unless_in_quotes('(?:ftp|https?):\/\/[^\s>"]+\.(?:jpg|jpeg|gif|png|bmp)(?:[^\s<"]*)?').'#is', // unprocessed images (i.e. without quotes around them)
+  $str = preg_replace_callback('#'.unless_in_quotes('(?:ftp|https?):\/\/[^\s>"]+\.(?:jpg|jpeg|gif|png|bmp|webp)(?:[^\s<"]*)?').'#is', // unprocessed images (i.e. without quotes around them)
     function ($m) {
       global $auth_id, $msg_id;
       if(empty($m[1])) 
         return $m[0];
-      else if (is_agent_iOS() || strpos($m[1], ".gif") !== false) 
+      else if (is_agent_iOS() || strpos($m[1], ".gif" ) !== false || strpos($m[1], ".webp" ) !== false) 
         return '<img style="cursor: pointer;max-width: 99%;max-height: 99%;" src="' . $m[1] . '" alt=""/>';
       else
         return '<img onload="loadimage(this);" style="cursor: pointer;max-width: 99%;max-height: 79vh;opacity: 0.5;" src="images/empty-image.png" alt="' . $m[1] . '"/>';      
