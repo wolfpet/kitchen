@@ -1107,7 +1107,7 @@ return '\[url='.$pattern.'|\[url\]'.$pattern.'|('.$pattern.')';
 function youtube($body, $embed = true) {
   global $host, $protocol, $google_key;
   
-  $pattern = '(?:https?://)?(?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?';
+  $pattern = '(?:https?://)?(?:www\.|m\.)?(?:\byoutu\b\.be/|\byoutube\b\.com/(?:embed|shorts\/|v|watch\?(?:[^\s<\]"]*?)?v=))([\w-]{10,12})(?:(?:\?|&)[^\s<\]"]*)?';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#i',
     function ($matches) use ($embed, $host, $protocol, $pattern, $google_key) {
