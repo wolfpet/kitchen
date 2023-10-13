@@ -11,16 +11,14 @@ require_once('head_inc.php');
 
     $query = 'SELECT u.username, u.moder, p.auth, p.closed as post_closed, CONVERT_TZ(p.created, \'' . $server_tz . '\', \'' . $prop_tz . ':00\') as created, p.subject, p.status, p.id as id, p.chars  from confa_posts p, confa_users u where p.author=u.id and p.status != 2 ';
 
-    if (!is_null($howmanylikes) && strlen($howmanylikes)) {
-        $howmanylikes = intval(trim($howmanylikes));
-        #$query .= ' and likes >= ' . $howmanylikes;
+    if (!is_null($howmanylikes) && $howmanylikes > 0) {
         if ($likedby == "2") {
             $query .= ' and likes >= ' . $howmanylikes;
-        } else {
+        } else if ($likedby == "1") {
             $query .= ' and exists ( select * from confa_likes li where li.post = p.id and li.user = ' . $user_id . ' and li.value >= ' . $howmanylikes . ')';
         }
-
     }
+
     if (!is_null($text) && strlen($text) > 0) {
         switch ($searchin) {
         case 1:
