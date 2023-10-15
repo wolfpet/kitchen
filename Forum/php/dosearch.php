@@ -18,24 +18,25 @@ require_once('head_inc.php');
         } else {
             $query .= ' and exists ( select * from confa_likes li where li.post = p.id and li.user = ' . $user_id . ' and li.value >= ' . $howmanylikes . ')';
         }
-
     }
+
     if (!is_null($text) && strlen($text) > 0) {
         switch ($searchin) {
         case 1:
-            $query .= ' and ( p.subject like \'%' . mysql_real_escape_string( $text ) . '%\' or p.body like \'%' . mysql_real_escape_string( $text ) . '%\') ';
+            $query .= ' and ( CONVERT(CAST(CONVERT(p.subject USING latin1) AS BINARY) USING utf8) like _utf8 \'%' . mysql_real_escape_string( $text ) . '%\' collate utf8_general_ci';
+            $query .=    ' or CONVERT(CAST(CONVERT(p.body    USING latin1) AS BINARY) USING utf8) like _utf8 \'%' . mysql_real_escape_string( $text ) . '%\' collate utf8_general_ci)';            
         break;
         case 2:
-            $query .= ' and p.body like \'%' . mysql_real_escape_string( $text ) . '%\' ';
+            $query .= ' and CONVERT(CAST(CONVERT(p.body USING latin1) AS BINARY) USING utf8) like _utf8 \'%' . mysql_real_escape_string( $text ) . '%\' collate utf8_general_ci';
         break;
         case 3:
-            $query .= ' and p.subject like \'%' . mysql_real_escape_string( $text ) . '%\' ';
+            $query .= ' and CONVERT(CAST(CONVERT(p.subject USING latin1) AS BINARY) USING utf8) like _utf8 \'%' . mysql_real_escape_string( $text ) . '%\' collate utf8_general_ci';
         break;
         }
     }
 
     if (!is_null($author) && strlen($author) > 0 ) {
-        $query .= ' and u.username like \'%' . mysql_real_escape_string($author) . '%\' ';
+        $query .= ' and CONVERT(CAST(CONVERT(u.username USING latin1) AS BINARY) USING utf8) like _utf8 \'%' . mysql_real_escape_string($author) . '%\' collate utf8_general_ci ';
     }
 
     $fromdate = '';
