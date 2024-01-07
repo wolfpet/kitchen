@@ -65,6 +65,7 @@ $imageGalleryBucket='';
 $tenorGifKey='LIVDSRZULELA';
 
 $days_to_edit_post = 3;
+$nsfw_max_reports = 1;
 
 // To use Gmail, download https://github.com/PHPMailer/PHPMailer and copy into ./PHPMailer directory
 // then uncomment and configure GMail credentials
