@@ -106,7 +106,7 @@ margin-right:5px;
     <div id="dragandrophandler">
         <svg  style="margin-top: 7px;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 50 43"><path fill="#606060" d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
         <br>
-	<label class="browseLabel" for="file">Choose an image</label><label> or Drag & Drop it Here</label>
+	<label class="browseLabel" for="file">Choose an image</label><label> or <b>Paste</b> or Drag & Drop it Here</label>
     </div>
     <div id="status1"></div>
     <input style="display: none" type="file" name="file" id="file" class="inputfile" />
@@ -215,13 +215,14 @@ function handleFileUpload(files,obj)
 {
    for (var i = 0; i < files.length; i++) 
    {
+        if (files[i].size > 26214000) continue;
+        
         var fd = new FormData();
         fd.append('file', files[i]);
 
         var status = new createStatusbar(obj); //Using this we can set progress.
         status.setFileNameSize(files[i].name,files[i].size);
         sendFileToServer(fd,status);
-
    }
 }
 $(document).ready(function()
@@ -248,6 +249,16 @@ obj.on('drop', function (e)
      //We need to send dropped files to Server
      handleFileUpload(files,obj);
 });
+obj.on('paste', function (e) 
+{
+ 
+     $(this).css('border', '2px dotted #0B85A1');
+     e.preventDefault();
+     var files = e.originalEvent.clipboardData.files;
+ 
+     //We need to send copy-pasted files to Server
+     handleFileUpload(files,obj);
+});
 $(document).on('dragenter', function (e)
 {
     e.stopPropagation();
@@ -264,7 +275,12 @@ $(document).on('drop', function (e)
     e.stopPropagation();
     e.preventDefault();
 });
- 
+$(document).on('paste', function (e)
+{
+    e.stopPropagation();
+    e.preventDefault();
+});
+obj.focus();
 });
 </script>
 </body>
