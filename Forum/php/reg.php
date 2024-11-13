@@ -158,8 +158,8 @@ if (isset($recaptcha_site_key) && isset($recaptcha_secret_key)) {
         if ( !isset($reg_type) || $reg_type == REG_TYPE_OPEN )
           print($message);
         else if ( isset($reg_type) && $reg_type == REG_TYPE_EMAIL ) {
-          mail($to,$subject,$message,$headers);
-          print("<B>" . $user . "</B>, activation link has been sent to " . htmlentities($email, HTML_ENTITIES,'UTF-8') . ". The link will be valid for 86400 seconds ( 24 hours )");
+          xmail($to,$subject,$message,$headers);
+          print("<B>" . $user . "</B>, activation link has been sent to " . htmlentities($email, HTML_ENTITIES,'UTF-8') . ". The link will be valid for 24 hours");
         } else if ( isset($reg_type) && $reg_type == REG_TYPE_CONFIRM ) {
           print("In order to activate your account, your request needs to be approved by a moderator. Until that time, feel free to read the forum.");
         } else
