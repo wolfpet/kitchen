@@ -1405,7 +1405,7 @@ function twitter($body, $embed = true, $in_place = false) {
   if (!$embed) return $body;
   
   // e.g. https://twitter.com/elonmusk/status/627040381729906688 or https://twitter.com/K4rlHungus/status/772244915128598528?s=09
-  $pattern = '(?:https?://)(?:twitter\.com/)(?:[^\s<\]"]*?)/status/([0-9]*)(?:/[^\s<\]"]*)?(?:(?:\?|&)[^\s<\]"]*)?\s*';
+  $pattern = '(?:https?:\/\/)(?:mobile\.)?(?:twitter|x)(?:\.com\/)(?:[^\s<\]"]*?)\/status\/([0-9]*)(?:\/[^\s<\]"]*)?(?:(?:\?|&)[^\s<\]"]*)?\s*';
 	
   $result = preg_replace_callback('#'.unless_in_url_tag($pattern).'#is',
     function ($matches) use ($embed, $pattern, $in_place) {
@@ -1416,6 +1416,7 @@ function twitter($body, $embed = true, $in_place = false) {
         return $matches[0];
 
       $url = preg_replace('/\s+/', '', $matches[0]);
+      $url = preg_replace('/x\.com/','twitter.com', $url);  
 			$id  = $matches[1];
 
       $obj2 = file_get_contents("https://api.twitter.com/1/statuses/oembed.json?url=" . $url);
