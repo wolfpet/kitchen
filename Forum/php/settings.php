@@ -41,6 +41,7 @@ $reactions = array(
   'reactwow' => 0,
   'reactsad' => 0,
   'reactmad' => 0,
+  'reactpuke' => 0
 );
 
 // $google_key = ""; // (optional) specify your Google API key here to enable YouTube metadata
