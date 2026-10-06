@@ -20,9 +20,9 @@ function do_bbcode($str, $auth_id, $msg_id, $link_renderer) {
       '#\[url\]((?:ftp|https?)://[^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]),
       '#\[url\]([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]) 
       '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#i', // Image ([img=http://url_to_image]tooltip[/img])
-      '#\[img=(\S*?)\s*\](.*)\[/img\]#i', // Image ([img=url_to_image]tooltip[/img])
+      '#\[img=(?://)?(\S*?)\s*\](.*)\[/img\]#i', // Image ([img=url_to_image]tooltip[/img]), [img=//url] too
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
-      '#\[img=(\S*?)\s*\]#i', // Image ([img=url_to_image])
+      '#\[img=(?://)?(\S*?)\s*\]#i', // Image ([img=url_to_image]), [img=//url] too
       '#\[img\](https?://\S*?)\s*\[/img\]#i', // Image ([img]http://url_to_image[/img])
       '#\[POLL\](.*?)\[/POLL\]#is', // Bold ([b]text[/b]
       '#\[spoiler\](.*?)\[/spoiler\]#is' // Spoiler - renders as (spoiler) when click or tap replaces it with actual content
