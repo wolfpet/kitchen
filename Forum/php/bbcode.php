@@ -211,6 +211,14 @@ function before_bbcode($original_body, &$has_video=null) {
   if (isset($has_video) && !is_null($has_video)) $has_video = strcmp($body, $original_body) != 0;
   // Fix postimage.org tags
   $body = fix_postimage_tags($body);
+  // hide URLs from WhatsApp formatting, or 71NJfbXrlGL._AC_SL600_.jpg gets an italic in the middle;
+  // trailing _*~ and punctuation stay outside, so "_see http://x.com_" is still italic
+  $urls = array();
+  $body = str_replace(array("\x02", "\x03"), '', $body); // placeholder delimiters must not come from the user
+  $body = preg_replace_callback('#(?:ftp|https?)://[^\s<\]"]*[^\s<\]"_*~.,;:!?)]#i', function ($m) use (&$urls) {
+    $urls[] = $m[0];
+    return "\x02" . (count($urls) - 1) . "\x03";
+  }, $body);
   // other replacements
   $body = preg_replace( array (
     // WhatsApp formatting
@@ -229,6 +237,10 @@ function before_bbcode($original_body, &$has_video=null) {
     '', 
     ''
      ), $body);
+  // put the URLs back
+  $body = preg_replace_callback("#\x02([0-9]+)\x03#", function ($m) use ($urls) {
+    return isset($urls[$m[1]]) ? $urls[$m[1]] : $m[0];
+  }, $body);
      
   // echo "{\n" . $body . "\n}\n";
 
