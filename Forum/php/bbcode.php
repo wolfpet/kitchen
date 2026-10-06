@@ -212,10 +212,11 @@ function before_bbcode($original_body, &$has_video=null) {
   // Fix postimage.org tags
   $body = fix_postimage_tags($body);
   // hide URLs from WhatsApp formatting, or 71NJfbXrlGL._AC_SL600_.jpg gets an italic in the middle;
-  // trailing _*~ and punctuation stay outside, so "_see http://x.com_" is still italic
+  // trailing _*~ and punctuation stay outside, so "_see http://x.com_" is still italic;
+  // the scheme is optional for stored embeds like src="//www.youtube-nocookie.com/embed/a-_bcd_-xyz"
   $urls = array();
   $body = str_replace(array("\x02", "\x03"), '', $body); // placeholder delimiters must not come from the user
-  $body = preg_replace_callback('#(?:ftp|https?)://[^\s<\]"]*[^\s<\]"_*~.,;:!?)]#i', function ($m) use (&$urls) {
+  $body = preg_replace_callback('#(?:(?:ftp|https?):)?//[^\s<\]"]*[^\s<\]"_*~.,;:!?)]#i', function ($m) use (&$urls) {
     $urls[] = $m[0];
     return "\x02" . (count($urls) - 1) . "\x03";
   }, $body);
