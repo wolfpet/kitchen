@@ -16,9 +16,9 @@ function do_bbcode($str, $auth_id, $msg_id, $link_renderer) {
       '#\[color=(.*?)\](.*?)\[/color\]#is', // Font color ([color=#00F]text[/color]) or Font color ([color={color_name}]text[/color])      
 //      '#\[url=((?:ftp|https?)://[^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
       '#\[url=((?:ftp|https?):\/\/[^\]\s]*)\s*\](.*?)\[\/url\]#is',
-      '#\[url=([^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url])
+      '#\[url=(?://)?([^\]\s]*)\s*\](.*?)\[/url\]#is', // Hyperlink with descriptive text ([url=http://url]text[/url]), [url=//url] too
       '#\[url\]((?:ftp|https?)://[^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]),
-      '#\[url\]([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]) 
+      '#\[url\]((?://)?)([^\s<\["]*)\s*\[/url\]#i', // Hyperlink ([url]http://url[/url]), [url]//url[/url] too
       '#\[img=(https?://\S*?)\s*\](.*)\[/img\]#i', // Image ([img=http://url_to_image]tooltip[/img])
       '#\[img=(?://)?(\S*?)\s*\](.*)\[/img\]#i', // Image ([img=url_to_image]tooltip[/img]), [img=//url] too
       '#\[img=(https?://\S*?)\s*\]#i', // Image ([img=http://url_to_image])
@@ -43,7 +43,7 @@ function do_bbcode($str, $auth_id, $msg_id, $link_renderer) {
       '<a target="_blank" href="$1">$2</a>',
       '<a target="_blank" href="//$1">$2</a>',
       '<a target="_blank" href="$1">$1</a>',
-      '<a target="_blank" href="//$1">$1</a>',
+      '<a target="_blank" href="//$2">$1$2</a>',
       '<img src="$1" alt="" title="$2" style="white-space: pre-line;"/>',
       '<img src="//$1" alt="" title="$2" style="white-space: pre-line;"/>',
       '<img src="$1" alt=""/>',
