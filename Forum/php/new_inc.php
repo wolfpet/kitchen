@@ -6,6 +6,10 @@
     background-color: #ebebeb;
     cursor: pointer;
 }
+/* iOS 26 Safari puts the baseline-aligned icons a line lower, below their group box */
+#Msg_ribbon span.ribbonIcon {
+    vertical-align: top;
+}
 </style>
 
 <?php
