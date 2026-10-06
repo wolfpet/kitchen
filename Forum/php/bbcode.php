@@ -177,8 +177,8 @@ function before_bbcode($original_body, &$has_video=null) {
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?facebook\.com/photo\.php\?fbid=[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // Twitter moments e.g. https://twitter.com/i/moments/1047551358948319233
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?(?:mobile\.)?twitter\.com\/i\/moments\/[^\s<\]"]+(?:(?:\?|&)[^\s<\]"]*+)?)#is',
-    // imgur
-    '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?i\.imgur\.com\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
+    // imgur embed, except image files (.jpg, .png, ...), which are shown as plain images, and links inside [img]...[/img]
+    '#(?<!(\[url(=|]))|\[img=|\[img\])((?:https?:\/\/)(?:www\.)?i\.imgur\.com\/(?![^\s\.]+\.(?:jpe?g|png|gif|webp|bmp)(?![a-z]))([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     '#(?<!(\[url(=|]))|\[img=)((?:https?:\/\/)(?:www\.)?imgur\.com\/gallery\/([^\s\.]+)\.?(?:[a-z]+)?(?:(?:\?|&)[^\s<\]"]*+)?)#is',
     // gfycat e.g. https://gfycat.com/BrightFragrantAmurstarfish
     '#(?<!\[url(=|\]))((?:https?://)(?:www\.)?gfycat\.com\/([^\s<\]"]*+)(?:(?:\?|&)[^\s<\]"]*+)?)#is',   
